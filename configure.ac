@@ -7,10 +7,13 @@ AC_CONFIG_FILES([Makefile])
 
 # Checks for programs.
 AC_PROG_CC
+PROCTAL_FIND_PROG([GENGETOPT], [gengetopt], [required])
 
 # Checks for libraries.
 
 # Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADER([sys/ptrace.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
