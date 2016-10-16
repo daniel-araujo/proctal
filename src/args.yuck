@@ -1,0 +1,15 @@
+Usage: proctal
+The process manipulator.
+
+  -h, --help            Display this help and exit.
+  -V, --version         Output version information and exit.
+
+Usage: proctal write [pid] [address] [value]
+Writes to the process' memory.
+
+  -t, --type
+
+Usage: proctal read [pid] [address]
+Reads from the process' memory.
+
+  -t, --type
