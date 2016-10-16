@@ -1,6 +1,6 @@
 bin_PROGRAMS = proctal
-proctal_SOURCES = src/proctal.h src/main.c src/write.c src/read.c
-proctal_CPPFLAGS = -Isrc
+proctal_SOURCES = src/proctal.h src/main.c src/write.c src/read.c src/command.c
+proctal_CPPFLAGS = -Isrc -Wall
 EXTRA_DIST = src/args.yuck src/args.yucc
 CLEANFILES = src/args.yucc
 
