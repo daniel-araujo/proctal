@@ -3,35 +3,40 @@
 
 #include "proctal.h"
 
-proctal_stream proctal_read_memory(
-	proctal_process process,
-	proctal_process_memory_address addr,
-	int size)
-{
-	return proctal_stream_create(NULL, 0);
-}
+#define FORWARD_NATIVE(pid, addr, val) \
+	proctal_mem_read(pid, addr, (char *) val, sizeof *val);
 
-int proctal_read_memory_int(
-	proctal_process process,
-	proctal_process_memory_address addr)
+int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size)
 {
-	int pid = proctal_process_get_pid(process);
+	const char *path_template = "/proc/%d/mem";
 
-	char path_template[] = "/proc/%d/mem";
 	char path[sizeof(path_template) + 11];
-	snprintf(path, sizeof path, path_template, pid);
+	int e = snprintf(path, sizeof path, path_template, pid);
+	path[e] = '\0';
 
 	FILE *f = fopen(path, "r");
 
 	if (f == NULL) {
-		return 0;
+		return -1;
 	}
 
-	fseek(f, proctal_process_memory_address_get_offset(addr), SEEK_SET);
+	fseek(f, (long) addr, SEEK_SET);
 
-	int val;
+	long i = fread(out, size, 1, f);
 
-	fread(&val, 4, 1, f);
+	if (i != 1) {
+		return -1;
+	}
 
-	return val;
+	return 0;
+}
+
+int proctal_mem_read_int(pid_t pid, void *addr, int *out)
+{
+	return FORWARD_NATIVE(pid, addr, out);
+}
+
+int proctal_mem_read_uint(pid_t pid, void *addr, unsigned int *out)
+{
+	return FORWARD_NATIVE(pid, addr, out);
 }

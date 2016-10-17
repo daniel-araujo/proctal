@@ -1,68 +1,53 @@
 #ifndef PROCTAL_H
 #define PROCTAL_H
 
-struct proctal_process;
-struct proctal_stream;
-struct proctal_process_memory_address { void *cant_touch_this; };
-
-typedef struct proctal_process *proctal_process;
-typedef struct proctal_process_memory_address proctal_process_memory_address;
-typedef struct proctal_stream *proctal_stream;
+#include <stddef.h>
+#include <sys/types.h>
 
 /*
- * Reads from a process' memory.
+ * Reads a specified length of characters starting from an address in an other
+ * process' memory space. This function assumes it can safely write the same
+ * length to the given buffer.
+ *
+ * On success will return 0 and the given buffer will contain all characters
+ * that were read.
+ *
+ * On failure will return a non-zero value. The contents of the given buffer
+ * may or may not have been modifed.
  */
-proctal_stream proctal_read_memory(
-	proctal_process process,
-	proctal_process_memory_address addr,
-	int size);
+int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size);
 
 /*
- * Reads an int from a process' memory.
+ * Convenient function to read an int.
  */
-int proctal_read_memory_int(
-	proctal_process process,
-	proctal_process_memory_address addr);
+int proctal_mem_read_int(pid_t pid, void *addr, int *out);
 
 /*
- * Writes to a process' memory.
+ * Convenient function to read an unsigned int.
  */
-void proctal_write_memory(
-	proctal_process process,
-	proctal_process_memory_address addr,
-	proctal_stream stream);
+int proctal_mem_read_uint(pid_t pid, void *addr, unsigned int *out);
 
 /*
- * Writes an int to a process' memory.
+ * Writes a specified length of characters starting from an address in an other
+ * process' memory space. This function assumes it can safely access the same
+ * length in the given buffer.
+ *
+ * On success will return 0.
+ *
+ * On failure will return a non-zero value. The contents of the given buffer
+ * may or may not have been partially written to the address space of the other
+ * process.
  */
-void proctal_write_memory_int(
-	proctal_process process,
-	proctal_process_memory_address addr,
-	int val);
+int proctal_mem_write(pid_t pid, void *addr, char *in, size_t size);
 
 /*
- * Creates a representation of a process.
+ * Convenient function to write an int.
  */
-proctal_process proctal_process_create(int pid);
-
-int proctal_process_get_pid(proctal_process process);
-
-void proctal_process_destroy(proctal_process process);
+int proctal_mem_write_int(pid_t pid, void *addr, int in);
 
 /*
- * Creates a representation of a process' memory address.
+ * Convenient function to write an unsigned int.
  */
-proctal_process_memory_address proctal_process_memory_address_create(
-	proctal_process process,
-	void *addr);
-
-long proctal_process_memory_address_get_offset(proctal_process_memory_address address);
-
-/*
- * Creates a representation of a stream of characters.
- */
-proctal_stream proctal_stream_create(
-	char *buffer,
-	int length);
+int proctal_mem_write_uint(pid_t pid, void *addr, unsigned int in);
 
 #endif /* PROCTAL_H */

@@ -6,18 +6,23 @@
 
 void proctal_command_read(struct proctal_command_read_arg *arg)
 {
-	proctal_process process = proctal_process_create(arg->pid);
-	proctal_process_memory_address address = proctal_process_memory_address_create(process, arg->address);
+	int val;
 
-	int i = proctal_read_memory_int(process, address);
-
-	printf("%d\n", i);
+	switch (proctal_mem_read_int(arg->pid, arg->address, &val)) {
+	case 0:
+		printf("%d\n", val);
+		break;
+	default:
+		fprintf(stderr, "Failed to read memory.\n");
+	}
 }
 
 void proctal_command_write(struct proctal_command_write_arg *arg)
 {
-	proctal_process process = proctal_process_create(arg->pid);
-	proctal_process_memory_address address = proctal_process_memory_address_create(process, arg->address);
-
-	proctal_write_memory_int(process, address, arg->value);
+	switch (proctal_mem_write_int(arg->pid, arg->address, arg->value)) {
+	case 0:
+		break;
+	default:
+		fprintf(stderr, "Failed to write to memory.\n");
+	}
 }
