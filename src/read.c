@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "proctal.h"
+#include "linux.h"
 
 #define FORWARD_NATIVE(PID, ADDR, VAL) \
 	proctal_mem_read(PID, ADDR, (char *) VAL, sizeof *VAL);
@@ -14,13 +15,7 @@
 
 int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size)
 {
-	const char *path_template = "/proc/%d/mem";
-
-	char path[sizeof(path_template) + 11];
-	int e = snprintf(path, sizeof path, path_template, pid);
-	path[e] = '\0';
-
-	FILE *f = fopen(path, "r");
+	FILE *f = fopen(proctal_linux_proc_path(pid, "mem"), "r");
 
 	if (f == NULL) {
 		return -1;
