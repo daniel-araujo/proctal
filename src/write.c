@@ -3,8 +3,14 @@
 
 #include "proctal.h"
 
-#define FORWARD_NATIVE(pid, addr, val) \
-	proctal_mem_write(pid, addr, (char *) &val, sizeof val);
+#define FORWARD_NATIVE(PID, ADDR, VAL) \
+	proctal_mem_write(PID, ADDR, (char *) &VAL, sizeof VAL);
+
+#define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
+	int proctal_mem_write_##SUFFIX(pid_t pid, void *addr, TYPE in) \
+	{ \
+		return FORWARD_NATIVE(pid, addr, in); \
+	}
 
 int proctal_mem_write(pid_t pid, void *addr, char *in, size_t size)
 {
@@ -33,12 +39,17 @@ int proctal_mem_write(pid_t pid, void *addr, char *in, size_t size)
 	return 0;
 }
 
-int proctal_mem_write_int(pid_t pid, void *addr, int in)
-{
-	return FORWARD_NATIVE(pid, addr, in);
-}
-
-int proctal_mem_write_uint(pid_t pid, void *addr, unsigned int in)
-{
-	return FORWARD_NATIVE(pid, addr, in);
-}
+DEFINE_FORWARD_NATIVE(char, char)
+DEFINE_FORWARD_NATIVE(schar, signed char)
+DEFINE_FORWARD_NATIVE(uchar, unsigned char)
+DEFINE_FORWARD_NATIVE(short, short)
+DEFINE_FORWARD_NATIVE(ushort, unsigned short)
+DEFINE_FORWARD_NATIVE(int, int)
+DEFINE_FORWARD_NATIVE(uint, unsigned int)
+DEFINE_FORWARD_NATIVE(long, long)
+DEFINE_FORWARD_NATIVE(ulong, unsigned long)
+DEFINE_FORWARD_NATIVE(longlong, long long)
+DEFINE_FORWARD_NATIVE(ulonglong, unsigned long long)
+DEFINE_FORWARD_NATIVE(float, float)
+DEFINE_FORWARD_NATIVE(double, double)
+DEFINE_FORWARD_NATIVE(longdouble, long double)
