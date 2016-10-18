@@ -24,6 +24,8 @@ int proctal_mem_write(pid_t pid, void *addr, char *in, size_t size)
 
 	long i = fwrite(in, size, 1, f);
 
+	fclose(f);
+
 	if (i != 1) {
 		return -1;
 	}

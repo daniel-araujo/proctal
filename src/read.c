@@ -24,6 +24,8 @@ int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size)
 
 	long i = fread(out, size, 1, f);
 
+	fclose(f);
+
 	if (i != 1) {
 		return -1;
 	}
