@@ -9,6 +9,8 @@
  * process' memory space. This function assumes it can safely write the same
  * length to the given buffer.
  *
+ * There are also convenience functions for reading native C types.
+ *
  * On success will return 0 and the given buffer will contain all characters
  * that were read.
  *
@@ -16,21 +18,27 @@
  * may or may not have been modifed.
  */
 int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size);
-
-/*
- * Convenient function to read an int.
- */
+int proctal_mem_read_char(pid_t pid, void *addr, char *out);
+int proctal_mem_read_schar(pid_t pid, void *addr, signed char *out);
+int proctal_mem_read_uchar(pid_t pid, void *addr, unsigned char *out);
+int proctal_mem_read_short(pid_t pid, void *addr, short *out);
+int proctal_mem_read_ushort(pid_t pid, void *addr, unsigned short *out);
 int proctal_mem_read_int(pid_t pid, void *addr, int *out);
-
-/*
- * Convenient function to read an unsigned int.
- */
 int proctal_mem_read_uint(pid_t pid, void *addr, unsigned int *out);
+int proctal_mem_read_long(pid_t pid, void *addr, long *out);
+int proctal_mem_read_ulong(pid_t pid, void *addr, unsigned long *out);
+int proctal_mem_read_longlong(pid_t pid, void *addr, long long *out);
+int proctal_mem_read_ulonglong(pid_t pid, void *addr, unsigned long long *out);
+int proctal_mem_read_float(pid_t pid, void *addr, float *out);
+int proctal_mem_read_double(pid_t pid, void *addr, double *out);
+int proctal_mem_read_longdouble(pid_t pid, void *addr, long double *out);
 
 /*
  * Writes a specified length of characters starting from an address in an other
  * process' memory space. This function assumes it can safely access the same
  * length in the given buffer.
+ *
+ * There are also convenience functions for writing native C types.
  *
  * On success will return 0.
  *
@@ -39,15 +47,19 @@ int proctal_mem_read_uint(pid_t pid, void *addr, unsigned int *out);
  * process.
  */
 int proctal_mem_write(pid_t pid, void *addr, char *in, size_t size);
-
-/*
- * Convenient function to write an int.
- */
+int proctal_mem_write_char(pid_t pid, void *addr, char in);
+int proctal_mem_write_schar(pid_t pid, void *addr, signed char in);
+int proctal_mem_write_uchar(pid_t pid, void *addr, unsigned char in);
+int proctal_mem_write_short(pid_t pid, void *addr, short in);
+int proctal_mem_write_ushort(pid_t pid, void *addr, unsigned short in);
 int proctal_mem_write_int(pid_t pid, void *addr, int in);
-
-/*
- * Convenient function to write an unsigned int.
- */
 int proctal_mem_write_uint(pid_t pid, void *addr, unsigned int in);
+int proctal_mem_write_long(pid_t pid, void *addr, long in);
+int proctal_mem_write_ulong(pid_t pid, void *addr, unsigned long in);
+int proctal_mem_write_longlong(pid_t pid, void *addr, long long in);
+int proctal_mem_write_ulonglong(pid_t pid, void *addr, unsigned long long in);
+int proctal_mem_write_float(pid_t pid, void *addr, float in);
+int proctal_mem_write_double(pid_t pid, void *addr, double in);
+int proctal_mem_write_longdouble(pid_t pid, void *addr, long double in);
 
 #endif /* PROCTAL_H */
