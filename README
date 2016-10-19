@@ -1,16 +1,74 @@
 # Proctal
 
-Manipulates the address space of running processes.
+Manipulates the address space of a running program.
+
+Comes with a command line interface and a C library.
+
+
+## Example
+
+### CLI
+
+Having acquired the right permissions to fiddle with running programs (root):
+
+	$ proctal read 22002 1803acc
+	123
+	$ proctal write 22002 1803acc 124
+	$ proctal read 22002 1803acc
+	124
+
+### C library
+
+Linking to libproctal.so:
+
+	// Declares the libraries' functions.
+	#include <proctal.h>
+
+	int main (int argc, char **argv)
+	{
+		int val;
+
+		// Attempting to read an int from an other process. Depending
+		if (proctal_mem_read_int(22002, (void *) 0xBEEF, &val) != 0) {
+			return 1; // Failed to read.
+		}
+
+		val += 1;
+
+		if (proctal_mem_write_int(22002, (void *) 0xBEEF, val) != 0) {
+			return 1; // Failed to write.
+		}
+
+		return 0;
+	}
 
 
 ## Usage
 
-	$ proctal read <pid> <address>
+### CLI
 
-	$ proctal write <pid> <address> <value>
+Command used to read a value at <address> in process <pid>.
+
+	$ proctal read [options] <pid> <address>
+
+Command used to write <value> at <address> in process <pid>.
+
+	$ proctal write [options] <pid> <address> <value>
+
+Passing --help in [options] will explain every behavior.
+
+
+### C library
+
+Can be used by linking to libproctal.so and including proctal.h
+
+Available functions are documented in the header file.
 
 
 ## Installation
+
+Proctal provides a 3 step installation process commonly employed by Linux
+C/C++ programs:
 
 	$ ./configure
 	$ make
