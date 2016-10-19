@@ -6,6 +6,7 @@ lib_LIBRARIES = libproctal.a
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/proctal.h
 
+# Cli tool.
 proctal_SOURCES = \
 	src/main.c \
 	src/command.h \
@@ -13,6 +14,7 @@ proctal_SOURCES = \
 proctal_LDADD = libproctal.la
 proctal_CFLAGS = -Isrc -Wall -fmax-errors=10
 
+# Static library.
 libproctal_a_SOURCES = \
 	src/proctal.h \
 	src/write.c \
@@ -21,6 +23,7 @@ libproctal_a_SOURCES = \
 	src/linux.c
 libproctal_a_CFLAGS = # Forcing renamed objects.
 
+# Shared library.
 libproctal_la_SOURCES = $(libproctal_a_SOURCES)
 libproctal_la_CFLAGS = # Forcing renamed objects.
 
