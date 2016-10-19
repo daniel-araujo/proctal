@@ -5,15 +5,15 @@
 #include "linux.h"
 
 #define FORWARD_NATIVE(PID, ADDR, VAL) \
-	proctal_mem_read(PID, ADDR, (char *) VAL, sizeof *VAL);
+	proctal_read(PID, ADDR, (char *) VAL, sizeof *VAL);
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	int proctal_mem_read_##SUFFIX(pid_t pid, void *addr, TYPE *out) \
+	int proctal_read_##SUFFIX(pid_t pid, void *addr, TYPE *out) \
 	{ \
 		return FORWARD_NATIVE(pid, addr, out); \
 	}
 
-int proctal_mem_read(pid_t pid, void *addr, char *out, size_t size)
+int proctal_read(pid_t pid, void *addr, char *out, size_t size)
 {
 	FILE *f = fopen(proctal_linux_proc_path(pid, "mem"), "r");
 

@@ -28,14 +28,15 @@ Linking to libproctal.so:
 	{
 		int val;
 
-		// Attempting to read an int from an other process. Depending
-		if (proctal_mem_read_int(22002, (void *) 0xBEEF, &val) != 0) {
+		// Attempting to read an int from an other process.
+		if (proctal_read_int(22002, (void *) 0xBEEF, &val) != 0) {
 			return 1; // Failed to read.
 		}
 
 		val += 1;
 
-		if (proctal_mem_write_int(22002, (void *) 0xBEEF, val) != 0) {
+		// Attempting to write an int to an other process.
+		if (proctal_write_int(22002, (void *) 0xBEEF, val) != 0) {
 			return 1; // Failed to write.
 		}
 
