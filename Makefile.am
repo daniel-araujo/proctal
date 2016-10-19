@@ -1,14 +1,28 @@
-bin_PROGRAMS = proctal
-proctal_SOURCES = \
-	src/proctal.h \
-	src/main.c \
-	src/write.c \
-	src/read.c \
-	src/command.c \
-	src/linux.c
-proctal_CPPFLAGS = -Isrc -Wall -fmax-errors=10
 EXTRA_DIST = src/args.yuck src/args.yucc
 CLEANFILES = src/args.yucc
+
+bin_PROGRAMS = proctal
+lib_LIBRARIES = libproctal.a
+lib_LTLIBRARIES = libproctal.la
+include_HEADERS = src/proctal.h
+
+proctal_SOURCES = \
+	src/main.c \
+	src/command.h \
+	src/command.c
+proctal_LDADD = libproctal.la
+proctal_CPPFLAGS = -Isrc -Wall -fmax-errors=10
+
+libproctal_a_SOURCES = \
+	src/proctal.h \
+	src/write.c \
+	src/read.c \
+	src/linux.h \
+	src/linux.c
+libproctal_a_CFLAGS = # Forcing renamed objects.
+
+libproctal_la_SOURCES = $(libproctal_a_SOURCES)
+libproctal_la_CFLAGS = # Forcing renamed objects.
 
 # The following rules specify additional dependencies for object files.
 #

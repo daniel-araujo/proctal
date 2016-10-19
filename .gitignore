@@ -12,3 +12,6 @@
 /missing
 /config.h.in
 /config.h.in~
+/config.guess
+/config.sub
+/ltmain.sh
