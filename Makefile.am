@@ -11,7 +11,7 @@ proctal_SOURCES = \
 	src/command.h \
 	src/command.c
 proctal_LDADD = libproctal.la
-proctal_CPPFLAGS = -Isrc -Wall -fmax-errors=10
+proctal_CFLAGS = -Isrc -Wall -fmax-errors=10
 
 libproctal_a_SOURCES = \
 	src/proctal.h \
@@ -29,7 +29,7 @@ libproctal_la_CFLAGS = # Forcing renamed objects.
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
 # documentation, automake does not support a convenient method for specifying
 # dependencies for automatically generated object files of *_SOURCES c files
-# and that you should be wary of renamed objects when *_CPPFLAGS is defined.
+# and that you should be wary of renamed objects when *_CFLAGS is defined.
 src/proctal-main.$(OBJEXT): src/args.yucc
 
 # Generates argument parsing code.
