@@ -1,6 +1,6 @@
 # Proctal
 
-Manipulates the address space of a running program.
+Manipulates the address space of a running program on Linux.
 
 Comes with a command line interface and a C library.
 
@@ -19,7 +19,7 @@ Having acquired the right permissions to fiddle with running programs (root):
 
 ### C library
 
-Linking to libproctal.so:
+Linking dynamically or statically to libproctal:
 
 	// Declares the libraries' functions.
 	#include <proctal.h>
@@ -61,7 +61,7 @@ Passing --help in [options] will explain every behavior.
 
 ### C library
 
-Can be used by linking to libproctal.so and including proctal.h
+Can be used by linking to libproctal and including proctal.h
 
 Available functions are documented in the header file.
 
