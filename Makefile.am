@@ -25,7 +25,7 @@ libproctal_a_CFLAGS = # Forcing renamed objects.
 
 # Shared library.
 libproctal_la_SOURCES = $(libproctal_a_SOURCES)
-libproctal_la_CFLAGS = # Forcing renamed objects.
+libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 
 # The following rules specify additional dependencies for object files.
 #

@@ -1,8 +1,10 @@
 AC_PREREQ([2.69])
-AC_INIT([proctal], [1.0.0])
+AC_INIT([proctal], [0.0.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_PREREQ([2.4])
 LT_INIT([dlopen])
+
+AC_SUBST(PROCTAL_LIBRARY_VERSION, [0:0:0])
 
 AC_CONFIG_SRCDIR([src/proctal.h])
 AC_CONFIG_HEADERS([config.h:config.h.in])
