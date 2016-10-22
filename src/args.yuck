@@ -7,9 +7,37 @@ The process manipulator.
 Usage: proctal write [pid] [address] [value]
 Writes to the process' memory.
 
-  -t, --type
+  -t, --type=TYPE       Type of value. TYPE can be:
+                          char
+                          uchar
+                          schar
+                          short
+                          ushort
+                          int
+                          uint
+                          long
+                          ulong
+                          longlong
+                          ulonglong
+                          float
+                          double
+                          longdouble
 
 Usage: proctal read [pid] [address]
 Reads from the process' memory.
 
-  -t, --type
+  -t, --type=TYPE       Type of value. This determines the size.
+                          char
+                          uchar
+                          schar
+                          short
+                          ushort
+                          int
+                          uint
+                          long
+                          ulong
+                          longlong
+                          ulonglong
+                          float
+                          double
+                          longdouble

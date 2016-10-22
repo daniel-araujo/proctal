@@ -42,6 +42,85 @@ int parse_zstr_address(const char *string, void *addr)
 	return parse_lstr_address(string, strlen(string), addr);
 }
 
+enum proctal_command_value_type yuck_arg_type_to_proctal_command_value_type(const char *arg)
+{
+	struct type {
+		enum proctal_command_value_type type;
+		const char *name;
+	};
+
+	static struct type types[] = {
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_CHAR,
+			.name = "char"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR,
+			.name = "uchar"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_SCHAR,
+			.name = "schar"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_SHORT,
+			.name = "short"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_USHORT,
+			.name = "ushort"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_INT,
+			.name = "int"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_UINT,
+			.name = "uint"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_LONG,
+			.name = "long"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_ULONG,
+			.name = "ulong"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_LONGLONG,
+			.name = "longlong"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_ULONGLONG,
+			.name = "ulonglong"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_FLOAT,
+			.name = "float"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_DOUBLE,
+			.name = "double"
+		},
+		{
+			.type = PROCTAL_COMMAND_VALUE_TYPE_LONGDOUBLE,
+			.name = "longdouble"
+		},
+	};
+
+	if (arg == NULL) {
+		return PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN;
+	}
+
+	for (int i = 0; i < (sizeof types / sizeof types[0]); i++) {
+		if (strcmp(types[i].name, arg) == 0) {
+			return types[i].type;
+		}
+	}
+
+	return PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN;
+}
+
 int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal_command_read_arg *proctal_command_arg)
 {
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
@@ -62,6 +141,12 @@ int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal_comman
 	if (parse_zstr_address(yuck_arg->args[1], &proctal_command_arg->address)) {
 		fputs("Invalid address.\n", stderr);
 		return -1;
+	}
+
+	proctal_command_arg->type = yuck_arg_type_to_proctal_command_value_type(yuck_arg->read.type_arg);
+
+	if (proctal_command_arg->type == PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN) {
+		proctal_command_arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
 	}
 
 	return 0;
@@ -87,6 +172,12 @@ int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_comma
 	if (parse_zstr_address(yuck_arg->args[1], &proctal_command_arg->address)) {
 		fputs("Invalid address.\n", stderr);
 		return -1;
+	}
+
+	proctal_command_arg->type = yuck_arg_type_to_proctal_command_value_type(yuck_arg->write.type_arg);
+
+	if (proctal_command_arg->type == PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN) {
+		proctal_command_arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
 	}
 
 	if (parse_zstr_int(yuck_arg->args[2], &proctal_command_arg->value)) {
