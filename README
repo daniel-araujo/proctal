@@ -111,7 +111,13 @@ and recompile again.
 
 For tinkering with the source code this is the least you need to know about
 the build system. For more details on what you can do with the autotools read
-the manuals over at gnu.org.[1]
+the manuals over at gnu.org [[1]].
+
+
+## Contributing
+
+Found a bug or want to contribute code? Feel free to create an issue or send a
+pull request on GitHub [[2]].
 
 
 ## License
@@ -126,3 +132,4 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 [1]: https://www.gnu.org/software/
+[2]: https://github.com/daniel-araujo/proctal
