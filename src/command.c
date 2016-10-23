@@ -138,10 +138,62 @@ fail:
 
 void proctal_command_write(struct proctal_command_write_arg *arg)
 {
-	switch (proctal_write_int(arg->pid, arg->address, arg->value)) {
-	case 0:
+#define ERROR_CHECKER(CALL) \
+	if (CALL != 0) { \
+		goto fail; \
+	}
+
+	switch (arg->type) {
+	case PROCTAL_COMMAND_VALUE_TYPE_CHAR:
+		ERROR_CHECKER(proctal_write_char(arg->pid, arg->address, *((char *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_UCHAR:
+		ERROR_CHECKER(proctal_write_uchar(arg->pid, arg->address, *((unsigned char *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_SCHAR:
+		ERROR_CHECKER(proctal_write_schar(arg->pid, arg->address, *((signed char *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_SHORT:
+		ERROR_CHECKER(proctal_write_short(arg->pid, arg->address, *((short *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_USHORT:
+		ERROR_CHECKER(proctal_write_ushort(arg->pid, arg->address, *((unsigned short *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_INT:
+		ERROR_CHECKER(proctal_write_int(arg->pid, arg->address, *((int *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_UINT:
+		ERROR_CHECKER(proctal_write_uint(arg->pid, arg->address, *((unsigned int *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONG:
+		ERROR_CHECKER(proctal_write_long(arg->pid, arg->address, *((long *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_ULONG:
+		ERROR_CHECKER(proctal_write_ulong(arg->pid, arg->address, *((unsigned long *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONGLONG:
+		ERROR_CHECKER(proctal_write_longlong(arg->pid, arg->address, *((long long *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_ULONGLONG:
+		ERROR_CHECKER(proctal_write_ulonglong(arg->pid, arg->address, *((unsigned long long *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_FLOAT:
+		ERROR_CHECKER(proctal_write_float(arg->pid, arg->address, *((float *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_DOUBLE:
+		ERROR_CHECKER(proctal_write_double(arg->pid, arg->address, *((double *) arg->value)));
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONGDOUBLE:
+		ERROR_CHECKER(proctal_write_longdouble(arg->pid, arg->address, *((long double *) arg->value)));
 		break;
 	default:
-		fprintf(stderr, "Failed to write to memory.\n");
+		goto fail;
 	}
+
+	return;
+
+#undef ERROR_CHECKER
+
+fail:
+	fprintf(stderr, "Failed to write to memory.\n");
 }

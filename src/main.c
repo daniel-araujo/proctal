@@ -6,43 +6,197 @@
 #include "command.h"
 #include "args.yucc"
 
-int parse_lstr_int(const char *string, size_t length, int *i)
+static int parse_zstr_char(const char *string, char *val)
 {
-	// Temporary.
-	errno = 0;
-	*i = strtol(string, NULL, 10);
+	// TODO: figure out how to detect sign of char.
+	int success = sscanf(string, "%hhd", val);
 
-	if (errno != 0) {
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_schar(const char *string, signed char *val)
+{
+	int success = sscanf(string, "%hhd", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_uchar(const char *string, unsigned char *val)
+{
+	int success = sscanf(string, "%hhu", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_short(const char *string, short *val)
+{
+	int success = sscanf(string, "%hd", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_ushort(const char *string, unsigned short *val)
+{
+	int success = sscanf(string, "%hu", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_int(const char *string, int *val)
+{
+	int success = sscanf(string, "%d", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_uint(const char *string, unsigned int *val)
+{
+	int success = sscanf(string, "%u", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_long(const char *string, long *val)
+{
+	int success = sscanf(string, "%ld", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_ulong(const char *string, unsigned long *val)
+{
+	int success = sscanf(string, "%lu", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_longlong(const char *string, long long *val)
+{
+	int success = sscanf(string, "%lld", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_ulonglong(const char *string, unsigned long long *val)
+{
+	int success = sscanf(string, "%llu", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_float(const char *string, float *val)
+{
+	int success = sscanf(string, "%f", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_double(const char *string, double *val)
+{
+	int success = sscanf(string, "%lf", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_longdouble(const char *string, long double *val)
+{
+	int success = sscanf(string, "%Lf", val);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_zstr_address(const char *string, void *addr)
+{
+	// TODO: figure out how to portably find address size.
+	int success = sscanf(string, "%lx", (unsigned long *) addr);
+
+	return success == 1 ? 0 : -1;
+}
+
+static int parse_value(enum proctal_command_value_type type, const char *string, void **value)
+{
+	// This fits for all types for now.
+	*value = malloc(16);
+
+	switch (type) {
+	case PROCTAL_COMMAND_VALUE_TYPE_CHAR:
+		if (parse_zstr_char(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_UCHAR:
+		if (parse_zstr_uchar(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_SCHAR:
+		if (parse_zstr_schar(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_SHORT:
+		if (parse_zstr_short(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_USHORT:
+		if (parse_zstr_ushort(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_INT:
+		if (parse_zstr_int(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_UINT:
+		if (parse_zstr_uint(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONG:
+		if (parse_zstr_long(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_ULONG:
+		if (parse_zstr_ulong(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONGLONG:
+		if (parse_zstr_longlong(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_ULONGLONG:
+		if (parse_zstr_ulonglong(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_FLOAT:
+		if (parse_zstr_float(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_DOUBLE:
+		if (parse_zstr_double(string, *value)) {
+			return -1;
+		}
+		break;
+	case PROCTAL_COMMAND_VALUE_TYPE_LONGDOUBLE:
+		if (parse_zstr_longdouble(string, *value)) {
+			return -1;
+		}
+		break;
+	default:
 		return -1;
 	}
 
 	return 0;
 }
 
-int parse_lstr_address(const char *string, size_t length, void **addr)
-{
-	// Temporary.
-	errno = 0;
-	*addr = (void *) strtol(string, NULL, 16);
-
-	if (errno != 0) {
-		return -1;
-	}
-
-	return 0;
-}
-
-int parse_zstr_int(const char *string, int *i)
-{
-	return parse_lstr_int(string, strlen(string), i);
-}
-
-int parse_zstr_address(const char *string, void *addr)
-{
-	return parse_lstr_address(string, strlen(string), addr);
-}
-
-enum proctal_command_value_type yuck_arg_type_to_proctal_command_value_type(const char *arg)
+static enum proctal_command_value_type yuck_arg_type_to_proctal_command_value_type(const char *arg)
 {
 	struct type {
 		enum proctal_command_value_type type;
@@ -121,7 +275,7 @@ enum proctal_command_value_type yuck_arg_type_to_proctal_command_value_type(cons
 	return PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN;
 }
 
-int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal_command_read_arg *proctal_command_arg)
+static int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal_command_read_arg *proctal_command_arg)
 {
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
 		fputs("Wrong command\n", stderr);
@@ -152,7 +306,7 @@ int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal_comman
 	return 0;
 }
 
-int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_command_write_arg *proctal_command_arg)
+static int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_command_write_arg *proctal_command_arg)
 {
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
 		fputs("Wrong command\n", stderr);
@@ -180,7 +334,7 @@ int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_comma
 		proctal_command_arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
 	}
 
-	if (parse_zstr_int(yuck_arg->args[2], &proctal_command_arg->value)) {
+	if (parse_value(proctal_command_arg->type, yuck_arg->args[2], &proctal_command_arg->value)) {
 		fputs("Invalid value.\n", stderr);
 		return -1;
 	}
@@ -190,7 +344,7 @@ int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_comma
 
 int main(int argc, char **argv)
 {
- 	yuck_t argp;
+	yuck_t argp;
 
 	if (yuck_parse(&argp, argc, argv) != 0) {
 		// Yuck's error messages are fine for now. Just end it here.
