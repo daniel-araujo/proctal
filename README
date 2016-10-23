@@ -48,11 +48,11 @@ Linking dynamically or statically to libproctal:
 
 ### CLI
 
-Command used to read a value at <address> in process <pid>.
+Command used to read a value:.
 
 	$ proctal read [options] <pid> <address>
 
-Command used to write <value> at <address> in process <pid>.
+Command used to write a value.
 
 	$ proctal write [options] <pid> <address> <value>
 
