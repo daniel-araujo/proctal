@@ -19,8 +19,8 @@ Assuming `22002` is a process id (PID) and `1803acc` is an address.
 
 ### C library
 
-A little program that takes a process id (PID) and an address to an integer
-value as arguments and reads the value then increments by 1 each time it's run.
+A program that takes a process id (PID) and an address to an integer value as
+arguments and reads the value then increments by 1 each time it's run.
 
 	#include <stdio.h>
 	#include <sys/types.h>
