@@ -75,8 +75,8 @@ on Linux:
 	$ make
 	$ make install
 
-The configure script is very powerful for defining how you want Proctal to be
-compiled and installed. For more information type `./configure -h`.
+The configure script allows you to define how you want Proctal to be compiled
+and installed. For more information type `./configure -h`.
 
 
 ## License
