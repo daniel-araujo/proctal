@@ -1,13 +1,19 @@
 Usage: proctal
-The process manipulator.
+Accesses the address space of a running program.
 
   -h, --help            Display this help and exit.
   -V, --version         Output version information and exit.
 
-Usage: proctal write [pid] [address] [value]
-Writes to the process' memory.
+Usage: proctal read
+Reads values from the address space of a running program.
 
-  -t, --type=TYPE       Type of value. TYPE can be:
+Example:
+        proctal read --pid=12345 --address=1c09346
+
+  -p, --pid=PID         Process ID of a running program.
+  -a, --address=ADDR    Start address of value to read.
+  -t, --type=TYPE       Type of value. If omitted, TYPE is implicitly uchar.
+                        TYPE can be one of:
                           char
                           uchar
                           schar
@@ -23,10 +29,16 @@ Writes to the process' memory.
                           double
                           longdouble
 
-Usage: proctal read [pid] [address]
-Reads from the process' memory.
+Usage: proctal write VALUE
+Writes values to the address space of a running program.
 
-  -t, --type=TYPE       Type of value. This determines the size.
+Example:
+        proctal write --pid=12345 --address=1c09346 99
+
+  -p, --pid=PID         Process ID of a running program.
+  -a, --address=ADDR    Start address where value will be written.
+  -t, --type=TYPE       Type of value. If omitted, TYPE is implicitly uchar.
+                        TYPE can be one of:
                           char
                           uchar
                           schar

@@ -1,27 +1,25 @@
 # Proctal
 
-Manipulates the address space of a running program on Linux.
-
-Writes and reads values from memory.
-
-Comes with a command line interface and a C library.
+Proctal provides a command line interface and a C library to manipulate the
+address space of a running program on Linux. It allows you to read and write
+values from a process' memory.
 
 
 ## Example
 
 ### CLI
 
-Assuming `22002` is a process id (PID) and `1803acc` is an address.
+Assuming `22002` is a Process ID (PID) and `1803acc` is an address.
 
-	$ proctal read 22002 1803acc
+	$ proctal read --pid=22002 --address=1803acc
 	123
-	$ proctal write 22002 1803acc 124
-	$ proctal read 22002 1803acc
+	$ proctal write --pid=22002 --address=1803acc 124
+	$ proctal read -p 22002 -a 1803acc
 	124
 
 ### C library
 
-A program that takes a process id (PID) and an address to an integer value as
+A program that takes a Process ID (PID) and an address to an integer value as
 arguments and reads the value then increments by 1 each time it's run.
 
 	#include <stdio.h>
@@ -87,15 +85,12 @@ arguments and reads the value then increments by 1 each time it's run.
 
 ### CLI
 
-Command used to read a value:
+The command line interface can be used in the following ways:
 
-	$ proctal read [options] <pid> <address>
+	proctal read [--type=<type>] --pid=<pid> --address=<address>
+	proctal write [--type=<type>] --pid=<pid> --address=<address> <value>
 
-Command used to write a value:
-
-	$ proctal write [options] <pid> <address> <value>
-
-Passing --help in [options] will print more usage details.
+For more details run `proctal -h`.
 
 
 ### C library
