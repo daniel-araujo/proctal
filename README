@@ -2,6 +2,8 @@
 
 Manipulates the address space of a running program on Linux.
 
+Writes and reads values from memory.
+
 Comes with a command line interface and a C library.
 
 
