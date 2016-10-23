@@ -9,7 +9,7 @@ Comes with a command line interface and a C library.
 
 ### CLI
 
-Having acquired the right permissions to fiddle with running programs (root):
+Assuming `22002` is a process id (PID) and `1803acc` is an address.
 
 	$ proctal read 22002 1803acc
 	123
@@ -19,26 +19,63 @@ Having acquired the right permissions to fiddle with running programs (root):
 
 ### C library
 
-Linking dynamically or statically to libproctal:
+A little program that takes a process id (PID) and an address to an integer
+value as arguments and reads the value then increments by 1 each time it's run.
 
-	// Declares the libraries' functions.
+	#include <stdio.h>
+	#include <sys/types.h>
+
+	// Declares proctal's functions.
 	#include <proctal.h>
 
 	int main (int argc, char **argv)
 	{
-		int val;
-
-		// Attempting to read an int from an other process.
-		if (proctal_read_int(22002, (void *) 0xBEEF, &val) != 0) {
-			return 1; // Failed to read.
+		if (argc == 1) {
+			printf("Usage: %s <pid> <address>\n", argv[0]);
+			return 0;
+		} else if (argc != 3) {
+			fprintf(stderr, "Incorrect number of arguments.\n");
+			return 1;
 		}
 
-		val += 1;
+		pid_t pid;
 
-		// Attempting to write an int to an other process.
-		if (proctal_write_int(22002, (void *) 0xBEEF, val) != 0) {
-			return 1; // Failed to write.
+		if (sscanf(argv[1], "%hd", &pid) != 1) {
+			fprintf(stderr, "Failed to parse process id.\n");
+			return 1;
 		}
+
+		void *addr;
+
+		if (sscanf(argv[2], "%lx", (unsigned long *) &addr) != 1) {
+			fprintf(stderr, "Failed to parse address.\n");
+			return 1;
+		}
+
+		int read;
+
+		// Attempts to read an int from an other process. May fail if
+		// your program does not have permission to access the address
+		// space of other processes.
+		if (proctal_read_int(pid, addr, &read)) {
+			fprintf(stderr, "Failed to read from %p of process %d.\n", addr, pid);
+			return 1;
+		}
+
+		printf("Read %d from address %p of process %d.\n", read, addr, pid);
+
+		// Just going to increment the read value.
+		int write = read + 1;
+
+		// Attempts to write an int to an other process. May fail if
+		// your program does not have permission to access the address
+		// space of other processes.
+		if (proctal_write_int(pid, addr, write)) {
+			fprintf(stderr, "Failed to write to %p of process %d.\n", addr, pid);
+			return 1;
+		}
+
+		printf("Written %d to address %p to process %d.\n", write, addr, pid);
 
 		return 0;
 	}
