@@ -68,12 +68,15 @@ Available functions are documented in the header file.
 
 ## Installation
 
-Proctal provides a 3 step installation process commonly employed by Linux
-C/C++ programs:
+Proctal provides a 3 step installation process employed by many C/C++ programs
+on Linux:
 
 	$ ./configure
 	$ make
 	$ make install
+
+The configure script is very powerful for defining how you want Proctal to be
+compiled and installed. For more information type `./configure -h`.
 
 
 ## License
