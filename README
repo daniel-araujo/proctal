@@ -56,7 +56,7 @@ Command used to write a value.
 
 	$ proctal write [options] <pid> <address> <value>
 
-Passing --help in [options] will explain every behavior.
+Passing --help in [options] will print more usage details.
 
 
 ### C library
