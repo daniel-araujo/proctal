@@ -109,8 +109,9 @@ So with a build system in place, you can now start compiling by running the
 If you modify a source file and run `make` again it should detect the change
 and recompile again.
 
-For tinkering with the source code this is enough. For more details on what
-you can do with the autotools read the manuals over at gnu.org.[1]
+For tinkering with the source code this is the least you need to know about
+the build system. For more details on what you can do with the autotools read
+the manuals over at gnu.org.[1]
 
 
 ## License
