@@ -90,7 +90,9 @@ The command line interface can be used in the following ways:
 	proctal read [--type=<type>] --pid=<pid> --address=<address>
 	proctal write [--type=<type>] --pid=<pid> --address=<address> <value>
 
-For more details run `proctal -h`.
+For more details run `proctal -h` or read the man page:
+
+	man 1 proctal
 
 
 ### C library
