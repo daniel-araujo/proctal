@@ -75,7 +75,7 @@ arguments and reads the value then increments by 1 each time it's run.
 			return 1;
 		}
 
-		printf("Written %d to address %p to process %d.\n", write, addr, pid);
+		printf("Written %d to address %p of process %d.\n", write, addr, pid);
 
 		return 0;
 	}
