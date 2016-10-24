@@ -5,6 +5,7 @@ bin_PROGRAMS = proctal
 lib_LIBRARIES = libproctal.a
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/proctal.h
+dist_man_MANS = src/proctal.1
 
 # Cli tool.
 proctal_SOURCES = \
@@ -38,3 +39,7 @@ src/proctal-main.$(OBJEXT): src/args.yucc
 # Generates argument parsing code.
 src/args.yucc: Makefile $(srcdir)/src/args.yuck
 	$(YUCK) gen --no-auto-flags --no-auto-actions $(srcdir)/src/args.yuck -o $@
+
+# Generates man page.
+src/proctal.1: Makefile $(srcdir)/src/args.yuck
+	$(YUCK) genman $(srcdir)/src/args.yuck -o $@
