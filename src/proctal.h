@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <sys/types.h>
 
+typedef struct proctal_search_state *proctal_search_state;
+typedef struct proctal_search_options *proctal_search_options;
+
 /*
  * Reads a specified length of characters starting from an address in an other
  * process' memory space. This function assumes it can safely write the same
@@ -61,5 +64,37 @@ int proctal_write_ulonglong(pid_t pid, void *addr, unsigned long long in);
 int proctal_write_float(pid_t pid, void *addr, float in);
 int proctal_write_double(pid_t pid, void *addr, double in);
 int proctal_write_longdouble(pid_t pid, void *addr, long double in);
+
+/*
+ * Searches for values in the address space of a process.
+ *
+ * You need to:
+ *     - Pass the Process ID of the running program.
+ *     - A search state object. This keeps track of the progress. Call
+ *     proctal_search_state_create() for a fresh state. Don't forget to call
+ *     proctal_search_state_delete() when you're finished.
+ *     - A search options object. This is what tells the function which values
+ *     you're looking for. Call proctal_search_options_create() and then the
+ *     filter methods you're interested in. Don't forget to call
+ *     proctal_search_options_delete() when you're done.
+ *     - An address where the function will store the address of a finding.
+ *     - An address where the function will store the value of a finding. You
+ *     need to allocate enough space depending on the size of the values you're
+ *     looking for.
+ *
+ * This function will return 1 each time it finds a matching value; the address
+ * and the value arguments will be written. Once it ends the search it will
+ * return 0.
+ */
+int proctal_search(
+	pid_t pid,
+	proctal_search_state state,
+	proctal_search_options options,
+	void **addr,
+	void *value);
+
+proctal_search_options proctal_search_options_create();
+
+void proctal_search_options_delete(proctal_search_options options);
 
 #endif /* PROCTAL_H */

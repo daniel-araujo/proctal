@@ -35,7 +35,7 @@ Writes values to the address space of a running program.
 Example:
         proctal write --pid=12345 --address=1c09346 99
 
-  -p, --pid=PID         Process ID of a running program.
+  -p, --pid=pid         process id of a running program.
   -a, --address=ADDR    Start address where value will be written.
   -t, --type=TYPE       Type of value. If omitted, TYPE is implicitly uchar.
                         TYPE can be one of:
@@ -53,3 +53,43 @@ Example:
                           float
                           double
                           longdouble
+
+Usage: proctal search
+Searches for values in the address space of a running program.
+
+Example:
+        proctal search -type=int --pid=12345 --address=1c09346 --eq 12
+        d32428          12
+        d4ccc4          12
+        d80984          12
+        dc234c          12
+        [...]
+
+  -p, --pid=pid         process id of a running program.
+  -t, --type=TYPE       Type of value. If omitted, TYPE is implicitly uchar.
+                        TYPE can be one of:
+                          char
+                          uchar
+                          schar
+                          short
+                          ushort
+                          int
+                          uint
+                          long
+                          ulong
+                          longlong
+                          ulonglong
+                          float
+                          double
+                          longdouble
+  --eq=VAL              Equal VAL
+  --ne=VAL              Not equal to VAL
+  --gt=VAL              Greater than VAL
+  --gte=VAL             Greater than or equal to VAL
+  --lt=VAL              Less than VAL
+  --lte=VAL             Less than or equal to VAL
+  --inc=VAL             Incremented by VAL
+  --dec=VAL             Decremented by VAL
+  --unchanged           Value did not change from previous scan
+  --increased           Value increased from previous scan
+  --decreased           Value decreased from previous scan
