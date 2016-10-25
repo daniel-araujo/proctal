@@ -4,6 +4,8 @@ Proctal provides a command line interface and a C library to manipulate the
 address space of a running program on Linux. It allows you to read and write
 values from a process' memory.
 
+**Note:** This is work in progress and things may change over time.
+
 
 ## Example
 
