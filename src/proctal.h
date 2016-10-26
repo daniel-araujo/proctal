@@ -7,6 +7,9 @@
 typedef struct proctal_search_state *proctal_search_state;
 typedef struct proctal_search_options *proctal_search_options;
 
+typedef void *(*proctal_malloc)(size_t);
+typedef void (*proctal_free)(void *);
+
 /*
  * Reads a specified length of characters starting from an address in an other
  * process' memory space. This function assumes it can safely write the same
@@ -96,5 +99,18 @@ int proctal_search(
 proctal_search_options proctal_search_options_create();
 
 void proctal_search_options_delete(proctal_search_options options);
+
+/*
+ * Sets the memory allocator/deallocator used for internal data structures.
+ *
+ * If never called or passed NULL, will use the version of malloc/free that the
+ * library was linked to.
+ *
+ * These functions must be called before any other function of the library so
+ * as to avoid a deallocator being called with an address returned by a
+ * different allocator.
+ */
+void proctal_set_malloc(proctal_malloc new);
+void proctal_set_free(proctal_free new);
 
 #endif /* PROCTAL_H */

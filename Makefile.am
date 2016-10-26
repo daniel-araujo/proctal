@@ -21,7 +21,9 @@ libproctal_a_SOURCES = \
 	src/write.c \
 	src/read.c \
 	src/linux.h \
-	src/linux.c
+	src/linux.c \
+	src/alloc.h \
+	src/alloc.c
 libproctal_a_CFLAGS = # Forcing renamed objects.
 
 # Shared library.
