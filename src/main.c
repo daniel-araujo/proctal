@@ -362,6 +362,26 @@ static int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct procta
 	return 0;
 }
 
+static int yuck_arg_to_proctal_command_search_arg(yuck_t *yuck_arg, struct proctal_command_search_arg *proctal_command_arg)
+{
+	if (yuck_arg->cmd != PROCTAL_CMD_SEARCH) {
+		fputs("Wrong command.\n", stderr);
+		return -1;
+	}
+
+	if (yuck_arg->search.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		return -1;
+	}
+
+	if (parse_zstr_int(yuck_arg->search.pid_arg, &proctal_command_arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		return -1;
+	}
+
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
 	yuck_t argp;
@@ -393,6 +413,14 @@ int main(int argc, char **argv)
 		}
 
 		proctal_command_read(&arg);
+	} else if (argp.cmd == PROCTAL_CMD_SEARCH) {
+		struct proctal_command_search_arg arg;
+
+		if (yuck_arg_to_proctal_command_search_arg(&argp, &arg) != 0) {
+			goto bad_parse;
+		}
+
+		proctal_command_search(&arg);
 	}
 
 	yuck_free(&argp);

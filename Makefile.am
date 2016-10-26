@@ -20,6 +20,7 @@ libproctal_a_SOURCES = \
 	src/proctal.h \
 	src/write.c \
 	src/read.c \
+	src/search.c \
 	src/linux.h \
 	src/linux.c \
 	src/alloc.h \

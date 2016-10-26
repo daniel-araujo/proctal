@@ -86,8 +86,8 @@ int proctal_write_longdouble(pid_t pid, void *addr, long double in);
  *     looking for.
  *
  * This function will return 1 each time it finds a matching value; the address
- * and the value arguments will be written. Once it ends the search it will
- * return 0.
+ * and the value arguments can be read. Once it ends the search it will return
+ * 0. On failure it returns -1.
  */
 int proctal_search(
 	pid_t pid,
@@ -96,7 +96,13 @@ int proctal_search(
 	void **addr,
 	void *value);
 
+proctal_search_state proctal_search_state_create();
+
+void proctaL_search_state_delete(proctal_search_state state);
+
 proctal_search_options proctal_search_options_create();
+
+void proctal_search_options_set_size(size_t size);
 
 void proctal_search_options_delete(proctal_search_options options);
 

@@ -197,3 +197,18 @@ void proctal_command_write(struct proctal_command_write_arg *arg)
 fail:
 	fprintf(stderr, "Failed to write to memory.\n");
 }
+
+void proctal_command_search(struct proctal_command_search_arg *arg)
+{
+	proctal_search_state state = proctal_search_state_create();
+	proctal_search_options options = proctal_search_options_create();
+	void *addr;
+	char value[20];
+
+	while (proctal_search(arg->pid, state, options, &addr, (void *) &value) == 1) {
+		printf("%p %d", addr, (int) *value);
+	}
+
+	proctal_search_state_delete(state);
+	proctal_search_options_delete(options);
+}
