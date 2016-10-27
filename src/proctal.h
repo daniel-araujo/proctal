@@ -102,7 +102,13 @@ void proctal_search_state_delete(proctal_search_state state);
 
 proctal_search_options proctal_search_options_create();
 
-void proctal_search_options_set_size(size_t size);
+size_t proctal_search_options_size(proctal_search_options options);
+
+void proctal_search_options_set_size(proctal_search_options options, size_t size);
+
+size_t proctal_search_options_align(proctal_search_options options);
+
+void proctal_search_options_set_align(proctal_search_options options, size_t align);
 
 void proctal_search_options_delete(proctal_search_options options);
 

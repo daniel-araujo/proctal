@@ -202,6 +202,8 @@ void proctal_command_search(struct proctal_command_search_arg *arg)
 {
 	proctal_search_state state = proctal_search_state_create();
 	proctal_search_options options = proctal_search_options_create();
+	proctal_search_options_set_size(options, sizeof (int));
+	proctal_search_options_set_align(options, sizeof (int));
 	void *addr;
 	char value[20];
 
