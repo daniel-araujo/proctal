@@ -7,7 +7,8 @@
 struct proctal_linux_mem_region {
 	void *start_addr;
 	void *end_addr;
-	char *path_name;
+	// This is not perfect.
+	char path[255];
 };
 
 const char *proctal_linux_proc_path(pid_t pid, const char *file);

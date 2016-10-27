@@ -206,7 +206,7 @@ void proctal_command_search(struct proctal_command_search_arg *arg)
 	char value[20];
 
 	while (proctal_search(arg->pid, state, options, &addr, (void *) &value) == 1) {
-		printf("%p %d", addr, (int) *value);
+		printf("%p %d\n", addr, (int) *value);
 	}
 
 	proctal_search_state_delete(state);

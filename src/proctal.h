@@ -98,7 +98,7 @@ int proctal_search(
 
 proctal_search_state proctal_search_state_create();
 
-void proctaL_search_state_delete(proctal_search_state state);
+void proctal_search_state_delete(proctal_search_state state);
 
 proctal_search_options proctal_search_options_create();
 
