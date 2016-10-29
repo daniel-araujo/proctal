@@ -362,24 +362,92 @@ static int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct procta
 	return 0;
 }
 
-static int yuck_arg_to_proctal_command_search_arg(yuck_t *yuck_arg, struct proctal_command_search_arg *proctal_command_arg)
+static struct proctal_command_search_arg *create_proctal_command_search_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
+	struct proctal_command_search_arg *arg = malloc(sizeof *arg);
+
 	if (yuck_arg->cmd != PROCTAL_CMD_SEARCH) {
 		fputs("Wrong command.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->search.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	if (parse_zstr_int(yuck_arg->search.pid_arg, &proctal_command_arg->pid)) {
+	if (parse_zstr_int(yuck_arg->search.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	return 0;
+	arg->type = yuck_arg_type_to_proctal_command_value_type(yuck_arg->search.type_arg);
+
+	if (arg->type == PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN) {
+		arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
+	}
+
+#define GET_COMPARE_ARG(NAME) \
+	if (yuck_arg->search.NAME##_arg != NULL) { \
+		arg->NAME = 1; \
+		if (parse_value(arg->type, yuck_arg->search.NAME##_arg, &arg->NAME##_value)) { \
+			fputs("Invalid value for --NAME.\n", stderr); \
+			free(arg); \
+			return NULL; \
+		} \
+	} else { \
+		arg->NAME = 0; \
+	}
+
+	GET_COMPARE_ARG(eq);
+	GET_COMPARE_ARG(ne);
+	GET_COMPARE_ARG(gt);
+	GET_COMPARE_ARG(gte);
+	GET_COMPARE_ARG(lt);
+	GET_COMPARE_ARG(lte);
+	GET_COMPARE_ARG(inc);
+	GET_COMPARE_ARG(dec);
+
+#undef GET_COMPARE_ARG
+
+#define GET_OPTION_ARG(NAME) \
+	if (yuck_arg->search.NAME##_flag) { \
+		arg->NAME = 1; \
+	} else { \
+		arg->NAME = 0; \
+	}
+
+	GET_OPTION_ARG(increased);
+	GET_OPTION_ARG(decreased);
+	GET_OPTION_ARG(unchanged);
+
+#undef GET_OPTION_ARG
+
+	return arg;
+}
+
+static void destroy_proctal_command_search_arg_from_yuck_arg(struct proctal_command_search_arg *arg)
+{
+#define DESTROY_COMPARE_ARG(PROCTALNAME) \
+	if (arg->PROCTALNAME) { \
+		free(arg->PROCTALNAME##_value); \
+	}
+
+	DESTROY_COMPARE_ARG(eq);
+	DESTROY_COMPARE_ARG(ne);
+	DESTROY_COMPARE_ARG(gt);
+	DESTROY_COMPARE_ARG(gte);
+	DESTROY_COMPARE_ARG(lt);
+	DESTROY_COMPARE_ARG(lte);
+	DESTROY_COMPARE_ARG(inc);
+	DESTROY_COMPARE_ARG(dec);
+
+#undef DESTROY_COMPARE_ARG
+
+	free(arg);
 }
 
 int main(int argc, char **argv)
@@ -414,13 +482,15 @@ int main(int argc, char **argv)
 
 		proctal_command_read(&arg);
 	} else if (argp.cmd == PROCTAL_CMD_SEARCH) {
-		struct proctal_command_search_arg arg;
+		struct proctal_command_search_arg *arg = create_proctal_command_search_arg_from_yuck_arg(&argp);
 
-		if (yuck_arg_to_proctal_command_search_arg(&argp, &arg) != 0) {
+		if (arg == NULL) {
 			goto bad_parse;
 		}
 
-		proctal_command_search(&arg);
+		proctal_command_search(arg);
+
+		destroy_proctal_command_search_arg_from_yuck_arg(arg);
 	}
 
 	yuck_free(&argp);

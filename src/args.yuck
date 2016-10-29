@@ -66,6 +66,8 @@ Example:
         [...]
 
   -p, --pid=pid         process id of a running program.
+  -i, --input           gets addresses and values from a
+                        scan of the same type.
   -t, --type=TYPE       Type of value. If omitted, TYPE is implicitly uchar.
                         TYPE can be one of:
                           char
