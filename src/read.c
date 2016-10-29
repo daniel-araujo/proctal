@@ -2,20 +2,20 @@
 #include <stdio.h>
 
 #include "proctal.h"
-#include "linux.h"
+#include "internal.h"
 
-#define FORWARD_NATIVE(PID, ADDR, VAL) \
-	proctal_read(PID, ADDR, (char *) VAL, sizeof *VAL);
+#define FORWARD_NATIVE(P, ADDR, VAL) \
+	proctal_read(P, ADDR, (char *) VAL, sizeof *VAL);
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	int proctal_read_##SUFFIX(pid_t pid, void *addr, TYPE *out) \
+	int proctal_read_##SUFFIX(proctal p, void *addr, TYPE *out) \
 	{ \
-		return FORWARD_NATIVE(pid, addr, out); \
+		return FORWARD_NATIVE(p, addr, out); \
 	}
 
-int proctal_read(pid_t pid, void *addr, char *out, size_t size)
+int proctal_read(proctal p, void *addr, char *out, size_t size)
 {
-	FILE *f = fopen(proctal_linux_proc_path(pid, "mem"), "r");
+	FILE *f = proctal_memr(p);
 
 	if (f == NULL) {
 		return -1;
@@ -24,8 +24,6 @@ int proctal_read(pid_t pid, void *addr, char *out, size_t size)
 	fseek(f, (long) addr, SEEK_SET);
 
 	long i = fread(out, size, 1, f);
-
-	fclose(f);
 
 	if (i != 1) {
 		return -1;

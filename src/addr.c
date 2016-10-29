@@ -2,12 +2,12 @@
 #include <stdio.h>
 
 #include "proctal.h"
-#include "alloc.h"
+#include "internal.h"
 #include "linux.h"
 
 struct proctal_addr_iter {
-	// Process ID.
-	pid_t pid;
+	// Proctal instance.
+	proctal p;
 	// Start address of the next call.
 	void *curr_addr;
 	// Memory mappings of the address space.
@@ -82,7 +82,7 @@ static inline int next_address(proctal_addr_iter iter)
 
 static inline int start(proctal_addr_iter iter)
 {
-	iter->maps = fopen(proctal_linux_proc_path(iter->pid, "maps"), "r");
+	iter->maps = fopen(proctal_linux_proc_path(proctal_pid(iter->p), "maps"), "r");
 
 	if (iter->maps == NULL) {
 		return -1;
@@ -97,15 +97,15 @@ static inline int start(proctal_addr_iter iter)
 	return 0;
 }
 
-proctal_addr_iter proctal_addr_iter_create(pid_t pid)
+proctal_addr_iter proctal_addr_iter_create(proctal p)
 {
-	proctal_addr_iter iter = proctal_alloc(sizeof *iter);
+	proctal_addr_iter iter = proctal_alloc(p, sizeof *iter);
 
 	if (iter == NULL) {
 		return iter;
 	}
 
-	iter->pid = pid;
+	iter->p = p; 
 	iter->curr_addr = NULL;
 	iter->maps = NULL;
 	iter->size = 1;
@@ -116,7 +116,7 @@ proctal_addr_iter proctal_addr_iter_create(pid_t pid)
 
 void proctal_addr_iter_destroy(proctal_addr_iter iter)
 {
-	proctal_dealloc(iter);
+	proctal_dealloc(iter->p, iter);
 }
 
 size_t proctal_addr_iter_size(proctal_addr_iter iter)

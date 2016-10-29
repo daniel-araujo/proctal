@@ -18,13 +18,13 @@ proctal_CFLAGS = -Isrc -Wall -fmax-errors=10
 # Static library.
 libproctal_a_SOURCES = \
 	src/proctal.h \
+	src/proctal.c \
+	src/global.c \
 	src/write.c \
 	src/read.c \
 	src/addr.c \
 	src/linux.h \
-	src/linux.c \
-	src/alloc.h \
-	src/alloc.c
+	src/linux.c
 libproctal_a_CFLAGS = # Forcing renamed objects.
 
 # Shared library.

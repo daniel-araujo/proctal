@@ -54,6 +54,15 @@ arguments and reads the value then increments by 1 each time it's run.
 			return 1;
 		}
 
+		proctal p = proctal_create();
+
+		if (p == NULL) {
+			fprintf(stderr, "Failed to create a Proctal instance.\n");
+			return 1;
+		}
+
+		proctal_set_pid(pid);
+
 		int read;
 
 		// Attempts to read an int from an other process. May fail if

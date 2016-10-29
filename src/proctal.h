@@ -4,15 +4,26 @@
 #include <stddef.h>
 #include <sys/types.h>
 
+typedef struct proctal *proctal;
 typedef struct proctal_addr_iter *proctal_addr_iter;
 
-typedef void *(*proctal_malloc)(size_t);
-typedef void (*proctal_free)(void *);
+/*
+ * Creates and deletes an instance of Proctal.
+ */
+proctal proctal_create();
+void proctal_destroy(proctal p);
 
 /*
- * Reads a specified length of characters starting from an address in an other
- * process' memory space. This function assumes it can safely write the same
- * length to the given buffer.
+ * Sets and gets the Process ID for that instance of Proctal.
+ *
+ * When the returned value is 0, then that means no Process ID is associated.
+ */
+void proctal_set_pid(proctal p, pid_t pid);
+pid_t proctal_pid(proctal p);
+
+/*
+ * Reads a specified length of characters starting from the given address. This
+ * function assumes it can safely write the same length to the given buffer.
  *
  * There are also convenience functions for reading native C types.
  *
@@ -22,21 +33,21 @@ typedef void (*proctal_free)(void *);
  * On failure will return a non-zero value. The contents of the given buffer
  * may or may not have been modifed.
  */
-int proctal_read(pid_t pid, void *addr, char *out, size_t size);
-int proctal_read_char(pid_t pid, void *addr, char *out);
-int proctal_read_schar(pid_t pid, void *addr, signed char *out);
-int proctal_read_uchar(pid_t pid, void *addr, unsigned char *out);
-int proctal_read_short(pid_t pid, void *addr, short *out);
-int proctal_read_ushort(pid_t pid, void *addr, unsigned short *out);
-int proctal_read_int(pid_t pid, void *addr, int *out);
-int proctal_read_uint(pid_t pid, void *addr, unsigned int *out);
-int proctal_read_long(pid_t pid, void *addr, long *out);
-int proctal_read_ulong(pid_t pid, void *addr, unsigned long *out);
-int proctal_read_longlong(pid_t pid, void *addr, long long *out);
-int proctal_read_ulonglong(pid_t pid, void *addr, unsigned long long *out);
-int proctal_read_float(pid_t pid, void *addr, float *out);
-int proctal_read_double(pid_t pid, void *addr, double *out);
-int proctal_read_longdouble(pid_t pid, void *addr, long double *out);
+int proctal_read(proctal p, void *addr, char *out, size_t size);
+int proctal_read_char(proctal p, void *addr, char *out);
+int proctal_read_schar(proctal p, void *addr, signed char *out);
+int proctal_read_uchar(proctal p, void *addr, unsigned char *out);
+int proctal_read_short(proctal p, void *addr, short *out);
+int proctal_read_ushort(proctal p, void *addr, unsigned short *out);
+int proctal_read_int(proctal p, void *addr, int *out);
+int proctal_read_uint(proctal p, void *addr, unsigned int *out);
+int proctal_read_long(proctal p, void *addr, long *out);
+int proctal_read_ulong(proctal p, void *addr, unsigned long *out);
+int proctal_read_longlong(proctal p, void *addr, long long *out);
+int proctal_read_ulonglong(proctal p, void *addr, unsigned long long *out);
+int proctal_read_float(proctal p, void *addr, float *out);
+int proctal_read_double(proctal p, void *addr, double *out);
+int proctal_read_longdouble(proctal p, void *addr, long double *out);
 
 /*
  * Writes a specified length of characters starting from an address in an other
@@ -51,21 +62,21 @@ int proctal_read_longdouble(pid_t pid, void *addr, long double *out);
  * may or may not have been partially written to the address space of the other
  * process.
  */
-int proctal_write(pid_t pid, void *addr, char *in, size_t size);
-int proctal_write_char(pid_t pid, void *addr, char in);
-int proctal_write_schar(pid_t pid, void *addr, signed char in);
-int proctal_write_uchar(pid_t pid, void *addr, unsigned char in);
-int proctal_write_short(pid_t pid, void *addr, short in);
-int proctal_write_ushort(pid_t pid, void *addr, unsigned short in);
-int proctal_write_int(pid_t pid, void *addr, int in);
-int proctal_write_uint(pid_t pid, void *addr, unsigned int in);
-int proctal_write_long(pid_t pid, void *addr, long in);
-int proctal_write_ulong(pid_t pid, void *addr, unsigned long in);
-int proctal_write_longlong(pid_t pid, void *addr, long long in);
-int proctal_write_ulonglong(pid_t pid, void *addr, unsigned long long in);
-int proctal_write_float(pid_t pid, void *addr, float in);
-int proctal_write_double(pid_t pid, void *addr, double in);
-int proctal_write_longdouble(pid_t pid, void *addr, long double in);
+int proctal_write(proctal p, void *addr, char *in, size_t size);
+int proctal_write_char(proctal p, void *addr, char in);
+int proctal_write_schar(proctal p, void *addr, signed char in);
+int proctal_write_uchar(proctal p, void *addr, unsigned char in);
+int proctal_write_short(proctal p, void *addr, short in);
+int proctal_write_ushort(proctal p, void *addr, unsigned short in);
+int proctal_write_int(proctal p, void *addr, int in);
+int proctal_write_uint(proctal p, void *addr, unsigned int in);
+int proctal_write_long(proctal p, void *addr, long in);
+int proctal_write_ulong(proctal p, void *addr, unsigned long in);
+int proctal_write_longlong(proctal p, void *addr, long long in);
+int proctal_write_ulonglong(proctal p, void *addr, unsigned long long in);
+int proctal_write_float(proctal p, void *addr, float in);
+int proctal_write_double(proctal p, void *addr, double in);
+int proctal_write_longdouble(proctal p, void *addr, long double in);
 
 /*
  * Iterates over every address of a process.
@@ -87,7 +98,7 @@ int proctal_write_longdouble(pid_t pid, void *addr, long double in);
  * to the same stage after a call to proctal_addr_iter_create while retaining
  * your custom configuration.
  */
-proctal_addr_iter proctal_addr_iter_create(pid_t pid);
+proctal_addr_iter proctal_addr_iter_create(proctal p);
 int proctal_addr_iter_next(proctal_addr_iter iter, void **addr);
 void proctal_addr_iter_destroy(proctal_addr_iter iter);
 void proctal_addr_iter_restart(proctal_addr_iter iter);
@@ -114,6 +125,17 @@ void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
 /*
  * Sets the memory allocator/deallocator used for internal data structures.
  *
+ * These functions should only be called right after creating an instance of
+ * Proctal so as to avoid a deallocator being called with an address returned
+ * by a different allocator.
+ */
+void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
+void proctal_set_free(proctal p, void (*free)(void *));
+
+/*
+ * Global counterparts. These define the values that are used by default when
+ * an instance of Proctal is created.
+ *
  * If never called or passed NULL, will use the version of malloc/free that the
  * library was linked to.
  *
@@ -121,7 +143,7 @@ void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
  * as to avoid a deallocator being called with an address returned by a
  * different allocator.
  */
-void proctal_set_malloc(proctal_malloc new);
-void proctal_set_free(proctal_free new);
+void proctal_global_set_malloc(void *(*malloc)(size_t));
+void proctal_global_set_free(void (*free)(void *));
 
 #endif /* PROCTAL_H */
