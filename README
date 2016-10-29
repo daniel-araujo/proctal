@@ -68,7 +68,7 @@ arguments and reads the value then increments by 1 each time it's run.
 		// Attempts to read an int from an other process. May fail if
 		// your program does not have permission to access the address
 		// space of other processes.
-		if (proctal_read_int(pid, addr, &read)) {
+		if (proctal_read_int(p, addr, &read)) {
 			fprintf(stderr, "Failed to read from %p of process %d.\n", addr, pid);
 			return 1;
 		}
@@ -81,7 +81,7 @@ arguments and reads the value then increments by 1 each time it's run.
 		// Attempts to write an int to an other process. May fail if
 		// your program does not have permission to access the address
 		// space of other processes.
-		if (proctal_write_int(pid, addr, write)) {
+		if (proctal_write_int(p, addr, write)) {
 			fprintf(stderr, "Failed to write to %p of process %d.\n", addr, pid);
 			return 1;
 		}
