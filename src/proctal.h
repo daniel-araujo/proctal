@@ -4,8 +4,7 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-typedef struct proctal_search_state *proctal_search_state;
-typedef struct proctal_search_options *proctal_search_options;
+typedef struct proctal_addr_iter *proctal_addr_iter;
 
 typedef void *(*proctal_malloc)(size_t);
 typedef void (*proctal_free)(void *);
@@ -69,48 +68,48 @@ int proctal_write_double(pid_t pid, void *addr, double in);
 int proctal_write_longdouble(pid_t pid, void *addr, long double in);
 
 /*
- * Searches for values in the address space of a process.
+ * Iterates over every address of a process.
  *
- * You need to:
- *     - Pass the Process ID of the running program.
- *     - A search state object. This keeps track of the progress. Call
- *     proctal_search_state_create() for a fresh state. Don't forget to call
- *     proctal_search_state_delete() when you're finished.
- *     - A search options object. This is what tells the function which values
- *     you're looking for. Call proctal_search_options_create() and then the
- *     filter methods you're interested in. Don't forget to call
- *     proctal_search_options_delete() when you're done.
- *     - An address where the function will store the address of a finding.
- *     - An address where the function will store the value of a finding. You
- *     need to allocate enough space depending on the size of the values you're
- *     looking for.
+ * Using the iterator is an elaborate process. You must first call
+ * proctal_addr_iter_create with a Process ID. It will return an opaque data
+ * structure that represents the iterator. With it you're allowed to call
+ * functions that alter the behavior of the iterator, like
+ * proctal_addr_iter_set_align and proctal_addr_iter_set_size.
  *
- * This function will return 1 each time it finds a matching value; the address
- * and the value arguments can be read. Once it ends the search it will return
- * 0. On failure it returns -1.
+ * With the iterator configured to your liking, you can query addresses by
+ * multiple calls to proctal_addr_iter_next. At this point you can no longer
+ * configure the behavior of the iterator. The function returns 0 on success, 1
+ * after the last successful call to the function had returned the last address
+ * and -1 on failure.
+ *
+ * Once you're done iterating, you can call proctal_addr_iter_finish to declare
+ * the iterator data structure as garbage or proctal_addr_iter_restart to get
+ * to the same stage after a call to proctal_addr_iter_create while retaining
+ * your custom configuration.
  */
-int proctal_search(
-	pid_t pid,
-	proctal_search_state state,
-	proctal_search_options options,
-	void **addr,
-	void *value);
+proctal_addr_iter proctal_addr_iter_create(pid_t pid);
+int proctal_addr_iter_next(proctal_addr_iter iter, void **addr);
+void proctal_addr_iter_destroy(proctal_addr_iter iter);
+void proctal_addr_iter_restart(proctal_addr_iter iter);
 
-proctal_search_state proctal_search_state_create();
+/*
+ * Sets and returns the alignment requirements of the addresses to be iterated.
+ *
+ * Attempting to set a new value after retriving an address with the iterator
+ * can cause undefined behavior. Don't do it.
+ */
+size_t proctal_addr_iter_align(proctal_addr_iter iter);
+void proctal_addr_iter_set_align(proctal_addr_iter iter, size_t align);
 
-void proctal_search_state_delete(proctal_search_state state);
-
-proctal_search_options proctal_search_options_create();
-
-size_t proctal_search_options_size(proctal_search_options options);
-
-void proctal_search_options_set_size(proctal_search_options options, size_t size);
-
-size_t proctal_search_options_align(proctal_search_options options);
-
-void proctal_search_options_set_align(proctal_search_options options, size_t align);
-
-void proctal_search_options_delete(proctal_search_options options);
+/*
+ * Sets and returns the size of the values pointed to by the addresses to be
+ * iterated.
+ *
+ * Attempting to set a new value after retriving an address with the iterator
+ * can cause undefined behavior. Don't do it.
+ */
+size_t proctal_addr_iter_size(proctal_addr_iter iter);
+void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.

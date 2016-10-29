@@ -200,17 +200,16 @@ fail:
 
 void proctal_command_search(struct proctal_command_search_arg *arg)
 {
-	proctal_search_state state = proctal_search_state_create();
-	proctal_search_options options = proctal_search_options_create();
-	proctal_search_options_set_size(options, sizeof (int));
-	proctal_search_options_set_align(options, sizeof (int));
-	void *addr;
-	char value[20];
+	proctal_addr_iter iter = proctal_addr_iter_create(arg->pid);
+	proctal_addr_iter_set_align(iter, sizeof (int));
+	proctal_addr_iter_set_size(iter, sizeof (int));
 
-	while (proctal_search(arg->pid, state, options, &addr, (void *) &value) == 1) {
-		printf("%p %d\n", addr, (int) *value);
+	void *addr;
+	while (proctal_addr_iter_next(iter, &addr) == 0) {
+		int i;
+		proctal_read_int(arg->pid, addr, &i);
+		printf("%p %d\n", addr, i);
 	}
 
-	proctal_search_state_delete(state);
-	proctal_search_options_delete(options);
+	proctal_addr_iter_destroy(iter);
 }
