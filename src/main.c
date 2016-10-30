@@ -316,50 +316,65 @@ static int yuck_arg_to_proctal_command_read_arg(yuck_t *yuck_arg, struct proctal
 	return 0;
 }
 
-static int yuck_arg_to_proctal_command_write_arg(yuck_t *yuck_arg, struct proctal_command_write_arg *proctal_command_arg)
+static struct proctal_command_write_arg *create_proctal_command_write_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
+	struct proctal_command_write_arg *arg = malloc(sizeof *arg);
+
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
 		fputs("Wrong command.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->nargs != 1) {
 		fputs("Wrong number of arguments.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->write.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	if (parse_zstr_int(yuck_arg->write.pid_arg, &proctal_command_arg->pid)) {
+	if (parse_zstr_int(yuck_arg->write.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->write.address_arg == NULL) {
 		fputs("OPTION -a, --address is required.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	if (parse_zstr_address(yuck_arg->write.address_arg, &proctal_command_arg->address)) {
+	if (parse_zstr_address(yuck_arg->write.address_arg, &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	proctal_command_arg->type = yuck_arg_type_to_proctal_command_value_type(yuck_arg->write.type_arg);
+	arg->type = yuck_arg_type_to_proctal_command_value_type(yuck_arg->write.type_arg);
 
-	if (proctal_command_arg->type == PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN) {
-		proctal_command_arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
+	if (arg->type == PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN) {
+		arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
 	}
 
-	if (parse_value(proctal_command_arg->type, yuck_arg->args[0], &proctal_command_arg->value)) {
+	if (parse_value(arg->type, yuck_arg->args[0], &arg->value)) {
 		fputs("Invalid value.\n", stderr);
-		return -1;
+		free(arg);
+		return NULL;
 	}
 
-	return 0;
+	return arg;
+}
+
+static void destroy_proctal_command_write_arg_from_yuck_arg(struct proctal_command_write_arg *arg)
+{
+	free(arg->value);
+	free(arg);
 }
 
 static struct proctal_command_search_arg *create_proctal_command_search_arg_from_yuck_arg(yuck_t *yuck_arg)
@@ -467,13 +482,15 @@ int main(int argc, char **argv)
 	} else if (argp.cmd == YUCK_NOCMD) {
 		yuck_auto_help(&argp);
 	} else if (argp.cmd == PROCTAL_CMD_WRITE) {
-		struct proctal_command_write_arg arg;
+		struct proctal_command_write_arg *arg = create_proctal_command_write_arg_from_yuck_arg(&argp);
 
-		if (yuck_arg_to_proctal_command_write_arg(&argp, &arg) != 0) {
+		if (arg == NULL) {
 			goto bad_parse;
 		}
 
-		proctal_command_write(&arg);
+		proctal_command_write(arg);
+
+		destroy_proctal_command_write_arg_from_yuck_arg(arg);
 	} else if (argp.cmd == PROCTAL_CMD_READ) {
 		struct proctal_command_read_arg arg;
 

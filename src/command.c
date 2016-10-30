@@ -310,9 +310,11 @@ void proctal_command_read(struct proctal_command_read_arg *arg)
 
 #undef ERROR_CHECKER
 
+	proctal_destroy(p);
 	return;
 
 fail:
+	proctal_destroy(p);
 	fprintf(stderr, "Failed to read memory.\n");
 }
 
@@ -377,11 +379,13 @@ void proctal_command_write(struct proctal_command_write_arg *arg)
 		goto fail;
 	}
 
+	proctal_destroy(p);
 	return;
 
 #undef ERROR_CHECKER
 
 fail:
+	proctal_destroy(p);
 	fprintf(stderr, "Failed to write to memory.\n");
 }
 
@@ -433,4 +437,5 @@ void proctal_command_search(struct proctal_command_search_arg *arg)
 	free(value);
 
 	proctal_addr_iter_destroy(iter);
+	proctal_destroy(p);
 }
