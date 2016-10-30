@@ -472,8 +472,11 @@ int main(int argc, char **argv)
 
 	if (yuck_parse(&argp, argc, argv) != 0) {
 		// Yuck's error messages are fine for now. Just end it here.
-		goto bad_parse;
+		yuck_free(&argp);
+		return 1;
 	}
+
+	int exit_code = 0;
 
 	if (argp.help_flag) {
 		yuck_auto_help(&argp);
@@ -485,38 +488,35 @@ int main(int argc, char **argv)
 		struct proctal_command_write_arg *arg = create_proctal_command_write_arg_from_yuck_arg(&argp);
 
 		if (arg == NULL) {
-			goto bad_parse;
+			yuck_free(&argp);
+			return 1;
 		}
 
-		proctal_command_write(arg);
+		exit_code = proctal_command_write(arg);
 
 		destroy_proctal_command_write_arg_from_yuck_arg(arg);
 	} else if (argp.cmd == PROCTAL_CMD_READ) {
 		struct proctal_command_read_arg arg;
 
 		if (yuck_arg_to_proctal_command_read_arg(&argp, &arg) != 0) {
-			goto bad_parse;
+			yuck_free(&argp);
+			return 1;
 		}
 
-		proctal_command_read(&arg);
+		exit_code = proctal_command_read(&arg);
 	} else if (argp.cmd == PROCTAL_CMD_SEARCH) {
 		struct proctal_command_search_arg *arg = create_proctal_command_search_arg_from_yuck_arg(&argp);
 
 		if (arg == NULL) {
-			goto bad_parse;
+			yuck_free(&argp);
+			return 1;
 		}
 
-		proctal_command_search(arg);
+		exit_code = proctal_command_search(arg);
 
 		destroy_proctal_command_search_arg_from_yuck_arg(arg);
 	}
 
 	yuck_free(&argp);
-
-	return 0;
-
-bad_parse:
-	yuck_free(&argp);
-
-	return 1;
+	return exit_code;
 }

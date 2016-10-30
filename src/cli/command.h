@@ -22,17 +22,18 @@ enum proctal_command_value_type {
 struct proctal_command_read_arg {
 	int pid;
 
-	enum proctal_command_value_type type;
-
 	void *address;
+
+	enum proctal_command_value_type type;
 };
 
 struct proctal_command_write_arg {
 	int pid;
 
+	void *address;
+
 	enum proctal_command_value_type type;
 
-	void *address;
 	void* value;
 };
 
@@ -92,10 +93,10 @@ struct proctal_command_search_arg {
 	int decreased;
 };
 
-void proctal_command_read(struct proctal_command_read_arg *arg);
+int proctal_command_read(struct proctal_command_read_arg *arg);
 
-void proctal_command_write(struct proctal_command_write_arg *arg);
+int proctal_command_write(struct proctal_command_write_arg *arg);
 
-void proctal_command_search(struct proctal_command_search_arg *arg);
+int proctal_command_search(struct proctal_command_search_arg *arg);
 
 #endif /* COMMAND_H */
