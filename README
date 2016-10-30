@@ -1,8 +1,8 @@
 # Proctal
 
 Proctal provides a command line interface and a C library to manipulate the
-address space of a running program on Linux. It allows you to read and write
-values from a process' memory.
+address space of a running program on Linux. It allows you to read, write and
+search values in memory.
 
 **Note:** This is work in progress and things may change over time.
 
@@ -11,13 +11,30 @@ values from a process' memory.
 
 ### CLI
 
-Assuming `22002` is a Process ID (PID) and `1803acc` is an address.
+Assuming `22002` is a Process ID (PID):
 
-	$ proctal read --pid=22002 --address=1803acc
-	123
-	$ proctal write --pid=22002 --address=1803acc 124
-	$ proctal read -p 22002 -a 1803acc
+	$ proctal search --pid=22002 > result
+
+	$ cat result
+	9a3654 40
+	acfa08 365
+	acfe90 394
+	b683f8 1055
+	b7d178 824
+	b84ab0 192
+	ba2e38 1264
+	[...]
+
+	$ proctal search --pid=22002 --gt=31 --lt=110 -i < result
+	9a3654 40
+	acfa08 109
+	b7d178 56
+
+	$ proctal write --pid=22002 --address=b7d178 124
+
+	$ proctal read --pid=22002 --address=b7d178
 	124
+
 
 ### C library
 
@@ -99,7 +116,13 @@ arguments and reads the value then increments by 1 each time it's run.
 The command line interface can be used in the following ways:
 
 	proctal read [--type=<type>] --pid=<pid> --address=<address>
+
 	proctal write [--type=<type>] --pid=<pid> --address=<address> <value>
+
+	proctal search [--type=<type>] [--eq=<val>] [--gt=<val>] [--gte=<val>]
+		[--lt=<val>] [--lte=<val>] [--inc=<val>] [--dec=<val>]
+		[--changed] [--unchanged] [--increased] [--decreased]
+		[--input] --pid=<pid> --address=<address>
 
 For more details run `proctal -h` or read the man page:
 
@@ -119,7 +142,9 @@ Proctal provides a 3 step installation process employed by many C/C++ programs
 on Linux:
 
 	$ ./configure
+
 	$ make
+
 	$ make install
 
 The configure script allows you to define how you want Proctal to be compiled
@@ -145,7 +170,9 @@ different build directories for different purposes. Here's how you can create
 a build that surpresses optimizations and adds debugging symbols:
 
 	$ mkdir -p build/debug
+
 	$ cd build/debug
+
 	$ ../../configure 'CFLAGS=-g -O0'
 
 So with a build system in place, you can now start compiling by running the
