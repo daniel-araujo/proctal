@@ -14,10 +14,14 @@ dist_man_MANS = src/cli/proctal.1
 # Cli tool.
 proctal_SOURCES = \
 	src/cli/main.c \
-	src/cli/command.h \
-	src/cli/command.c
+	src/cli/cmd/read.c \
+	src/cli/cmd/write.c \
+	src/cli/cmd/search.c \
+	src/cli/cmd/val.h \
+	src/cli/cmd/val.c \
+	src/cli/cmd.h
 proctal_LDADD = libproctal.la
-proctal_CFLAGS = -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
+proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
 
 # Static library.
 libproctal_a_SOURCES = \
@@ -31,7 +35,7 @@ libproctal_a_SOURCES = \
 	src/lib/linux.h \
 	src/lib/linux.c \
 	src/lib/internal.h
-libproctal_a_CFLAGS = -Isrc/lib -I$(proctal_lib_headers_dir) $(proctal_cflags)
+libproctal_a_CFLAGS = -I$(srcdir)src/lib -I/src/lib -I$(proctal_lib_headers_dir) $(proctal_cflags)
 
 # Shared library.
 libproctal_la_SOURCES = $(libproctal_a_SOURCES)
