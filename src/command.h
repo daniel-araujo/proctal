@@ -79,6 +79,9 @@ struct proctal_command_search_arg {
 	int dec;
 	void* dec_value;
 
+	// Whether to check if it was changed.
+	int changed;
+
 	// Whether to check if it was unchanged.
 	int unchanged;
 

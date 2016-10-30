@@ -420,9 +420,10 @@ static struct proctal_command_search_arg *create_proctal_command_search_arg_from
 		arg->NAME = 0; \
 	}
 
+	GET_OPTION_ARG(changed);
+	GET_OPTION_ARG(unchanged);
 	GET_OPTION_ARG(increased);
 	GET_OPTION_ARG(decreased);
-	GET_OPTION_ARG(unchanged);
 
 #undef GET_OPTION_ARG
 
