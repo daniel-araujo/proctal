@@ -42,11 +42,8 @@ struct proctal_command_search_arg {
 
 	enum proctal_command_value_type type;
 
-	// Whether to check these addresses.
-	struct {
-		void *address;
-		void *value;
-	} *scan;
+	// Whether we're going to read from stdin.
+	int input;
 
 	// Whether to perform an equality check.
 	int eq;

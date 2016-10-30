@@ -405,6 +405,10 @@ static struct proctal_command_search_arg *create_proctal_command_search_arg_from
 		arg->type = PROCTAL_COMMAND_VALUE_TYPE_UCHAR;
 	}
 
+	if (yuck_arg->search.input_flag) {
+		arg->input = 1;
+	}
+
 #define GET_COMPARE_ARG(NAME) \
 	if (yuck_arg->search.NAME##_arg != NULL) { \
 		arg->NAME = 1; \
