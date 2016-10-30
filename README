@@ -78,7 +78,7 @@ arguments and reads the value then increments by 1 each time it's run.
 			return 1;
 		}
 
-		proctal_set_pid(pid);
+		proctal_set_pid(p, pid);
 
 		int read;
 
