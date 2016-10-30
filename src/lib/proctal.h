@@ -10,7 +10,7 @@ typedef struct proctal_addr_iter *proctal_addr_iter;
 /*
  * Creates and deletes an instance of Proctal.
  */
-proctal proctal_create();
+proctal proctal_create(void);
 void proctal_destroy(proctal p);
 
 /*

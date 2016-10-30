@@ -1,9 +1,10 @@
 #include <stdlib.h>
 
 #include "proctal.h"
+#include "global.h"
 
-void *(*a)(size_t) = malloc;
-void (*b)(void *) = free;
+static void *(*a)(size_t) = malloc;
+static void (*b)(void *) = free;
 
 void proctal_global_set_malloc(void *(*malloc)(size_t))
 {
@@ -23,12 +24,12 @@ void proctal_global_set_free(void (*free)(void *))
 	b = free;
 }
 
-void *(*proctal_global_malloc())(size_t)
+void *(*proctal_global_malloc(void))(size_t)
 {
 	return a;
 }
 
-void (*proctal_global_free())(void *)
+void (*proctal_global_free(void))(void *)
 {
 	return b;
 }

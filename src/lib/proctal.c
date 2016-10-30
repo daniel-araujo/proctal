@@ -17,7 +17,7 @@ struct proctal {
 	void (*free)(void *);
 };
 
-proctal proctal_create()
+proctal proctal_create(void)
 {
 	proctal p = proctal_global_malloc()(sizeof *p);
 

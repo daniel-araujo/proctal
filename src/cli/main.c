@@ -266,7 +266,7 @@ static enum proctal_command_value_type yuck_arg_type_to_proctal_command_value_ty
 		return PROCTAL_COMMAND_VALUE_TYPE_UNKNOWN;
 	}
 
-	for (int i = 0; i < (sizeof types / sizeof types[0]); i++) {
+	for (size_t i = 0; i < (sizeof types / sizeof types[0]); i++) {
 		if (strcmp(types[i].name, arg) == 0) {
 			return types[i].type;
 		}

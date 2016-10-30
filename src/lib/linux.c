@@ -51,7 +51,7 @@ const char *proctal_linux_proc_path(pid_t pid, const char *file)
 
 int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE *maps)
 {
-	if (fscanf(maps, "%lx-%lx", &region->start_addr, &region->end_addr) != 2) {
+	if (fscanf(maps, "%lx-%lx", (unsigned long *) &region->start_addr, (unsigned long *) &region->end_addr) != 2) {
 		return -1;
 	}
 
@@ -62,7 +62,7 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 		mem_region_skip_space(maps);
 	}
 
-	if (mem_region_is_path_present(maps) && fscanf(maps, "%254s", &region->path) != 1) {
+	if (mem_region_is_path_present(maps) && fscanf(maps, "%254s", region->path) != 1) {
 		return -1;
 	}
 

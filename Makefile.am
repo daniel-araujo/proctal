@@ -1,4 +1,5 @@
-proctal_cflags = -Wall -fmax-errors=10
+proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
+	-Wmissing-prototypes 
 proctal_lib_headers_dir = $(srcdir)/src/lib
 
 EXTRA_DIST = src/cli/args.yuck src/cli/args.yucc
