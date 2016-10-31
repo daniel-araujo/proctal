@@ -81,13 +81,13 @@ int proctal_write_longdouble(proctal p, void *addr, long double in);
 int proctal_write_address(proctal p, void *addr, void *in);
 
 /*
- * Iterates over every address of a process.
+ * Iterates over addresses in a process.
  *
  * Using the iterator is an elaborate process. You must first call
- * proctal_addr_iter_create with a Process ID. It will return an opaque data
- * structure that represents the iterator. With it you're allowed to call
- * functions that alter the behavior of the iterator, like
- * proctal_addr_iter_set_align and proctal_addr_iter_set_size.
+ * proctal_addr_iter_create. It will return an opaque data structure that
+ * represents the iterator. With it you're allowed to call functions that alter
+ * the behavior of the iterator, like proctal_addr_iter_set_align and
+ * proctal_addr_iter_set_size.
  *
  * With the iterator configured to your liking, you can query addresses by
  * multiple calls to proctal_addr_iter_next. At this point you can no longer
