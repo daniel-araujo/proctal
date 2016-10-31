@@ -48,6 +48,7 @@ int proctal_read_ulonglong(proctal p, void *addr, unsigned long long *out);
 int proctal_read_float(proctal p, void *addr, float *out);
 int proctal_read_double(proctal p, void *addr, double *out);
 int proctal_read_longdouble(proctal p, void *addr, long double *out);
+int proctal_read_address(proctal p, void *addr, void **out);
 
 /*
  * Writes a specified length of characters starting from an address in an other
@@ -77,6 +78,7 @@ int proctal_write_ulonglong(proctal p, void *addr, unsigned long long in);
 int proctal_write_float(proctal p, void *addr, float in);
 int proctal_write_double(proctal p, void *addr, double in);
 int proctal_write_longdouble(proctal p, void *addr, long double in);
+int proctal_write_address(proctal p, void *addr, void *in);
 
 /*
  * Iterates over every address of a process.

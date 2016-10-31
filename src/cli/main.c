@@ -69,6 +69,10 @@ static enum proctal_cmd_val_type yuck_arg_type_to_proctal_cmd_val_type(const cha
 			.type = PROCTAL_CMD_VAL_TYPE_LONGDOUBLE,
 			.name = "longdouble"
 		},
+		{
+			.type = PROCTAL_CMD_VAL_TYPE_ADDRESS,
+			.name = "address"
+		},
 	};
 
 	if (arg == NULL) {
