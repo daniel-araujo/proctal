@@ -13,7 +13,7 @@ Features:
 - Searching for values with a vast combination of filters
 
 Planned:
-- Showing dissassembly of instructions
+- Showing disassembly of instructions
 - Overwrite instructions directly from assembly mnemonics
 - Freezing values in memory
 - Read watch points
