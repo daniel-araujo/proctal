@@ -72,7 +72,9 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 	char value[size];
 
 	while (proctal_addr_iter_next(iter, &addr) == 0) {
-		proctal_read(p, addr, value, size);
+		if (proctal_read(p, addr, value, size) != 0) {
+			continue;
+		}
 
 		if (!pass_search_filters(arg, value)) {
 			continue;
@@ -100,14 +102,17 @@ static inline void search_input(struct proctal_cmd_search_arg *arg, proctal p)
 			break;
 		}
 
-		if (proctal_read(p, addr, value, size) == 0) {
-			if (!pass_search_filters(arg, value)) {
-				continue;
-			}
+		if (proctal_read(p, addr, value, size) != 0) {
+			// Can't seem to read anymore. Dropping it.
+			continue;
+		}
 
-			if (!pass_search_filters_p(arg, value, previous_value)) {
-				continue;
-			}
+		if (!pass_search_filters(arg, value)) {
+			continue;
+		}
+
+		if (!pass_search_filters_p(arg, value, previous_value)) {
+			continue;
 		}
 
 		print_search_match(addr, arg->type, value);
