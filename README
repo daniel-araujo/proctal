@@ -1,10 +1,29 @@
-# Proctal
+# Proctal 0.0.0
 
 Proctal provides a command line interface and a C library to manipulate the
-address space of a running program on Linux. It allows you to read, write and
-search values in memory.
+address space of a running program on Linux. Can be used like a process memory
+editor or to provide the base functionality to build a specialized version.
 
-**Note:** This is work in progress and things may change over time.
+**Note:** This is work in progress and as such the API is unstable and the
+documentation is done as an afterthought. This will change as the project
+matures.
+
+Features:
+- Reading and writing values in memory
+- Searching for values with a vast combination of filters
+
+Planned:
+- Showing dissassembly
+- Overwriting instructions
+- Freezing values in memory
+- Read watch points
+- Write watch points
+- Integer types from a combination of size, signing convention and endianness
+- Reading and writing text
+- Reading and writing multiple values in contiguous memory
+- Specifying floating point comparisson precision
+- Freezing execution
+- Allocating and deallocating memory manually
 
 
 ## Example
@@ -17,13 +36,16 @@ Assuming `22002` is a Process ID (PID):
 
 	$ cat result
 	9a3654 40
-	acfa08 365
+	acfa08 109
 	acfe90 394
 	b683f8 1055
-	b7d178 824
+	b7d178 56
 	b84ab0 192
 	ba2e38 1264
 	[...]
+
+	$ wc -l result
+	1634
 
 	$ proctal search --pid=22002 --gt=31 --lt=110 -i < result
 	9a3654 40
