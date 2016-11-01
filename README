@@ -13,15 +13,15 @@ Features:
 - Searching for values with a vast combination of filters
 
 Planned:
-- Showing dissassembly
-- Overwriting instructions
+- Showing dissassembly of instructions
+- Overwrite instructions directly from assembly mnemonics
 - Freezing values in memory
 - Read watch points
 - Write watch points
 - Integer types from a combination of size, signing convention and endianness
 - Reading and writing text
 - Reading and writing multiple values in contiguous memory
-- Specifying floating point comparisson precision
+- Specifying floating point comparison precision
 - Freezing execution
 - Allocating and deallocating memory manually
 
