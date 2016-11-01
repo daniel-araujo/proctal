@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "proctal.h"
 #include "internal.h"
@@ -8,14 +9,22 @@
 struct proctal_addr_iter {
 	// Proctal instance.
 	proctal p;
+
 	// Start address of the next call.
 	void *curr_addr;
+
 	// Memory mappings of the address space.
 	FILE *maps;
+
 	// Current region being read.
 	struct proctal_linux_mem_region region;
+
+	// Tells which regions are iterated.
+	long region_mask;
+
 	// Address alignment.
 	size_t align;
+
 	// Size of the value of the address. We only want to return addresses
 	// that when dereferenced can return values of up to this size.
 	size_t size;
@@ -47,11 +56,36 @@ static inline void *align_addr(void *addr, size_t align)
 	return (void *) ((char *) addr + offset);
 }
 
+static inline int interesting_region(proctal_addr_iter iter)
+{
+	if (iter->region_mask == PROCTAL_ADDR_REGION_ALL) {
+		return 1;
+	}
+
+	if (iter->region_mask & PROCTAL_ADDR_REGION_STACK) {
+		if (strncmp(iter->region.path, "[stack", 6) == 0) {
+			return 1;
+		}
+	}
+
+	if (iter->region_mask & PROCTAL_ADDR_REGION_HEAP) {
+		if (strcmp(iter->region.path, "[heap]") == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static inline int next_region(proctal_addr_iter iter)
 {
-	do {
+	for (;;) {
 		if (proctal_linux_read_mem_region(&iter->region, iter->maps) != 0) {
 			return 0;
+		}
+
+		if (!interesting_region(iter)) {
+			continue;
 		}
 
 		iter->curr_addr = align_addr(iter->region.start_addr, iter->align);
@@ -60,7 +94,10 @@ static inline int next_region(proctal_addr_iter iter)
 		// possible to have reached the end of the memory region. Even
 		// if this is very unlikely to happen, this situation must be
 		// checked.
-	} while (has_reached_region_end(iter));
+		if (!has_reached_region_end(iter)) {
+			break;
+		}
+	}
 
 	return 1;
 }
@@ -108,6 +145,7 @@ proctal_addr_iter proctal_addr_iter_create(proctal p)
 	iter->p = p; 
 	iter->curr_addr = NULL;
 	iter->maps = NULL;
+	iter->region_mask = PROCTAL_ADDR_REGION_HEAP | PROCTAL_ADDR_REGION_STACK;
 	iter->size = 1;
 	iter->align = 1;
 
@@ -137,6 +175,16 @@ size_t proctal_addr_iter_align(proctal_addr_iter iter)
 void proctal_addr_iter_set_align(proctal_addr_iter iter, size_t align)
 {
 	iter->align = align > 0 ? align : 1;
+}
+
+long proctal_addr_iter_region(proctal_addr_iter iter)
+{
+	return iter->region_mask;
+}
+
+void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask)
+{
+	iter->region_mask = mask;
 }
 
 int proctal_addr_iter_next(proctal_addr_iter iter, void **addr)

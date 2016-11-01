@@ -4,6 +4,10 @@
 #include <stddef.h>
 #include <sys/types.h>
 
+#define PROCTAL_ADDR_REGION_ALL 0
+#define PROCTAL_ADDR_REGION_STACK 1
+#define PROCTAL_ADDR_REGION_HEAP 2
+
 typedef struct proctal *proctal;
 typedef struct proctal_addr_iter *proctal_addr_iter;
 
@@ -123,6 +127,20 @@ void proctal_addr_iter_set_align(proctal_addr_iter iter, size_t align);
  */
 size_t proctal_addr_iter_size(proctal_addr_iter iter);
 void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
+
+/*
+ * Sets and returns which address space regions are iterated.
+ *
+ * By default it's set to PROCTAL_ADDR_REGION_STACK | PROCTAL_ADDR_REGION_HEAP.
+ *
+ * Setting the mask to PROCTAL_ADDR_REGION_ALL will make it iterate over all
+ * regions.
+ *
+ * Attempting to set a new value after retriving an address with the iterator
+ * can cause undefined behavior. Don't do it.
+ */
+long proctal_addr_iter_region(proctal_addr_iter iter);
+void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.
