@@ -12,7 +12,7 @@ AC_CONFIG_FILES([Makefile])
 
 # Checks for programs.
 AC_PROG_CC
-PROCTAL_FIND_PROG([YUCK], [yuck], [required])
+PROCTAL_FIND_PROG([YUCK], [yuck])
 
 # Checks for libraries.
 

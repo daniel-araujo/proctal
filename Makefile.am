@@ -51,9 +51,9 @@ libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 src/cli/proctal-main.$(OBJEXT): src/cli/args.yucc
 
 # Generates argument parsing code.
-src/cli/args.yucc: Makefile $(srcdir)/src/cli/args.yuck
+src/cli/args.yucc: $(srcdir)/src/cli/args.yuck
 	$(YUCK) gen --no-auto-flags --no-auto-actions $(srcdir)/src/cli/args.yuck -o $@
 
 # Generates man page.
-src/cli/proctal.1: Makefile $(srcdir)/src/cli/args.yuck
+src/cli/proctal.1: $(srcdir)/src/cli/args.yuck
 	$(YUCK) genman $(srcdir)/src/cli/args.yuck -o $@
