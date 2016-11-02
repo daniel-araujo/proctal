@@ -2,8 +2,8 @@
 
 Proctal provides a command line interface and a C library to manipulate the
 address space of a running program on Linux. It can be used like a process
-memory editor or to provide the base functionality for building a
-domain-specific editor.
+memory editor or to provide the base functionality for building one that is
+domain-specific.
 
 **Note:** This is work in progress and as such the API is unstable and the
 documentation is done as an afterthought. This will change as the project
