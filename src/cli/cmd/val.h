@@ -101,6 +101,96 @@ inline size_t proctal_cmd_val_size(enum proctal_cmd_val_type type)
 	}
 }
 
+inline int proctal_cmd_val_add(enum proctal_cmd_val_type type, void *v1, void *v2, void *r)
+{
+#define ADD(TYPE) \
+	*(TYPE*) r = *(TYPE*) v1 + *(TYPE*) v2; \
+	return 1;
+
+	switch (type) {
+	default:
+	case PROCTAL_CMD_VAL_TYPE_UNKNOWN:
+		return 0;
+	case PROCTAL_CMD_VAL_TYPE_CHAR:
+		return ADD(char);
+	case PROCTAL_CMD_VAL_TYPE_UCHAR:
+		return ADD(unsigned char);
+	case PROCTAL_CMD_VAL_TYPE_SCHAR:
+		return ADD(signed char);
+	case PROCTAL_CMD_VAL_TYPE_SHORT:
+		return ADD(short);
+	case PROCTAL_CMD_VAL_TYPE_USHORT:
+		return ADD(unsigned short);
+	case PROCTAL_CMD_VAL_TYPE_INT:
+		return ADD(int);
+	case PROCTAL_CMD_VAL_TYPE_UINT:
+		return ADD(unsigned int);
+	case PROCTAL_CMD_VAL_TYPE_LONG:
+		return ADD(long);
+	case PROCTAL_CMD_VAL_TYPE_ULONG:
+		return ADD(unsigned long);
+	case PROCTAL_CMD_VAL_TYPE_LONGLONG:
+		return ADD(long long);
+	case PROCTAL_CMD_VAL_TYPE_ULONGLONG:
+		return ADD(unsigned long long);
+	case PROCTAL_CMD_VAL_TYPE_FLOAT:
+		return ADD(float);
+	case PROCTAL_CMD_VAL_TYPE_DOUBLE:
+		return ADD(double);
+	case PROCTAL_CMD_VAL_TYPE_LONGDOUBLE:
+		return ADD(long double);
+	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
+		return 0;
+	}
+
+#undef ADD
+}
+
+inline int proctal_cmd_val_sub(enum proctal_cmd_val_type type, void *v1, void *v2, void *r)
+{
+#define SUB(TYPE) \
+	*(TYPE*) r = *(TYPE*) v1 - *(TYPE*) v2; \
+	return 1;
+
+	switch (type) {
+	default:
+	case PROCTAL_CMD_VAL_TYPE_UNKNOWN:
+		return 0;
+	case PROCTAL_CMD_VAL_TYPE_CHAR:
+		return SUB(char);
+	case PROCTAL_CMD_VAL_TYPE_UCHAR:
+		return SUB(unsigned char);
+	case PROCTAL_CMD_VAL_TYPE_SCHAR:
+		return SUB(signed char);
+	case PROCTAL_CMD_VAL_TYPE_SHORT:
+		return SUB(short);
+	case PROCTAL_CMD_VAL_TYPE_USHORT:
+		return SUB(unsigned short);
+	case PROCTAL_CMD_VAL_TYPE_INT:
+		return SUB(int);
+	case PROCTAL_CMD_VAL_TYPE_UINT:
+		return SUB(unsigned int);
+	case PROCTAL_CMD_VAL_TYPE_LONG:
+		return SUB(long);
+	case PROCTAL_CMD_VAL_TYPE_ULONG:
+		return SUB(unsigned long);
+	case PROCTAL_CMD_VAL_TYPE_LONGLONG:
+		return SUB(long long);
+	case PROCTAL_CMD_VAL_TYPE_ULONGLONG:
+		return SUB(unsigned long long);
+	case PROCTAL_CMD_VAL_TYPE_FLOAT:
+		return SUB(float);
+	case PROCTAL_CMD_VAL_TYPE_DOUBLE:
+		return SUB(double);
+	case PROCTAL_CMD_VAL_TYPE_LONGDOUBLE:
+		return SUB(long double);
+	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
+		return 0;
+	}
+
+#undef SUB
+}
+
 inline int proctal_cmd_val_cmp(enum proctal_cmd_val_type type, void *v1, void *v2)
 {
 #define DEREFERENCE(TYPE) \

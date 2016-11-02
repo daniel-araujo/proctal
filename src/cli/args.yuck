@@ -94,7 +94,9 @@ Example:
   --lt=VAL              Less than VAL
   --lte=VAL             Less than or equal to VAL
   --inc=VAL             Incremented by VAL
+  --inc-up-to=VAL       Incremented up to and including VAL
   --dec=VAL             Decremented by VAL
+  --dec-up-to=VAL       Decremented up to and including VAL
   --changed             Value changed from previous scan
   --unchanged           Value did not change from previous scan
   --increased           Value increased from previous scan

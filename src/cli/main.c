@@ -236,12 +236,26 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 		arg->input = 1;
 	}
 
+#define FORCE_POSITIVE(NAME) \
+	if (yuck_arg->search.NAME##_arg != NULL \
+		&& (strcmp("0", yuck_arg->search.NAME##_arg) == 0 \
+			|| strncmp("-", yuck_arg->search.NAME##_arg, 1) == 0)) { \
+		fputs("Value must be positive for --"#NAME".\n", stderr); \
+		free(arg); \
+		return NULL; \
+	}
+
+	FORCE_POSITIVE(inc);
+	FORCE_POSITIVE(inc_up_to);
+	FORCE_POSITIVE(dec);
+	FORCE_POSITIVE(dec_up_to);
+
 #define GET_COMPARE_ARG(NAME) \
 	if (yuck_arg->search.NAME##_arg != NULL) { \
 		arg->NAME = 1; \
 		arg->NAME##_value = malloc(proctal_cmd_val_size(arg->type)); \
 		if (proctal_cmd_val_parse(yuck_arg->search.NAME##_arg, arg->type, arg->NAME##_value)) { \
-			fputs("Invalid value for --NAME.\n", stderr); \
+			fputs("Invalid value for --"#NAME".\n", stderr); \
 			free(arg); \
 			return NULL; \
 		} \
@@ -256,7 +270,9 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 	GET_COMPARE_ARG(lt);
 	GET_COMPARE_ARG(lte);
 	GET_COMPARE_ARG(inc);
+	GET_COMPARE_ARG(inc_up_to);
 	GET_COMPARE_ARG(dec);
+	GET_COMPARE_ARG(dec_up_to);
 
 #undef GET_COMPARE_ARG
 

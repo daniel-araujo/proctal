@@ -49,6 +49,44 @@ static inline int pass_search_filters_p(struct proctal_cmd_search_arg *arg, void
 		return 0;
 	}
 
+	if (arg->inc) {
+		char exactly[proctal_cmd_val_size(arg->type)];
+
+		if (proctal_cmd_val_add(arg->type, previous_value, arg->inc_value, &exactly)
+			&& proctal_cmd_val_cmp(arg->type, value, exactly) != 0) {
+			return 0;
+		}
+	}
+
+	if (arg->inc_up_to) {
+		char upto[proctal_cmd_val_size(arg->type)];
+
+		if (proctal_cmd_val_add(arg->type, previous_value, arg->inc_up_to_value, &upto)
+			&& !(proctal_cmd_val_cmp(arg->type, value, upto) <= 0
+				&& proctal_cmd_val_cmp(arg->type, value, previous_value) > 0)) {
+			return 0;
+		}
+	}
+
+	if (arg->dec) {
+		char exactly[proctal_cmd_val_size(arg->type)];
+
+		if (proctal_cmd_val_sub(arg->type, previous_value, arg->dec_value, &exactly)
+			&& proctal_cmd_val_cmp(arg->type, value, exactly) != 0) {
+			return 0;
+		}
+	}
+
+	if (arg->dec_up_to) {
+		char upto[proctal_cmd_val_size(arg->type)];
+
+		if (proctal_cmd_val_sub(arg->type, previous_value, arg->dec_up_to_value, &upto)
+			&& !(proctal_cmd_val_cmp(arg->type, value, upto) >= 0
+				&& proctal_cmd_val_cmp(arg->type, value, previous_value) < 0)) {
+			return 0;
+		}
+	}
+
 	return 1;
 }
 

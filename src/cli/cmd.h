@@ -57,9 +57,17 @@ struct proctal_cmd_search_arg {
 	int inc;
 	void* inc_value;
 
+	// Whether to check if it was incremented up to and including value.
+	int inc_up_to;
+	void* inc_up_to_value;
+
 	// Whether to check if it was decremented.
 	int dec;
 	void* dec_value;
+
+	// Whether to check if it was decremented up to and including value.
+	int dec_up_to;
+	void* dec_up_to_value;
 
 	// Whether to check if it was changed.
 	int changed;
