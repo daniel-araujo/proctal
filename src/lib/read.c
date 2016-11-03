@@ -5,20 +5,21 @@
 #include "internal.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
-	proctal_read(P, ADDR, (char *) VAL, sizeof *VAL);
+	proctal_read(P, ADDR, (char *) VAL, sizeof *VAL)
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	int proctal_read_##SUFFIX(proctal p, void *addr, TYPE *out) \
+	size_t proctal_read_##SUFFIX(proctal p, void *addr, TYPE *out) \
 	{ \
-		return FORWARD_NATIVE(p, addr, out); \
+		return FORWARD_NATIVE(p, addr, out) / sizeof (TYPE); \
 	}
 
-int proctal_read(proctal p, void *addr, char *out, size_t size)
+size_t proctal_read(proctal p, void *addr, char *out, size_t size)
 {
 	FILE *f = proctal_memr(p);
 
 	if (f == NULL) {
-		return -1;
+		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
+		return 0;
 	}
 
 	fseek(f, (long) addr, SEEK_SET);
@@ -26,10 +27,15 @@ int proctal_read(proctal p, void *addr, char *out, size_t size)
 	long i = fread(out, size, 1, f);
 
 	if (i != 1) {
-		return -1;
+		proctal_set_error(p, PROCTAL_ERROR_READ_FAILURE);
+		return 0;
 	}
 
-	return 0;
+	// The way this is using the C library makes it seem like either
+	// everything is read or nothing is. Might want to investigate
+	// this.
+
+	return size;
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

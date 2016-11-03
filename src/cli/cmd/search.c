@@ -109,8 +109,24 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 	void *addr;
 	char value[size];
 
-	while (proctal_addr_iter_next(iter, &addr) == 0) {
-		if (proctal_read(p, addr, value, size) != 0) {
+	while (proctal_addr_iter_next(iter, &addr)) {
+		if (proctal_read(p, addr, value, size) != size) {
+			switch (proctal_error(p)) {
+			case PROCTAL_ERROR_PERMISSION_DENIED:
+				fprintf(stderr, "No permission to read from address ");
+				proctal_cmd_val_print(stderr, PROCTAL_CMD_VAL_TYPE_ADDRESS, &addr);
+				fprintf(stderr, "\n");
+				proctal_error_ack(p);
+				break;
+
+			default:
+				fprintf(stderr, "Failed to read from address ");
+				proctal_cmd_val_print(stderr, PROCTAL_CMD_VAL_TYPE_ADDRESS, &addr);
+				fprintf(stderr, "\n");
+				proctal_error_ack(p);
+				break;
+			}
+
 			continue;
 		}
 
@@ -119,6 +135,21 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 		}
 
 		print_search_match(addr, arg->type, value);
+	}
+
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	case PROCTAL_ERROR_PERMISSION_DENIED:
+		fprintf(stderr, "No permission.\n");
+		proctal_error_ack(p);
+		break;
+
+	default:
+		fprintf(stderr, "Failed to search all addresses.\n");
+		proctal_error_ack(p);
+		break;
 	}
 
 	proctal_addr_iter_destroy(iter);
@@ -132,7 +163,7 @@ static inline void search_input(struct proctal_cmd_search_arg *arg, proctal p)
 	char previous_value[size];
 
 	for (;;) {
-		if (scanf("%lx", (unsigned long *) &addr) != 1) {
+		if (!proctal_cmd_val_scan(stdin, PROCTAL_CMD_VAL_TYPE_ADDRESS, &addr)) {
 			break;
 		}
 
@@ -140,7 +171,23 @@ static inline void search_input(struct proctal_cmd_search_arg *arg, proctal p)
 			break;
 		}
 
-		if (proctal_read(p, addr, value, size) != 0) {
+		if (proctal_read(p, addr, value, size) != size) {
+			switch (proctal_error(p)) {
+			case PROCTAL_ERROR_PERMISSION_DENIED:
+				fprintf(stderr, "No permission to read from address ");
+				proctal_cmd_val_print(stderr, PROCTAL_CMD_VAL_TYPE_ADDRESS, &addr);
+				fprintf(stderr, "\n");
+				proctal_error_ack(p);
+				break;
+
+			default:
+				fprintf(stderr, "Failed to read from address ");
+				proctal_cmd_val_print(stderr, PROCTAL_CMD_VAL_TYPE_ADDRESS, &addr);
+				fprintf(stderr, "\n");
+				proctal_error_ack(p);
+				break;
+			}
+
 			// Can't seem to read anymore. Dropping it.
 			continue;
 		}

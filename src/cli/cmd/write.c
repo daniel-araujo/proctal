@@ -15,7 +15,19 @@ int proctal_cmd_write(struct proctal_cmd_write_arg *arg)
 
 	size_t size = proctal_cmd_val_size(arg->type);
 
-	if (proctal_write(p, arg->address, arg->value, size) != 0) {
+	proctal_write(p, arg->address, arg->value, size);
+
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	case PROCTAL_ERROR_PERMISSION_DENIED:
+		fprintf(stderr, "No permission.\n");
+		proctal_error_ack(p);
+		return 1;
+
+	default:
+	case PROCTAL_ERROR_WRITE_FAILURE:
 		fprintf(stderr, "Failed to write to memory.\n");
 		proctal_destroy(p);
 		return 1;

@@ -5,20 +5,21 @@
 #include "internal.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
-	proctal_write(P, ADDR, (char *) &VAL, sizeof VAL);
+	proctal_write(P, ADDR, (char *) &VAL, sizeof VAL)
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	int proctal_write_##SUFFIX(proctal p, void *addr, TYPE in) \
+	size_t proctal_write_##SUFFIX(proctal p, void *addr, TYPE in) \
 	{ \
-		return FORWARD_NATIVE(p, addr, in); \
+		return FORWARD_NATIVE(p, addr, in) / sizeof (TYPE); \
 	}
 
-int proctal_write(proctal p, void *addr, char *in, size_t size)
+size_t proctal_write(proctal p, void *addr, char *in, size_t size)
 {
 	FILE *f = proctal_memw(p);
 
 	if (f == NULL) {
-		return -1;
+		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
+		return 0;
 	}
 
 	fseek(f, (long) addr, SEEK_SET);
@@ -26,10 +27,15 @@ int proctal_write(proctal p, void *addr, char *in, size_t size)
 	long i = fwrite(in, size, 1, f);
 
 	if (i != 1) {
-		return -1;
+		proctal_set_error(p, PROCTAL_ERROR_WRITE_FAILURE);
+		return 0;
 	}
 
-	return 0;
+	// The way this is using the C library makes it seem like either
+	// everything is written or nothing is. Might want to investigate
+	// this.
+
+	return size;
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

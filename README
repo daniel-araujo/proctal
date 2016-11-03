@@ -82,7 +82,7 @@ arguments and reads the value then increments by 1 each time it's run.
 
 		pid_t pid;
 
-		if (sscanf(argv[1], "%hd", &pid) != 1) {
+		if (sscanf(argv[1], "%d", &pid) != 1) {
 			fprintf(stderr, "Failed to parse process id.\n");
 			return 1;
 		}
@@ -108,7 +108,7 @@ arguments and reads the value then increments by 1 each time it's run.
 		// Attempts to read an int from an other process. May fail if
 		// your program does not have permission to access the address
 		// space of other processes.
-		if (proctal_read_int(p, addr, &read)) {
+		if (proctal_read_int(p, addr, &read) != 1) {
 			fprintf(stderr, "Failed to read from %p of process %d.\n", addr, pid);
 			return 1;
 		}
@@ -121,7 +121,7 @@ arguments and reads the value then increments by 1 each time it's run.
 		// Attempts to write an int to an other process. May fail if
 		// your program does not have permission to access the address
 		// space of other processes.
-		if (proctal_write_int(p, addr, write)) {
+		if (proctal_write_int(p, addr, write) != 1) {
 			fprintf(stderr, "Failed to write to %p of process %d.\n", addr, pid);
 			return 1;
 		}

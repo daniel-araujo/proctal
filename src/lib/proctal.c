@@ -15,6 +15,8 @@ struct proctal {
 	FILE *memw;
 	void *(*malloc)(size_t);
 	void (*free)(void *);
+	// Last error.
+	int error;
 };
 
 proctal proctal_create(void)
@@ -30,6 +32,7 @@ proctal proctal_create(void)
 	p->memw = NULL;
 	p->malloc = proctal_global_malloc();
 	p->free = proctal_global_free();
+	p->error = 0;
 
 	return p;
 }
@@ -72,9 +75,24 @@ void proctal_set_free(proctal p, void (*free)(void *))
 	p->free = free;
 }
 
+void proctal_set_error(proctal p, int error)
+{
+	p->error = error;
+}
+
 pid_t proctal_pid(proctal p)
 {
 	return p->pid;
+}
+
+int proctal_error(proctal p)
+{
+	return p->error;
+}
+
+void proctal_error_ack(proctal p)
+{
+	p->error = 0;
 }
 
 FILE *proctal_memr(proctal p)

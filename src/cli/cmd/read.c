@@ -16,7 +16,19 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 	size_t size = proctal_cmd_val_size(arg->type);
 	char value[size];
 
-	if (proctal_read(p, arg->address, value, size) != 0) { \
+	proctal_read(p, arg->address, value, size);
+
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	case PROCTAL_ERROR_PERMISSION_DENIED:
+		fprintf(stderr, "No permission.\n");
+		proctal_error_ack(p);
+		return 1;
+
+	default:
+	case PROCTAL_ERROR_READ_FAILURE:
 		fprintf(stderr, "Failed to read memory.\n");
 		proctal_destroy(p);
 		return 1;

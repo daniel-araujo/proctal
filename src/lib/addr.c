@@ -58,7 +58,7 @@ static inline void *align_addr(void *addr, size_t align)
 
 static inline int interesting_region(proctal_addr_iter iter)
 {
-	if (iter->region_mask == PROCTAL_ADDR_REGION_ALL) {
+	if (iter->region_mask == 0) {
 		return 1;
 	}
 
@@ -122,16 +122,17 @@ static inline int start(proctal_addr_iter iter)
 	iter->maps = fopen(proctal_linux_proc_path(proctal_pid(iter->p), "maps"), "r");
 
 	if (iter->maps == NULL) {
-		return -1;
+		proctal_set_error(iter->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		return 0;
 	}
 
 	if (!next_region(iter)) {
 		fclose(iter->maps);
 		iter->maps = NULL;
-		return -1;
+		return 0;
 	}
 
-	return 0;
+	return 1;
 }
 
 proctal_addr_iter proctal_addr_iter_create(proctal p)
@@ -190,19 +191,21 @@ void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask)
 int proctal_addr_iter_next(proctal_addr_iter iter, void **addr)
 {
 	if (!has_started(iter)) {
-		if (start(iter) != 0) {
-			return -1;
+		if (!start(iter)) {
+			return 0;
 		}
-	} else if (has_ended(iter)) {
+
+		*addr = iter->curr_addr;
 		return 1;
+	} else if (has_ended(iter)) {
+		return 0;
 	}
 
-	*addr = iter->curr_addr;
-
 	if (next_address(iter)) {
-		return 0;
+		*addr = iter->curr_addr;
+		return 1;
 	} else {
 		fclose(iter->maps);
-		return 1;
+		return 0;
 	}
 }

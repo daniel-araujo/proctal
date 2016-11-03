@@ -3,6 +3,8 @@
 
 #include "proctal.h"
 
+void proctal_set_error(proctal p, int error);
+
 FILE *proctal_memr(proctal p);
 FILE *proctal_memw(proctal p);
 

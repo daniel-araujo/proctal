@@ -29,6 +29,7 @@ libproctal_a_SOURCES = \
 	src/lib/proctal.c \
 	src/lib/global.h \
 	src/lib/global.c \
+	src/lib/error.c \
 	src/lib/write.c \
 	src/lib/read.c \
 	src/lib/addr.c \
