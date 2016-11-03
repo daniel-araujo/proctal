@@ -66,25 +66,40 @@ pid_t proctal_pid(proctal p);
  *
  * Not returning the expect number of values indicates an error.
  *
- * There are also convenience functions for reading native C types which return
- * 1 on success because only 1 value is read.
+ * There are also convenience functions for reading native C types. Sizes
+ * correspond to the type's size.
  */
 size_t proctal_read(proctal p, void *addr, char *out, size_t size);
 size_t proctal_read_char(proctal p, void *addr, char *out);
+size_t proctal_read_char_array(proctal p, void *addr, char *out, size_t size);
 size_t proctal_read_schar(proctal p, void *addr, signed char *out);
+size_t proctal_read_schar_array(proctal p, void *addr, signed char *out, size_t size);
 size_t proctal_read_uchar(proctal p, void *addr, unsigned char *out);
+size_t proctal_read_uchar_array(proctal p, void *addr, unsigned char *out, size_t size);
 size_t proctal_read_short(proctal p, void *addr, short *out);
+size_t proctal_read_short_array(proctal p, void *addr, short *out, size_t size);
 size_t proctal_read_ushort(proctal p, void *addr, unsigned short *out);
+size_t proctal_read_ushort_array(proctal p, void *addr, unsigned short *out, size_t size);
 size_t proctal_read_int(proctal p, void *addr, int *out);
+size_t proctal_read_int_array(proctal p, void *addr, int *out, size_t size);
 size_t proctal_read_uint(proctal p, void *addr, unsigned int *out);
+size_t proctal_read_uint_array(proctal p, void *addr, unsigned int *out, size_t size);
 size_t proctal_read_long(proctal p, void *addr, long *out);
+size_t proctal_read_long_array(proctal p, void *addr, long *out, size_t size);
 size_t proctal_read_ulong(proctal p, void *addr, unsigned long *out);
+size_t proctal_read_ulong_array(proctal p, void *addr, unsigned long *out, size_t size);
 size_t proctal_read_longlong(proctal p, void *addr, long long *out);
+size_t proctal_read_longlong_array(proctal p, void *addr, long long *out, size_t size);
 size_t proctal_read_ulonglong(proctal p, void *addr, unsigned long long *out);
+size_t proctal_read_ulonglong_array(proctal p, void *addr, unsigned long long *out, size_t size);
 size_t proctal_read_float(proctal p, void *addr, float *out);
+size_t proctal_read_float_array(proctal p, void *addr, float *out, size_t size);
 size_t proctal_read_double(proctal p, void *addr, double *out);
+size_t proctal_read_double_array(proctal p, void *addr, double *out, size_t size);
 size_t proctal_read_longdouble(proctal p, void *addr, long double *out);
+size_t proctal_read_longdouble_array(proctal p, void *addr, long double *out, size_t size);
 size_t proctal_read_address(proctal p, void *addr, void **out);
+size_t proctal_read_address_array(proctal p, void *addr, void **out, size_t size);
 
 /*
  * Writes a specified length of characters starting from an address in an other
@@ -95,25 +110,40 @@ size_t proctal_read_address(proctal p, void *addr, void **out);
  *
  * Not returning the expect number of values indicates an error.
  *
- * There are also convenience functions for writing native C types which return
- * 1 on success because only 1 value is written.
+ * There are also convenience functions for writing native C types. Sizes
+ * correspond to the type's size.
  */
 size_t proctal_write(proctal p, void *addr, char *in, size_t size);
 size_t proctal_write_char(proctal p, void *addr, char in);
+size_t proctal_write_char_array(proctal p, void *addr, char *in, size_t size);
 size_t proctal_write_schar(proctal p, void *addr, signed char in);
+size_t proctal_write_schar_array(proctal p, void *addr, signed char *in, size_t size);
 size_t proctal_write_uchar(proctal p, void *addr, unsigned char in);
+size_t proctal_write_uchar_array(proctal p, void *addr, unsigned char *in, size_t size);
 size_t proctal_write_short(proctal p, void *addr, short in);
+size_t proctal_write_short_array(proctal p, void *addr, short *in, size_t size);
 size_t proctal_write_ushort(proctal p, void *addr, unsigned short in);
+size_t proctal_write_ushort_array(proctal p, void *addr, unsigned short *in, size_t size);
 size_t proctal_write_int(proctal p, void *addr, int in);
+size_t proctal_write_int_array(proctal p, void *addr, int *in, size_t size);
 size_t proctal_write_uint(proctal p, void *addr, unsigned int in);
+size_t proctal_write_uint_array(proctal p, void *addr, unsigned int *in, size_t size);
 size_t proctal_write_long(proctal p, void *addr, long in);
+size_t proctal_write_long_array(proctal p, void *addr, long *in, size_t size);
 size_t proctal_write_ulong(proctal p, void *addr, unsigned long in);
+size_t proctal_write_ulong_array(proctal p, void *addr, unsigned long *in, size_t size);
 size_t proctal_write_longlong(proctal p, void *addr, long long in);
+size_t proctal_write_longlong_array(proctal p, void *addr, long long *in, size_t size);
 size_t proctal_write_ulonglong(proctal p, void *addr, unsigned long long in);
+size_t proctal_write_ulonglong_array(proctal p, void *addr, unsigned long long *in, size_t size);
 size_t proctal_write_float(proctal p, void *addr, float in);
+size_t proctal_write_float_array(proctal p, void *addr, float *in, size_t size);
 size_t proctal_write_double(proctal p, void *addr, double in);
+size_t proctal_write_double_array(proctal p, void *addr, double *in, size_t size);
 size_t proctal_write_longdouble(proctal p, void *addr, long double in);
+size_t proctal_write_longdouble_array(proctal p, void *addr, long double *in, size_t size);
 size_t proctal_write_address(proctal p, void *addr, void *in);
+size_t proctal_write_address_array(proctal p, void *addr, void **in, size_t size);
 
 /*
  * Iterates over addresses in a process.

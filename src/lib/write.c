@@ -7,10 +7,19 @@
 #define FORWARD_NATIVE(P, ADDR, VAL) \
 	proctal_write(P, ADDR, (char *) &VAL, sizeof VAL)
 
+#define FORWARD_NATIVE_ARRAY(P, ADDR, VAL, SIZE) \
+	proctal_write(P, ADDR, (char *) VAL, SIZE * sizeof *VAL)
+
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
 	size_t proctal_write_##SUFFIX(proctal p, void *addr, TYPE in) \
 	{ \
 		return FORWARD_NATIVE(p, addr, in) / sizeof (TYPE); \
+	}
+
+#define DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX, TYPE) \
+	size_t proctal_write_##SUFFIX(proctal p, void *addr, TYPE *in, size_t size) \
+	{ \
+		return FORWARD_NATIVE_ARRAY(p, addr, out, size) / sizeof (TYPE); \
 	}
 
 size_t proctal_write(proctal p, void *addr, char *in, size_t size)
