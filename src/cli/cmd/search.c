@@ -105,6 +105,7 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 	proctal_addr_iter iter = proctal_addr_iter_create(p);
 	proctal_addr_iter_set_align(iter, proctal_cmd_val_align(arg->type));
 	proctal_addr_iter_set_size(iter, size);
+	proctal_addr_iter_set_region(iter, 0);
 
 	void *addr;
 	char value[size];
