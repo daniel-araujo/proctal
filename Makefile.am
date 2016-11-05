@@ -1,5 +1,5 @@
 proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
-	-Wmissing-prototypes 
+	-Wmissing-prototypes -Wno-switch
 proctal_lib_headers_dir = $(srcdir)/src/lib
 
 EXTRA_DIST = src/cli/args.yuck src/cli/args.yucc
@@ -19,6 +19,8 @@ proctal_SOURCES = \
 	src/cli/cmd/search.c \
 	src/cli/cmd/val.h \
 	src/cli/cmd/val.c \
+	src/cli/parser.h \
+	src/cli/parser.c \
 	src/cli/cmd.h
 proctal_LDADD = libproctal.la
 proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
@@ -51,10 +53,14 @@ libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 # and that you should be wary of renamed objects when *_CFLAGS is defined.
 src/cli/proctal-main.$(OBJEXT): src/cli/args.yucc
 
+# Expands M4 macros.
+src/cli/args.yuck: $(srcdir)/src/cli/args.yuck.m4
+	m4 $^ > $@
+
 # Generates argument parsing code.
-src/cli/args.yucc: $(srcdir)/src/cli/args.yuck
-	$(YUCK) gen --no-auto-flags --no-auto-actions $(srcdir)/src/cli/args.yuck -o $@
+src/cli/args.yucc: src/cli/args.yuck
+	$(YUCK) gen --no-auto-flags --no-auto-actions $^ -o $@
 
 # Generates man page.
-src/cli/proctal.1: $(srcdir)/src/cli/args.yuck
-	$(YUCK) genman $(srcdir)/src/cli/args.yuck -o $@
+src/cli/proctal.1: src/cli/args.yuck
+	$(YUCK) genman $^ -o $@

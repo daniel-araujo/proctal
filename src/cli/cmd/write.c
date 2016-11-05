@@ -13,9 +13,10 @@ int proctal_cmd_write(struct proctal_cmd_write_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	size_t size = proctal_cmd_val_size(arg->type);
+	size_t size = proctal_cmd_val_sizeof(arg->value);
+	char *input = proctal_cmd_val_addr(arg->value);
 
-	proctal_write(p, arg->address, arg->value, size);
+	proctal_write(p, arg->address, input, size);
 
 	switch (proctal_error(p)) {
 	case 0:

@@ -8,7 +8,7 @@ struct proctal_cmd_read_arg {
 
 	void *address;
 
-	enum proctal_cmd_val_type type;
+	proctal_cmd_val_attr value_attr;
 };
 
 struct proctal_cmd_write_arg {
@@ -16,58 +16,56 @@ struct proctal_cmd_write_arg {
 
 	void *address;
 
-	enum proctal_cmd_val_type type;
-
-	void* value;
+	proctal_cmd_val value;
 };
 
 struct proctal_cmd_search_arg {
 	int pid;
 
-	enum proctal_cmd_val_type type;
+	proctal_cmd_val_attr value_attr;
 
 	// Whether we're going to read from stdin.
 	int input;
 
 	// Whether to perform an equality check.
 	int eq;
-	void* eq_value;
+	proctal_cmd_val eq_value;
 
 	// Whether to perform a not equals check.
 	int ne;
-	void* ne_value;
+	proctal_cmd_val ne_value;
 
 	// Whether to perform greather than.
 	int gt;
-	void* gt_value;
+	proctal_cmd_val gt_value;
 
 	// Whether to perform greather than equals.
 	int gte;
-	void* gte_value;
+	proctal_cmd_val gte_value;
 
 	// Whether to perform less than.
 	int lt;
-	void* lt_value;
+	proctal_cmd_val lt_value;
 
 	// Whether to perform less than equals.
 	int lte;
-	void* lte_value;
+	proctal_cmd_val lte_value;
 
 	// Whether to check if it was incremented.
 	int inc;
-	void* inc_value;
+	proctal_cmd_val inc_value;
 
 	// Whether to check if it was incremented up to and including value.
 	int inc_up_to;
-	void* inc_up_to_value;
+	proctal_cmd_val inc_up_to_value;
 
 	// Whether to check if it was decremented.
 	int dec;
-	void* dec_value;
+	proctal_cmd_val dec_value;
 
 	// Whether to check if it was decremented up to and including value.
 	int dec_up_to;
-	void* dec_up_to_value;
+	proctal_cmd_val dec_up_to_value;
 
 	// Whether to check if it was changed.
 	int changed;

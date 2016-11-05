@@ -13,10 +13,11 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	size_t size = proctal_cmd_val_size(arg->type);
-	char value[size];
+	proctal_cmd_val value = proctal_cmd_val_create(arg->value_attr);
+	size_t size = proctal_cmd_val_sizeof(value);
+	char *output = proctal_cmd_val_addr(value);
 
-	proctal_read(p, arg->address, value, size);
+	proctal_read(p, arg->address, output, size);
 
 	switch (proctal_error(p)) {
 	case 0:
@@ -34,7 +35,7 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 		return 1;
 	}
 
-	proctal_cmd_val_print(stdout, arg->type, value);
+	proctal_cmd_val_print(value, stdout);
 	printf("\n");
 
 	proctal_destroy(p);
