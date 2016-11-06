@@ -54,17 +54,31 @@ Example:
 
   -p, --pid=PID         Process ID of a running program.
   -a, --address=ADDR    Start address of value to read.
+  --array=SIZE          Makes the command read SIZE values in adjacent memory
+                        addresses. By default SIZE is equal to 1.
+                        is 1.
   TYPE_ARGUMENTS
 
 
-Usage: proctal write VALUE
+Usage: proctal write VALUES...
 Writes values to the address space of a running program.
+
+The first value passed will be written to the given address, the the remaining
+ones will be written to the memory address coming after the previous one
+without overwriting the previous value.
 
 Example:
         proctal write --pid=12345 --address=1c09346 99
 
   -p, --pid=pid         process id of a running program.
   -a, --address=ADDR    Start address where value will be written.
+  --array=SIZE          Makes the command write SIZE values in adjacent
+                        addresses. If less than SIZE values are provided, then
+                        when in need of more values it will cycle back through
+                        the provided values. This behavior allows you to
+                        specify a single value and have it written SIZE times.
+                        If SIZE is not provided, it will be set to the number
+                        of values given to the command.
   --repeat              Whether to repeatedly write the same value to the
                         address until the program is told to shut down.
   --repeat-delay=DELAY  If the repeat option is passed, this sets the delay in
@@ -78,7 +92,7 @@ Usage: proctal search
 Searches for values in the address space of a running program.
 
 Example:
-        proctal search -type=int --pid=12345 --address=1c09346 --eq 12
+        proctal search -type=integer --pid=12345 --address=1c09346 --eq 12
         d32428          12
         d4ccc4          12
         d80984          12
@@ -89,7 +103,7 @@ Example:
   -i, --input           reads addresses and values from a previous scan of the
                         same type from standard input.
   TYPE_ARGUMENTS
-  --eq=VAL              Equal VAL
+  --eq=VAL              Equal to VAL
   --ne=VAL              Not equal to VAL
   --gt=VAL              Greater than VAL
   --gte=VAL             Greater than or equal to VAL

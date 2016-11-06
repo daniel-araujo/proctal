@@ -8,6 +8,9 @@ struct proctal_cmd_read_arg {
 
 	void *address;
 
+	// Number of values expected to read.
+	size_t array;
+
 	proctal_cmd_val_attr value_attr;
 };
 
@@ -16,7 +19,13 @@ struct proctal_cmd_write_arg {
 
 	void *address;
 
-	proctal_cmd_val value;
+	// Number of values expected to write.
+	size_t array;
+
+	// Points to the first element of the list of values.
+	proctal_cmd_val *first_value;
+	// Points to the address after the last element of the list of values.
+	proctal_cmd_val *end_value;
 
 	// Whether to write the same value repeatedly until the program is told
 	// to shut down.

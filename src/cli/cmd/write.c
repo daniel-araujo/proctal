@@ -14,26 +14,37 @@ int proctal_cmd_write(struct proctal_cmd_write_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	size_t size = proctal_cmd_val_sizeof(arg->value);
-	char *input = proctal_cmd_val_addr(arg->value);
-
 	do {
-		proctal_write(p, arg->address, input, size);
+		proctal_cmd_val *v = arg->first_value;
+		char *addr = (char *) arg->address;
+		for (size_t i = 0; i < arg->array; ++i) {
+			if (v == arg->end_value) {
+				v = arg->first_value;
+			}
 
-		switch (proctal_error(p)) {
-		case 0:
-			break;
+			size_t size = proctal_cmd_val_sizeof(*v);
+			char *input = proctal_cmd_val_addr(*v);
 
-		case PROCTAL_ERROR_PERMISSION_DENIED:
-			fprintf(stderr, "No permission.\n");
-			proctal_error_ack(p);
-			return 1;
+			proctal_write(p, addr, input, size);
 
-		default:
-		case PROCTAL_ERROR_WRITE_FAILURE:
-			fprintf(stderr, "Failed to write to memory.\n");
-			proctal_destroy(p);
-			return 1;
+			switch (proctal_error(p)) {
+			case 0:
+				break;
+
+			case PROCTAL_ERROR_PERMISSION_DENIED:
+				fprintf(stderr, "No permission.\n");
+				proctal_error_ack(p);
+				return 1;
+
+			default:
+			case PROCTAL_ERROR_WRITE_FAILURE:
+				fprintf(stderr, "Failed to write to memory.\n");
+				proctal_destroy(p);
+				return 1;
+			}
+
+			v += 1;
+			addr += size;
 		}
 
 		if (arg->repeat && arg->repeat_delay > 0) {

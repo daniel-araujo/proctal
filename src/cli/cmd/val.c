@@ -335,6 +335,7 @@ size_t proctal_cmd_val_sizeof(proctal_cmd_val v)
 		case PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_64:
 			return sizeof (int64_t);
 		}
+		break;
 
 	case PROCTAL_CMD_VAL_TYPE_IEEE754:
 		switch (((struct proctal_cmd_val_attr_ieee754 *) v->attr.type_attr)->precision) {
@@ -347,6 +348,7 @@ size_t proctal_cmd_val_sizeof(proctal_cmd_val v)
 		case PROCTAL_CMD_VAL_TYPE_IEEE754_PRECISION_EXTENDED:
 			return sizeof (long double);
 		}
+		break;
 
 	case PROCTAL_CMD_VAL_TYPE_TEXT:
 		return ((struct proctal_cmd_val_str *) v->value)->size;

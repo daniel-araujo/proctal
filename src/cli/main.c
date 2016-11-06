@@ -229,18 +229,32 @@ static struct proctal_cmd_read_arg *create_proctal_cmd_read_arg_from_yuck_arg(yu
 		return NULL;
 	}
 
-	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->search.type_arg);
+	if (yuck_arg->read.array_arg != NULL) {
+		if (!proctal_cmd_parse_int(yuck_arg->read.array_arg, (int *) &arg->array)) {
+			fputs("Invalid array size.\n", stderr);
+			destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->array = 1;
+	}
+
+	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->read.type_arg);
 	arg->value_attr = proctal_cmd_val_attr_create(t);
 
-	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->search)
+	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->read)
 
 	return arg;
 }
 
 static void destroy_proctal_cmd_write_arg_from_yuck_arg(struct proctal_cmd_write_arg *arg)
 {
-	if (arg->value) {
-		proctal_cmd_val_destroy(arg->value);
+	if (arg->first_value) {
+		for (size_t i = 0; arg->first_value + i != arg->end_value; ++i) {
+			proctal_cmd_val_destroy(arg->first_value[i]);
+		}
+
+		free(arg->first_value);
 	}
 
 	free(arg);
@@ -249,7 +263,8 @@ static void destroy_proctal_cmd_write_arg_from_yuck_arg(struct proctal_cmd_write
 static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
 	struct proctal_cmd_write_arg *arg = malloc(sizeof *arg);
-	arg->value = NULL;
+	arg->first_value = NULL;
+	arg->end_value = NULL;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
 		fputs("Wrong command.\n", stderr);
@@ -257,8 +272,8 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 		return NULL;
 	}
 
-	if (yuck_arg->nargs != 1) {
-		fputs("Wrong number of arguments.\n", stderr);
+	if (yuck_arg->nargs == 0) {
+		fputs("You must provide at least 1 value.\n", stderr);
 		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
@@ -292,14 +307,40 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 
 	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->write)
 
-	arg->value = proctal_cmd_val_create(value_attr);
+	arg->first_value = malloc(sizeof (proctal_cmd_val) + yuck_arg->nargs);
+
+	if (arg->first_value == NULL) {
+		fputs("Failed to allocate memory for values.\n", stderr);
+		proctal_cmd_val_attr_destroy(value_attr);
+		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	arg->end_value = arg->first_value;
+	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
+		 proctal_cmd_val v = proctal_cmd_val_create(value_attr);
+
+		if (!proctal_cmd_val_parse(v, yuck_arg->args[i])) {
+			fprintf(stderr, "Value #%d is invalid.\n", i);
+			proctal_cmd_val_attr_destroy(value_attr);
+			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+
+		arg->first_value[i] = v;
+		arg->end_value = arg->first_value + i + 1;
+	}
 
 	proctal_cmd_val_attr_destroy(value_attr);
 
-	if (!proctal_cmd_val_parse(arg->value, yuck_arg->args[0])) {
-		fputs("Invalid value.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
-		return NULL;
+	if (yuck_arg->read.array_arg != NULL) {
+		if (!proctal_cmd_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
+			fputs("Invalid array size.\n", stderr);
+			destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->array = arg->end_value - arg->first_value;
 	}
 
 	if (yuck_arg->write.repeat_flag) {

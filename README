@@ -22,7 +22,6 @@ Planned:
 - Read watch points
 - Write watch points
 - Reading and writing text
-- Reading and writing multiple values in contiguous addresses
 - Freezing execution
 - Allocating and deallocating readable/writable/executable address spaces
 
