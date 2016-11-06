@@ -2,6 +2,27 @@
 
 #include "cmd.h"
 
+static inline void print_separator(struct proctal_cmd_read_arg *arg)
+{
+	switch (proctal_cmd_val_attr_type(arg->value_attr)) {
+	case PROCTAL_CMD_VAL_TYPE_TEXT:
+		break;
+
+	case PROCTAL_CMD_VAL_TYPE_BYTE:
+	case PROCTAL_CMD_VAL_TYPE_INTEGER:
+	case PROCTAL_CMD_VAL_TYPE_IEEE754:
+	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
+	default:
+		printf("\n");
+		break;
+	}
+}
+
+static inline void print_ending(struct proctal_cmd_read_arg *arg)
+{
+	printf("\n");
+}
+
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 {
 	proctal p = proctal_create();
@@ -38,10 +59,15 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 		}
 
 		proctal_cmd_val_print(value, stdout);
-		printf("\n");
 
 		addr += size;
+
+		if (i < arg->array - 1) {
+			print_separator(arg);
+		}
 	}
+
+	print_ending(arg);
 
 	proctal_destroy(p);
 

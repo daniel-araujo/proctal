@@ -63,11 +63,13 @@ void proctal_cmd_val_attr_set_text_charset(
 	proctal_cmd_val_attr a,
 	enum proctal_cmd_val_type_text_charset charset);
 
+enum proctal_cmd_val_type proctal_cmd_val_attr_type(proctal_cmd_val_attr a);
 size_t proctal_cmd_val_attr_alignof(proctal_cmd_val_attr a);
 
 proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a);
 void proctal_cmd_val_destroy(proctal_cmd_val v);
 
+enum proctal_cmd_val_type proctal_cmd_val_type(proctal_cmd_val v);
 size_t proctal_cmd_val_alignof(proctal_cmd_val v);
 size_t proctal_cmd_val_sizeof(proctal_cmd_val v);
 char *proctal_cmd_val_addr(proctal_cmd_val v);

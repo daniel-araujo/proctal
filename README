@@ -21,7 +21,6 @@ Planned:
 - Overwrite instructions directly from assembly mnemonics
 - Read watch points
 - Write watch points
-- Reading and writing text
 - Freezing execution
 - Allocating and deallocating readable/writable/executable address spaces
 

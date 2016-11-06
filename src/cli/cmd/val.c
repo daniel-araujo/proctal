@@ -269,6 +269,11 @@ proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a)
 	return v;
 }
 
+enum proctal_cmd_val_type proctal_cmd_val_attr_type(proctal_cmd_val_attr a)
+{
+	return a->type;
+}
+
 size_t proctal_cmd_val_attr_alignof(proctal_cmd_val_attr a)
 {
 	switch (a->type) {
@@ -308,6 +313,11 @@ size_t proctal_cmd_val_attr_alignof(proctal_cmd_val_attr a)
 	}
 
 	return 1;
+}
+
+enum proctal_cmd_val_type proctal_cmd_val_type(proctal_cmd_val v)
+{
+	return proctal_cmd_val_attr_type(&v->attr);
 }
 
 size_t proctal_cmd_val_alignof(proctal_cmd_val v)

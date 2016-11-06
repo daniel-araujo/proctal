@@ -321,7 +321,7 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 		 proctal_cmd_val v = proctal_cmd_val_create(value_attr);
 
 		if (!proctal_cmd_val_parse(v, yuck_arg->args[i])) {
-			fprintf(stderr, "Value #%d is invalid.\n", i);
+			fprintf(stderr, "Value #%zu is invalid.\n", i);
 			proctal_cmd_val_attr_destroy(value_attr);
 			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
@@ -336,7 +336,7 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 	if (yuck_arg->read.array_arg != NULL) {
 		if (!proctal_cmd_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
 			fputs("Invalid array size.\n", stderr);
-			destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
 		}
 	} else {
