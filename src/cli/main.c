@@ -7,6 +7,8 @@
 #include "args.yucc"
 
 #define PARSE_TYPE_ATTRIBUTES(ATTR, YUCK) \
+	proctal_cmd_val_attr_set_endianness(ATTR, proctal_cmd_val_type_endianness_by_name(YUCK.endianness_arg)); \
+\
 	switch (t) { \
 	case PROCTAL_CMD_VAL_TYPE_INTEGER: \
 		proctal_cmd_val_attr_set_integer_size(ATTR, proctal_cmd_val_type_integer_size_by_name(YUCK.integer_size_arg)); \
@@ -72,6 +74,22 @@ static enum proctal_cmd_val_type proctal_cmd_val_type_by_name(const char *name)
 		sizeof options / sizeof options[0],
 		name,
 		(void *) PROCTAL_CMD_VAL_TYPE_BYTE);
+}
+
+static enum proctal_cmd_val_type_endianness proctal_cmd_val_type_endianness_by_name(const char *name)
+{
+	static struct value_options options[] = {
+		{
+			.name = "little",
+			.value = (void *) PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE,
+		},
+	};
+
+	return (enum proctal_cmd_val_type_integer_size) value_by_name(
+		options,
+		sizeof options / sizeof options[0],
+		name,
+		(void *) PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE);
 }
 
 static enum proctal_cmd_val_type_integer_size proctal_cmd_val_type_integer_size_by_name(const char *name)

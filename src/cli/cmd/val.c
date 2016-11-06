@@ -21,6 +21,7 @@ struct proctal_cmd_val_attr_integer {
 struct proctal_cmd_val_attr {
 	enum proctal_cmd_val_type type;
 	void *type_attr;
+	enum proctal_cmd_val_type_endianness endianness;
 };
 
 struct proctal_cmd_val_str {
@@ -43,6 +44,7 @@ proctal_cmd_val_attr proctal_cmd_val_attr_create(enum proctal_cmd_val_type type)
 
 	a->type = type;
 	a->type_attr = NULL;
+	a->endianness = PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE;
 
 	switch (a->type) {
 	case PROCTAL_CMD_VAL_TYPE_INTEGER: {
@@ -97,6 +99,13 @@ void proctal_cmd_val_attr_destroy(proctal_cmd_val_attr a)
 	}
 
 	free(a);
+}
+
+void proctal_cmd_val_attr_set_endianness(
+	proctal_cmd_val_attr a,
+	enum proctal_cmd_val_type_endianness endianness)
+{
+	a->endianness = endianness;
 }
 
 void proctal_cmd_val_attr_set_integer_size(

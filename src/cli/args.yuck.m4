@@ -7,6 +7,10 @@ define(`TYPE_ARGUMENTS', `
                         ieee754
                         text
                         address
+  --endianness=ENDIANNESS
+                        By default ENDIANNESS is little.
+                        ENDIANNESS can be one of:
+                        little
   --integer-size=SIZE
                         If type is integer, this determines the number of bits
                         stored in memory. By default SIZE is 8.

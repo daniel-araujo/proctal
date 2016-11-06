@@ -19,10 +19,8 @@ Planned:
 - Freezing values in memory
 - Read watch points
 - Write watch points
-- Integer types from a combination of size, signing convention and endianness
 - Reading and writing text
-- Reading and writing multiple values in contiguous memory
-- Specifying floating point comparison precision
+- Reading and writing multiple values in contiguous addresses
 - Freezing execution
 - Allocating and deallocating memory manually
 

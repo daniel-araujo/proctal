@@ -12,6 +12,10 @@ enum proctal_cmd_val_type {
 	PROCTAL_CMD_VAL_TYPE_ADDRESS,
 };
 
+enum proctal_cmd_val_type_endianness {
+	PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE,
+};
+
 enum proctal_cmd_val_type_integer_size {
 	PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_8,
 	PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_16,
@@ -39,6 +43,10 @@ typedef struct proctal_cmd_val *proctal_cmd_val;
 
 proctal_cmd_val_attr proctal_cmd_val_attr_create(enum proctal_cmd_val_type type);
 void proctal_cmd_val_attr_destroy(proctal_cmd_val_attr a);
+
+void proctal_cmd_val_attr_set_endianness(
+	proctal_cmd_val_attr a,
+	enum proctal_cmd_val_type_endianness endianness);
 
 void proctal_cmd_val_attr_set_integer_size(
 	proctal_cmd_val_attr a,
