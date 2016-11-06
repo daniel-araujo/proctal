@@ -5,6 +5,8 @@ address space of a running program on Linux. It can be used like a process
 memory editor or to provide the base functionality for building one that is
 domain-specific.
 
+Currently only tested on x86-64 Linux.
+
 **Note:** This is work in progress and as such the API is unstable and the
 documentation is done as an afterthought. This will change as the project
 matures.
