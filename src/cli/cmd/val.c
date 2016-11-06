@@ -366,9 +366,10 @@ char *proctal_cmd_val_addr(proctal_cmd_val v)
 	case PROCTAL_CMD_VAL_TYPE_BYTE:
 	case PROCTAL_CMD_VAL_TYPE_INTEGER:
 	case PROCTAL_CMD_VAL_TYPE_IEEE754:
-	case PROCTAL_CMD_VAL_TYPE_TEXT:
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
 		return (char *) v->value;
+	case PROCTAL_CMD_VAL_TYPE_TEXT:
+		return (char *) ((struct proctal_cmd_val_str *) v->value)->data;
 	}
 
 	return NULL;
@@ -560,8 +561,11 @@ int proctal_cmd_val_cmp(proctal_cmd_val v1, proctal_cmd_val v2)
 
 int proctal_cmd_val_print(proctal_cmd_val v, FILE *f)
 {
+#define PRINTFV(FORMAT, TYPE, VALUE) \
+	fprintf(f, FORMAT, *(TYPE *) VALUE)
+
 #define PRINTF(FORMAT, TYPE) \
-	fprintf(f, FORMAT, *(TYPE *) v->value);
+	PRINTFV(FORMAT, TYPE, v->value)
 
 	switch (v->attr.type) {
 	case PROCTAL_CMD_VAL_TYPE_BYTE:
@@ -612,7 +616,7 @@ int proctal_cmd_val_print(proctal_cmd_val v, FILE *f)
 
 	case PROCTAL_CMD_VAL_TYPE_TEXT:
 		if (((struct proctal_cmd_val_attr_text *) v->attr.type_attr)->charset == PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII) {
-			return PRINTF("%c", char);
+			return PRINTFV("%c", char, (char *) ((struct proctal_cmd_val_str *) v->value)->data);
 		}
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
@@ -620,14 +624,18 @@ int proctal_cmd_val_print(proctal_cmd_val v, FILE *f)
 	}
 
 #undef PRINTF
+#undef PRINTFV
 
 	return 0;
 }
 
 int proctal_cmd_val_scan(proctal_cmd_val v, FILE *f)
 {
+#define SCANFV(FORMAT, TYPE, VALUE) \
+	(fscanf(f, FORMAT, (TYPE *) VALUE) == 1 ? 1 : 0)
+
 #define SCANF(FORMAT, TYPE) \
-	fscanf(f, FORMAT, (TYPE *) v->value) == 1 ? 1 : 0;
+	SCANFV(FORMAT, TYPE, v->value)
 
 	switch (v->attr.type) {
 	case PROCTAL_CMD_VAL_TYPE_BYTE:
@@ -678,7 +686,7 @@ int proctal_cmd_val_scan(proctal_cmd_val v, FILE *f)
 
 	case PROCTAL_CMD_VAL_TYPE_TEXT:
 		if (((struct proctal_cmd_val_attr_text *) v->attr.type_attr)->charset == PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII) {
-			return SCANF("%c", char);
+			return SCANFV("%c", char, ((struct proctal_cmd_val_str *) v->value)->data);
 		}
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
@@ -686,14 +694,18 @@ int proctal_cmd_val_scan(proctal_cmd_val v, FILE *f)
 	}
 
 #undef SCANF
+#undef SCANFV
 
 	return 0;
 }
 
 int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 {
+#define SCANFV(FORMAT, TYPE, VALUE) \
+	(sscanf(s, FORMAT, (TYPE *) VALUE) == 1 ? 1 : 0)
+
 #define SCANF(FORMAT, TYPE) \
-	sscanf(s, FORMAT, (TYPE *) v->value) == 1 ? 1 : 0;
+	SCANFV(FORMAT, TYPE, v->value)
 
 	switch (v->attr.type) {
 	case PROCTAL_CMD_VAL_TYPE_BYTE:
@@ -744,7 +756,7 @@ int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 
 	case PROCTAL_CMD_VAL_TYPE_TEXT:
 		if (((struct proctal_cmd_val_attr_text *) v->attr.type_attr)->charset == PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII) {
-			return SCANF("%c", char);
+			return SCANFV("%c", char, ((struct proctal_cmd_val_str *) v->value)->data);
 		}
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
@@ -752,6 +764,7 @@ int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 	}
 
 #undef SCANF
+#undef SCANFV
 
 	return 0;
 }
