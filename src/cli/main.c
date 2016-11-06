@@ -302,6 +302,23 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 		return NULL;
 	}
 
+	if (yuck_arg->write.repeat_flag) {
+		arg->repeat = 1;
+
+		if (yuck_arg->write.repeat_delay_arg) {
+			if (!proctal_cmd_parse_int(yuck_arg->write.repeat_delay_arg, &arg->repeat_delay)) {
+				fputs("Invalid repeat delay.\n", stderr);
+				destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+				return NULL;
+			}
+		} else {
+			arg->repeat_delay = 5;
+		}
+	} else {
+		arg->repeat = 0;
+	}
+
+
 	return arg;
 }
 

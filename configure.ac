@@ -10,19 +10,22 @@ AC_CONFIG_SRCDIR([src/lib/proctal.h])
 AC_CONFIG_HEADERS([config.h:config.h.in])
 AC_CONFIG_FILES([Makefile])
 
-# Checks for programs.
 AC_PROG_CC
-PROCTAL_FIND_PROG([YUCK], [yuck])
-
-# Checks for libraries.
-
-# Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADER([sys/ptrace.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
-# Checks for library functions.
+PROCTAL_FIND_PROG([YUCK], [yuck])
+
+PROCTAL_CHECK_HEADER([HAVE_SYS_PTRACE_H], [sys/ptrace.h], [required])
+
+PROCTAL_CHECK_HEADER([HAVE_UNISTD_H], [unistd.h], [required])
+
+PROCTAL_CHECK_FUNC([HAVE_USLEEP], [usleep], [required])
+
+if test -n "$HAVE_USLEEP"; then
+	proctal_xopen_flags="-D_XOPEN_SOURCE=500"
+fi
+
+AC_SUBST(proctal_xopen_flags)
 
 AC_OUTPUT

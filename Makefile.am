@@ -1,5 +1,5 @@
 proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
-	-Wmissing-prototypes -Wno-switch
+	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags)
 proctal_lib_headers_dir = $(srcdir)/src/lib
 
 EXTRA_DIST = src/cli/args.yuck src/cli/args.yucc

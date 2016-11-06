@@ -65,6 +65,13 @@ Example:
 
   -p, --pid=pid         process id of a running program.
   -a, --address=ADDR    Start address where value will be written.
+  --repeat              Whether to repeatedly write the same value to the
+                        address until the program is told to shut down.
+  --repeat-delay=DELAY  If the repeat option is passed, this sets the delay in
+                        milliseconds between each write. A delay value of 0
+                        essentially removes the delay and will let the program
+                        use every CPU cycle it gets to overwrite the value. By
+                        default, DELAY is set to 5.
   TYPE_ARGUMENTS
 
 Usage: proctal search

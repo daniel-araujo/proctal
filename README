@@ -14,11 +14,11 @@ matures.
 Features:
 - Reading and writing values in memory
 - Searching for values with a vast combination of filters
+- Writing a value to memory repeatedly fast, essentially freezing it
 
 Planned:
 - Showing disassembly of instructions
 - Overwrite instructions directly from assembly mnemonics
-- Freezing values in memory
 - Read watch points
 - Write watch points
 - Reading and writing text

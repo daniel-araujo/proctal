@@ -17,6 +17,13 @@ struct proctal_cmd_write_arg {
 	void *address;
 
 	proctal_cmd_val value;
+
+	// Whether to write the same value repeatedly until the program is told
+	// to shut down.
+	int repeat;
+	// A delay in milliseconds before writing to the address again. Without
+	// a delay you could theoretically turn your CPU into a heater.
+	int repeat_delay;
 };
 
 struct proctal_cmd_search_arg {
