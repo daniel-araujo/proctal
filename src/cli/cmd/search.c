@@ -121,6 +121,20 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 	size_t size = proctal_cmd_val_sizeof(value);
 
 	proctal_addr_iter iter = proctal_addr_iter_create(p);
+
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	case PROCTAL_ERROR_OUT_OF_MEMORY:
+		fprintf(stderr, "Out of memory.\n");
+		return;
+
+	default:
+		fprintf(stderr, "Failed to create a Proctal address iterator.\n");
+		return;
+	}
+
 	proctal_addr_iter_set_align(iter, proctal_cmd_val_alignof(value));
 	proctal_addr_iter_set_size(iter, size);
 	proctal_addr_iter_set_region(iter, 0);
@@ -228,8 +242,18 @@ int proctal_cmd_search(struct proctal_cmd_search_arg *arg)
 {
 	proctal p = proctal_create();
 
-	if (p == NULL) {
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	case PROCTAL_ERROR_OUT_OF_MEMORY:
+		fprintf(stderr, "Out of memory.\n");
+		proctal_destroy(p);
+		return 1;
+
+	default:
 		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+		proctal_destroy(p);
 		return 1;
 	}
 

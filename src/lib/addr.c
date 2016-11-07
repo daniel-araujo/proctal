@@ -140,7 +140,8 @@ proctal_addr_iter proctal_addr_iter_create(proctal p)
 	proctal_addr_iter iter = proctal_alloc(p, sizeof *iter);
 
 	if (iter == NULL) {
-		return iter;
+		proctal_set_error(p, PROCTAL_ERROR_OUT_OF_MEMORY);
+		return NULL;
 	}
 
 	iter->p = p; 
@@ -155,6 +156,10 @@ proctal_addr_iter proctal_addr_iter_create(proctal p)
 
 void proctal_addr_iter_destroy(proctal_addr_iter iter)
 {
+	if (iter == NULL) {
+		return;
+	}
+
 	proctal_dealloc(iter->p, iter);
 }
 

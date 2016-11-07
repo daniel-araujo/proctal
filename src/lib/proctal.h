@@ -7,15 +7,24 @@
 #define PROCTAL_ADDR_REGION_STACK 1
 #define PROCTAL_ADDR_REGION_HEAP 2
 
-#define PROCTAL_ERROR_PERMISSION_DENIED 1
-#define PROCTAL_ERROR_WRITE_FAILURE 2
-#define PROCTAL_ERROR_READ_FAILURE 3
+#define PROCTAL_ERROR_OUT_OF_MEMORY 1
+#define PROCTAL_ERROR_PERMISSION_DENIED 2
+#define PROCTAL_ERROR_WRITE_FAILURE 3
+#define PROCTAL_ERROR_READ_FAILURE 4
 
 typedef struct proctal *proctal;
 typedef struct proctal_addr_iter *proctal_addr_iter;
 
 /*
  * Creates and deletes an instance of Proctal.
+ *
+ * There's always a tiny chance that creating an instance fails, such as when
+ * running out of memory, so you're better off calling proctal_error right
+ * after calling this function to make sure you don't use an invalid instance.
+ * Regardless if it succeeds or fails, you still need to call proctal_destroy.
+ * Do not compare it to NULL.
+ *
+ * Using an invalid instance of Proctal results in undefined behavior.
  */
 proctal proctal_create(void);
 void proctal_destroy(proctal p);
@@ -152,7 +161,10 @@ size_t proctal_write_address_array(proctal p, void *addr, void **in, size_t size
  * proctal_addr_iter_create. It will return an opaque data structure that
  * represents the iterator. With it you're allowed to call functions that alter
  * the behavior of the iterator, like proctal_addr_iter_set_align and
- * proctal_addr_iter_set_size.
+ * proctal_addr_iter_set_size. This function can fail, so you should call
+ * proctal_error right after it to make sure nothing went wrong with it.
+ * On failure you do not need to call proctal_addr_iter_destroy. Do not
+ * compare it to NULL.
  *
  * With the iterator configured to your liking, you can query addresses by
  * multiple calls to proctal_addr_iter_next. At this point you can no longer
@@ -161,7 +173,7 @@ size_t proctal_write_address_array(proctal p, void *addr, void **in, size_t size
  * and on failure. To check that it returned 0 because of a failure, call
  * proctal_error
  *
- * Once you're done iterating, you can call proctal_addr_iter_finish to declare
+ * Once you're done iterating, you can call proctal_addr_iter_destroy to declare
  * the iterator data structure as garbage or proctal_addr_iter_restart to get
  * to the same stage after a call to proctal_addr_iter_create while retaining
  * your custom configuration.

@@ -39,6 +39,10 @@ proctal proctal_create(void)
 
 void proctal_destroy(proctal p)
 {
+	if (p == NULL) {
+		return;
+	}
+
 	if (p->memr) {
 		fclose(p->memr);
 	}
@@ -87,6 +91,10 @@ pid_t proctal_pid(proctal p)
 
 int proctal_error(proctal p)
 {
+	if (p == NULL) {
+		return PROCTAL_ERROR_OUT_OF_MEMORY;
+	}
+
 	return p->error;
 }
 
