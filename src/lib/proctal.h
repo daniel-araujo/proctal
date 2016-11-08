@@ -11,6 +11,7 @@
 #define PROCTAL_ERROR_PERMISSION_DENIED 2
 #define PROCTAL_ERROR_WRITE_FAILURE 3
 #define PROCTAL_ERROR_READ_FAILURE 4
+#define PROCTAL_ERROR_UNKNOWN 5
 
 typedef struct proctal *proctal;
 typedef struct proctal_addr_iter *proctal_addr_iter;
@@ -214,6 +215,15 @@ void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
  */
 long proctal_addr_iter_region(proctal_addr_iter iter);
 void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
+
+/*
+ * Freezes and unfreezes all threads of execution.
+ *
+ * You should unfreeze before destroying or exiting your program otherwise it
+ * will stay frozen.
+ */
+int proctal_freeze(proctal p);
+int proctal_unfreeze(proctal p);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.

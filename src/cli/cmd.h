@@ -96,10 +96,16 @@ struct proctal_cmd_search_arg {
 	int decreased;
 };
 
+struct proctal_cmd_freeze_arg {
+	int pid;
+};
+
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);
 
 int proctal_cmd_write(struct proctal_cmd_write_arg *arg);
 
 int proctal_cmd_search(struct proctal_cmd_search_arg *arg);
+
+int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg);
 
 #endif /* CMD_H */

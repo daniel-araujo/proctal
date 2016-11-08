@@ -117,3 +117,14 @@ Example:
   --unchanged           Value did not change from previous scan
   --increased           Value increased from previous scan
   --decreased           Value decreased from previous scan
+
+Usage: proctal freeze
+Freezes every thread of execution.
+
+The running program will be frozen as long as the command is executing. It will
+only stop executing when it receives EOF from standard input.
+
+Example:
+        proctal freeze --pid=12345
+
+  -p, --pid=pid         process id of a running program.

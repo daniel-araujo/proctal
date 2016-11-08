@@ -18,6 +18,8 @@ PROCTAL_FIND_PROG([YUCK], [yuck])
 
 PROCTAL_CHECK_HEADER([HAVE_SYS_PTRACE_H], [sys/ptrace.h], [required])
 
+PROCTAL_CHECK_FUNC([HAVE_PTRACE], [ptrace], [required])
+
 PROCTAL_CHECK_HEADER([HAVE_UNISTD_H], [unistd.h], [required])
 
 PROCTAL_CHECK_FUNC([HAVE_USLEEP], [usleep], [required])
