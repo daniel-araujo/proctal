@@ -217,10 +217,10 @@ long proctal_addr_iter_region(proctal_addr_iter iter);
 void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
 
 /*
- * Freezes and unfreezes all threads of execution.
+ * Freezes and unfreezes main thread of execution.
  *
  * You should unfreeze before destroying or exiting your program otherwise it
- * will stay frozen.
+ * will cause undefined behavior.
  */
 int proctal_freeze(proctal p);
 int proctal_unfreeze(proctal p);

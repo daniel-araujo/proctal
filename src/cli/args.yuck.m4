@@ -119,7 +119,7 @@ Example:
   --decreased           Value decreased from previous scan
 
 Usage: proctal freeze
-Freezes every thread of execution.
+Freezes main thread of execution.
 
 The running program will be frozen as long as the command is executing. It will
 stop executing when it receives the SIGINT signal.
