@@ -122,9 +122,12 @@ Usage: proctal freeze
 Freezes every thread of execution.
 
 The running program will be frozen as long as the command is executing. It will
-only stop executing when it receives EOF from standard input.
+stop executing when it receives the SIGINT signal.
 
 Example:
         proctal freeze --pid=12345
 
   -p, --pid=pid         process id of a running program.
+  -i, --input           additionally to quitting when receiving SIGINT, will
+                        read from standard input and quit when no more input is
+                        available, whichever happens first.

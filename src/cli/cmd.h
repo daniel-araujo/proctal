@@ -98,6 +98,9 @@ struct proctal_cmd_search_arg {
 
 struct proctal_cmd_freeze_arg {
 	int pid;
+
+	// Whether to quit when no more input is available.
+	int input;
 };
 
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);

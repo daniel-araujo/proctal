@@ -28,6 +28,9 @@ if test -n "$HAVE_USLEEP"; then
 	proctal_xopen_flags="-D_XOPEN_SOURCE=500"
 fi
 
+proctal_posix_flags="-D_POSIX_C_SOURCE=200112L"
+
 AC_SUBST(proctal_xopen_flags)
+AC_SUBST(proctal_posix_flags)
 
 AC_OUTPUT

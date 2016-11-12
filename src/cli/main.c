@@ -521,6 +521,8 @@ static struct proctal_cmd_freeze_arg *create_proctal_cmd_freeze_arg_from_yuck_ar
 		return NULL;
 	}
 
+	arg->input = yuck_arg->freeze.input_flag == 1;
+
 	return arg;
 }
 
