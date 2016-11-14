@@ -14,6 +14,7 @@
 #define PROCTAL_ERROR_UNKNOWN 5
 
 typedef struct proctal *proctal;
+typedef struct proctal_watch *proctal_watch;
 typedef struct proctal_addr_iter *proctal_addr_iter;
 
 /*
@@ -224,6 +225,52 @@ void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
  */
 int proctal_freeze(proctal p);
 int proctal_unfreeze(proctal p);
+
+/*
+ * Watches for accesses at a defined address by the main execution thread.
+ *
+ * You start by calling proctal_watch_create to create a watch handle. You
+ * should check if the watch handle successfully created by calling
+ * proctal_error.
+ *
+ * You can define the address you want to watch by calling
+ * proctal_watch_set_addr.
+ *
+ * You can set whether you want to watch for reads or writes by calling
+ * proctal_watch_set_read and proctal_watch_set_write.
+ *
+ * Once the watch handler is configured, you can call proctal_watch_next which
+ * will block until an access is made. After the first call, you may no longer
+ * configure it any further.
+ *
+ * Once you're done using the handle, you must call proctal_watch_destroy to
+ * release it.
+ */
+proctal_watch proctal_watch_create(proctal p);
+int proctal_watch_next(proctal_watch pw, void **addr);
+void proctal_watch_destroy(proctal_watch pw);
+
+/*
+ * Sets and gets the address to watch.
+ */
+void *proctal_watch_addr(proctal_watch pw);
+void proctal_watch_set_addr(proctal_watch pw, void *addr);
+
+/*
+ * Sets and gets whether to watch for reads.
+ *
+ * A value of 1 means yes, 0 means no.
+ */
+int proctal_watch_read(proctal_watch pw);
+void proctal_watch_set_read(proctal_watch pw, int r);
+
+/*
+ * Sets and gets whether to watch for writes.
+ *
+ * A value of 1 means yes, 0 means no.
+ */
+int proctal_watch_write(proctal_watch pw);
+void proctal_watch_set_write(proctal_watch pw, int w);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.

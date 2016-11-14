@@ -8,6 +8,9 @@ void proctal_set_error(proctal p, int error);
 FILE *proctal_memr(proctal p);
 FILE *proctal_memw(proctal p);
 
+int proctal_ptrace_attach(proctal p);
+int proctal_ptrace_detach(proctal p);
+
 /*
  * Allocate and deallocate memory.
  */

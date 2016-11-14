@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <errno.h>
 #include <sys/ptrace.h>
 
 #include "proctal.h"
@@ -8,17 +7,10 @@
 
 int proctal_freeze(proctal p)
 {
-	if (ptrace(PTRACE_ATTACH, proctal_pid(p), 0, 0) == -1) {
-		switch (errno) {
-		case EPERM:
-			proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
-			break;
+	proctal_ptrace_attach(p);
 
-		default:
-			proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
-			break;
-		}
-
+	if (ptrace(PTRACE_SINGLESTEP, proctal_pid(p), 0L, 0L) == -1) {
+		proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
 		return 0;
 	}
 
@@ -27,19 +19,9 @@ int proctal_freeze(proctal p)
 
 int proctal_unfreeze(proctal p)
 {
-	if (ptrace(PTRACE_DETACH, proctal_pid(p), 0, 0) == -1) {
-		switch (errno) {
-		case EACCES:
-			proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
-			break;
+	ptrace(PTRACE_CONT, proctal_pid(p), 0L, 0L);
 
-		default:
-			proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
-			break;
-		}
-
-		return 0;
-	}
+	proctal_ptrace_detach(p);
 
 	return 1;
 }

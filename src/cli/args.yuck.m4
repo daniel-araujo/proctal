@@ -131,3 +131,17 @@ Example:
   -i, --input           additionally to quitting when receiving SIGINT, will
                         read from standard input and quit when no more input is
                         available, whichever happens first.
+
+Usage: proctal watch
+Reports the address of the instruction after an access to an address is detected.
+
+It's important to note that this is not reporting the actual instruction that
+accessed the address.
+
+Example:
+        proctal watch --pid=12345 --address=1c09346 --read
+
+  -p, --pid=pid         process id of a running program.
+  -a, --address=ADDR    address to watch.
+  -r, --read            read access.
+  -w, --write           write access.

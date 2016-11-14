@@ -103,6 +103,18 @@ struct proctal_cmd_freeze_arg {
 	int input;
 };
 
+struct proctal_cmd_watch_arg {
+	int pid;
+
+	void *address;
+
+	// Whether to watch for reads.
+	int read;
+
+	// Whether to watch for writes.
+	int write;
+};
+
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);
 
 int proctal_cmd_write(struct proctal_cmd_write_arg *arg);
@@ -110,5 +122,7 @@ int proctal_cmd_write(struct proctal_cmd_write_arg *arg);
 int proctal_cmd_search(struct proctal_cmd_search_arg *arg);
 
 int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg);
+
+int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg);
 
 #endif /* CMD_H */
