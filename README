@@ -94,12 +94,6 @@ arguments and reads the value then increments by 1 each time it's run.
 		}
 
 		proctal p = proctal_create();
-
-		if (p == NULL) {
-			fprintf(stderr, "Failed to create a Proctal instance.\n");
-			return 1;
-		}
-
 		proctal_set_pid(p, pid);
 
 		int read;
