@@ -44,8 +44,8 @@ libproctal_a_SOURCES = \
 	src/lib/linux/proc.h \
 	src/lib/linux/ptrace.c \
 	src/lib/linux/ptrace.h \
-	src/lib/arch-x86/dr.c \
-	src/lib/arch-x86/dr.h \
+	src/lib/x86/dr.c \
+	src/lib/x86/dr.h \
 	src/lib/internal.h
 libproctal_a_CFLAGS = -I$(srcdir)src/lib -I/src/lib -I$(proctal_lib_headers_dir) $(proctal_cflags)
 

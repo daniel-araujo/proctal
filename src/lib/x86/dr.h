@@ -1,5 +1,5 @@
-#ifndef ARCH_X86_DBGREG_H
-#define ARCH_X86_DBGREG_H
+#ifndef X86_DBGREG_H
+#define X86_DBGREG_H
 
 /*
  * From what I understood reading AMD64 Architecture Programmer's Manual, there
@@ -54,35 +54,35 @@
  * otherwise the behavior is left undefined.
  */
 
-#define PROCTAL_ARCH_X86_DR_0 0
-#define PROCTAL_ARCH_X86_DR_1 1
-#define PROCTAL_ARCH_X86_DR_2 2
-#define PROCTAL_ARCH_X86_DR_3 3
-#define PROCTAL_ARCH_X86_DR_4 4
-#define PROCTAL_ARCH_X86_DR_5 5
-#define PROCTAL_ARCH_X86_DR_6 6
-#define PROCTAL_ARCH_X86_DR_7 7
+#define PROCTAL_X86_DR_0 0
+#define PROCTAL_X86_DR_1 1
+#define PROCTAL_X86_DR_2 2
+#define PROCTAL_X86_DR_3 3
+#define PROCTAL_X86_DR_4 4
+#define PROCTAL_X86_DR_5 5
+#define PROCTAL_X86_DR_6 6
+#define PROCTAL_X86_DR_7 7
 
-#define PROCTAL_ARCH_X86_DR_RW_X 0
-#define PROCTAL_ARCH_X86_DR_RW_W 1
-#define PROCTAL_ARCH_X86_DR_RW_RW 3
+#define PROCTAL_X86_DR_RW_X 0
+#define PROCTAL_X86_DR_RW_W 1
+#define PROCTAL_X86_DR_RW_RW 3
 
-#define PROCTAL_ARCH_X86_DR_LEN_1B 0
-#define PROCTAL_ARCH_X86_DR_LEN_2B 1
-#define PROCTAL_ARCH_X86_DR_LEN_4B 3
-#define PROCTAL_ARCH_X86_DR_LEN_8B 2
+#define PROCTAL_X86_DR_LEN_1B 0
+#define PROCTAL_X86_DR_LEN_2B 1
+#define PROCTAL_X86_DR_LEN_4B 3
+#define PROCTAL_X86_DR_LEN_8B 2
 
 /*
  * Sets and gets the RW portion.
  */
-void proctal_arch_x86_dr_set_rw(unsigned long long *dr7, int r, unsigned int state);
-unsigned int proctal_arch_x86_dr_rw(unsigned long long dr7, int r);
+void proctal_x86_dr_set_rw(unsigned long long *dr7, int r, unsigned int state);
+unsigned int proctal_x86_dr_rw(unsigned long long dr7, int r);
 
 /*
  * Sets and gets the LEN portion.
  */
-void proctal_arch_x86_dr_set_len(unsigned long long *dr7, int r, unsigned int state);
-unsigned int proctal_arch_x86_dr_len(unsigned long long dr7, int r);
+void proctal_x86_dr_set_len(unsigned long long *dr7, int r, unsigned int state);
+unsigned int proctal_x86_dr_len(unsigned long long dr7, int r);
 
 /*
  * Enables and disables local breakpoints.
@@ -90,12 +90,12 @@ unsigned int proctal_arch_x86_dr_len(unsigned long long dr7, int r);
  * If enable is set to 0, breakpoint will be disabled, if set to 1 it will be
  * enabled.
  */
-void proctal_arch_x86_dr_enable_local_breakpoint(unsigned long long *dr7, int r, int enable);
+void proctal_x86_dr_enable_l(unsigned long long *dr7, int r, int enable);
 /*
  * Checks whether a local breakpoint is enabled.
  *
  * If the return value is 0 it's disabled, if 1 it's enabled.
  */
-int proctal_arch_x86_dr_is_local_breakpoint_enabled(unsigned long long dr7, int r);
+int proctal_x86_dr_is_l_enabled(unsigned long long dr7, int r);
 
-#endif /* ARCH_X86_DBGREG_H */
+#endif /* X86_DBGREG_H */

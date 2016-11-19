@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 
 #include "internal.h"
-#include "arch-x86/dr.h"
+#include "x86/dr.h"
 #include "linux/ptrace.h"
 
 struct proctal_watch {
@@ -43,17 +43,17 @@ static int enable_breakpoint(proctal_watch pw)
 		return 0;
 	}
 
-	proctal_arch_x86_dr_set_len(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_LEN_1B);
+	proctal_x86_dr_set_len(&dr7, PROCTAL_X86_DR_0, PROCTAL_X86_DR_LEN_1B);
 
 	if (proctal_watch_execute(pw)) {
-		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_X);
+		proctal_x86_dr_set_rw(&dr7, PROCTAL_X86_DR_0, PROCTAL_X86_DR_RW_X);
 	} else if (proctal_watch_read(pw) && proctal_watch_write(pw)) {
-		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_RW);
+		proctal_x86_dr_set_rw(&dr7, PROCTAL_X86_DR_0, PROCTAL_X86_DR_RW_RW);
 	} else {
-		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_W);
+		proctal_x86_dr_set_rw(&dr7, PROCTAL_X86_DR_0, PROCTAL_X86_DR_RW_W);
 	}
 
-	proctal_arch_x86_dr_enable_local_breakpoint(&dr7, PROCTAL_ARCH_X86_DR_0, 1);
+	proctal_x86_dr_enable_l(&dr7, PROCTAL_X86_DR_0, 1);
 
 	if (!proctal_linux_ptrace_set_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
@@ -70,7 +70,7 @@ static int disable_breakpoint(proctal_watch pw)
 		return 0;
 	}
 
-	proctal_arch_x86_dr_enable_local_breakpoint(&dr7, PROCTAL_ARCH_X86_DR_0, 0);
+	proctal_x86_dr_enable_l(&dr7, PROCTAL_X86_DR_0, 0);
 
 	if (!proctal_linux_ptrace_set_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
