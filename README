@@ -16,14 +16,14 @@ Features:
 - Searching for values with a vast combination of filters
 - Writing a value to memory repeatedly fast, essentially freezing it
 - Temporarily freezing execution of a program's main thread
-- Read and write watch points on the main thread
+- Read, write and execution watch points on the main thread
 
 Planned:
 - Showing disassembly of instructions
 - Overwrite instructions directly from assembly mnemonics
 - Allocating and deallocating readable/writable/executable address spaces
 - Freezing all threads of execution
-- Read and watch points on all threads of execution
+- Watch points on all threads of execution
 
 
 ## Example
