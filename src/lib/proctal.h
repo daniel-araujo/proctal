@@ -4,14 +4,21 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-#define PROCTAL_ADDR_REGION_STACK 1
-#define PROCTAL_ADDR_REGION_HEAP 2
-
 #define PROCTAL_ERROR_OUT_OF_MEMORY 1
 #define PROCTAL_ERROR_PERMISSION_DENIED 2
 #define PROCTAL_ERROR_WRITE_FAILURE 3
 #define PROCTAL_ERROR_READ_FAILURE 4
 #define PROCTAL_ERROR_UNKNOWN 5
+#define PROCTAL_ERROR_UNIMPLEMENTED 6
+#define PROCTAL_ERROR_UNSUPPORTED 7
+#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ 8
+#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE 9
+#define PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE 10
+#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE 11
+#define PROCTAL_ERROR_PROCESS_NOT_FOUND 12
+
+#define PROCTAL_ADDR_REGION_STACK 1
+#define PROCTAL_ADDR_REGION_HEAP 2
 
 typedef struct proctal *proctal;
 typedef struct proctal_watch *proctal_watch;
@@ -26,21 +33,21 @@ typedef struct proctal_addr_iter *proctal_addr_iter;
  * Regardless if it succeeds or fails, you still need to call proctal_destroy.
  * Do not compare it to NULL.
  *
- * Using an invalid instance of Proctal results in undefined behavior.
+ * Using an invalid instance of Proctal results in undefined behavior, likely
+ * leading to a crash.
  */
 proctal proctal_create(void);
 void proctal_destroy(proctal p);
 
 /*
- * Use this function to check if something ever went wrong with the given
- * instance of Proctal.
+ * Use this function to check for errors.
  *
- * Any truthy value returned indicates an error which is one of PROCTAL_ERROR_*
- * defined constants. The only falsy value it can return is 0 which means there
- * are no errors to report.
+ * It will return a non-zero value to represent an error, which is defined as a
+ * macro that starts with PROCTAL_ERROR_. A 0 means there are no errors. There
+ * is no macro defined for no error.
  *
- * This function always returns the last error until you acknowledge it with a
- * call to proctal_error_ack.
+ * This function will keep reporting the same error until you acknowledge it
+ * with a call to proctal_error_ack.
  */
 int proctal_error(proctal p);
 
@@ -271,6 +278,14 @@ void proctal_watch_set_read(proctal_watch pw, int r);
  */
 int proctal_watch_write(proctal_watch pw);
 void proctal_watch_set_write(proctal_watch pw, int w);
+
+/*
+ * Sets and gets whether to watch for instruction execution.
+ *
+ * A value of 1 means yes, 0 means no.
+ */
+int proctal_watch_execute(proctal_watch pw);
+void proctal_watch_set_execute(proctal_watch pw, int x);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.

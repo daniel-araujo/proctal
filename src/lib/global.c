@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "proctal.h"
+#include "internal.h"
 #include "global.h"
 
 static void *(*a)(size_t) = malloc;

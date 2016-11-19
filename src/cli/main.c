@@ -573,6 +573,7 @@ static struct proctal_cmd_watch_arg *create_proctal_cmd_watch_arg_from_yuck_arg(
 
 	arg->read = yuck_arg->watch.read_flag == 1;
 	arg->write = yuck_arg->watch.write_flag == 1;
+	arg->execute = yuck_arg->watch.execute_flag == 1;
 
 	return arg;
 }

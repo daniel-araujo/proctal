@@ -113,6 +113,9 @@ struct proctal_cmd_watch_arg {
 
 	// Whether to watch for writes.
 	int write;
+
+	// Whether to watch for instruction execution.
+	int execute;
 };
 
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);

@@ -145,3 +145,4 @@ Example:
   -a, --address=ADDR    address to watch.
   -r, --read            read access.
   -w, --write           write access.
+  -x, --execute         execute instruction.

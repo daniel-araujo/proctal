@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "proctal.h"
 #include "internal.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \

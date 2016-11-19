@@ -6,8 +6,9 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 
-#include "proctal.h"
 #include "internal.h"
+#include "arch-x86/dr.h"
+#include "linux/ptrace.h"
 
 struct proctal_watch {
 	// Proctal instance.
@@ -25,76 +26,98 @@ struct proctal_watch {
 
 	// Whether to watch for writes.
 	int write;
+
+	// Whether to watch for instruction execution.
+	int execute;
 };
 
-#define DBG_REG_X86_DR0 0
-#define DBG_REG_X86_DR1 1
-#define DBG_REG_X86_DR2 2
-#define DBG_REG_X86_DR3 3
-#define DBG_REG_X86_DR4 4
-#define DBG_REG_X86_DR5 5
-#define DBG_REG_X86_DR6 6
-#define DBG_REG_X86_DR7 7
-
-static int get_instruction_address(proctal p, void **addr)
+static int enable_breakpoint(proctal_watch pw)
 {
-	size_t offset = offsetof(struct user, regs)
-		+ offsetof(struct user_regs_struct, rip);
+	if (!proctal_linux_ptrace_set_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR0, (unsigned long long) pw->addr)) {
+		return 0;
+	}
 
-	errno = 0;
+	unsigned long long dr7;
 
-	*addr = (void *) ptrace(PTRACE_PEEKUSER, proctal_pid(p), offset, 0);
+	if (!proctal_linux_ptrace_get_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
+		return 0;
+	}
 
-	if (errno) {
+	proctal_arch_x86_dr_set_len(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_LEN_1B);
+
+	if (proctal_watch_execute(pw)) {
+		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_X);
+	} else if (proctal_watch_read(pw) && proctal_watch_write(pw)) {
+		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_RW);
+	} else {
+		proctal_arch_x86_dr_set_rw(&dr7, PROCTAL_ARCH_X86_DR_0, PROCTAL_ARCH_X86_DR_RW_W);
+	}
+
+	proctal_arch_x86_dr_enable_local_breakpoint(&dr7, PROCTAL_ARCH_X86_DR_0, 1);
+
+	if (!proctal_linux_ptrace_set_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static int get_debug_register(proctal p, int reg, long *val)
+static int disable_breakpoint(proctal_watch pw)
 {
-	size_t offset = offsetof(struct user, u_debugreg)
-		+ sizeof (((struct user *) 0)->u_debugreg[0]) * reg;
+	unsigned long long dr7;
 
-	errno = 0;
+	if (!proctal_linux_ptrace_get_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
+		return 0;
+	}
 
-	*val = ptrace(PTRACE_PEEKUSER, proctal_pid(p), offset, 0);
+	proctal_arch_x86_dr_enable_local_breakpoint(&dr7, PROCTAL_ARCH_X86_DR_0, 0);
 
-	if (errno) {
+	if (!proctal_linux_ptrace_set_x86_reg(pw->p, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static int set_debug_register(proctal p, int reg, long val)
+static int start(proctal_watch pw)
 {
-	size_t offset = offsetof(struct user, u_debugreg)
-		+ sizeof (((struct user *) 0)->u_debugreg[0]) * reg;
-
-	errno = 0;
-
-	ptrace(PTRACE_POKEUSER, proctal_pid(p), offset, val);
-
-	if (errno) {
+	if (pw->read && !pw->write && !pw->execute) {
+		proctal_set_error(pw->p, PROCTAL_ERROR_UNSUPPORTED_WATCH_READ);
 		return 0;
 	}
 
-	return 1;
-}
-
-static void wait_for_stop(proctal p)
-{
-	int wstatus;
-
-	for (;;) {
-		waitpid(proctal_pid(p), &wstatus, WUNTRACED);
-
-		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP) {
-			break;
-		}
+	if (pw->read && !pw->write && pw->execute) {
+		proctal_set_error(pw->p, PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE);
+		return 0;
 	}
+
+	if (!pw->read && pw->write && pw->execute) {
+		proctal_set_error(pw->p, PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE);
+		return 0;
+	}
+
+	if (pw->read && pw->write && pw->execute) {
+		proctal_set_error(pw->p, PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE);
+		return 0;
+	}
+
+	if (!proctal_linux_ptrace_attach(pw->p)) {
+		return 0;
+	}
+
+	if (!enable_breakpoint(pw)) {
+		proctal_linux_ptrace_detach(pw->p);
+		return 0;
+	}
+
+	if (!proctal_linux_ptrace_cont(pw->p)) {
+		disable_breakpoint(pw);
+		return 0;
+	}
+
+	pw->started = 1;
+
+	return 1;
 }
 
 proctal_watch proctal_watch_create(proctal p)
@@ -111,6 +134,7 @@ proctal_watch proctal_watch_create(proctal p)
 	pw->started = 0;
 	pw->read = 0;
 	pw->write = 0;
+	pw->execute = 0;
 
 	return pw;
 }
@@ -122,7 +146,11 @@ void proctal_watch_destroy(proctal_watch pw)
 	}
 
 	if (pw->started) {
-		proctal_ptrace_detach(pw->p);
+		proctal_linux_ptrace_stop(pw->p);
+
+		disable_breakpoint(pw);
+
+		proctal_linux_ptrace_detach(pw->p);
 	}
 
 	proctal_dealloc(pw->p, pw);
@@ -158,56 +186,67 @@ void proctal_watch_set_write(proctal_watch pw, int w)
 	pw->write = w != 0;
 }
 
+int proctal_watch_execute(proctal_watch pw)
+{
+	return pw->execute;
+}
+
+void proctal_watch_set_execute(proctal_watch pw, int x)
+{
+	pw->execute = x != 0;
+}
+
 int proctal_watch_next(proctal_watch pw, void **addr)
 {
 	if (!pw->started) {
-		if (!proctal_ptrace_attach(pw->p)) {
+		if (!start(pw)) {
 			return 0;
 		}
-
-		pw->started = 1;
-
-		wait_for_stop(pw->p);
-	}
-
-	if (!set_debug_register(pw->p, DBG_REG_X86_DR0, pw->addr)) {
-		proctal_ptrace_detach(pw->p);
-		return 0;
-	}
-
-	if (!set_debug_register(pw->p, DBG_REG_X86_DR7, 0x1 + (1 << 16))) {
-		proctal_ptrace_detach(pw->p);
-		return 0;
-	}
-
-	long dr7;
-
-	if (!get_debug_register(pw->p, DBG_REG_X86_DR7, &dr7)) {
-		proctal_ptrace_detach(pw->p);
-		return 0;
 	}
 
 	int wstatus;
 
-	ptrace(PTRACE_CONT, proctal_pid(pw->p), 0, 0);
-
 	for (;;) {
-		waitpid(proctal_pid(pw->p), &wstatus, WUNTRACED);
+		if (waitpid(proctal_pid(pw->p), &wstatus, WUNTRACED) != proctal_pid(pw->p)) {
+			// If it failed due to an interrupt, we're not going to
+			// consider this an error.
+			if (errno != EINTR) {
+				proctal_set_error(pw->p, PROCTAL_ERROR_UNKNOWN);
+			}
+
+			return 0;
+		}
 
 		if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
 			// Process is gone, nothing to do anymore.
 			break;
 		} else if (WIFSTOPPED(wstatus)) {
-			if (WSTOPSIG(wstatus) == SIGTRAP) {
+			int signal = WSTOPSIG(wstatus);
+
+			switch (signal) {
+			case SIGTRAP: {
 				void *rip;
-				get_instruction_address(pw->p, &rip);
+
+				proctal_linux_ptrace_get_instruction_address(pw->p, &rip);
+
 				*addr = rip;
-				if (!set_debug_register(pw->p, DBG_REG_X86_DR7, 0x0)) {
-					proctal_ptrace_detach(pw->p);
-					return 0;
-				}
+
+				ptrace(PTRACE_CONT, proctal_pid(pw->p), 0, 0);
+
 				break;
 			}
+
+			case SIGINT:
+			default:
+				// Process was signal to be stopped. We're letting go.
+				kill(proctal_pid(pw->p), signal);
+
+				proctal_linux_ptrace_detach(pw->p);
+
+				return 0;
+			}
+
+			break;
 		}
 	}
 

@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "proctal.h"
 #include "internal.h"
-#include "linux.h"
+#include "linux/proc.h"
 
 struct proctal_addr_iter {
 	// Proctal instance.

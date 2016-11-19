@@ -175,6 +175,16 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 
 	proctal_destroy(p);
 
+	switch (proctal_error(p)) {
+	case 0:
+		break;
+
+	default:
+		fprintf(stderr, "Failed to cleanup properly.\n");
+		proctal_destroy(p);
+		return 1;
+	}
+
 	unregister_signal_handler();
 
 	return 0;

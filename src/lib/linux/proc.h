@@ -1,5 +1,5 @@
-#ifndef LINUX_H
-#define LINUX_H
+#ifndef LINUX_PROC_H
+#define LINUX_PROC_H
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -15,4 +15,4 @@ const char *proctal_linux_proc_path(pid_t pid, const char *file);
 
 int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE *maps);
 
-#endif /* LINUX_H */
+#endif /* LINUX_PROC_H */
