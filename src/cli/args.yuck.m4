@@ -1,3 +1,6 @@
+define(`PID_ARGUMENT', `
+  -p, --pid=PID         Process ID (PID) of a running program.
+')dnl
 define(`TYPE_ARGUMENTS', `
   -t, --type=TYPE
                         Type of value. If omitted, TYPE is implicitly byte.
@@ -44,43 +47,44 @@ define(`TYPE_ARGUMENTS', `
 Usage: proctal
 Accesses the address space of a running program.
 
-  -h, --help            Display this help and exit.
+  -h, --help            Display help information and exit. If a command is
+                        given, also show command specific options.
   -V, --version         Output version information and exit.
 
 Usage: proctal read
-Reads values from the address space of a running program.
+Reads values.
 
 Example:
         proctal read --pid=12345 --address=1c09346
 
-  -p, --pid=PID         Process ID of a running program.
-  -a, --address=ADDR    Start address of value to read.
+  PID_ARGUMENT
+  -a, --address=ADDR    Start address of values to read.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
   TYPE_ARGUMENTS
 
 
 Usage: proctal write VALUES...
-Writes values to the address space of a running program.
+Writes values.
 
-The first value passed will be written to the given address, the the remaining
-ones will be written to the memory address coming after the previous one
-without overwriting the previous value.
+The first value will be written to the given address, then the next one will be
+written to the memory address coming after it, and so on.
 
 Example:
         proctal write --pid=12345 --address=1c09346 99
 
-  -p, --pid=pid         process id of a running program.
-  -a, --address=ADDR    Start address where value will be written.
+  PID_ARGUMENT
+  -a, --address=ADDR    Start address where to begin writing values.
   --array=SIZE          Makes the command write SIZE values in adjacent
                         addresses. If less than SIZE values are provided, then
                         when in need of more values it will cycle back through
                         the provided values. This behavior allows you to
-                        specify a single value and have it written SIZE times.
-                        If SIZE is not provided, it will be set to the number
-                        of values given to the command.
-  --repeat              Whether to repeatedly write the same value to the
-                        address until the program is told to shut down.
+                        specify a single value and have it repeatedly written
+                        SIZE times. If SIZE is not provided, it will be set to
+                        the number of given values.
+  --repeat              Whether to repeatedly write the same values to the
+                        address until the command is interrupted by the SIGINT
+                        signal.
   --repeat-delay=DELAY  If the repeat option is passed, this sets the delay in
                         milliseconds between each write. A delay value of 0
                         essentially removes the delay and will let the program
@@ -89,19 +93,14 @@ Example:
   TYPE_ARGUMENTS
 
 Usage: proctal search
-Searches for values in the address space of a running program.
+Searches for values.
 
 Example:
         proctal search -type=integer --pid=12345 --address=1c09346 --eq 12
-        d32428          12
-        d4ccc4          12
-        d80984          12
-        dc234c          12
-        [...]
 
-  -p, --pid=pid         process id of a running program.
-  -i, --input           reads addresses and values from a previous scan of the
-                        same type from standard input.
+  PID_ARGUMENT
+  -i, --input           Reads the output of a previous scan of the same type
+                        from standard input.
   TYPE_ARGUMENTS
   --eq=VAL              Equal to VAL
   --ne=VAL              Not equal to VAL
@@ -127,22 +126,22 @@ stop executing when it receives the SIGINT signal.
 Example:
         proctal freeze --pid=12345
 
-  -p, --pid=pid         process id of a running program.
-  -i, --input           additionally to quitting when receiving SIGINT, will
+  PID_ARGUMENT
+  -i, --input           Additionally to quitting when receiving SIGINT, will
                         read from standard input and quit when no more input is
                         available, whichever happens first.
 
 Usage: proctal watch
-Reports the address of the instruction after an access to an address is detected.
+Watches memory accesses.
 
 It's important to note that this is not reporting the actual instruction that
 accessed the address.
 
 Example:
-        proctal watch --pid=12345 --address=1c09346 --read
+        proctal watch --pid=12345 --address=1c09346 -rw
 
-  -p, --pid=pid         process id of a running program.
-  -a, --address=ADDR    address to watch.
-  -r, --read            read access.
-  -w, --write           write access.
-  -x, --execute         execute instruction.
+  PID_ARGUMENT
+  -a, --address=ADDR    Address to watch.
+  -r, --read            Read access.
+  -w, --write           Write access.
+  -x, --execute         Execute instruction.
