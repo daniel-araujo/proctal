@@ -140,6 +140,11 @@ The command line interface can be used in the following ways:
 		[--changed] [--unchanged] [--increased] [--decreased]
 		[--input] --pid=<pid> --address=<address>
 
+	proctal watch [--read] [--write] [--execute] --pid=<pid>
+		--address=<address>
+
+	proctal freeze [--input] --pid=<pid>
+
 For more details run `proctal -h` or read the man page:
 
 	man 1 proctal
