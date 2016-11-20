@@ -873,10 +873,11 @@ int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 		}
 
 		if (ks_asm(ks, s, 0, &encode, &size, &count) != KS_ERR_OK) {
+			ks_close(ks);
 			return 0;
 		}
 
-		int parse_bin = proctal_cmd_val_parse_bin(v, (const char *) encode, count);
+		int parse_bin = proctal_cmd_val_parse_bin(v, (const char *) encode, size);
 
 		ks_free(encode);
 		ks_close(ks);
