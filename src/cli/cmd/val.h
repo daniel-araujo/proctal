@@ -70,6 +70,8 @@ size_t proctal_cmd_val_attr_alignof(proctal_cmd_val_attr a);
 proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a);
 void proctal_cmd_val_destroy(proctal_cmd_val v);
 
+void proctal_cmd_val_set_instruction_addr(proctal_cmd_val v, void *addr);
+
 enum proctal_cmd_val_type proctal_cmd_val_type(proctal_cmd_val v);
 size_t proctal_cmd_val_alignof(proctal_cmd_val v);
 size_t proctal_cmd_val_sizeof(proctal_cmd_val v);

@@ -32,6 +32,7 @@ struct proctal_cmd_val_str {
 };
 
 struct proctal_cmd_val_ins {
+	void *addr;
 	cs_insn *insn;
 };
 
@@ -298,6 +299,17 @@ proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a)
 	}
 
 	return v;
+}
+
+void proctal_cmd_val_set_instruction_addr(proctal_cmd_val v, void *addr)
+{
+	if (v->attr.type != PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+		return;
+	}
+
+	struct proctal_cmd_val_ins *value = (struct proctal_cmd_val_ins *) v->value;
+
+	value->addr = addr;
 }
 
 enum proctal_cmd_val_type proctal_cmd_val_attr_type(proctal_cmd_val_attr a)
@@ -912,7 +924,7 @@ int proctal_cmd_val_parse_bin(proctal_cmd_val v, const char *s, size_t length)
 			return 0;
 		}
 
-		int count = cs_disasm(handle, (const unsigned char *) s, length, 0, 1, &value->insn);
+		int count = cs_disasm(handle, (const unsigned char *) s, length, (unsigned long int) value->addr, 1, &value->insn);
 
 		cs_close(&handle);
 

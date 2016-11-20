@@ -67,6 +67,8 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			return 1;
 		}
 
+		proctal_cmd_val_set_instruction_addr(value, addr);
+
 		int size = proctal_cmd_val_parse_bin(value, output, sizeof output / sizeof output[0]);
 
 		if (size == 0) {
