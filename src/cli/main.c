@@ -307,15 +307,6 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 	}
 
 	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->write.type_arg);
-
-	if (t == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
-		fprintf(stderr, "Writing instructions from assembly code is"
-			" not supported.\nYou will have to assemble your code"
-			" and write each byte.\n");
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
-		return NULL;
-	}
-
 	proctal_cmd_val_attr value_attr = proctal_cmd_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->write)

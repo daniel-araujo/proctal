@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <capstone/capstone.h>
+#include <keystone/keystone.h>
 
 #include "cmd/val.h"
 
@@ -832,6 +833,44 @@ int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
 		return SCANF("%lx", unsigned long);
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = ((struct proctal_cmd_val_ins *) v->value);
+
+		if (value->insn) {
+			cs_free(value->insn, 1);
+			value->insn = NULL;
+		}
+
+		// The value structure was programmed to hold a reference to a
+		// capstone disassembled instruction because it's very
+		// convenient. To remain compatible with existing code, we're
+		// going to assemble the code with keystone and then
+		// disassemble the result with capstone so as to keep the
+		// remaining code as is. Also, it ensures we only parse the
+		// first instruction that shows up and ignore the rest.
+
+		ks_engine *ks;
+
+		size_t count;
+		unsigned char *encode;
+		size_t size;
+
+		if (ks_open(KS_ARCH_X86, KS_MODE_64, &ks) != KS_ERR_OK) {
+			return 0;
+		}
+
+		if (ks_asm(ks, s, 0, &encode, &size, &count) != KS_ERR_OK) {
+			return 0;
+		}
+
+		int parse_bin = proctal_cmd_val_parse_bin(v, (const char *) encode, count);
+
+		ks_free(encode);
+		ks_close(ks);
+
+		return parse_bin ? 1 : 0;
+	}
 	}
 
 #undef SCANF

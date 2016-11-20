@@ -18,6 +18,7 @@ Features:
 - Temporarily freezing execution of a program's main thread
 - Read, write and execution watch points on the main thread
 - Disassembling instructions from any memory location
+- Assembling instructions to write to any memory location
 
 Planned:
 - Allocating and deallocating readable/writable/executable address spaces
