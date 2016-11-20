@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <string.h>
+#include <capstone/capstone.h>
 
 #include "cmd/val.h"
 
@@ -27,6 +28,10 @@ struct proctal_cmd_val_attr {
 struct proctal_cmd_val_str {
 	size_t size;
 	char *data;
+};
+
+struct proctal_cmd_val_ins {
+	cs_insn *insn;
 };
 
 struct proctal_cmd_val {
@@ -164,6 +169,17 @@ void proctal_cmd_val_destroy(proctal_cmd_val v)
 		}
 		break;
 
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = (struct proctal_cmd_val_ins *) v->value;
+
+		if (value->insn) {
+			cs_free(value->insn, 1);
+		}
+
+		free(v->value);
+		break;
+	}
+
 	case PROCTAL_CMD_VAL_TYPE_TEXT: {
 		if (v->value == NULL) {
 			break;
@@ -260,6 +276,20 @@ proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a)
 			v->value = value;
 		}
 		break;
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = malloc(sizeof *value);
+
+		if (value == NULL) {
+			proctal_cmd_val_destroy(v);
+			return NULL;
+		}
+
+		value->insn = NULL;
+
+		v->value = value;
+		break;
+	}
 
 	default:
 		proctal_cmd_val_destroy(v);
@@ -365,6 +395,16 @@ size_t proctal_cmd_val_sizeof(proctal_cmd_val v)
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
 		return sizeof (void *);
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = (struct proctal_cmd_val_ins *) v->value;
+
+		if (value->insn == NULL) {
+			return 0;
+		}
+
+		return value->insn->size;
+	}
 	}
 
 	return 1;
@@ -378,8 +418,19 @@ char *proctal_cmd_val_addr(proctal_cmd_val v)
 	case PROCTAL_CMD_VAL_TYPE_IEEE754:
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
 		return (char *) v->value;
+
 	case PROCTAL_CMD_VAL_TYPE_TEXT:
 		return (char *) ((struct proctal_cmd_val_str *) v->value)->data;
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = (struct proctal_cmd_val_ins *) v->value;
+
+		if (value->insn == NULL) {
+			return NULL;
+		}
+
+		return (char *) value->insn->bytes;
+	}
 	}
 
 	return NULL;
@@ -631,6 +682,16 @@ int proctal_cmd_val_print(proctal_cmd_val v, FILE *f)
 
 	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
 		return PRINTF("%lx", unsigned long);
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = ((struct proctal_cmd_val_ins *) v->value);
+
+		if (value->insn == NULL) {
+			return 0;
+		}
+
+		return fprintf(f, "%s\t%s", value->insn->mnemonic, value->insn->op_str);
+	}
 	}
 
 #undef PRINTF
@@ -775,6 +836,52 @@ int proctal_cmd_val_parse(proctal_cmd_val v, const char *s)
 
 #undef SCANF
 #undef SCANFV
+
+	return 0;
+}
+
+int proctal_cmd_val_parse_bin(proctal_cmd_val v, const char *s, size_t length)
+{
+	switch (v->attr.type) {
+	case PROCTAL_CMD_VAL_TYPE_BYTE:
+	case PROCTAL_CMD_VAL_TYPE_INTEGER:
+	case PROCTAL_CMD_VAL_TYPE_IEEE754:
+	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
+	case PROCTAL_CMD_VAL_TYPE_TEXT: {
+		size_t size = proctal_cmd_val_sizeof(v);
+
+		if (size > length) {
+			return 0;
+		}
+
+		memcpy(proctal_cmd_val_addr(v), s, size);
+
+		return size;
+	}
+
+	case PROCTAL_CMD_VAL_TYPE_INSTRUCTION: {
+		struct proctal_cmd_val_ins *value = ((struct proctal_cmd_val_ins *) v->value);
+
+		if (value->insn) {
+			cs_free(value->insn, 1);
+			value->insn = NULL;
+		}
+
+		csh handle;
+
+		if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK) {
+			return 0;
+		}
+
+		int count = cs_disasm(handle, (const unsigned char *) s, length, 0, 1, &value->insn);
+
+		cs_close(&handle);
+
+		if (count > 0) {
+			return value->insn->size;
+		}
+	}
+	}
 
 	return 0;
 }

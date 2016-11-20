@@ -10,6 +10,7 @@ enum proctal_cmd_val_type {
 	PROCTAL_CMD_VAL_TYPE_IEEE754,
 	PROCTAL_CMD_VAL_TYPE_TEXT,
 	PROCTAL_CMD_VAL_TYPE_ADDRESS,
+	PROCTAL_CMD_VAL_TYPE_INSTRUCTION,
 };
 
 enum proctal_cmd_val_type_endianness {
@@ -79,5 +80,6 @@ int proctal_cmd_val_cmp(proctal_cmd_val v1, proctal_cmd_val v2);
 int proctal_cmd_val_print(proctal_cmd_val v, FILE *f);
 int proctal_cmd_val_scan(proctal_cmd_val v, FILE *f);
 int proctal_cmd_val_parse(proctal_cmd_val v, const char *s);
+int proctal_cmd_val_parse_bin(proctal_cmd_val v, const char *s, size_t length);
 
 #endif /* CMD_VAL_H */

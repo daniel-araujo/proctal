@@ -25,7 +25,7 @@ proctal_SOURCES = \
 	src/cli/parser.h \
 	src/cli/parser.c \
 	src/cli/cmd.h
-proctal_LDADD = libproctal.la
+proctal_LDADD = libproctal.la $(proctal_capstone_libs)
 proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
 
 # Static library.

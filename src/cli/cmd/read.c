@@ -45,12 +45,11 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 	proctal_set_pid(p, arg->pid);
 
 	proctal_cmd_val value = proctal_cmd_val_create(arg->value_attr);
-	size_t size = proctal_cmd_val_sizeof(value);
-	char *output = proctal_cmd_val_addr(value);
+	char output[16];
 
 	char *addr = (char *) arg->address;
 	for (size_t i = 0; i < arg->array; ++i) {
-		proctal_read(p, addr, output, size);
+		proctal_read(p, addr, output, sizeof output / sizeof output[0]);
 
 		switch (proctal_error(p)) {
 		case 0:
@@ -68,9 +67,22 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			return 1;
 		}
 
-		proctal_cmd_val_print(value, stdout);
+		int size = proctal_cmd_val_parse_bin(value, output, sizeof output / sizeof output[0]);
+
+		if (size == 0) {
+			if (i == 0) {
+				fprintf(stderr, "Failed to parse value.\n");
+			} else {
+				fprintf(stderr, "Failed to parse further values.\n");
+			}
+
+			proctal_destroy(p);
+			return 1;
+		}
 
 		addr += size;
+
+		proctal_cmd_val_print(value, stdout);
 
 		if (i < arg->array - 1) {
 			print_separator(arg);

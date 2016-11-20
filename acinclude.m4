@@ -56,6 +56,27 @@ AC_DEFUN([PROCTAL_CHECK_FUNC], [
 	fi
 ])
 
+dnl PROCTAL_CHECK_LIB(VAR, LIB, FUNC, [DEPENDENCIES], [OPTIONS])
+dnl
+dnl Checks if FUNC exists when linking to LIB. If the check is successful, VAR
+dnl will be assigned 1 if it hasn't already been assigned a value, otherwise
+dnl VAR is left untouched. DEPENDENCIES are an additional set of libraries to
+dnl link with for the test.
+AC_DEFUN([PROCTAL_CHECK_LIB], [
+	dnl Reusing AC_CHECK_LIB check message.
+	AC_CHECK_LIB([$2], [$3], [
+		PROCTAL_ASSIGN_VAR([$1], [1])
+	],, [$4])
+
+	if test -n "$5" && test "$5" = "required" && test -z "$$1"; then
+		AC_MSG_ERROR(["Failed to link to library $2. Cannot continue without it"])
+	fi
+
+	if test -z "$$1"; then
+		AC_MSG_WARN(["Failed to link to library $2. Some files may fail to compile without it"])
+	fi
+])
+
 dnl PROCTAL_ASSIGN_VAR(VAR, VAL)
 dnl
 dnl Assigns VAL to VAR if VAR hasn't already been assigned a value previously.

@@ -67,6 +67,10 @@ static enum proctal_cmd_val_type proctal_cmd_val_type_by_name(const char *name)
 			.name = "address",
 			.value = (void *) PROCTAL_CMD_VAL_TYPE_ADDRESS,
 		},
+		{
+			.name = "instruction",
+			.value = (void *) PROCTAL_CMD_VAL_TYPE_INSTRUCTION,
+		},
 	};
 
 	return (enum proctal_cmd_val_type) value_by_name(
@@ -303,6 +307,15 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 	}
 
 	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->write.type_arg);
+
+	if (t == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+		fprintf(stderr, "Writing instructions from assembly code is"
+			" not supported.\nYou will have to assemble your code"
+			" and write each byte.\n");
+		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
 	proctal_cmd_val_attr value_attr = proctal_cmd_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->write)
@@ -423,6 +436,13 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 	}
 
 	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->search.type_arg);
+
+	if (t == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+		fprintf(stderr, "Searching for assembly code is not supported.\n");
+		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
 	arg->value_attr = proctal_cmd_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->search)

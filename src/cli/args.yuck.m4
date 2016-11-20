@@ -7,6 +7,7 @@ define(`TYPE_ARGUMENTS', `
                         ieee754
                         text
                         address
+                        instruction
   --endianness=ENDIANNESS
                         By default ENDIANNESS is little.
                         ENDIANNESS can be one of:
@@ -56,7 +57,6 @@ Example:
   -a, --address=ADDR    Start address of value to read.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
-                        is 1.
   TYPE_ARGUMENTS
 
 
