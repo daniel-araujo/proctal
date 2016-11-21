@@ -311,7 +311,7 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 
 	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->write)
 
-	arg->first_value = malloc(sizeof (proctal_cmd_val) + yuck_arg->nargs);
+	arg->first_value = malloc((sizeof (proctal_cmd_val)) * yuck_arg->nargs);
 
 	if (arg->first_value == NULL) {
 		fputs("Failed to allocate memory for values.\n", stderr);
