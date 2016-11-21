@@ -287,6 +287,7 @@ proctal_cmd_val proctal_cmd_val_create(proctal_cmd_val_attr a)
 			return NULL;
 		}
 
+		value->addr = 0;
 		value->insn = NULL;
 
 		v->value = value;
