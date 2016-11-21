@@ -65,6 +65,9 @@ Example:
   --show-instruction-address
                         If type is instruction, additionally prints the
                         instruction address.
+  --show-instruction-byte-code
+                        If type is instruction, additionally prints the
+                        byte code of the instruction in hexadecimal.
 
 
 Usage: proctal write VALUES...

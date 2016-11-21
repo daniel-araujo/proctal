@@ -100,6 +100,23 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 
 		proctal_cmd_val_print(value, stdout);
 
+		if (arg->show_instruction_byte_code
+			&& proctal_cmd_val_attr_type(arg->value_attr) == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+			printf("\n");
+
+			if (arg->show_instruction_address) {
+				printf("\t");
+			}
+
+			for (int j = 0; j < size; j++) {
+				printf("%hhx", output[j]);
+
+				if (j < size -1) {
+					printf(" ");
+				}
+			}
+		}
+
 		if (i < arg->array - 1) {
 			print_separator(arg);
 		}

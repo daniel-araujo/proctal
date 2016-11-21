@@ -15,6 +15,9 @@ struct proctal_cmd_read_arg {
 
 	// Whether to additionally print the instruction's address.
 	int show_instruction_address;
+
+	// Whether to additionally print the byte code of the instruction.
+	int show_instruction_byte_code;
 };
 
 struct proctal_cmd_write_arg {

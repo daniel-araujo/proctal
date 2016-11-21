@@ -249,6 +249,7 @@ static struct proctal_cmd_read_arg *create_proctal_cmd_read_arg_from_yuck_arg(yu
 	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->read)
 
 	arg->show_instruction_address = yuck_arg->read.show_instruction_address_flag == 1;
+	arg->show_instruction_byte_code = yuck_arg->read.show_instruction_byte_code_flag == 1;
 
 	return arg;
 }
