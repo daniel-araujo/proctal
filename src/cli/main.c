@@ -326,6 +326,10 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 
 		if (!proctal_cmd_val_parse(v, yuck_arg->args[i])) {
 			fprintf(stderr, "Value #%zu is invalid.\n", i);
+			proctal_cmd_val_destroy(v);
+			while (i--) {
+				proctal_cmd_val_destroy(arg->first_value[i]);
+			}
 			proctal_cmd_val_attr_destroy(value_attr);
 			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
