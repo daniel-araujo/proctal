@@ -82,6 +82,20 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			return 1;
 		}
 
+		if (arg->show_instruction_address
+			&& proctal_cmd_val_attr_type(arg->value_attr) == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+			proctal_cmd_val_attr vaddr_attr = proctal_cmd_val_attr_create(PROCTAL_CMD_VAL_TYPE_ADDRESS);
+			proctal_cmd_val vaddr = proctal_cmd_val_create(vaddr_attr);
+			proctal_cmd_val_attr_destroy(vaddr_attr);
+
+			proctal_cmd_val_parse_bin(vaddr, (const char *) &addr, sizeof addr);
+
+			proctal_cmd_val_print(vaddr, stdout);
+			printf("\t");
+
+			proctal_cmd_val_destroy(vaddr);
+		}
+
 		addr += size;
 
 		proctal_cmd_val_print(value, stdout);

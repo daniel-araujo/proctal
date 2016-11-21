@@ -62,6 +62,9 @@ Example:
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
   TYPE_ARGUMENTS
+  --show-instruction-address
+                        If type is instruction, additionally prints the
+                        instruction address.
 
 
 Usage: proctal write VALUES...

@@ -12,6 +12,9 @@ struct proctal_cmd_read_arg {
 	size_t array;
 
 	proctal_cmd_val_attr value_attr;
+
+	// Whether to additionally print the instruction's address.
+	int show_instruction_address;
 };
 
 struct proctal_cmd_write_arg {
