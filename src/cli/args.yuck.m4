@@ -132,9 +132,9 @@ Example:
                         available, whichever happens first.
 
 Usage: proctal watch
-Watches memory accesses.
+Watches for memory accesses in main thread of execution.
 
-It's important to note that this is not reporting the actual instruction that
+It's important to note that this may not report the actual instruction that
 accessed the address.
 
 Example:
