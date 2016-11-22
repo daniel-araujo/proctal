@@ -154,7 +154,7 @@ For more details run `proctal -h` or read the man page:
 
 Can be used by linking to libproctal and including proctal.h
 
-Available functions are documented in the header file.
+Functions, types and constants are documented in the header file.
 
 
 ## Installation
