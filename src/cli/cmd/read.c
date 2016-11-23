@@ -109,7 +109,7 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			}
 
 			for (int j = 0; j < size; j++) {
-				printf("%hhx", output[j]);
+				printf("%02hhx", output[j]);
 
 				if (j < size -1) {
 					printf(" ");
