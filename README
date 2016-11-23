@@ -22,6 +22,7 @@ Features:
 
 Planned:
 - Arbitrary instruction execution
+- Byte pattern search
 - Allocating and deallocating readable/writable/executable address spaces
 - Freezing all threads of execution
 - Watch points on all threads of execution
