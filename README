@@ -21,6 +21,7 @@ Features:
 - Assembling instructions to write to any memory location
 
 Planned:
+- Arbitrary instruction execution
 - Allocating and deallocating readable/writable/executable address spaces
 - Freezing all threads of execution
 - Watch points on all threads of execution
