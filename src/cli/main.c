@@ -411,6 +411,7 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 	arg->inc_up_to = 0;
 	arg->dec = 0;
 	arg->dec_up_to = 0;
+	arg->input = 0;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_SEARCH) {
 		fputs("Wrong command.\n", stderr);
