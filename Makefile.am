@@ -57,8 +57,7 @@ libproctal_a_SOURCES = \
 	src/lib/linux/watch.c \
 	src/lib/linux/watch.h \
 	src/lib/x86/dr.c \
-	src/lib/x86/dr.h \
-	src/lib/internal.h
+	src/lib/x86/dr.h
 libproctal_a_CFLAGS = -I$(srcdir)/src/lib -Isrc/lib $(proctal_cflags)
 
 # Shared library.
