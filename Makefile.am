@@ -3,8 +3,8 @@ proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
 	-Wno-unused-parameter $(proctal_posix_flags)
 proctal_lib_headers_dir = $(srcdir)/src/lib/include
 
-EXTRA_DIST = src/cli/args.yuck src/cli/args.yucc
-CLEANFILES = src/cli/args.yucc
+EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
+CLEANFILES = src/cli/args.yuck src/cli/args.yucc
 
 bin_PROGRAMS = proctal
 lib_LIBRARIES = libproctal.a
