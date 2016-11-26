@@ -44,6 +44,15 @@ struct proctal_addr_iter {
 
 	// Whether we have started iterating over addresses.
 	int started;
+
+	// Whether to iterate over readable addresses.
+	int read;
+
+	// Whether to iterate over writable addresses.
+	int write;
+
+	// Whether to iterate over executable addresses.
+	int execute;
 };
 
 /*

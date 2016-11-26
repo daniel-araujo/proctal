@@ -243,6 +243,36 @@ long proctal_addr_iter_region(proctal_addr_iter iter);
 void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
 
 /*
+ * Sets and returns whether to iterate over readable addresses.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_addr_iter_read(proctal_addr_iter iter);
+void proctal_addr_iter_set_read(proctal_addr_iter iter, int read);
+
+/*
+ * Sets and returns whether to iterate over writable addresses.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 0.
+ */
+int proctal_addr_iter_write(proctal_addr_iter iter);
+void proctal_addr_iter_set_write(proctal_addr_iter iter, int write);
+
+/*
+ * Sets and returns whether to iterate over executable addresses.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 0.
+ */
+int proctal_addr_iter_execute(proctal_addr_iter iter);
+void proctal_addr_iter_set_execute(proctal_addr_iter iter, int execute);
+
+/*
  * Freezes and unfreezes main thread of execution.
  *
  * You should unfreeze before destroying or exiting your program otherwise it

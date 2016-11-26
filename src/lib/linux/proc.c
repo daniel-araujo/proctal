@@ -57,7 +57,14 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 
 	mem_region_skip_space(maps);
 
-	for (int i = 0; i < 4; i++) {
+	region->read = fgetc(maps) == 'r';
+	region->write = fgetc(maps) == 'w';
+	region->execute = fgetc(maps) == 'x';
+	fgetc(maps); // Skipping over this one.
+
+	mem_region_skip_space(maps);
+
+	for (int i = 0; i < 3; i++) {
 		mem_region_skip_until_space(maps);
 		mem_region_skip_space(maps);
 	}

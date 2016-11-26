@@ -21,6 +21,9 @@ void proctal_addr_iter_init(struct proctal *p, struct proctal_addr_iter *iter)
 	iter->size = 1;
 	iter->align = 1;
 	iter->started = 0;
+	iter->read = 1;
+	iter->write = 0;
+	iter->execute = 0;
 }
 
 void proctal_addr_iter_deinit(struct proctal *p, struct proctal_addr_iter *iter)
@@ -68,6 +71,36 @@ long proctal_addr_iter_region(proctal_addr_iter iter)
 void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask)
 {
 	iter->region_mask = mask;
+}
+
+int proctal_addr_iter_read(proctal_addr_iter iter)
+{
+	return iter->read;
+}
+
+void proctal_addr_iter_set_read(proctal_addr_iter iter, int read)
+{
+	iter->read = read != 0;
+}
+
+int proctal_addr_iter_write(proctal_addr_iter iter)
+{
+	return iter->write;
+}
+
+void proctal_addr_iter_set_write(proctal_addr_iter iter, int write)
+{
+	iter->write = write != 0;
+}
+
+int proctal_addr_iter_execute(proctal_addr_iter iter)
+{
+	return iter->execute;
+}
+
+void proctal_addr_iter_set_execute(proctal_addr_iter iter, int execute)
+{
+	iter->execute = execute != 0;
 }
 
 int proctal_addr_iter_next(proctal_addr_iter iter, void **addr)

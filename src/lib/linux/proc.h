@@ -7,6 +7,11 @@
 struct proctal_linux_mem_region {
 	void *start_addr;
 	void *end_addr;
+
+	int read;
+	int write;
+	int execute;
+
 	// This is not perfect.
 	char path[255];
 };

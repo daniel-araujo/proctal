@@ -4,6 +4,26 @@
 
 static inline int interesting_region(struct proctal_linux_addr_iter *iterl)
 {
+	if (iterl->iter.read) {
+		if (!iterl->region.read) {
+			return 0;
+		}
+
+		if (strcmp(iterl->region.path, "[vvar]") == 0) {
+			// Can't seem to read from this region regardless of it
+			// being readable.
+			return 0;
+		}
+	}
+
+	if (iterl->iter.write && !iterl->region.write) {
+		return 0;
+	}
+
+	if (iterl->iter.execute && !iterl->region.execute) {
+		return 0;
+	}
+
 	if (iterl->iter.region_mask == 0) {
 		return 1;
 	}
