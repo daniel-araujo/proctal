@@ -1,49 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "internal.h"
+#include <proctal.h>
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
-	proctal_write(P, ADDR, (char *) &VAL, sizeof VAL)
+	proctal_write(P, ADDR, (const char *) &VAL, sizeof VAL)
 
 #define FORWARD_NATIVE_ARRAY(P, ADDR, VAL, SIZE) \
-	proctal_write(P, ADDR, (char *) VAL, SIZE * sizeof *VAL)
+	proctal_write(P, ADDR, (const char *) VAL, SIZE * sizeof *VAL)
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
 	size_t proctal_write_##SUFFIX(proctal p, void *addr, TYPE in) \
 	{ \
 		return FORWARD_NATIVE(p, addr, in) / sizeof (TYPE); \
-	}
+	} \
+	DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX##_array, TYPE)
 
 #define DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX, TYPE) \
-	size_t proctal_write_##SUFFIX(proctal p, void *addr, TYPE *in, size_t size) \
+	size_t proctal_write_##SUFFIX(proctal p, void *addr, const TYPE *in, size_t size) \
 	{ \
-		return FORWARD_NATIVE_ARRAY(p, addr, out, size) / sizeof (TYPE); \
+		return FORWARD_NATIVE_ARRAY(p, addr, in, size) / sizeof (TYPE); \
 	}
 
-size_t proctal_write(proctal p, void *addr, char *in, size_t size)
+size_t proctal_write(proctal p, void *addr, const char *in, size_t size)
 {
-	FILE *f = proctal_memw(p);
-
-	if (f == NULL) {
-		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
-		return 0;
-	}
-
-	fseek(f, (long) addr, SEEK_SET);
-
-	long i = fwrite(in, size, 1, f);
-
-	if (i != 1) {
-		proctal_set_error(p, PROCTAL_ERROR_WRITE_FAILURE);
-		return 0;
-	}
-
-	// The way this is using the C library makes it seem like either
-	// everything is written or nothing is. Might want to investigate
-	// this.
-
-	return size;
+	return proctal_impl_write(p, addr, in, size);
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

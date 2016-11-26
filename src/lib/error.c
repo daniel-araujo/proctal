@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "internal.h"
+#include <proctal.h>
 
 static const char *a[] = {
 	[0] = NULL,
@@ -21,6 +21,7 @@ static const char *a[] = {
 	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE] =
 		"Watching for reads, writes and instruction executions at once is not supported.",
 	[PROCTAL_ERROR_PROCESS_NOT_FOUND] = "Process not found.",
+	[PROCTAL_ERROR_PROCESS_NOT_SET] = "Process was not set.",
 };
 
 int proctal_error(proctal p)

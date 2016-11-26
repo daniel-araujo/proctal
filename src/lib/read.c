@@ -1,7 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "internal.h"
+#include <proctal.h>
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
 	proctal_read(P, ADDR, (char *) VAL, sizeof *VAL)
@@ -24,27 +21,7 @@
 
 size_t proctal_read(proctal p, void *addr, char *out, size_t size)
 {
-	FILE *f = proctal_memr(p);
-
-	if (f == NULL) {
-		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
-		return 0;
-	}
-
-	fseek(f, (long) addr, SEEK_SET);
-
-	long i = fread(out, size, 1, f);
-
-	if (i != 1) {
-		proctal_set_error(p, PROCTAL_ERROR_READ_FAILURE);
-		return 0;
-	}
-
-	// The way this is using the C library makes it seem like either
-	// everything is read or nothing is. Might want to investigate
-	// this.
-
-	return size;
+	return proctal_impl_read(p, addr, out, size);
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

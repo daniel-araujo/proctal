@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "linux/proc.h"
+#include <linux/proc.h>
 
 #define PID_MAX_DIGITS 5
 #define PROC_FILE_MAX 40

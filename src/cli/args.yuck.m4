@@ -151,3 +151,14 @@ Example:
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.
+
+Usage: proctal execute
+Executes arbitrary code.
+
+The instructions will be embedded at some place in memory and execution will
+jump directly to there, leaving registers and stack intact.
+
+Example:
+        proctal execute --pid=12345
+
+  PID_ARGUMENT

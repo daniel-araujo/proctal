@@ -1,314 +1,113 @@
 #ifndef PROCTAL_H
-#define PROCTAL_H
+// Include guard macro will be defined by the following include statement. It
+// just so happens the included header file also uses the same macro name.
+#include <include/proctal.h>
 
-#include <stddef.h>
-#include <sys/types.h>
-
-#define PROCTAL_ERROR_OUT_OF_MEMORY 1
-#define PROCTAL_ERROR_PERMISSION_DENIED 2
-#define PROCTAL_ERROR_WRITE_FAILURE 3
-#define PROCTAL_ERROR_READ_FAILURE 4
-#define PROCTAL_ERROR_UNKNOWN 5
-#define PROCTAL_ERROR_UNIMPLEMENTED 6
-#define PROCTAL_ERROR_UNSUPPORTED 7
-#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ 8
-#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE 9
-#define PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE 10
-#define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE 11
-#define PROCTAL_ERROR_PROCESS_NOT_FOUND 12
-
-#define PROCTAL_ADDR_REGION_STACK 1
-#define PROCTAL_ADDR_REGION_HEAP 2
-
-typedef struct proctal *proctal;
-typedef struct proctal_watch *proctal_watch;
-typedef struct proctal_addr_iter *proctal_addr_iter;
+#include <impl/impl.h>
 
 /*
- * Creates and deletes an instance of Proctal.
- *
- * There's always a tiny chance that creating an instance fails, such as when
- * running out of memory, so you're better off calling proctal_error right
- * after calling this function to make sure you don't use an invalid instance.
- * Regardless if it succeeds or fails, you still need to call proctal_destroy.
- * Do not compare it to NULL.
- *
- * Using an invalid instance of Proctal results in undefined behavior, likely
- * leading to a crash.
+ * Global variables. Keep these to a minimum.
  */
-proctal proctal_create(void);
-void proctal_destroy(proctal p);
+extern void *(*proctal_global_malloc)(size_t);
+extern void (*proctal_global_free)(void *);
 
 /*
- * Use this function to check for errors.
- *
- * It will return a non-zero value to represent an error, which is defined as a
- * macro that starts with PROCTAL_ERROR_. A 0 means there are no errors. There
- * is no macro defined for no error.
- *
- * This function will keep reporting the same error until you acknowledge it
- * with a call to proctal_error_ack.
+ * Base structure of an instance of Proctal.
  */
-int proctal_error(proctal p);
+struct proctal {
+	// Memory allocator and deallocator with the same signatures (and
+	// names) as the standard malloc and free functions which are also used
+	// by default.
+	void *(*malloc)(size_t);
+	void (*free)(void *);
+
+	// Keeps track of the last error that was set.
+	int error;
+};
 
 /*
- * Allows you to acknowledge the last error that ocurred with the given
- * instance of Proctal, essentially making Proctal forget about its erroneous
- * past.
+ * Base structure of an address iterator.
  */
-void proctal_error_ack(proctal p);
+struct proctal_addr_iter {
+	// Start address of the next call.
+	void *curr_addr;
+
+	// Tells which regions are iterated.
+	long region_mask;
+
+	// Address alignment.
+	size_t align;
+
+	// Size of the value of the address. We only want to return addresses
+	// that when dereferenced can return values of up to this size.
+	size_t size;
+
+	// Whether we have started iterating over addresses.
+	int started;
+};
 
 /*
- * Similar to proctal_error, but returns pointers to read-only C-style strings
- * for diagnostic purposes such as logging. NULL is returned as the only falsy
- * value which indicates no error.
- *
- * These messages are in English and are not suitable for displaying to the
- * user.
+ * Base structure of a watch.
  */
-const char *proctal_error_msg(proctal p);
+struct proctal_watch {
+	// Address to watch.
+	void *addr;
+
+	// Tells us when it has started.
+	int started;
+
+	// Whether to watch for reads.
+	int read;
+
+	// Whether to watch for writes.
+	int write;
+
+	// Whether to watch for instruction execution.
+	int execute;
+};
 
 /*
- * Sets and gets the Process ID for that instance of Proctal.
- *
- * When the returned value is 0 then it means no Process ID is associated.
+ * Initializes fields in the base structure.
  */
-void proctal_set_pid(proctal p, pid_t pid);
-pid_t proctal_pid(proctal p);
+void proctal_init(struct proctal *p);
 
 /*
- * Reads a specified length of characters starting from the given address. This
- * function assumes it can safely write the same length to the given buffer.
- *
- * Will return the number of characters it successfuly reads.
- *
- * Not returning the expect number of values indicates an error.
- *
- * There are also convenience functions for reading native C types. Sizes
- * correspond to the type's size.
+ * Deinitializes fields in the base structure.
  */
-size_t proctal_read(proctal p, void *addr, char *out, size_t size);
-size_t proctal_read_char(proctal p, void *addr, char *out);
-size_t proctal_read_char_array(proctal p, void *addr, char *out, size_t size);
-size_t proctal_read_schar(proctal p, void *addr, signed char *out);
-size_t proctal_read_schar_array(proctal p, void *addr, signed char *out, size_t size);
-size_t proctal_read_uchar(proctal p, void *addr, unsigned char *out);
-size_t proctal_read_uchar_array(proctal p, void *addr, unsigned char *out, size_t size);
-size_t proctal_read_short(proctal p, void *addr, short *out);
-size_t proctal_read_short_array(proctal p, void *addr, short *out, size_t size);
-size_t proctal_read_ushort(proctal p, void *addr, unsigned short *out);
-size_t proctal_read_ushort_array(proctal p, void *addr, unsigned short *out, size_t size);
-size_t proctal_read_int(proctal p, void *addr, int *out);
-size_t proctal_read_int_array(proctal p, void *addr, int *out, size_t size);
-size_t proctal_read_uint(proctal p, void *addr, unsigned int *out);
-size_t proctal_read_uint_array(proctal p, void *addr, unsigned int *out, size_t size);
-size_t proctal_read_long(proctal p, void *addr, long *out);
-size_t proctal_read_long_array(proctal p, void *addr, long *out, size_t size);
-size_t proctal_read_ulong(proctal p, void *addr, unsigned long *out);
-size_t proctal_read_ulong_array(proctal p, void *addr, unsigned long *out, size_t size);
-size_t proctal_read_longlong(proctal p, void *addr, long long *out);
-size_t proctal_read_longlong_array(proctal p, void *addr, long long *out, size_t size);
-size_t proctal_read_ulonglong(proctal p, void *addr, unsigned long long *out);
-size_t proctal_read_ulonglong_array(proctal p, void *addr, unsigned long long *out, size_t size);
-size_t proctal_read_float(proctal p, void *addr, float *out);
-size_t proctal_read_float_array(proctal p, void *addr, float *out, size_t size);
-size_t proctal_read_double(proctal p, void *addr, double *out);
-size_t proctal_read_double_array(proctal p, void *addr, double *out, size_t size);
-size_t proctal_read_longdouble(proctal p, void *addr, long double *out);
-size_t proctal_read_longdouble_array(proctal p, void *addr, long double *out, size_t size);
-size_t proctal_read_address(proctal p, void *addr, void **out);
-size_t proctal_read_address_array(proctal p, void *addr, void **out, size_t size);
+void proctal_deinit(struct proctal *p);
+
+void proctal_addr_iter_init(struct proctal *p, struct proctal_addr_iter *iter);
+
+void proctal_addr_iter_deinit(struct proctal *p, struct proctal_addr_iter *iter);
+
+void proctal_watch_init(struct proctal *p, struct proctal_watch *w);
+
+void proctal_watch_deinit(struct proctal *p, struct proctal_watch *w);
 
 /*
- * Writes a specified length of characters starting from an address in an other
- * process' memory space. This function assumes it can safely access the same
- * length in the given buffer.
+ * Sets the error of an instance of Proctal.
  *
- * Will return the number of characters it successfuly writes.
- *
- * Not returning the expect number of values indicates an error.
- *
- * There are also convenience functions for writing native C types. Sizes
- * correspond to the type's size.
+ * The error parameter must be a value available as a macro with the name
+ * PROCTAL_ERROR as a prefix, otherwise library users won't have a way to know
+ * what the error is.
  */
-size_t proctal_write(proctal p, void *addr, char *in, size_t size);
-size_t proctal_write_char(proctal p, void *addr, char in);
-size_t proctal_write_char_array(proctal p, void *addr, char *in, size_t size);
-size_t proctal_write_schar(proctal p, void *addr, signed char in);
-size_t proctal_write_schar_array(proctal p, void *addr, signed char *in, size_t size);
-size_t proctal_write_uchar(proctal p, void *addr, unsigned char in);
-size_t proctal_write_uchar_array(proctal p, void *addr, unsigned char *in, size_t size);
-size_t proctal_write_short(proctal p, void *addr, short in);
-size_t proctal_write_short_array(proctal p, void *addr, short *in, size_t size);
-size_t proctal_write_ushort(proctal p, void *addr, unsigned short in);
-size_t proctal_write_ushort_array(proctal p, void *addr, unsigned short *in, size_t size);
-size_t proctal_write_int(proctal p, void *addr, int in);
-size_t proctal_write_int_array(proctal p, void *addr, int *in, size_t size);
-size_t proctal_write_uint(proctal p, void *addr, unsigned int in);
-size_t proctal_write_uint_array(proctal p, void *addr, unsigned int *in, size_t size);
-size_t proctal_write_long(proctal p, void *addr, long in);
-size_t proctal_write_long_array(proctal p, void *addr, long *in, size_t size);
-size_t proctal_write_ulong(proctal p, void *addr, unsigned long in);
-size_t proctal_write_ulong_array(proctal p, void *addr, unsigned long *in, size_t size);
-size_t proctal_write_longlong(proctal p, void *addr, long long in);
-size_t proctal_write_longlong_array(proctal p, void *addr, long long *in, size_t size);
-size_t proctal_write_ulonglong(proctal p, void *addr, unsigned long long in);
-size_t proctal_write_ulonglong_array(proctal p, void *addr, unsigned long long *in, size_t size);
-size_t proctal_write_float(proctal p, void *addr, float in);
-size_t proctal_write_float_array(proctal p, void *addr, float *in, size_t size);
-size_t proctal_write_double(proctal p, void *addr, double in);
-size_t proctal_write_double_array(proctal p, void *addr, double *in, size_t size);
-size_t proctal_write_longdouble(proctal p, void *addr, long double in);
-size_t proctal_write_longdouble_array(proctal p, void *addr, long double *in, size_t size);
-size_t proctal_write_address(proctal p, void *addr, void *in);
-size_t proctal_write_address_array(proctal p, void *addr, void **in, size_t size);
+void proctal_set_error(proctal p, int error);
 
 /*
- * Iterates over addresses in a process.
- *
- * Using the iterator is an elaborate process. You must first call
- * proctal_addr_iter_create. It will return an opaque data structure that
- * represents the iterator. With it you're allowed to call functions that alter
- * the behavior of the iterator, like proctal_addr_iter_set_align and
- * proctal_addr_iter_set_size. This function can fail, so you should call
- * proctal_error right after it to make sure nothing went wrong with it.
- * On failure you do not need to call proctal_addr_iter_destroy. Do not
- * compare it to NULL.
- *
- * With the iterator configured to your liking, you can query addresses by
- * multiple calls to proctal_addr_iter_next. At this point you can no longer
- * configure the behavior of the iterator. The function returns 1 on success, 0
- * after the last successful call to the function had returned the last address
- * and on failure. To check that it returned 0 because of a failure, call
- * proctal_error
- *
- * Once you're done iterating, you can call proctal_addr_iter_destroy to declare
- * the iterator data structure as garbage or proctal_addr_iter_restart to get
- * to the same stage after a call to proctal_addr_iter_create while retaining
- * your custom configuration.
+ * Allocates and deallocates memory.
  */
-proctal_addr_iter proctal_addr_iter_create(proctal p);
-int proctal_addr_iter_next(proctal_addr_iter iter, void **addr);
-void proctal_addr_iter_destroy(proctal_addr_iter iter);
-void proctal_addr_iter_restart(proctal_addr_iter iter);
+void *proctal_alloc(proctal p, size_t size);
+void proctal_dealloc(proctal p, void *addr);
 
-/*
- * Sets and returns the alignment requirements of the addresses to be iterated.
- *
- * Attempting to set a new value after retriving an address with the iterator
- * can cause undefined behavior. Don't do it.
- */
-size_t proctal_addr_iter_align(proctal_addr_iter iter);
-void proctal_addr_iter_set_align(proctal_addr_iter iter, size_t align);
+inline void *proctal_align_addr(void *addr, size_t align)
+{
+	ptrdiff_t offset = ((unsigned long) addr % align);
 
-/*
- * Sets and returns the size of the values pointed to by the addresses to be
- * iterated.
- *
- * Attempting to set a new value after retriving an address with the iterator
- * can cause undefined behavior. Don't do it.
- */
-size_t proctal_addr_iter_size(proctal_addr_iter iter);
-void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
+	if (offset != 0) {
+		offset = align - offset;
+	}
 
-/*
- * Sets and returns which address space regions are iterated.
- *
- * By default it's set to PROCTAL_ADDR_REGION_STACK | PROCTAL_ADDR_REGION_HEAP.
- *
- * Setting the mask to 0 will make it iterate over all regions.
- *
- * Attempting to set a new value after retriving an address with the iterator
- * can cause undefined behavior. Don't do it.
- */
-long proctal_addr_iter_region(proctal_addr_iter iter);
-void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
-
-/*
- * Freezes and unfreezes main thread of execution.
- *
- * You should unfreeze before destroying or exiting your program otherwise it
- * will cause undefined behavior.
- */
-int proctal_freeze(proctal p);
-int proctal_unfreeze(proctal p);
-
-/*
- * Watches for accesses at a defined address by the main execution thread.
- *
- * You start by calling proctal_watch_create to create a watch handle. You
- * should check if the watch handle successfully created by calling
- * proctal_error.
- *
- * You can define the address you want to watch by calling
- * proctal_watch_set_addr.
- *
- * You can set whether you want to watch for reads or writes by calling
- * proctal_watch_set_read and proctal_watch_set_write.
- *
- * Once the watch handler is configured, you can call proctal_watch_next which
- * will block until an access is made. After the first call, you may no longer
- * configure it any further.
- *
- * Once you're done using the handle, you must call proctal_watch_destroy to
- * release it.
- */
-proctal_watch proctal_watch_create(proctal p);
-int proctal_watch_next(proctal_watch pw, void **addr);
-void proctal_watch_destroy(proctal_watch pw);
-
-/*
- * Sets and gets the address to watch.
- */
-void *proctal_watch_addr(proctal_watch pw);
-void proctal_watch_set_addr(proctal_watch pw, void *addr);
-
-/*
- * Sets and gets whether to watch for reads.
- *
- * A value of 1 means yes, 0 means no.
- */
-int proctal_watch_read(proctal_watch pw);
-void proctal_watch_set_read(proctal_watch pw, int r);
-
-/*
- * Sets and gets whether to watch for writes.
- *
- * A value of 1 means yes, 0 means no.
- */
-int proctal_watch_write(proctal_watch pw);
-void proctal_watch_set_write(proctal_watch pw, int w);
-
-/*
- * Sets and gets whether to watch for instruction execution.
- *
- * A value of 1 means yes, 0 means no.
- */
-int proctal_watch_execute(proctal_watch pw);
-void proctal_watch_set_execute(proctal_watch pw, int x);
-
-/*
- * Sets the memory allocator/deallocator used for internal data structures.
- *
- * These functions should only be called right after creating an instance of
- * Proctal so as to avoid a deallocator being called with an address returned
- * by a different allocator.
- */
-void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
-void proctal_set_free(proctal p, void (*free)(void *));
-
-/*
- * Global counterparts. These define the values that are used by default when
- * an instance of Proctal is created.
- *
- * If never called or passed NULL, will use the version of malloc/free that the
- * library was linked to.
- *
- * These functions must be called before any other function of the library so
- * as to avoid a deallocator being called with an address returned by a
- * different allocator.
- */
-void proctal_global_set_malloc(void *(*malloc)(size_t));
-void proctal_global_set_free(void (*free)(void *));
+	return (void *) ((char *) addr + offset);
+}
 
 #endif /* PROCTAL_H */

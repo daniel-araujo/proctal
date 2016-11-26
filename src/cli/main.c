@@ -593,6 +593,42 @@ static struct proctal_cmd_watch_arg *create_proctal_cmd_watch_arg_from_yuck_arg(
 	return arg;
 }
 
+static void destroy_proctal_cmd_execute_arg_from_yuck_arg(struct proctal_cmd_execute_arg *arg)
+{
+	free(arg);
+}
+
+static struct proctal_cmd_execute_arg *create_proctal_cmd_execute_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct proctal_cmd_execute_arg *arg = malloc(sizeof *arg);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_EXECUTE) {
+		fputs("Wrong command.\n", stderr);
+		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs != 0) {
+		fputs("Too many arguments.\n", stderr);
+		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->execute.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!proctal_cmd_parse_int(yuck_arg->execute.pid_arg, &arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	return arg;
+}
+
 int main(int argc, char **argv)
 {
 	yuck_t argp;
@@ -666,6 +702,17 @@ int main(int argc, char **argv)
 		exit_code = proctal_cmd_watch(arg);
 
 		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+	} else if (argp.cmd == PROCTAL_CMD_EXECUTE) {
+		struct proctal_cmd_execute_arg *arg = create_proctal_cmd_execute_arg_from_yuck_arg(&argp);
+
+		if (arg == NULL) {
+			yuck_free(&argp);
+			return 1;
+		}
+
+		exit_code = proctal_cmd_execute(arg);
+
+		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
 	}
 
 	yuck_free(&argp);

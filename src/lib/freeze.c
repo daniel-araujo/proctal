@@ -1,16 +1,11 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/ptrace.h>
-
-#include "internal.h"
-#include "linux/ptrace.h"
+#include <proctal.h>
 
 int proctal_freeze(proctal p)
 {
-	return proctal_linux_ptrace_attach(p);
+	return proctal_impl_freeze(p);
 }
 
 int proctal_unfreeze(proctal p)
 {
-	return proctal_linux_ptrace_detach(p);
+	return proctal_impl_unfreeze(p);
 }
