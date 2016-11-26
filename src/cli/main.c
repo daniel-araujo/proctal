@@ -379,7 +379,7 @@ static void destroy_proctal_cmd_search_arg_from_yuck_arg(struct proctal_cmd_sear
 
 #define DESTROY_COMPARE_ARG(PROCTALNAME) \
 	if (arg->PROCTALNAME) { \
-		free(arg->PROCTALNAME##_value); \
+		proctal_cmd_val_destroy(arg->PROCTALNAME##_value); \
 	}
 
 	DESTROY_COMPARE_ARG(eq);

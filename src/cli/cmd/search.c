@@ -183,6 +183,8 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 	}
 
 	proctal_addr_iter_destroy(iter);
+	proctal_cmd_val_destroy(value);
+	proctal_cmd_val_destroy(addr);
 }
 
 static inline void search_input(struct proctal_cmd_search_arg *arg, proctal p)
