@@ -8,10 +8,13 @@ static inline FILE *mem(struct proctal_linux *pl)
 {
 	if (pl->mem == NULL) {
 		pl->mem = fopen(proctal_linux_proc_path(pl->pid, "mem"), "r+");
-	}
 
-	if (pl->mem == NULL) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		if (pl->mem == NULL) {
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+			return NULL;
+		}
+
+		setvbuf(pl->mem, NULL, _IONBF, BUFSIZ);
 	}
 
 	return pl->mem;
