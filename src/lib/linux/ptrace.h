@@ -3,6 +3,25 @@
 
 #include <linux/proctal.h>
 
+#define PROCTAL_LINUX_PTRACE_X86_REG_RAX 0x0
+#define PROCTAL_LINUX_PTRACE_X86_REG_RBX 0x1
+#define PROCTAL_LINUX_PTRACE_X86_REG_RCX 0x2
+#define PROCTAL_LINUX_PTRACE_X86_REG_RDX 0x3
+#define PROCTAL_LINUX_PTRACE_X86_REG_RSI 0x4
+#define PROCTAL_LINUX_PTRACE_X86_REG_RDI 0x5
+#define PROCTAL_LINUX_PTRACE_X86_REG_RBP 0x6
+#define PROCTAL_LINUX_PTRACE_X86_REG_RSP 0x7
+#define PROCTAL_LINUX_PTRACE_X86_REG_RIP 0x8
+#define PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS 0x9
+#define PROCTAL_LINUX_PTRACE_X86_REG_R8 0xA
+#define PROCTAL_LINUX_PTRACE_X86_REG_R9 0xB
+#define PROCTAL_LINUX_PTRACE_X86_REG_R10 0xC
+#define PROCTAL_LINUX_PTRACE_X86_REG_R11 0xD
+#define PROCTAL_LINUX_PTRACE_X86_REG_R12 0xE
+#define PROCTAL_LINUX_PTRACE_X86_REG_R13 0xF
+#define PROCTAL_LINUX_PTRACE_X86_REG_R14 0x10
+#define PROCTAL_LINUX_PTRACE_X86_REG_R15 0x11
+
 #define PROCTAL_LINUX_PTRACE_X86_REG_DR0 0x8000
 #define PROCTAL_LINUX_PTRACE_X86_REG_DR1 0x8001
 #define PROCTAL_LINUX_PTRACE_X86_REG_DR2 0x8002
@@ -17,6 +36,7 @@ int proctal_linux_ptrace_detach(struct proctal_linux *pl);
 
 int proctal_linux_ptrace_stop(struct proctal_linux *pl);
 int proctal_linux_ptrace_cont(struct proctal_linux *pl);
+int proctal_linux_ptrace_step(struct proctal_linux *pl);
 
 int proctal_linux_ptrace_get_instruction_address(struct proctal_linux *pl, void **addr);
 int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, void *addr);

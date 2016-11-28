@@ -139,9 +139,6 @@ int proctal_impl_watch_next(proctal_watch pw, void **addr)
 
 int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_length)
 {
-	fprintf(stderr, "To be implemented\n");
-	return 1;
-
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
 	if (!proctal_linux_ptrace_attach(pl)) {

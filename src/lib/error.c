@@ -22,6 +22,7 @@ static const char *a[] = {
 		"Watching for reads, writes and instruction executions at once is not supported.",
 	[PROCTAL_ERROR_PROCESS_NOT_FOUND] = "Process not found.",
 	[PROCTAL_ERROR_PROCESS_NOT_SET] = "Process was not set.",
+	[PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND] = "Could not find a suitable address in memory to inject code in.",
 };
 
 int proctal_error(proctal p)
