@@ -16,11 +16,9 @@ struct proctal_linux {
 	// Process ID. This identifies the process we're going to muck with.
 	pid_t pid;
 
-	// File handle for reading from memory. Always seek before using.
-	FILE *memr;
-
-	// File handle for writing to memory. Always seek before using.
-	FILE *memw;
+	// File handle for reading and writing to memory. Always seek before
+	// using.
+	FILE *mem;
 
 	// Tracks how many times we've attached to the process with
 	// ptrace. It's not attached if the value is 0.

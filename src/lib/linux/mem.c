@@ -4,30 +4,24 @@
 #include <linux/mem.h>
 #include <linux/proc.h>
 
-static inline FILE *memr(struct proctal_linux *pl)
+static inline FILE *mem(struct proctal_linux *pl)
 {
-	if (pl->memr == NULL) {
-		pl->memr = fopen(proctal_linux_proc_path(pl->pid, "mem"), "r");
+	if (pl->mem == NULL) {
+		pl->mem = fopen(proctal_linux_proc_path(pl->pid, "mem"), "r+");
 	}
 
-	return pl->memr;
-}
-
-static inline FILE *memw(struct proctal_linux *pl)
-{
-	if (pl->memw == NULL) {
-		pl->memw = fopen(proctal_linux_proc_path(pl->pid, "mem"), "w");
+	if (pl->mem == NULL) {
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 	}
 
-	return pl->memw;
+	return pl->mem;
 }
 
 size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, size_t size)
 {
-	FILE *f = memr(pl);
+	FILE *f = mem(pl);
 
 	if (f == NULL) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 		return 0;
 	}
 
@@ -49,10 +43,9 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, s
 
 size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char *in, size_t size)
 {
-	FILE *f = memw(pl);
+	FILE *f = mem(pl);
 
 	if (f == NULL) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 		return 0;
 	}
 
