@@ -5,6 +5,7 @@
 #include <linux/addr.h>
 #include <linux/watch.h>
 #include <linux/alloc.h>
+#include <linux/execute.h>
 
 proctal proctal_impl_create(void)
 {
@@ -141,27 +142,5 @@ int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_leng
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	if (!proctal_linux_ptrace_attach(pl)) {
-		return 0;
-	}
-
-	void *addr = proctal_linux_alloc(
-		pl,
-		byte_code_length,
-		PROCTAL_LINUX_ALLOC_WRITE | PROCTAL_LINUX_ALLOC_EXECUTE | PROCTAL_LINUX_ALLOC_READ);
-
-	if (addr == NULL) {
-		proctal_linux_ptrace_detach(pl);
-		return 0;
-	}
-
-	proctal_write(p, addr, byte_code, byte_code_length);
-
-	proctal_linux_ptrace_set_instruction_address(pl, addr);
-
-	if (!proctal_linux_ptrace_detach(pl)) {
-		return 0;
-	}
-
-	return 1;
+	return proctal_linux_execute(pl, byte_code, byte_code_length);
 }

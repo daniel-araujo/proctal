@@ -46,6 +46,8 @@ libproctal_a_SOURCES = \
 	src/lib/linux/addr.h \
 	src/lib/linux/alloc.c \
 	src/lib/linux/alloc.h \
+	src/lib/linux/execute.c \
+	src/lib/linux/execute.h \
 	src/lib/linux/mem.c \
 	src/lib/linux/mem.h \
 	src/lib/linux/proc.c \

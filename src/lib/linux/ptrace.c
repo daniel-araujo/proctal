@@ -99,8 +99,32 @@ static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
 	for (;;) {
 		waitpid(pl->pid, &wstatus, WUNTRACED);
 
-		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP) {
-			return 1;
+		if (WIFSTOPPED(wstatus)) {
+			if (WSTOPSIG(wstatus) == SIGSTOP) {
+				return 1;
+			} else {
+				break;
+			}
+		}
+	}
+
+	proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+	return 0;
+}
+
+static int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
+{
+	int wstatus;
+
+	for (;;) {
+		waitpid(pl->pid, &wstatus, WUNTRACED);
+
+		if (WIFSTOPPED(wstatus)) {
+			if (WSTOPSIG(wstatus) == SIGTRAP) {
+				return 1;
+			} else {
+				break;
+			}
 		}
 	}
 
@@ -251,7 +275,7 @@ int proctal_linux_ptrace_cont(struct proctal_linux *pl)
 int proctal_linux_ptrace_step(struct proctal_linux *pl)
 {
 	if (ptrace(PTRACE_SINGLESTEP, pl->pid, 0, 0)
-		&& !proctal_linux_ptrace_wait_stop(pl)) {
+		|| !proctal_linux_ptrace_wait_trap(pl)) {
 		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
 		return 0;
 	}

@@ -4,7 +4,7 @@ define(`PID_ARGUMENT', `
 define(`TYPE_ARGUMENTS', `
   -t, --type=TYPE
                         Type of value. If omitted, TYPE is implicitly byte.
-                        TYPE can be one of:
+                        TYPE can be:
                         byte
                         integer
                         ieee754
@@ -13,12 +13,12 @@ define(`TYPE_ARGUMENTS', `
                         instruction
   --endianness=ENDIANNESS
                         By default ENDIANNESS is little.
-                        ENDIANNESS can be one of:
+                        ENDIANNESS can be:
                         little
   --integer-size=SIZE
                         If type is integer, this determines the number of bits
                         stored in memory. By default SIZE is 8.
-                        SIZE can be one of:
+                        SIZE can be:
                         8
                         16
                         32
@@ -27,19 +27,19 @@ define(`TYPE_ARGUMENTS', `
                         If type is integer, this determines what signing
                         notation is used to distinguish negative from positive
                         numbers. By default SIGN is 2scmpl.
-                        SIGN can be one of:
+                        SIGN can be:
                         unsigned
                         2scmpl
   --text-charset=CHARSET
                         If type is text, this determines the character encoding.
                         By default CHARSET is ascii.
-                        CHARSET can be one of:
+                        CHARSET can be:
                         ascii
   --ieee754-precision=PRECISION
                         If type is ieee754, this determines the precision of
                         the floating point number. By default PRECISION is
                         single.
-                        PRECISION can be one of:
+                        PRECISION can be:
                         single
                         double
                         extended
@@ -162,3 +162,7 @@ Example:
         proctal execute --pid=12345
 
   PID_ARGUMENT
+  --format=FORMAT       Input format. By default FORMAT is assembly.
+                        FORMAT can be:
+                        assembly
+                        bytecode

@@ -184,6 +184,26 @@ static enum proctal_cmd_val_type_text_charset proctal_cmd_val_type_text_charset_
 		(void *) PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII);
 }
 
+static enum proctal_cmd_execute_format proctal_cmd_execute_format_by_name(const char *name)
+{
+	static struct value_options options[] = {
+		{
+			.name = "assembly",
+			.value = (void *) PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY,
+		},
+		{
+			.name = "bytecode",
+			.value = (void *) PROCTAL_CMD_EXECUTE_FORMAT_BYTECODE,
+		},
+	};
+
+	return (enum proctal_cmd_execute_format) value_by_name(
+		options,
+		sizeof options / sizeof options[0],
+		name,
+		(void *) PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY);
+}
+
 static void destroy_proctal_cmd_read_arg_from_yuck_arg(struct proctal_cmd_read_arg *arg)
 {
 	if (arg->value_attr) {
@@ -626,6 +646,8 @@ static struct proctal_cmd_execute_arg *create_proctal_cmd_execute_arg_from_yuck_
 		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
 		return NULL;
 	}
+
+	arg->format = proctal_cmd_execute_format_by_name(yuck_arg->execute.format_arg);
 
 	return arg;
 }

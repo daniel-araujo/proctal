@@ -3,6 +3,11 @@
 
 #include "cmd/val.h"
 
+enum proctal_cmd_execute_format {
+	PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY,
+	PROCTAL_CMD_EXECUTE_FORMAT_BYTECODE,
+};
+
 struct proctal_cmd_read_arg {
 	int pid;
 
@@ -126,6 +131,9 @@ struct proctal_cmd_watch_arg {
 
 struct proctal_cmd_execute_arg {
 	int pid;
+
+	// What format we're expecting the input to be.
+	enum proctal_cmd_execute_format format;
 };
 
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);
