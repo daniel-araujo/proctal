@@ -105,8 +105,8 @@ void proctal_set_error(proctal p, int error);
 /*
  * Allocates and deallocates memory.
  */
-void *proctal_alloc(proctal p, size_t size);
-void proctal_dealloc(proctal p, void *addr);
+void *proctal_malloc(proctal p, size_t size);
+void proctal_free(proctal p, void *addr);
 
 inline void *proctal_align_addr(void *addr, size_t align)
 {

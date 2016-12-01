@@ -136,6 +136,28 @@ struct proctal_cmd_execute_arg {
 	enum proctal_cmd_execute_format format;
 };
 
+struct proctal_cmd_alloc_arg {
+	int pid;
+
+	// Requested size.
+	size_t size;
+
+	// Read permission.
+	int read;
+
+	// Write permission.
+	int write;
+
+	// Execute permission.
+	int execute;
+};
+
+struct proctal_cmd_dealloc_arg {
+	int pid;
+
+	void *address;
+};
+
 int proctal_cmd_read(struct proctal_cmd_read_arg *arg);
 
 int proctal_cmd_write(struct proctal_cmd_write_arg *arg);
@@ -147,5 +169,9 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg);
 int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg);
 
 int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg);
+
+int proctal_cmd_alloc(struct proctal_cmd_alloc_arg *arg);
+
+int proctal_cmd_dealloc(struct proctal_cmd_dealloc_arg *arg);
 
 #endif /* CMD_H */

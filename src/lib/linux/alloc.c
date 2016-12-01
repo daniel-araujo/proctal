@@ -25,15 +25,15 @@ static inline int make_prot(int permissions)
 {
 	int prot = 0;
 
-	if (permissions & PROCTAL_LINUX_ALLOC_READ) {
+	if (permissions & PROCTAL_ALLOC_PERM_READ) {
 		prot |= PROT_READ;
 	}
 
-	if (permissions & PROCTAL_LINUX_ALLOC_WRITE) {
+	if (permissions & PROCTAL_ALLOC_PERM_WRITE) {
 		prot |= PROT_WRITE;
 	}
 
-	if (permissions & PROCTAL_LINUX_ALLOC_EXECUTE) {
+	if (permissions & PROCTAL_ALLOC_PERM_EXECUTE) {
 		prot |= PROT_EXEC;
 	}
 
@@ -221,8 +221,7 @@ void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions
 	return alloc_addr;
 }
 
-int proctal_linux_dealloc(struct proctal_linux *pl, void *addr)
+void proctal_linux_dealloc(struct proctal_linux *pl, void *addr)
 {
 	proctal_set_error(&pl->p, PROCTAL_ERROR_UNIMPLEMENTED);
-	return 0;
 }

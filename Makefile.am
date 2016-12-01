@@ -15,6 +15,8 @@ dist_man_MANS = src/cli/proctal.1
 # Cli tool.
 proctal_SOURCES = \
 	src/cli/main.c \
+	src/cli/cmd/alloc.c \
+	src/cli/cmd/dealloc.c \
 	src/cli/cmd/execute.c \
 	src/cli/cmd/watch.c \
 	src/cli/cmd/freeze.c \
@@ -41,6 +43,7 @@ libproctal_a_SOURCES = \
 	src/lib/write.c \
 	src/lib/read.c \
 	src/lib/addr.c \
+	src/lib/alloc.c \
 	src/lib/execute.c \
 	src/lib/linux/addr.c \
 	src/lib/linux/addr.h \

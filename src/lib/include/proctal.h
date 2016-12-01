@@ -34,6 +34,13 @@
 #define PROCTAL_ADDR_REGION_HEAP 2
 
 /*
+ * Macro definitions of memory allocation permissions.
+ */
+#define PROCTAL_ALLOC_PERM_EXECUTE 1
+#define PROCTAL_ALLOC_PERM_WRITE 2
+#define PROCTAL_ALLOC_PERM_READ 4
+
+/*
  * Types.
  */
 typedef struct proctal *proctal;
@@ -348,11 +355,35 @@ void proctal_watch_set_execute(proctal_watch pw, int x);
 int proctal_execute(proctal p, const char *byte_code, size_t byte_code_length);
 
 /*
+ * Allocates memory in the process.
+ *
+ * The size parameter specifies the minimum number of bytes. It may allocate
+ * more space but you should never rely on that.
+ * The perm parameter specifies read, write and execute permissions. You can
+ * OR the macros whose name start with PROCTAL_ALLOC_PERM.
+ *
+ * On success it returns the start address. On failure it will return NULL and
+ * proctal_error will return an error code.
+ */
+void *proctal_alloc(proctal p, size_t size, int perm);
+
+/*
+ * Deallocates memory allocated by proctal_malloc.
+ *
+ * This command is special in that it can deallocate memory allocated by a
+ * different instance of Proctal.
+ *
+ * Behavior is left undefined if you deallocate memory that had already been
+ * deallocated.
+ */
+void proctal_dealloc(proctal p, void *addr);
+
+/*
  * Sets the memory allocator/deallocator used for internal data structures.
  *
  * These functions should only be called right after creating an instance of
- * Proctal so as to avoid a deallocator being called with an address returned
- * by a different allocator.
+ * Proctal to avoid having the wrong deallocator being called on an internal
+ * data structure that was allocated before you changed it.
  */
 void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
 void proctal_set_free(proctal p, void (*free)(void *));

@@ -64,7 +64,7 @@ int proctal_pid(proctal p)
 	return proctal_impl_pid(p);
 }
 
-void *proctal_alloc(proctal p, size_t size)
+void *proctal_malloc(proctal p, size_t size)
 {
 	void *a = p->malloc(size);
 
@@ -75,7 +75,7 @@ void *proctal_alloc(proctal p, size_t size)
 	return a;
 }
 
-void proctal_dealloc(proctal p, void *addr)
+void proctal_free(proctal p, void *addr)
 {
 	return p->free(addr);
 }

@@ -12,7 +12,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	void *addr = proctal_linux_alloc(
 		pl,
 		byte_code_length,
-		PROCTAL_LINUX_ALLOC_WRITE | PROCTAL_LINUX_ALLOC_EXECUTE | PROCTAL_LINUX_ALLOC_READ);
+		PROCTAL_ALLOC_PERM_WRITE | PROCTAL_ALLOC_PERM_EXECUTE | PROCTAL_ALLOC_PERM_READ);
 
 	if (addr == NULL) {
 		proctal_linux_ptrace_detach(pl);

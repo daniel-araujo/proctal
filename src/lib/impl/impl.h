@@ -37,4 +37,8 @@ int proctal_impl_watch_next(proctal_watch pw, void **addr);
 
 int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_length);
 
+void *proctal_impl_alloc(proctal p, size_t size, int perm);
+
+void proctal_impl_dealloc(proctal p, void *addr);
+
 #endif /* PROCTAL_IMPL_H */

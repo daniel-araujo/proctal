@@ -652,6 +652,94 @@ static struct proctal_cmd_execute_arg *create_proctal_cmd_execute_arg_from_yuck_
 	return arg;
 }
 
+static void destroy_proctal_cmd_alloc_arg_from_yuck_arg(struct proctal_cmd_alloc_arg *arg)
+{
+	free(arg);
+}
+
+static struct proctal_cmd_alloc_arg *create_proctal_cmd_alloc_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct proctal_cmd_alloc_arg *arg = malloc(sizeof *arg);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_ALLOC) {
+		fputs("Wrong command.\n", stderr);
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs != 1) {
+		fputs("Incorrect number of arguments.\n", stderr);
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!proctal_cmd_parse_ulong(yuck_arg->args[0], &arg->size)) {
+		fputs("Invalid size.\n", stderr);
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->alloc.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!proctal_cmd_parse_int(yuck_arg->alloc.pid_arg, &arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	arg->read = yuck_arg->alloc.read_flag == 1;
+	arg->write = yuck_arg->alloc.write_flag == 1;
+	arg->execute = yuck_arg->alloc.execute_flag == 1;
+
+	return arg;
+}
+
+static void destroy_proctal_cmd_dealloc_arg_from_yuck_arg(struct proctal_cmd_dealloc_arg *arg)
+{
+	free(arg);
+}
+
+static struct proctal_cmd_dealloc_arg *create_proctal_cmd_dealloc_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct proctal_cmd_dealloc_arg *arg = malloc(sizeof *arg);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_DEALLOC) {
+		fputs("Wrong command.\n", stderr);
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs != 1) {
+		fputs("Incorrect number of arguments.\n", stderr);
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!proctal_cmd_parse_address(yuck_arg->args[0], &arg->address)) {
+		fputs("Invalid address.\n", stderr);
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->dealloc.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!proctal_cmd_parse_int(yuck_arg->dealloc.pid_arg, &arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	return arg;
+}
+
 int main(int argc, char **argv)
 {
 	yuck_t argp;
@@ -736,6 +824,28 @@ int main(int argc, char **argv)
 		exit_code = proctal_cmd_execute(arg);
 
 		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+	} else if (argp.cmd == PROCTAL_CMD_ALLOC) {
+		struct proctal_cmd_alloc_arg *arg = create_proctal_cmd_alloc_arg_from_yuck_arg(&argp);
+
+		if (arg == NULL) {
+			yuck_free(&argp);
+			return 1;
+		}
+
+		exit_code = proctal_cmd_alloc(arg);
+
+		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+	} else if (argp.cmd == PROCTAL_CMD_DEALLOC) {
+		struct proctal_cmd_dealloc_arg *arg = create_proctal_cmd_dealloc_arg_from_yuck_arg(&argp);
+
+		if (arg == NULL) {
+			yuck_free(&argp);
+			return 1;
+		}
+
+		exit_code = proctal_cmd_dealloc(arg);
+
+		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
 	}
 
 	yuck_free(&argp);

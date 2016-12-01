@@ -166,3 +166,30 @@ Example:
                         FORMAT can be:
                         assembly
                         bytecode
+
+Usage: proctal alloc SIZE
+Allocates memory.
+
+Will output the start address of an allocated chunk of memory with at least
+SIZE bytes.
+
+When you no longer need the space, you should deallocate it with the dealloc
+command.
+
+Example:
+        proctal alloc --pid=12345 8
+
+  PID_ARGUMENT
+  -r, --read            Read permission.
+  -w, --write           Write permission.
+  -x, --execute         Execute permission.
+
+Usage: proctal dealloc ADDRESS
+Deallocates memory.
+
+Should only be used to deallocate memory allocated by the alloc command.
+
+Example:
+        proctal dealloc --pid=12345 7fbf7b6b2000
+
+  PID_ARGUMENT

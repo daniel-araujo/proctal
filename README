@@ -19,11 +19,11 @@ Features:
 - Read, write and execution watch points on the main thread
 - Disassembling instructions from any memory location
 - Assembling instructions to write to any memory location
+- Allocating and deallocating readable/writable/executable memory locations
 
 Planned:
 - Arbitrary instruction execution
 - Byte pattern search
-- Allocating and deallocating readable/writable/executable address spaces
 - Freezing all threads of execution
 - Watch points on all threads of execution
 

@@ -74,7 +74,7 @@ int proctal_impl_unfreeze(proctal p)
 proctal_addr_iter proctal_impl_addr_iter_create(proctal p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
-	struct proctal_linux_addr_iter *iterl = proctal_alloc(p, sizeof *iterl);
+	struct proctal_linux_addr_iter *iterl = proctal_malloc(p, sizeof *iterl);
 
 	if (iterl == NULL) {
 		return NULL;
@@ -91,7 +91,7 @@ void proctal_impl_addr_iter_destroy(proctal_addr_iter iter)
 
 	proctal_linux_addr_iter_deinit(iterl->pl, iterl);
 
-	proctal_dealloc(&iterl->pl->p, iterl);
+	proctal_free(&iterl->pl->p, iterl);
 }
 
 int proctal_impl_addr_iter_first(proctal_addr_iter iter)
@@ -111,7 +111,7 @@ int proctal_impl_addr_iter_next(proctal_addr_iter iter)
 proctal_watch proctal_impl_watch_create(proctal p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
-	struct proctal_linux_watch *plw = proctal_alloc(p, sizeof *plw);
+	struct proctal_linux_watch *plw = proctal_malloc(p, sizeof *plw);
 
 	if (plw == NULL) {
 		return NULL;
@@ -128,7 +128,7 @@ void proctal_impl_watch_destroy(proctal_watch pw)
 
 	proctal_linux_watch_deinit(plw->pl, plw);
 
-	proctal_dealloc(&plw->pl->p, plw);
+	proctal_free(&plw->pl->p, plw);
 }
 
 int proctal_impl_watch_next(proctal_watch pw, void **addr)
@@ -143,4 +143,18 @@ int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_leng
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
 	return proctal_linux_execute(pl, byte_code, byte_code_length);
+}
+
+void *proctal_impl_alloc(proctal p, size_t size, int perm)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	return proctal_linux_alloc(pl, size, perm);
+}
+
+void proctal_impl_dealloc(proctal p, void *addr)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	proctal_linux_dealloc(pl, addr);
 }
