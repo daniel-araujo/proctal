@@ -21,6 +21,10 @@ struct state {
 	unsigned long long r11; // May be modifed.
 };
 
+struct mem_header {
+	size_t size;
+};
+
 static inline int make_prot(int permissions)
 {
 	int prot = 0;
@@ -183,6 +187,26 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 	return 1;
 }
 
+static inline void *read_header(struct proctal_linux *pl, struct mem_header *header, void *addr)
+{
+	void *alloc_addr = (char *) addr - sizeof header;
+
+	if (!proctal_linux_mem_read(pl, alloc_addr, (char *) header, sizeof header)) {
+		return NULL;
+	}
+
+	return alloc_addr;
+}
+
+static inline void *write_header(struct proctal_linux *pl, struct mem_header *header, void *alloc_addr)
+{
+	if (!proctal_linux_mem_write(pl, alloc_addr, (char *) header, sizeof header)) {
+		return NULL;
+	}
+
+	return (char *) alloc_addr + sizeof header;
+}
+
 void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions)
 {
 	struct state orig;
@@ -201,11 +225,20 @@ void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions
 
 	void *alloc_addr = NULL;
 
+	struct mem_header header;
+	header.size = size + sizeof header;
+
 	// mmap x86-64 system call.
-	if (!set_syscall6(pl, 9, 0, size, prot, flags, -1, 0)
+	if (!set_syscall6(pl, 9, 0, header.size, prot, flags, -1, 0)
 		|| !do_syscall(pl, (unsigned long long *) &alloc_addr)) {
 		load_state(pl, &orig);
 		proctal_linux_ptrace_detach(pl);
+		return NULL;
+	}
+
+	void *addr = write_header(pl, &header, alloc_addr);
+
+	if (addr == NULL) {
 		return NULL;
 	}
 
@@ -218,10 +251,50 @@ void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions
 		return NULL;
 	}
 
-	return alloc_addr;
+	return addr;
 }
 
 void proctal_linux_dealloc(struct proctal_linux *pl, void *addr)
 {
-	proctal_set_error(&pl->p, PROCTAL_ERROR_UNIMPLEMENTED);
+	struct state orig;
+
+	if (!proctal_linux_ptrace_attach(pl)) {
+		return;
+	}
+
+	struct mem_header header;
+	void *alloc_addr = read_header(pl, &header, addr);
+
+	if (alloc_addr == NULL) {
+		proctal_linux_ptrace_detach(pl);
+		return;
+	}
+
+	if (!save_state(pl, &orig)) {
+		proctal_linux_ptrace_detach(pl);
+		return;
+	}
+
+	unsigned long long ret;
+
+	// munmap x86-64 system call.
+	if (!set_syscall6(pl, 11, (unsigned long long) alloc_addr, header.size, 0, 0, 0, 0)
+		|| !do_syscall(pl, &ret)) {
+		load_state(pl, &orig);
+		proctal_linux_ptrace_detach(pl);
+		return;
+	}
+
+	if (!load_state(pl, &orig)) {
+		proctal_linux_ptrace_detach(pl);
+		return;
+	}
+
+	if (ret != 0) {
+		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		proctal_linux_ptrace_detach(pl);
+		return;
+	}
+
+	proctal_linux_ptrace_detach(pl);
 }
