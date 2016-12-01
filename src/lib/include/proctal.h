@@ -192,26 +192,26 @@ size_t proctal_write_address_array(proctal p, void *addr, const void **in, size_
 /*
  * Iterates over addresses in a process.
  *
- * Using the iterator is an elaborate process. You must first call
- * proctal_addr_iter_create. It will return an opaque data structure that
- * represents the iterator. With it you're allowed to call functions that alter
- * the behavior of the iterator, like proctal_addr_iter_set_align and
- * proctal_addr_iter_set_size. This function can fail, so you should call
- * proctal_error right after it to make sure nothing went wrong with it.
- * On failure you do not need to call proctal_addr_iter_destroy. Do not
- * compare it to NULL.
+ * How to create, configure and use the iterator is a quite elaborated process.
+ * You must first call proctal_addr_iter_create which will return a handle to
+ * an iterator. Regardless of succeeding or failing, you still have to destroy
+ * it.
  *
- * With the iterator configured to your liking, you can query addresses by
- * multiple calls to proctal_addr_iter_next. At this point you can no longer
- * configure the behavior of the iterator. The function returns 1 on success, 0
- * after the last successful call to the function had returned the last address
- * and on failure. To check that it returned 0 because of a failure, call
- * proctal_error
+ * After creating the iterator and before you start iterating, you can
+ * configure options like the address alignment.
+ *
+ * To begin iterating, you call proctal_addr_iter_next and you do so repeatedly
+ * to get the next address. It returns 1 on success and 0 when there are either
+ * no more addresses to return or a failure has occurred. You will most likely
+ * want to call this in a loop.
  *
  * Once you're done iterating, you can call proctal_addr_iter_destroy to declare
- * the iterator data structure as garbage or proctal_addr_iter_restart to get
- * to the same stage after a call to proctal_addr_iter_create while retaining
- * your custom configuration.
+ * the iterator as garbage or call proctal_addr_iter_restart to get to the same
+ * stage after the call to proctal_addr_iter_create while retaining the options
+ * you've configured.
+ *
+ * Any function call can fail, so you should call proctal_error right after any
+ * function call to check whether something went wrong.
  */
 proctal_addr_iter proctal_addr_iter_create(proctal p);
 int proctal_addr_iter_next(proctal_addr_iter iter, void **addr);
