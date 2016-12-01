@@ -118,7 +118,7 @@ static inline void *find_inject_addr(struct proctal_linux *pl, size_t size)
 
 	struct proctal_linux_mem_region region;
 
-	void *addr;
+	void *addr = NULL;
 
 	while (proctal_linux_read_mem_region(&region, maps) == 0) {
 		if (region.execute) {
