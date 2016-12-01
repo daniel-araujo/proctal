@@ -50,14 +50,13 @@ typedef struct proctal_addr_iter *proctal_addr_iter;
 /*
  * Creates and destroys an instance of Proctal.
  *
- * There is always a tiny chance that creating an instance may fail such as
- * when the system is running out of memory so you should call proctal_error
- * right after calling this function to so you don't end up using an invalid
- * instance. And regardless of it succeeding or failing you still need to call
- * proctal_destroy.
+ * There is always a tiny chance that this call may fail such as when the
+ * system is running out of memory therefore you should call proctal_error
+ * right after. And regardless of it succeeding or failing you still need to
+ * call proctal_destroy.
  *
- * Using an invalid instance of Proctal results in undefined behavior, likely
- * leading to a crash.
+ * Using an instance of Proctal that failed to be created correctly will result
+ * in undefined behavior, likely leading to a crash.
  */
 proctal proctal_create(void);
 void proctal_destroy(proctal p);
