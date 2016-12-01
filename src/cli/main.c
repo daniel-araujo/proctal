@@ -740,6 +740,54 @@ static struct proctal_cmd_dealloc_arg *create_proctal_cmd_dealloc_arg_from_yuck_
 	return arg;
 }
 
+typedef int (*proctal_yuck_cmd_handler)(yuck_t *);
+
+static int proctal_yuck_cmd_handler_none(yuck_t *argp)
+{
+	yuck_auto_help(argp);
+
+	return 0;
+}
+
+#define PROCTAL_YUCK_CMD_HANDLER_COMMON(CMD) \
+	static int proctal_yuck_cmd_handler_##CMD(yuck_t *argp) \
+	{ \
+		struct proctal_cmd_##CMD##_arg *arg = create_proctal_cmd_##CMD##_arg_from_yuck_arg(argp); \
+\
+		if (arg == NULL) { \
+			return 1; \
+		} \
+\
+		int exit_code = proctal_cmd_##CMD(arg); \
+\
+		destroy_proctal_cmd_##CMD##_arg_from_yuck_arg(arg); \
+\
+		return exit_code; \
+	}
+
+PROCTAL_YUCK_CMD_HANDLER_COMMON(read)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(write)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(search)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(freeze)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(watch)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(execute)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(alloc)
+PROCTAL_YUCK_CMD_HANDLER_COMMON(dealloc)
+
+#undef PROCTAL_YUCK_CMD_HANDLER_COMMON
+
+proctal_yuck_cmd_handler proctal_yuck_cmd_handlers[] = {
+	[PROCTAL_CMD_NONE] = proctal_yuck_cmd_handler_none,
+	[PROCTAL_CMD_READ] = proctal_yuck_cmd_handler_read,
+	[PROCTAL_CMD_WRITE] = proctal_yuck_cmd_handler_write,
+	[PROCTAL_CMD_SEARCH] = proctal_yuck_cmd_handler_search,
+	[PROCTAL_CMD_FREEZE] = proctal_yuck_cmd_handler_freeze,
+	[PROCTAL_CMD_WATCH] = proctal_yuck_cmd_handler_watch,
+	[PROCTAL_CMD_EXECUTE] = proctal_yuck_cmd_handler_execute,
+	[PROCTAL_CMD_ALLOC] = proctal_yuck_cmd_handler_alloc,
+	[PROCTAL_CMD_DEALLOC] = proctal_yuck_cmd_handler_dealloc,
+};
+
 int main(int argc, char **argv)
 {
 	yuck_t argp;
@@ -756,98 +804,14 @@ int main(int argc, char **argv)
 		yuck_auto_help(&argp);
 	} else if (argp.version_flag) {
 		yuck_auto_version(&argp);
-	} else if (argp.cmd == YUCK_NOCMD) {
-		yuck_auto_help(&argp);
-	} else if (argp.cmd == PROCTAL_CMD_WRITE) {
-		struct proctal_cmd_write_arg *arg = create_proctal_cmd_write_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_write(arg);
-
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_READ) {
-		struct proctal_cmd_read_arg *arg = create_proctal_cmd_read_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_read(arg);
-
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_SEARCH) {
-		struct proctal_cmd_search_arg *arg = create_proctal_cmd_search_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_search(arg);
-
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_FREEZE) {
-		struct proctal_cmd_freeze_arg *arg = create_proctal_cmd_freeze_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_freeze(arg);
-
-		destroy_proctal_cmd_freeze_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_WATCH) {
-		struct proctal_cmd_watch_arg *arg = create_proctal_cmd_watch_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_watch(arg);
-
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_EXECUTE) {
-		struct proctal_cmd_execute_arg *arg = create_proctal_cmd_execute_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_execute(arg);
-
-		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_ALLOC) {
-		struct proctal_cmd_alloc_arg *arg = create_proctal_cmd_alloc_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_alloc(arg);
-
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
-	} else if (argp.cmd == PROCTAL_CMD_DEALLOC) {
-		struct proctal_cmd_dealloc_arg *arg = create_proctal_cmd_dealloc_arg_from_yuck_arg(&argp);
-
-		if (arg == NULL) {
-			yuck_free(&argp);
-			return 1;
-		}
-
-		exit_code = proctal_cmd_dealloc(arg);
-
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+	} else if (argp.cmd < (sizeof proctal_yuck_cmd_handlers / sizeof proctal_yuck_cmd_handlers[0])) {
+		exit_code = proctal_yuck_cmd_handlers[argp.cmd](&argp);
+	} else {
+		fprintf(stderr, "Command not implemented.\n");
+		exit_code = 0;
 	}
 
 	yuck_free(&argp);
+
 	return exit_code;
 }
