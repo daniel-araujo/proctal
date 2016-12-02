@@ -30,6 +30,11 @@ void proctal_linux_set_pid(struct proctal_linux *pl, pid_t pid)
 		pl->mem = NULL;
 	}
 
+	if (pl->ptrace) {
+		pl->ptrace = 1;
+		proctal_linux_ptrace_detach(pl);
+	}
+
 	pl->pid = pid;
 }
 
