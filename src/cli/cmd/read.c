@@ -3,40 +3,40 @@
 #include "cmd.h"
 #include "printer.h"
 
-static inline void print_separator(struct proctal_cmd_read_arg *arg)
+static inline void print_separator(struct cli_cmd_read_arg *arg)
 {
-	switch (proctal_cmd_val_attr_type(arg->value_attr)) {
-	case PROCTAL_CMD_VAL_TYPE_TEXT:
+	switch (cli_val_attr_type(arg->value_attr)) {
+	case CLI_VAL_TYPE_TEXT:
 		break;
 
-	case PROCTAL_CMD_VAL_TYPE_BYTE:
-	case PROCTAL_CMD_VAL_TYPE_INTEGER:
-	case PROCTAL_CMD_VAL_TYPE_IEEE754:
-	case PROCTAL_CMD_VAL_TYPE_ADDRESS:
+	case CLI_VAL_TYPE_BYTE:
+	case CLI_VAL_TYPE_INTEGER:
+	case CLI_VAL_TYPE_IEEE754:
+	case CLI_VAL_TYPE_ADDRESS:
 	default:
 		printf("\n");
 		break;
 	}
 }
 
-static inline void print_ending(struct proctal_cmd_read_arg *arg)
+static inline void print_ending(struct cli_cmd_read_arg *arg)
 {
 	printf("\n");
 }
 
-int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
+int cli_cmd_read(struct cli_cmd_read_arg *arg)
 {
 	proctal p = proctal_create();
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
 
 	proctal_set_pid(p, arg->pid);
 
-	proctal_cmd_val value = proctal_cmd_val_create(arg->value_attr);
+	cli_val value = cli_val_create(arg->value_attr);
 	char output[16];
 
 	char *addr = (char *) arg->address;
@@ -48,19 +48,19 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			break;
 
 		case PROCTAL_ERROR_PERMISSION_DENIED:
-			proctal_print_error(p);
+			cli_print_proctal_error(p);
 			proctal_error_ack(p);
 			return 1;
 
 		default:
-			proctal_print_error(p);
+			cli_print_proctal_error(p);
 			proctal_destroy(p);
 			return 1;
 		}
 
-		proctal_cmd_val_set_instruction_addr(value, addr);
+		cli_val_set_instruction_addr(value, addr);
 
-		int size = proctal_cmd_val_parse_bin(value, output, sizeof output / sizeof output[0]);
+		int size = cli_val_parse_bin(value, output, sizeof output / sizeof output[0]);
 
 		if (size == 0) {
 			if (i == 0) {
@@ -74,25 +74,25 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 		}
 
 		if (arg->show_instruction_address
-			&& proctal_cmd_val_attr_type(arg->value_attr) == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
-			proctal_cmd_val_attr vaddr_attr = proctal_cmd_val_attr_create(PROCTAL_CMD_VAL_TYPE_ADDRESS);
-			proctal_cmd_val vaddr = proctal_cmd_val_create(vaddr_attr);
-			proctal_cmd_val_attr_destroy(vaddr_attr);
+			&& cli_val_attr_type(arg->value_attr) == CLI_VAL_TYPE_INSTRUCTION) {
+			cli_val_attr vaddr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
+			cli_val vaddr = cli_val_create(vaddr_attr);
+			cli_val_attr_destroy(vaddr_attr);
 
-			proctal_cmd_val_parse_bin(vaddr, (const char *) &addr, sizeof addr);
+			cli_val_parse_bin(vaddr, (const char *) &addr, sizeof addr);
 
-			proctal_cmd_val_print(vaddr, stdout);
+			cli_val_print(vaddr, stdout);
 			printf("\t");
 
-			proctal_cmd_val_destroy(vaddr);
+			cli_val_destroy(vaddr);
 		}
 
 		addr += size;
 
-		proctal_cmd_val_print(value, stdout);
+		cli_val_print(value, stdout);
 
 		if (arg->show_instruction_byte_code
-			&& proctal_cmd_val_attr_type(arg->value_attr) == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+			&& cli_val_attr_type(arg->value_attr) == CLI_VAL_TYPE_INSTRUCTION) {
 			printf("\n");
 
 			if (arg->show_instruction_address) {

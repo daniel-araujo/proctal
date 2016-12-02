@@ -3,6 +3,6 @@
 
 #include <proctal.h>
 
-void proctal_print_error(proctal p);
+void cli_print_proctal_error(proctal p);
 
 #endif /* PRINTER_H */

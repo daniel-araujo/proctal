@@ -7,20 +7,20 @@
 #include "args.yucc"
 
 #define PARSE_TYPE_ATTRIBUTES(ATTR, YUCK) \
-	proctal_cmd_val_attr_set_endianness(ATTR, proctal_cmd_val_type_endianness_by_name(YUCK.endianness_arg)); \
+	cli_val_attr_set_endianness(ATTR, cli_val_type_endianness_by_name(YUCK.endianness_arg)); \
 \
 	switch (t) { \
-	case PROCTAL_CMD_VAL_TYPE_INTEGER: \
-		proctal_cmd_val_attr_set_integer_size(ATTR, proctal_cmd_val_type_integer_size_by_name(YUCK.integer_size_arg)); \
-		proctal_cmd_val_attr_set_integer_sign(ATTR, proctal_cmd_val_type_integer_sign_by_name(YUCK.integer_sign_arg)); \
+	case CLI_VAL_TYPE_INTEGER: \
+		cli_val_attr_set_integer_size(ATTR, cli_val_type_integer_size_by_name(YUCK.integer_size_arg)); \
+		cli_val_attr_set_integer_sign(ATTR, cli_val_type_integer_sign_by_name(YUCK.integer_sign_arg)); \
 		break; \
 \
-	case PROCTAL_CMD_VAL_TYPE_IEEE754: \
-		proctal_cmd_val_attr_set_ieee754_precision(ATTR, proctal_cmd_val_type_ieee754_precision_by_name(YUCK.ieee754_precision_arg)); \
+	case CLI_VAL_TYPE_IEEE754: \
+		cli_val_attr_set_ieee754_precision(ATTR, cli_val_type_ieee754_precision_by_name(YUCK.ieee754_precision_arg)); \
 		break; \
 \
-	case PROCTAL_CMD_VAL_TYPE_TEXT: \
-		proctal_cmd_val_attr_set_text_charset(ATTR, proctal_cmd_val_type_text_charset_by_name(YUCK.text_charset_arg)); \
+	case CLI_VAL_TYPE_TEXT: \
+		cli_val_attr_set_text_charset(ATTR, cli_val_type_text_charset_by_name(YUCK.text_charset_arg)); \
 		break; \
 	}
 
@@ -44,227 +44,227 @@ static void *value_by_name(struct value_options *options, size_t length, const c
 	return fallback;
 }
 
-static enum proctal_cmd_val_type proctal_cmd_val_type_by_name(const char *name)
+static enum cli_val_type cli_val_type_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "byte",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_BYTE,
+			.value = (void *) CLI_VAL_TYPE_BYTE,
 		},
 		{
 			.name = "integer",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER,
+			.value = (void *) CLI_VAL_TYPE_INTEGER,
 		},
 		{
 			.name = "ieee754",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_IEEE754,
+			.value = (void *) CLI_VAL_TYPE_IEEE754,
 		},
 		{
 			.name = "text",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_TEXT,
+			.value = (void *) CLI_VAL_TYPE_TEXT,
 		},
 		{
 			.name = "address",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_ADDRESS,
+			.value = (void *) CLI_VAL_TYPE_ADDRESS,
 		},
 		{
 			.name = "instruction",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INSTRUCTION,
+			.value = (void *) CLI_VAL_TYPE_INSTRUCTION,
 		},
 	};
 
-	return (enum proctal_cmd_val_type) value_by_name(
+	return (enum cli_val_type) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_BYTE);
+		(void *) CLI_VAL_TYPE_BYTE);
 }
 
-static enum proctal_cmd_val_type_endianness proctal_cmd_val_type_endianness_by_name(const char *name)
+static enum cli_val_type_endianness cli_val_type_endianness_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "little",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE,
+			.value = (void *) CLI_VAL_TYPE_ENDIANNESS_LITTLE,
 		},
 	};
 
-	return (enum proctal_cmd_val_type_integer_size) value_by_name(
+	return (enum cli_val_type_integer_size) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_ENDIANNESS_LITTLE);
+		(void *) CLI_VAL_TYPE_ENDIANNESS_LITTLE);
 }
 
-static enum proctal_cmd_val_type_integer_size proctal_cmd_val_type_integer_size_by_name(const char *name)
+static enum cli_val_type_integer_size cli_val_type_integer_size_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "8",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_8,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIZE_8,
 		},
 		{
 			.name = "16",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_16,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIZE_16,
 		},
 		{
 			.name = "32",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_32,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIZE_32,
 		},
 		{
 			.name = "64",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_64,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIZE_64,
 		},
 	};
 
-	return (enum proctal_cmd_val_type_integer_size) value_by_name(
+	return (enum cli_val_type_integer_size) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIZE_8);
+		(void *) CLI_VAL_TYPE_INTEGER_SIZE_8);
 }
 
-static enum proctal_cmd_val_type_integer_sign proctal_cmd_val_type_integer_sign_by_name(const char *name)
+static enum cli_val_type_integer_sign cli_val_type_integer_sign_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "unsigned",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIGN_UNSIGNED,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIGN_UNSIGNED,
 		},
 		{
 			.name = "2scmpl",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIGN_2SCMPL,
+			.value = (void *) CLI_VAL_TYPE_INTEGER_SIGN_2SCMPL,
 		},
 	};
 
-	return (enum proctal_cmd_val_type_integer_sign) value_by_name(
+	return (enum cli_val_type_integer_sign) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_INTEGER_SIGN_2SCMPL);
+		(void *) CLI_VAL_TYPE_INTEGER_SIGN_2SCMPL);
 }
 
-static enum proctal_cmd_val_type_ieee754_precision proctal_cmd_val_type_ieee754_precision_by_name(const char *name)
+static enum cli_val_type_ieee754_precision cli_val_type_ieee754_precision_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "single",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_IEEE754_PRECISION_SINGLE,
+			.value = (void *) CLI_VAL_TYPE_IEEE754_PRECISION_SINGLE,
 		},
 		{
 			.name = "double",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_IEEE754_PRECISION_DOUBLE,
+			.value = (void *) CLI_VAL_TYPE_IEEE754_PRECISION_DOUBLE,
 		},
 		{
 			.name = "extended",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_IEEE754_PRECISION_EXTENDED,
+			.value = (void *) CLI_VAL_TYPE_IEEE754_PRECISION_EXTENDED,
 		},
 	};
 
-	return (enum proctal_cmd_val_type_ieee754_precision) value_by_name(
+	return (enum cli_val_type_ieee754_precision) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_IEEE754_PRECISION_SINGLE);
+		(void *) CLI_VAL_TYPE_IEEE754_PRECISION_SINGLE);
 }
 
-static enum proctal_cmd_val_type_text_charset proctal_cmd_val_type_text_charset_by_name(const char *name)
+static enum cli_val_type_text_charset cli_val_type_text_charset_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "ascii",
-			.value = (void *) PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII,
+			.value = (void *) CLI_VAL_TYPE_TEXT_CHARSET_ASCII,
 		},
 	};
 
-	return (enum proctal_cmd_val_type_text_charset) value_by_name(
+	return (enum cli_val_type_text_charset) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_VAL_TYPE_TEXT_CHARSET_ASCII);
+		(void *) CLI_VAL_TYPE_TEXT_CHARSET_ASCII);
 }
 
-static enum proctal_cmd_execute_format proctal_cmd_execute_format_by_name(const char *name)
+static enum cli_cmd_execute_format cli_cmd_execute_format_by_name(const char *name)
 {
 	static struct value_options options[] = {
 		{
 			.name = "assembly",
-			.value = (void *) PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY,
+			.value = (void *) CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,
 		},
 		{
 			.name = "bytecode",
-			.value = (void *) PROCTAL_CMD_EXECUTE_FORMAT_BYTECODE,
+			.value = (void *) CLI_CMD_EXECUTE_FORMAT_BYTECODE,
 		},
 	};
 
-	return (enum proctal_cmd_execute_format) value_by_name(
+	return (enum cli_cmd_execute_format) value_by_name(
 		options,
 		sizeof options / sizeof options[0],
 		name,
-		(void *) PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY);
+		(void *) CLI_CMD_EXECUTE_FORMAT_ASSEMBLY);
 }
 
-static void destroy_proctal_cmd_read_arg_from_yuck_arg(struct proctal_cmd_read_arg *arg)
+static void destroy_cli_cmd_read_arg_from_yuck_arg(struct cli_cmd_read_arg *arg)
 {
 	if (arg->value_attr) {
-		proctal_cmd_val_attr_destroy(arg->value_attr);
+		cli_val_attr_destroy(arg->value_attr);
 	}
 
 	free(arg);
 }
 
-static struct proctal_cmd_read_arg *create_proctal_cmd_read_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_read_arg *create_cli_cmd_read_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_read_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_read_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 0) {
 		fputs("Wrong number of arguments.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->read.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->read.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->read.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->read.address_arg == NULL) {
 		fputs("OPTION -a, --address is required.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_address(yuck_arg->read.address_arg, &arg->address)) {
+	if (!cli_parse_address(yuck_arg->read.address_arg, &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->read.array_arg != NULL) {
-		if (!proctal_cmd_parse_int(yuck_arg->read.array_arg, (int *) &arg->array)) {
+		if (!cli_parse_int(yuck_arg->read.array_arg, (int *) &arg->array)) {
 			fputs("Invalid array size.\n", stderr);
-			destroy_proctal_cmd_read_arg_from_yuck_arg(arg);
+			destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 			return NULL;
 		}
 	} else {
 		arg->array = 1;
 	}
 
-	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->read.type_arg);
-	arg->value_attr = proctal_cmd_val_attr_create(t);
+	enum cli_val_type t = cli_val_type_by_name(yuck_arg->read.type_arg);
+	arg->value_attr = cli_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->read)
 
@@ -274,11 +274,11 @@ static struct proctal_cmd_read_arg *create_proctal_cmd_read_arg_from_yuck_arg(yu
 	return arg;
 }
 
-static void destroy_proctal_cmd_write_arg_from_yuck_arg(struct proctal_cmd_write_arg *arg)
+static void destroy_cli_cmd_write_arg_from_yuck_arg(struct cli_cmd_write_arg *arg)
 {
 	if (arg->first_value) {
 		for (size_t i = 0; arg->first_value + i != arg->end_value; ++i) {
-			proctal_cmd_val_destroy(arg->first_value[i]);
+			cli_val_destroy(arg->first_value[i]);
 		}
 
 		free(arg->first_value);
@@ -287,71 +287,71 @@ static void destroy_proctal_cmd_write_arg_from_yuck_arg(struct proctal_cmd_write
 	free(arg);
 }
 
-static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_write_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_write_arg *arg = malloc(sizeof *arg);
 	arg->first_value = NULL;
 	arg->end_value = NULL;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs == 0) {
 		fputs("You must provide at least 1 value.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->write.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->write.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->write.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->write.address_arg == NULL) {
 		fputs("OPTION -a, --address is required.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_address(yuck_arg->write.address_arg, &arg->address)) {
+	if (!cli_parse_address(yuck_arg->write.address_arg, &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->write.type_arg);
-	proctal_cmd_val_attr value_attr = proctal_cmd_val_attr_create(t);
+	enum cli_val_type t = cli_val_type_by_name(yuck_arg->write.type_arg);
+	cli_val_attr value_attr = cli_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->write)
 
-	arg->first_value = malloc((sizeof (proctal_cmd_val)) * yuck_arg->nargs);
+	arg->first_value = malloc((sizeof (cli_val)) * yuck_arg->nargs);
 
 	if (arg->first_value == NULL) {
 		fputs("Failed to allocate memory for values.\n", stderr);
-		proctal_cmd_val_attr_destroy(value_attr);
-		destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+		cli_val_attr_destroy(value_attr);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	arg->end_value = arg->first_value;
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		 proctal_cmd_val v = proctal_cmd_val_create(value_attr);
+		 cli_val v = cli_val_create(value_attr);
 
-		if (!proctal_cmd_val_parse(v, yuck_arg->args[i])) {
+		if (!cli_val_parse(v, yuck_arg->args[i])) {
 			fprintf(stderr, "Value #%zu is invalid.\n", i);
-			proctal_cmd_val_destroy(v);
-			proctal_cmd_val_attr_destroy(value_attr);
-			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+			cli_val_destroy(v);
+			cli_val_attr_destroy(value_attr);
+			destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
 		}
 
@@ -359,12 +359,12 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 		arg->end_value = arg->first_value + i + 1;
 	}
 
-	proctal_cmd_val_attr_destroy(value_attr);
+	cli_val_attr_destroy(value_attr);
 
 	if (yuck_arg->read.array_arg != NULL) {
-		if (!proctal_cmd_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
+		if (!cli_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
 			fputs("Invalid array size.\n", stderr);
-			destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+			destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
 		}
 	} else {
@@ -375,9 +375,9 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 		arg->repeat = 1;
 
 		if (yuck_arg->write.repeat_delay_arg) {
-			if (!proctal_cmd_parse_int(yuck_arg->write.repeat_delay_arg, &arg->repeat_delay)) {
+			if (!cli_parse_int(yuck_arg->write.repeat_delay_arg, &arg->repeat_delay)) {
 				fputs("Invalid repeat delay.\n", stderr);
-				destroy_proctal_cmd_write_arg_from_yuck_arg(arg);
+				destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 				return NULL;
 			}
 		} else {
@@ -391,15 +391,15 @@ static struct proctal_cmd_write_arg *create_proctal_cmd_write_arg_from_yuck_arg(
 	return arg;
 }
 
-static void destroy_proctal_cmd_search_arg_from_yuck_arg(struct proctal_cmd_search_arg *arg)
+static void destroy_cli_cmd_search_arg_from_yuck_arg(struct cli_cmd_search_arg *arg)
 {
 	if (arg->value_attr) {
-		proctal_cmd_val_attr_destroy(arg->value_attr);
+		cli_val_attr_destroy(arg->value_attr);
 	}
 
 #define DESTROY_COMPARE_ARG(PROCTALNAME) \
 	if (arg->PROCTALNAME) { \
-		proctal_cmd_val_destroy(arg->PROCTALNAME##_value); \
+		cli_val_destroy(arg->PROCTALNAME##_value); \
 	}
 
 	DESTROY_COMPARE_ARG(eq);
@@ -418,9 +418,9 @@ static void destroy_proctal_cmd_search_arg_from_yuck_arg(struct proctal_cmd_sear
 	free(arg);
 }
 
-static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_search_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_search_arg *arg = malloc(sizeof *arg);
 	arg->eq = 0;
 	arg->ne = 0;
 	arg->gt = 0;
@@ -435,31 +435,31 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 
 	if (yuck_arg->cmd != PROCTAL_CMD_SEARCH) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->search.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->search.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->search.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	enum proctal_cmd_val_type t = proctal_cmd_val_type_by_name(yuck_arg->search.type_arg);
+	enum cli_val_type t = cli_val_type_by_name(yuck_arg->search.type_arg);
 
-	if (t == PROCTAL_CMD_VAL_TYPE_INSTRUCTION) {
+	if (t == CLI_VAL_TYPE_INSTRUCTION) {
 		fprintf(stderr, "Searching for assembly code is not supported.\n");
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	arg->value_attr = proctal_cmd_val_attr_create(t);
+	arg->value_attr = cli_val_attr_create(t);
 
 	PARSE_TYPE_ATTRIBUTES(arg->value_attr, yuck_arg->search)
 
@@ -472,7 +472,7 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 		&& (strcmp("0", yuck_arg->search.NAME##_arg) == 0 \
 			|| strncmp("-", yuck_arg->search.NAME##_arg, 1) == 0)) { \
 		fputs("Value must be positive for --"#NAME".\n", stderr); \
-		destroy_proctal_cmd_search_arg_from_yuck_arg(arg); \
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg); \
 		return NULL; \
 	}
 
@@ -484,10 +484,10 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 #define GET_COMPARE_ARG(NAME) \
 	if (yuck_arg->search.NAME##_arg != NULL) { \
 		arg->NAME = 1; \
-		arg->NAME##_value = proctal_cmd_val_create(arg->value_attr); \
-		if (!proctal_cmd_val_parse(arg->NAME##_value, yuck_arg->search.NAME##_arg)) { \
+		arg->NAME##_value = cli_val_create(arg->value_attr); \
+		if (!cli_val_parse(arg->NAME##_value, yuck_arg->search.NAME##_arg)) { \
 			fputs("Invalid value for --"#NAME".\n", stderr); \
-			destroy_proctal_cmd_search_arg_from_yuck_arg(arg); \
+			destroy_cli_cmd_search_arg_from_yuck_arg(arg); \
 			return NULL; \
 		} \
 	} else { \
@@ -524,36 +524,36 @@ static struct proctal_cmd_search_arg *create_proctal_cmd_search_arg_from_yuck_ar
 	return arg;
 }
 
-static void destroy_proctal_cmd_freeze_arg_from_yuck_arg(struct proctal_cmd_freeze_arg *arg)
+static void destroy_cli_cmd_freeze_arg_from_yuck_arg(struct cli_cmd_freeze_arg *arg)
 {
 	free(arg);
 }
 
-static struct proctal_cmd_freeze_arg *create_proctal_cmd_freeze_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_freeze_arg *create_cli_cmd_freeze_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_freeze_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_freeze_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_FREEZE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_freeze_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_freeze_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 0) {
 		fputs("Too many arguments.\n", stderr);
-		destroy_proctal_cmd_freeze_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_freeze_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->freeze.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_freeze_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_freeze_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->freeze.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->freeze.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_freeze_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_freeze_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
@@ -562,48 +562,48 @@ static struct proctal_cmd_freeze_arg *create_proctal_cmd_freeze_arg_from_yuck_ar
 	return arg;
 }
 
-static void destroy_proctal_cmd_watch_arg_from_yuck_arg(struct proctal_cmd_watch_arg *arg)
+static void destroy_cli_cmd_watch_arg_from_yuck_arg(struct cli_cmd_watch_arg *arg)
 {
 	free(arg);
 }
 
-static struct proctal_cmd_watch_arg *create_proctal_cmd_watch_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_watch_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_watch_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WATCH) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 0) {
 		fputs("Too many arguments.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->watch.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->watch.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->watch.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->watch.address_arg == NULL) {
 		fputs("OPTION -a, --address is required.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_address(yuck_arg->watch.address_arg, &arg->address)) {
+	if (!cli_parse_address(yuck_arg->watch.address_arg, &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		destroy_proctal_cmd_watch_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_watch_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
@@ -614,80 +614,80 @@ static struct proctal_cmd_watch_arg *create_proctal_cmd_watch_arg_from_yuck_arg(
 	return arg;
 }
 
-static void destroy_proctal_cmd_execute_arg_from_yuck_arg(struct proctal_cmd_execute_arg *arg)
+static void destroy_cli_cmd_execute_arg_from_yuck_arg(struct cli_cmd_execute_arg *arg)
 {
 	free(arg);
 }
 
-static struct proctal_cmd_execute_arg *create_proctal_cmd_execute_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_execute_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_execute_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_EXECUTE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_execute_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 0) {
 		fputs("Too many arguments.\n", stderr);
-		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_execute_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->execute.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_execute_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->execute.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->execute.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_execute_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_execute_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	arg->format = proctal_cmd_execute_format_by_name(yuck_arg->execute.format_arg);
+	arg->format = cli_cmd_execute_format_by_name(yuck_arg->execute.format_arg);
 
 	return arg;
 }
 
-static void destroy_proctal_cmd_alloc_arg_from_yuck_arg(struct proctal_cmd_alloc_arg *arg)
+static void destroy_cli_cmd_alloc_arg_from_yuck_arg(struct cli_cmd_alloc_arg *arg)
 {
 	free(arg);
 }
 
-static struct proctal_cmd_alloc_arg *create_proctal_cmd_alloc_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_alloc_arg *create_cli_cmd_alloc_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_alloc_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_alloc_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_ALLOC) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_alloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 1) {
 		fputs("Incorrect number of arguments.\n", stderr);
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_alloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_ulong(yuck_arg->args[0], &arg->size)) {
+	if (!cli_parse_ulong(yuck_arg->args[0], &arg->size)) {
 		fputs("Invalid size.\n", stderr);
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_alloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->alloc.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_alloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->alloc.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->alloc.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_alloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_alloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
@@ -698,94 +698,94 @@ static struct proctal_cmd_alloc_arg *create_proctal_cmd_alloc_arg_from_yuck_arg(
 	return arg;
 }
 
-static void destroy_proctal_cmd_dealloc_arg_from_yuck_arg(struct proctal_cmd_dealloc_arg *arg)
+static void destroy_cli_cmd_dealloc_arg_from_yuck_arg(struct cli_cmd_dealloc_arg *arg)
 {
 	free(arg);
 }
 
-static struct proctal_cmd_dealloc_arg *create_proctal_cmd_dealloc_arg_from_yuck_arg(yuck_t *yuck_arg)
+static struct cli_cmd_dealloc_arg *create_cli_cmd_dealloc_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct proctal_cmd_dealloc_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_dealloc_arg *arg = malloc(sizeof *arg);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_DEALLOC) {
 		fputs("Wrong command.\n", stderr);
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_dealloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 1) {
 		fputs("Incorrect number of arguments.\n", stderr);
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_dealloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_address(yuck_arg->args[0], &arg->address)) {
+	if (!cli_parse_address(yuck_arg->args[0], &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_dealloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->dealloc.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_dealloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	if (!proctal_cmd_parse_int(yuck_arg->dealloc.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->dealloc.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_proctal_cmd_dealloc_arg_from_yuck_arg(arg);
+		destroy_cli_cmd_dealloc_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
 	return arg;
 }
 
-typedef int (*proctal_yuck_cmd_handler)(yuck_t *);
+typedef int (*cli_yuck_cmd_handler)(yuck_t *);
 
-static int proctal_yuck_cmd_handler_none(yuck_t *argp)
+static int cli_yuck_cmd_handler_none(yuck_t *argp)
 {
 	yuck_auto_help(argp);
 
 	return 0;
 }
 
-#define PROCTAL_YUCK_CMD_HANDLER_COMMON(CMD) \
-	static int proctal_yuck_cmd_handler_##CMD(yuck_t *argp) \
+#define CLI_YUCK_CMD_HANDLER_COMMON(CMD) \
+	static int cli_yuck_cmd_handler_##CMD(yuck_t *argp) \
 	{ \
-		struct proctal_cmd_##CMD##_arg *arg = create_proctal_cmd_##CMD##_arg_from_yuck_arg(argp); \
+		struct cli_cmd_##CMD##_arg *arg = create_cli_cmd_##CMD##_arg_from_yuck_arg(argp); \
 \
 		if (arg == NULL) { \
 			return 1; \
 		} \
 \
-		int exit_code = proctal_cmd_##CMD(arg); \
+		int exit_code = cli_cmd_##CMD(arg); \
 \
-		destroy_proctal_cmd_##CMD##_arg_from_yuck_arg(arg); \
+		destroy_cli_cmd_##CMD##_arg_from_yuck_arg(arg); \
 \
 		return exit_code; \
 	}
 
-PROCTAL_YUCK_CMD_HANDLER_COMMON(read)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(write)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(search)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(freeze)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(watch)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(execute)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(alloc)
-PROCTAL_YUCK_CMD_HANDLER_COMMON(dealloc)
+CLI_YUCK_CMD_HANDLER_COMMON(read)
+CLI_YUCK_CMD_HANDLER_COMMON(write)
+CLI_YUCK_CMD_HANDLER_COMMON(search)
+CLI_YUCK_CMD_HANDLER_COMMON(freeze)
+CLI_YUCK_CMD_HANDLER_COMMON(watch)
+CLI_YUCK_CMD_HANDLER_COMMON(execute)
+CLI_YUCK_CMD_HANDLER_COMMON(alloc)
+CLI_YUCK_CMD_HANDLER_COMMON(dealloc)
 
-#undef PROCTAL_YUCK_CMD_HANDLER_COMMON
+#undef CLI_YUCK_CMD_HANDLER_COMMON
 
-proctal_yuck_cmd_handler proctal_yuck_cmd_handlers[] = {
-	[PROCTAL_CMD_NONE] = proctal_yuck_cmd_handler_none,
-	[PROCTAL_CMD_READ] = proctal_yuck_cmd_handler_read,
-	[PROCTAL_CMD_WRITE] = proctal_yuck_cmd_handler_write,
-	[PROCTAL_CMD_SEARCH] = proctal_yuck_cmd_handler_search,
-	[PROCTAL_CMD_FREEZE] = proctal_yuck_cmd_handler_freeze,
-	[PROCTAL_CMD_WATCH] = proctal_yuck_cmd_handler_watch,
-	[PROCTAL_CMD_EXECUTE] = proctal_yuck_cmd_handler_execute,
-	[PROCTAL_CMD_ALLOC] = proctal_yuck_cmd_handler_alloc,
-	[PROCTAL_CMD_DEALLOC] = proctal_yuck_cmd_handler_dealloc,
+cli_yuck_cmd_handler cli_yuck_cmd_handlers[] = {
+	[PROCTAL_CMD_NONE] = cli_yuck_cmd_handler_none,
+	[PROCTAL_CMD_READ] = cli_yuck_cmd_handler_read,
+	[PROCTAL_CMD_WRITE] = cli_yuck_cmd_handler_write,
+	[PROCTAL_CMD_SEARCH] = cli_yuck_cmd_handler_search,
+	[PROCTAL_CMD_FREEZE] = cli_yuck_cmd_handler_freeze,
+	[PROCTAL_CMD_WATCH] = cli_yuck_cmd_handler_watch,
+	[PROCTAL_CMD_EXECUTE] = cli_yuck_cmd_handler_execute,
+	[PROCTAL_CMD_ALLOC] = cli_yuck_cmd_handler_alloc,
+	[PROCTAL_CMD_DEALLOC] = cli_yuck_cmd_handler_dealloc,
 };
 
 int main(int argc, char **argv)
@@ -804,8 +804,8 @@ int main(int argc, char **argv)
 		yuck_auto_help(&argp);
 	} else if (argp.version_flag) {
 		yuck_auto_version(&argp);
-	} else if (argp.cmd < (sizeof proctal_yuck_cmd_handlers / sizeof proctal_yuck_cmd_handlers[0])) {
-		exit_code = proctal_yuck_cmd_handlers[argp.cmd](&argp);
+	} else if (argp.cmd < (sizeof cli_yuck_cmd_handlers / sizeof cli_yuck_cmd_handlers[0])) {
+		exit_code = cli_yuck_cmd_handlers[argp.cmd](&argp);
 	} else {
 		fprintf(stderr, "Command not implemented.\n");
 		exit_code = 0;

@@ -30,7 +30,7 @@ static void unregister_signal_handler()
 	signal(SIGTERM, SIG_DFL);
 }
 
-int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
+int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 {
 	if (!register_signal_handler()) {
 		fprintf(stderr, "Failed to set up signal handler.\n");
@@ -40,7 +40,7 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 	proctal p = proctal_create();
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -64,7 +64,7 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 	proctal_watch pw = proctal_watch_create(p);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_watch_destroy(pw);
 		proctal_destroy(p);
 		return 1;
@@ -75,25 +75,25 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 	proctal_watch_set_write(pw, arg->write);
 	proctal_watch_set_execute(pw, arg->execute);
 
-	proctal_cmd_val_attr addr_attr = proctal_cmd_val_attr_create(PROCTAL_CMD_VAL_TYPE_ADDRESS);
-	proctal_cmd_val addr = proctal_cmd_val_create(addr_attr);
-	proctal_cmd_val_attr_destroy(addr_attr);
+	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
+	cli_val addr = cli_val_create(addr_attr);
+	cli_val_attr_destroy(addr_attr);
 
 	while (!request_quit) {
- 		if (!proctal_watch_next(pw, (void **) proctal_cmd_val_addr(addr))) {
+ 		if (!proctal_watch_next(pw, (void **) cli_val_addr(addr))) {
  			break;
  		}
 
-		proctal_cmd_val_print(addr, stdout);
+		cli_val_print(addr, stdout);
 		printf("\n");
 	}
 
 	unregister_signal_handler();
 
-	proctal_cmd_val_destroy(addr);
+	cli_val_destroy(addr);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_watch_destroy(pw);
 		proctal_destroy(p);
 		return 1;
@@ -102,7 +102,7 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 	proctal_watch_destroy(pw);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}

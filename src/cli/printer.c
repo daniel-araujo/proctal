@@ -25,7 +25,7 @@ static const char *messages[] = {
 	[PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND] = "Could not find a suitable address in memory to inject code in.",
 };
 
-void proctal_print_error(proctal p)
+void cli_print_proctal_error(proctal p)
 {
 	int error = proctal_error(p);
 

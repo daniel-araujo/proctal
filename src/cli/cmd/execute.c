@@ -78,12 +78,12 @@ static size_t assemble(char **buf, char *assembly)
 	return size;
 }
 
-int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
+int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 {
 	proctal p = proctal_create();
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -99,7 +99,7 @@ int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
 	}
 
 	switch (arg->format) {
-	case PROCTAL_CMD_EXECUTE_FORMAT_ASSEMBLY: {
+	case CLI_CMD_EXECUTE_FORMAT_ASSEMBLY: {
 		char *asmbuf;
 		size_t asmsize = assemble(&asmbuf, buf);
 
@@ -113,7 +113,7 @@ int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
 		break;
 	}
 
-	case PROCTAL_CMD_EXECUTE_FORMAT_BYTECODE:
+	case CLI_CMD_EXECUTE_FORMAT_BYTECODE:
 		proctal_execute(p, buf, size);
 		break;
 
@@ -125,7 +125,7 @@ int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
 	}
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		free_read(&buf);
 		proctal_destroy(p);
 		return 1;

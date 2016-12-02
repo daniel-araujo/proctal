@@ -123,7 +123,7 @@ static void wait_input_or_signal_handler()
 	sigprocmask(SIG_SETMASK, &original, NULL);
 }
 
-int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
+int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
 {
 	if (!register_signal_handler()) {
 		fprintf(stderr, "Failed to set up signal handler.\n");
@@ -133,7 +133,7 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 	proctal p = proctal_create();
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -141,7 +141,7 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 	proctal_set_pid(p, arg->pid);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -155,7 +155,7 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 	proctal_unfreeze(p);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}

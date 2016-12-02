@@ -3,12 +3,12 @@
 #include "cmd.h"
 #include "printer.h"
 
-int proctal_cmd_dealloc(struct proctal_cmd_dealloc_arg *arg)
+int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg)
 {
 	proctal p = proctal_create();
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -18,7 +18,7 @@ int proctal_cmd_dealloc(struct proctal_cmd_dealloc_arg *arg)
 	proctal_dealloc(p, arg->address);
 
 	if (proctal_error(p)) {
-		proctal_print_error(p);
+		cli_print_proctal_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
