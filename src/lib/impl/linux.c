@@ -24,6 +24,10 @@ void proctal_impl_destroy(proctal p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
+	if (pl == NULL) {
+		return;
+	}
+
 	proctal_linux_deinit(pl);
 
 	proctal_global_free(pl);

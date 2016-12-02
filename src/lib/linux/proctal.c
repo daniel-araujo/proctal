@@ -1,4 +1,5 @@
 #include <linux/proctal.h>
+#include <linux/ptrace.h>
 
 void proctal_linux_init(struct proctal_linux *pl)
 {
@@ -10,14 +11,15 @@ void proctal_linux_init(struct proctal_linux *pl)
 
 void proctal_linux_deinit(struct proctal_linux *pl)
 {
-	if (pl == NULL) {
-		return;
-	}
-
 	proctal_deinit(&pl->p);
 
 	if (pl->mem) {
 		fclose(pl->mem);
+	}
+
+	if (pl->ptrace) {
+		pl->ptrace = 1;
+		proctal_linux_ptrace_detach(pl);
 	}
 }
 
