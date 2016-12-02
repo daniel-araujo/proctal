@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <linux/mem.h>
 #include <linux/proc.h>
@@ -66,4 +67,23 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
 	// this.
 
 	return size;
+}
+
+int proctal_linux_mem_swap(struct proctal_linux *pl, void *addr, char *dst, char *src, size_t size)
+{
+	// TODO: should copy in chunks otherwise we'll eventually cause a
+	// stack overflow.
+	char t[size];
+
+	if (!proctal_linux_mem_read(pl, addr, t, size)) {
+		return 0;
+	}
+
+	if (!proctal_linux_mem_write(pl, addr, src, size)) {
+		return 0;
+	}
+
+	memcpy(dst, t, size);
+
+	return 1;
 }
