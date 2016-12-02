@@ -155,8 +155,11 @@ Example:
 Usage: proctal execute
 Executes arbitrary code.
 
-The instructions will be embedded at some place in memory and execution will
-jump directly to there, leaving registers and stack intact.
+The given instructions will be embedded at some place in memory and executed in
+the context of a new stack frame. Your code is free to modify any registers
+because they will be restored to their original values on return. You can
+either use the ret instruction to explicitly return or let the processor
+continue executing instructions after the last instruction you gave.
 
 Example:
         proctal execute --pid=12345

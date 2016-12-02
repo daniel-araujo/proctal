@@ -188,9 +188,35 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
+	// TODO: Should generate byte code instead of hardcoding it, would be
+	// easier to maintain.
+	const char prologue[] = {
+		// Escaping the red zone.
+		0x81, 0xec, 0x80, 0x00, 0x00, 0x00,
+
+		// Saving general purpose registers on the stack.
+		0x50, 0x53, 0x51, 0x52, 0x55, 0x57, 0x56, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56, 0x41, 0x57,
+
+		// TODO: Save other registers too.
+
+		// TODO: Call code
+	};
+	const char epilogue[] = {
+		// Restoring general purpose registers from the stack.
+		0x41, 0x5f, 0x41, 0x5e, 0x41, 0x5d, 0x41, 0x5c, 0x41, 0x5b, 0x41, 0x5a, 0x41, 0x59, 0x41, 0x58, 0x5e, 0x5f, 0x5d, 0x5a, 0x59, 0x5b, 0x58,
+
+		// Back into the red zone.
+		0x81, 0xc4, 0x80, 0x00, 0x00, 0x00,
+
+		// TODO: Return control back to the program.
+	};
+
+	size_t prologue_size = sizeof prologue / sizeof prologue[0];
+	size_t epilogue_size = sizeof epilogue / sizeof epilogue[0];
+
 	void *addr = proctal_linux_alloc(
 		pl,
-		byte_code_length,
+		prologue_size + epilogue_size + byte_code_length,
 		PROCTAL_ALLOC_PERM_WRITE | PROCTAL_ALLOC_PERM_EXECUTE | PROCTAL_ALLOC_PERM_READ);
 
 	if (addr == NULL) {
@@ -198,9 +224,23 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	proctal_linux_mem_write(pl, addr, byte_code, byte_code_length);
+	void *prologue_start_addr = addr;
+	void *epilogue_start_addr = (char *) prologue_start_addr + prologue_size;
+	void *code_start_addr = (char *) epilogue_start_addr + epilogue_size;
 
-	proctal_linux_ptrace_set_instruction_address(pl, addr);
+	if (!proctal_linux_mem_write(pl, prologue_start_addr, prologue, prologue_size)
+		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)
+		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)) {
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	if (!proctal_linux_ptrace_set_instruction_address(pl, (char *) code_start_addr + 2)) {
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
 
 	if (!proctal_linux_ptrace_detach(pl)) {
 		return 0;
