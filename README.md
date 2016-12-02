@@ -170,6 +170,12 @@ Functions, types and macros are documented in the header file.
 >
 > $ autoreconf -i
 
+Dependencies:
+
+- capstone [[3]]
+- keystone [[4]]
+- yuck [[5]]
+
 Proctal provides a 3 step installation process employed by many C/C++ programs
 on Linux:
 
@@ -179,8 +185,9 @@ on Linux:
 
 	$ make install
 
-The configure script allows you to define how you want Proctal to be compiled
-and installed. For more information type `./configure -h`.
+The configure script checks whether your system meets the minimum necessary
+requirements and allows you to define how you want Proctal to be compiled and
+installed. For more information type `./configure -h`.
 
 
 ## Development
@@ -236,3 +243,6 @@ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 [1]: https://www.gnu.org/software/
 [2]: https://github.com/daniel-araujo/proctal
+[3]: http://www.capstone-engine.org/
+[4]: http://www.keystone-engine.org/
+[5]: http://www.fresse.org/yuck/
