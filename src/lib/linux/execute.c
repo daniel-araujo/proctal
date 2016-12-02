@@ -4,6 +4,31 @@
 #include <linux/mem.h>
 #include <linux/ptrace.h>
 
+#define RED_ZONE_SIZE 128
+
+struct execute_save_state {
+	unsigned long long rax;
+	unsigned long long rbx;
+	unsigned long long rcx;
+	unsigned long long rdx;
+	unsigned long long rsi;
+	unsigned long long rdi;
+	unsigned long long rbp;
+	unsigned long long rsp;
+	unsigned long long rip;
+	unsigned long long eflags;
+	unsigned long long r8;
+	unsigned long long r9;
+	unsigned long long r10;
+	unsigned long long r11;
+	unsigned long long r12;
+	unsigned long long r13;
+	unsigned long long r14;
+	unsigned long long r15;
+
+	// TODO: Save remaining registers.
+};
+
 struct syscall_save_state {
 	void *addr; // Instruction pointer.
 	unsigned long long eflags; // Flags.
@@ -18,6 +43,58 @@ struct syscall_save_state {
 	unsigned long long rcx; // May be modifed.
 	unsigned long long r11; // May be modifed.
 };
+
+static inline int execute_save_state(struct proctal_linux *pl, struct execute_save_state *s)
+{
+	if (!proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, &s->rax)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBX, &s->rbx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, &s->rcx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, &s->rdx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, &s->rsi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, &s->rdi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, &s->rbp)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, &s->rsp)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RIP, &s->rip)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, &s->eflags)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, &s->r8)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, &s->r9)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, &s->r10)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, &s->r11)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R12, &s->r12)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R13, &s->r13)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R14, &s->r14)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R15, &s->r15)) {
+		return 0;
+	}
+
+	return 1;
+}
+
+static inline int execute_load_state(struct proctal_linux *pl, struct execute_save_state *s)
+{
+	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, s->rax)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBX, s->rbx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, s->rcx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, s->rdx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, s->rsi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, s->rdi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, s->rbp)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, s->rsp)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RIP, s->rip)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, s->eflags)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, s->r8)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, s->r9)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, s->r10)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, s->r11)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R12, s->r12)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R13, s->r13)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R14, s->r14)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R15, s->r15)) {
+		return 0;
+	}
+
+	return 1;
+}
 
 static inline int syscall_save_state(struct proctal_linux *pl, struct syscall_save_state *s)
 {
@@ -184,39 +261,24 @@ int proctal_linux_execute_syscall(
 
 int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_t byte_code_length)
 {
+	struct execute_save_state orig;
+
 	if (!proctal_linux_ptrace_attach(pl)) {
 		return 0;
 	}
 
 	// TODO: Should generate byte code instead of hardcoding it, would be
 	// easier to maintain.
-	const char prologue[] = {
-		// Escaping the red zone.
-		0x81, 0xec, 0x80, 0x00, 0x00, 0x00,
-
-		// Saving general purpose registers on the stack.
-		0x50, 0x53, 0x51, 0x52, 0x55, 0x57, 0x56, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56, 0x41, 0x57,
-
-		// TODO: Save other registers too.
-
-		// TODO: Call code
-	};
 	const char epilogue[] = {
-		// Restoring general purpose registers from the stack.
-		0x41, 0x5f, 0x41, 0x5e, 0x41, 0x5d, 0x41, 0x5c, 0x41, 0x5b, 0x41, 0x5a, 0x41, 0x59, 0x41, 0x58, 0x5e, 0x5f, 0x5d, 0x5a, 0x59, 0x5b, 0x58,
-
-		// Back into the red zone.
-		0x81, 0xc4, 0x80, 0x00, 0x00, 0x00,
-
-		// TODO: Return control back to the program.
+		// It's a trap.
+		0xcd, 0x03,
 	};
 
-	size_t prologue_size = sizeof prologue / sizeof prologue[0];
 	size_t epilogue_size = sizeof epilogue / sizeof epilogue[0];
 
 	void *addr = proctal_linux_alloc(
 		pl,
-		prologue_size + epilogue_size + byte_code_length,
+		byte_code_length + epilogue_size,
 		PROCTAL_ALLOC_PERM_WRITE | PROCTAL_ALLOC_PERM_EXECUTE | PROCTAL_ALLOC_PERM_READ);
 
 	if (addr == NULL) {
@@ -224,23 +286,68 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	void *prologue_start_addr = addr;
-	void *epilogue_start_addr = (char *) prologue_start_addr + prologue_size;
-	void *code_start_addr = (char *) epilogue_start_addr + epilogue_size;
+	void *code_start_addr = addr;
+	void *epilogue_start_addr = (char *) code_start_addr + byte_code_length;
 
-	if (!proctal_linux_mem_write(pl, prologue_start_addr, prologue, prologue_size)
-		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)
-		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)) {
+	if (!execute_save_state(pl, &orig)) {
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	unsigned long long stack_pointer = orig.rsp - RED_ZONE_SIZE - sizeof epilogue_start_addr;
+	unsigned long long base_pointer = stack_pointer;
+
+	// New stack frame.
+	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, stack_pointer)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, base_pointer)) {
+		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
+	if (!proctal_linux_mem_write(pl, (void *) base_pointer, (char *) &epilogue_start_addr, sizeof epilogue_start_addr)) {
+		execute_load_state(pl, &orig);
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	if (!proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
+		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)) {
+		execute_load_state(pl, &orig);
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	// TODO: Figure out why the instruction pointer backs out by 2 bytes
+	// sometimes. In the mean time this will add 2 more bytes to the
+	// instruction pointer, as it seems to back out by 2 bytes more often
+	// than not.
 	if (!proctal_linux_ptrace_set_instruction_address(pl, (char *) code_start_addr + 2)) {
+		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
+
+	// Wait for the code to return control back to the program.
+	if (!proctal_linux_ptrace_cont(pl)
+		|| !proctal_linux_ptrace_wait_trap(pl)) {
+		execute_load_state(pl, &orig);
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	if (!execute_load_state(pl, &orig)) {
+		proctal_linux_dealloc(pl, addr);
+		proctal_linux_ptrace_detach(pl);
+		return 0;
+	}
+
+	proctal_linux_dealloc(pl, addr);
 
 	if (!proctal_linux_ptrace_detach(pl)) {
 		return 0;

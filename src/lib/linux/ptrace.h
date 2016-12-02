@@ -38,6 +38,8 @@ int proctal_linux_ptrace_stop(struct proctal_linux *pl);
 int proctal_linux_ptrace_cont(struct proctal_linux *pl);
 int proctal_linux_ptrace_step(struct proctal_linux *pl);
 
+int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl);
+
 int proctal_linux_ptrace_get_instruction_address(struct proctal_linux *pl, void **addr);
 int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, void *addr);
 

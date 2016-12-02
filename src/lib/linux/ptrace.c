@@ -112,7 +112,7 @@ static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
 	return 0;
 }
 
-static int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
+int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
 {
 	int wstatus;
 

@@ -20,9 +20,9 @@ Features:
 - Disassembling instructions from any memory location
 - Assembling instructions to write to any memory location
 - Allocating and deallocating readable/writable/executable memory locations
+- Arbitrary instruction execution
 
 Planned:
-- Arbitrary instruction execution
 - Byte pattern search
 - Freezing all threads of execution
 - Watch points on all threads of execution
