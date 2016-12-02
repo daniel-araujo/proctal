@@ -1,6 +1,7 @@
 #include <proctal.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static int make_permission(struct proctal_cmd_alloc_arg *arg)
 {
@@ -25,17 +26,8 @@ int proctal_cmd_alloc(struct proctal_cmd_alloc_arg *arg)
 {
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -46,22 +38,8 @@ int proctal_cmd_alloc(struct proctal_cmd_alloc_arg *arg)
 
 	void *addr = proctal_alloc(p, arg->size, perm);
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_PERMISSION_DENIED:
-		fprintf(stderr, "Permission denied.\n");
-		proctal_destroy(p);
-		return 1;
-
-	case PROCTAL_ERROR_PROCESS_NOT_FOUND:
-		fprintf(stderr, "Process not found.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Failed to cleanup properly.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}

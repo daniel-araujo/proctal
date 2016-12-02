@@ -6,6 +6,7 @@
 #include <proctal.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static int request_quit = 0;
 
@@ -131,38 +132,18 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
 
 	proctal_set_pid(p, arg->pid);
 
-	if (!proctal_freeze(p)) {
-		switch (proctal_error(p)) {
-		case 0:
-			break;
-
-		case PROCTAL_ERROR_PERMISSION_DENIED:
-			fprintf(stderr, "Permission denied.\n");
-			proctal_destroy(p);
-			return 1;
-
-		default:
-			fprintf(stderr, "Unable to freeze.\n");
-			proctal_destroy(p);
-			return 1;
-		}
+	if (proctal_error(p)) {
+		proctal_print_error(p);
+		proctal_destroy(p);
+		return 1;
 	}
 
 	if (arg->input) {
@@ -173,17 +154,13 @@ int proctal_cmd_freeze(struct proctal_cmd_freeze_arg *arg)
 
 	proctal_unfreeze(p);
 
-	proctal_destroy(p);
-
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	default:
-		fprintf(stderr, "Failed to cleanup properly.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
+
+	proctal_destroy(p);
 
 	unregister_signal_handler();
 

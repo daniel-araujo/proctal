@@ -1,6 +1,7 @@
 #include <proctal.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static inline void print_separator(struct proctal_cmd_read_arg *arg)
 {
@@ -27,17 +28,8 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 {
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -56,13 +48,12 @@ int proctal_cmd_read(struct proctal_cmd_read_arg *arg)
 			break;
 
 		case PROCTAL_ERROR_PERMISSION_DENIED:
-			fprintf(stderr, "No permission.\n");
+			proctal_print_error(p);
 			proctal_error_ack(p);
 			return 1;
 
 		default:
-		case PROCTAL_ERROR_READ_FAILURE:
-			fprintf(stderr, "Failed to read memory.\n");
+			proctal_print_error(p);
 			proctal_destroy(p);
 			return 1;
 		}

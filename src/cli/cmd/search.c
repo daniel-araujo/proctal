@@ -1,6 +1,7 @@
 #include <proctal.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static inline int pass_search_filters(struct proctal_cmd_search_arg *arg, void *value)
 {
@@ -122,16 +123,9 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 
 	proctal_addr_iter iter = proctal_addr_iter_create(p);
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		return;
-
-	default:
-		fprintf(stderr, "Failed to create a Proctal address iterator.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
+		proctal_destroy(p);
 		return;
 	}
 
@@ -167,19 +161,10 @@ static inline void search_process(struct proctal_cmd_search_arg *arg, proctal p)
 		print_search_match(addr, value);
 	}
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_PERMISSION_DENIED:
-		fprintf(stderr, "No permission.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_error_ack(p);
-		break;
-
-	default:
-		fprintf(stderr, "Failed to search all addresses.\n");
-		proctal_error_ack(p);
-		break;
+		return;
 	}
 
 	proctal_addr_iter_destroy(iter);
@@ -244,17 +229,8 @@ int proctal_cmd_search(struct proctal_cmd_search_arg *arg)
 {
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}

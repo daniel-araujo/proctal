@@ -2,6 +2,7 @@
 #include <proctal.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static int request_quit = 0;
 
@@ -38,17 +39,8 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -72,7 +64,10 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 	proctal_watch pw = proctal_watch_create(p);
 
 	if (proctal_error(p)) {
-		fprintf(stderr, "Failed to create watch.\n");
+		proctal_print_error(p);
+		proctal_watch_destroy(pw);
+		proctal_destroy(p);
+		return 1;
 	}
 
 	proctal_watch_set_addr(pw, arg->address);
@@ -97,18 +92,8 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 
 	proctal_cmd_val_destroy(addr);
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_PERMISSION_DENIED:
-		fprintf(stderr, "No permission.\n");
-		proctal_watch_destroy(pw);
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Failed to watch.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_watch_destroy(pw);
 		proctal_destroy(p);
 		return 1;
@@ -116,12 +101,8 @@ int proctal_cmd_watch(struct proctal_cmd_watch_arg *arg)
 
 	proctal_watch_destroy(pw);
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	default:
-		fprintf(stderr, "Failed to cleanup properly.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}

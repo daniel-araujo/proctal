@@ -4,6 +4,7 @@
 #include <keystone/keystone.h>
 
 #include "cmd.h"
+#include "printer.h"
 
 static void free_read(char **buf)
 {
@@ -81,17 +82,8 @@ int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
 {
 	proctal p = proctal_create();
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_OUT_OF_MEMORY:
-		fprintf(stderr, "Out of memory.\n");
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Unable to create an instance of Proctal.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		proctal_destroy(p);
 		return 1;
 	}
@@ -132,24 +124,8 @@ int proctal_cmd_execute(struct proctal_cmd_execute_arg *arg)
 		return 1;
 	}
 
-	switch (proctal_error(p)) {
-	case 0:
-		break;
-
-	case PROCTAL_ERROR_PERMISSION_DENIED:
-		fprintf(stderr, "Permission denied.\n");
-		free_read(&buf);
-		proctal_destroy(p);
-		return 1;
-
-	case PROCTAL_ERROR_PROCESS_NOT_FOUND:
-		fprintf(stderr, "Process not found.\n");
-		free_read(&buf);
-		proctal_destroy(p);
-		return 1;
-
-	default:
-		fprintf(stderr, "Failed to cleanup properly.\n");
+	if (proctal_error(p)) {
+		proctal_print_error(p);
 		free_read(&buf);
 		proctal_destroy(p);
 		return 1;
