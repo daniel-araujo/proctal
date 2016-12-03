@@ -186,7 +186,7 @@ static inline int set_syscall6(
 
 static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 {
-	char code[] = { 0x0F, 0x05, 0xcd, 0x03 };
+	char code[] = { 0x0F, 0x05 };
 
 	void *inject_addr = find_inject_addr(pl, sizeof code / sizeof code[0]);
 
@@ -203,8 +203,7 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_cont(pl)
-		&& !proctal_linux_ptrace_wait_trap(pl)) {
+	if (!proctal_linux_ptrace_step(pl)) {
 		return 0;
 	}
 
