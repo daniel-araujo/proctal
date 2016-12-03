@@ -268,6 +268,16 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
+	const char prologue[] = {
+		// A bunch of NOPs so that if the instruction pointer decides
+		// to back out a couple of bytes it will safely start executing
+		// NOPs until it reaches the actual code.
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+	};
+
 	// TODO: Should generate byte code instead of hardcoding it, would be
 	// easier to maintain.
 	const char epilogue[] = {
@@ -275,11 +285,12 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		0xcd, 0x03,
 	};
 
+	size_t prologue_size = sizeof prologue / sizeof prologue[0];
 	size_t epilogue_size = sizeof epilogue / sizeof epilogue[0];
 
 	void *addr = proctal_linux_alloc(
 		pl,
-		byte_code_length + epilogue_size,
+		prologue_size + byte_code_length + epilogue_size,
 		PROCTAL_ALLOC_PERM_WRITE | PROCTAL_ALLOC_PERM_EXECUTE | PROCTAL_ALLOC_PERM_READ);
 
 	if (addr == NULL) {
@@ -287,8 +298,11 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	void *code_start_addr = addr;
+	void *prologue_start_addr = addr;
+	void *code_start_addr = (char *) prologue_start_addr + prologue_size;
 	void *epilogue_start_addr = (char *) code_start_addr + byte_code_length;
+
+	void *landing_zone = (char *) prologue_start_addr + (prologue_size / 2);
 
 	if (!execute_save_state(pl, &orig)) {
 		proctal_linux_ptrace_detach(pl);
@@ -314,7 +328,8 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	if (!proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
+	if (!proctal_linux_mem_write(pl, prologue_start_addr, prologue, prologue_size)
+		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
 		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)) {
 		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
@@ -322,7 +337,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_set_instruction_address(pl, code_start_addr)) {
+	if (!proctal_linux_ptrace_set_instruction_address(pl, landing_zone)) {
 		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
 		proctal_linux_ptrace_detach(pl);
