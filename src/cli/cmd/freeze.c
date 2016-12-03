@@ -140,6 +140,8 @@ int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
+	proctal_freeze(p);
+
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		proctal_destroy(p);
