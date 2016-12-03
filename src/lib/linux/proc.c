@@ -12,7 +12,26 @@ static inline void mem_region_skip_space(FILE *maps)
 
 	do {
 		ch = fgetc(maps);
-	} while (ch != EOF && ch == ' ');
+
+		if (ch == EOF) {
+			return;
+		}
+	} while (ch == ' ');
+
+	ungetc(ch, maps);
+}
+
+static inline void mem_region_skip_nl(FILE *maps)
+{
+	int ch;
+
+	do {
+		ch = fgetc(maps);
+
+		if (ch == EOF) {
+			return;
+		}
+	} while (ch == '\n');
 
 	ungetc(ch, maps);
 }
@@ -23,7 +42,26 @@ static inline void mem_region_skip_until_space(FILE *maps)
 
 	do {
 		ch = fgetc(maps);
-	} while (ch != EOF && ch != ' ');
+
+		if (ch == EOF) {
+			return;
+		}
+	} while (ch != ' ');
+
+	ungetc(ch, maps);
+}
+
+static inline void mem_region_skip_until_nl(FILE *maps)
+{
+	int ch;
+
+	do {
+		ch = fgetc(maps);
+
+		if (ch == EOF) {
+			return;
+		}
+	} while (ch != '\n');
 
 	ungetc(ch, maps);
 }
@@ -36,6 +74,29 @@ static inline int mem_region_is_path_present(FILE *maps)
 	ungetc(ch, maps);
 
 	return r;
+}
+
+static inline int read_until_nl(FILE *maps, char *buf, int max)
+{
+	int ch;
+	int i = 0;
+
+	do {
+		ch = fgetc(maps);
+
+		if (ch == EOF) {
+			break;
+		}
+
+		if (ch == '\n') {
+			ungetc(ch, maps);
+			break;
+		}
+
+		buf[i++] = ch;
+	} while (i < max);
+
+	return i;
 }
 
 const char *proctal_linux_proc_path(pid_t pid, const char *file)
@@ -62,16 +123,19 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 	region->execute = fgetc(maps) == 'x';
 	fgetc(maps); // Skipping over this one.
 
-	mem_region_skip_space(maps);
-
 	for (int i = 0; i < 3; i++) {
-		mem_region_skip_until_space(maps);
 		mem_region_skip_space(maps);
+		mem_region_skip_until_space(maps);
 	}
 
-	if (mem_region_is_path_present(maps) && fscanf(maps, "%254s", region->path) != 1) {
-		return -1;
+	if (mem_region_is_path_present(maps)) {
+		mem_region_skip_space(maps);
+		int read = read_until_nl(maps, region->path, (sizeof region->path) - 1);
+		region->path[read] = '\0';
 	}
+
+	mem_region_skip_until_nl(maps);
+	mem_region_skip_nl(maps);
 
 	return 0;
 }
