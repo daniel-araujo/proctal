@@ -1,6 +1,6 @@
 proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
 	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
-	-Wno-unused-parameter $(proctal_posix_flags)
+	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags)
 proctal_lib_headers_dir = $(srcdir)/src/lib/include
 
 EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc

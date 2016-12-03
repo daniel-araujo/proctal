@@ -92,6 +92,78 @@ static inline int user_register_offset(int reg)
 #undef OFFSET_INTO_REGS
 }
 
+static int bad_signal(struct proctal_linux *pl, int wstatus)
+{
+	if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
+		return 1;
+	} else if (WIFSTOPPED(wstatus)) {
+		int sig = WSTOPSIG(wstatus);
+
+		switch (sig) {
+		case SIGSEGV:
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_SEGFAULT);
+			return 1;
+
+		case SIGTRAP:
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_TRAPPED);
+			return 1;
+
+		default:
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_STOPPED);
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+static int check_errno_ptrace_run_state(struct proctal_linux *pl)
+{
+	if (errno == 0) {
+		return 0;
+	}
+
+	switch (errno) {
+	case EPERM:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		break;
+
+	case ESRCH:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
+		break;
+
+	default:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		break;
+	}
+
+	return 1;
+}
+
+static int check_errno_ptrace_stop_state(struct proctal_linux *pl)
+{
+	if (errno == 0) {
+		return 0;
+	}
+
+	switch (errno) {
+	case EACCES:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		break;
+
+	case ESRCH:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_UNTAMEABLE);
+		break;
+
+	default:
+		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		break;
+	}
+
+	return 1;
+}
+
 static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
 {
 	int wstatus;
@@ -99,17 +171,31 @@ static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
 	for (;;) {
 		waitpid(pl->pid, &wstatus, WUNTRACED);
 
-		if (WIFSTOPPED(wstatus)) {
-			if (WSTOPSIG(wstatus) == SIGSTOP) {
-				return 1;
-			} else {
-				break;
-			}
+		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP) {
+			break;
+		} else if (bad_signal(pl, wstatus)) {
+			return 0;
 		}
 	}
 
-	proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
-	return 0;
+	return 1;
+}
+
+static int proctal_linux_ptrace_wait_cont(struct proctal_linux *pl)
+{
+	int wstatus;
+
+	for (;;) {
+		waitpid(pl->pid, &wstatus, WCONTINUED | WUNTRACED);
+
+		if (WIFCONTINUED(wstatus)) {
+			break;
+		} else if (bad_signal(pl, wstatus)) {
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
@@ -119,37 +205,21 @@ int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
 	for (;;) {
 		waitpid(pl->pid, &wstatus, WUNTRACED);
 
-		if (WIFSTOPPED(wstatus)) {
-			if (WSTOPSIG(wstatus) == SIGTRAP) {
-				return 1;
-			} else {
-				break;
-			}
+		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGTRAP) {
+			break;
+		} else if (bad_signal(pl, wstatus)) {
+			return 0;
 		}
 	}
 
-	proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
-	return 0;
+	return 1;
 }
 
 int proctal_linux_ptrace_attach(struct proctal_linux *pl)
 {
 	if (pl->ptrace == 0) {
 		if (ptrace(PTRACE_ATTACH, pl->pid, 0L, 0L) == -1) {
-			switch (errno) {
-			case EPERM:
-				proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
-				break;
-
-			case ESRCH:
-				proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
-				break;
-
-			default:
-				proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
-				break;
-			}
-
+			check_errno_ptrace_run_state(pl);
 			return 0;
 		}
 
@@ -175,16 +245,7 @@ int proctal_linux_ptrace_detach(struct proctal_linux *pl)
 	}
 
 	if (ptrace(PTRACE_DETACH, pl->pid, 0L, 0L) == -1) {
-		switch (errno) {
-		case EACCES:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
-			break;
-
-		default:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
-			break;
-		}
-
+		check_errno_ptrace_stop_state(pl);
 		return 0;
 	}
 
@@ -222,8 +283,7 @@ int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, int reg, unsigned
 
 	*v = ptrace(PTRACE_PEEKUSER, pl->pid, offset, 0);
 
-	if (errno) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+	if (check_errno_ptrace_stop_state(pl)) {
 		return 0;
 	}
 
@@ -243,8 +303,7 @@ int proctal_linux_ptrace_set_x86_reg(struct proctal_linux *pl, int reg, unsigned
 
 	ptrace(PTRACE_POKEUSER, pl->pid, offset, v);
 
-	if (errno) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+	if (check_errno_ptrace_stop_state(pl)) {
 		return 0;
 	}
 
@@ -264,8 +323,8 @@ int proctal_linux_ptrace_stop(struct proctal_linux *pl)
 
 int proctal_linux_ptrace_cont(struct proctal_linux *pl)
 {
-	if (ptrace(PTRACE_CONT, pl->pid, 0, 0)) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+	if (ptrace(PTRACE_CONT, pl->pid, 0, 0) != 0) {
+		check_errno_ptrace_stop_state(pl);
 		return 0;
 	}
 
@@ -274,9 +333,12 @@ int proctal_linux_ptrace_cont(struct proctal_linux *pl)
 
 int proctal_linux_ptrace_step(struct proctal_linux *pl)
 {
-	if (ptrace(PTRACE_SINGLESTEP, pl->pid, 0, 0)
-		|| !proctal_linux_ptrace_wait_trap(pl)) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+	if (ptrace(PTRACE_SINGLESTEP, pl->pid, 0, 0) != 0) {
+		check_errno_ptrace_stop_state(pl);
+		return 0;
+	}
+
+	if (!proctal_linux_ptrace_wait_trap(pl)) {
 		return 0;
 	}
 
