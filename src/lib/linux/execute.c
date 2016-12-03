@@ -186,7 +186,7 @@ static inline int set_syscall6(
 
 static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 {
-	char code[] = { 0x0F, 0x05 };
+	char code[] = { 0x0F, 0x05, 0xcd, 0x03 };
 
 	void *inject_addr = find_inject_addr(pl, sizeof code / sizeof code[0]);
 
@@ -203,7 +203,8 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_step(pl)) {
+	if (!proctal_linux_ptrace_cont(pl)
+		&& !proctal_linux_ptrace_wait_trap(pl)) {
 		return 0;
 	}
 
@@ -321,11 +322,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	// TODO: Figure out why the instruction pointer backs out by 2 bytes
-	// sometimes. In the mean time this will add 2 more bytes to the
-	// instruction pointer, as it seems to back out by 2 bytes more often
-	// than not.
-	if (!proctal_linux_ptrace_set_instruction_address(pl, (char *) code_start_addr + 2)) {
+	if (!proctal_linux_ptrace_set_instruction_address(pl, code_start_addr)) {
 		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
 		proctal_linux_ptrace_detach(pl);
