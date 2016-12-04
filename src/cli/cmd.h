@@ -157,6 +157,15 @@ struct cli_cmd_dealloc_arg {
 	void *address;
 };
 
+struct cli_cmd_measure_arg {
+	void *address;
+
+	// Number of values that would be expected to write.
+	size_t array;
+
+	cli_val_list value_list;
+};
+
 int cli_cmd_read(struct cli_cmd_read_arg *arg);
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg);
@@ -172,5 +181,7 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg);
 int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg);
 
 int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg);
+
+int cli_cmd_measure(struct cli_cmd_measure_arg *arg);
 
 #endif /* CMD_H */

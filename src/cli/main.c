@@ -342,7 +342,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *
 
 	cli_val_attr_destroy(value_attr);
 
-	if (yuck_arg->read.array_arg != NULL) {
+	if (yuck_arg->write.array_arg != NULL) {
 		if (!cli_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_write_arg_from_yuck_arg(arg);
@@ -721,6 +721,75 @@ static struct cli_cmd_dealloc_arg *create_cli_cmd_dealloc_arg_from_yuck_arg(yuck
 	return arg;
 }
 
+static void destroy_cli_cmd_measure_arg_from_yuck_arg(struct cli_cmd_measure_arg *arg)
+{
+	cli_val_list_destroy(arg->value_list);
+	free(arg);
+}
+
+static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct cli_cmd_measure_arg *arg = malloc(sizeof *arg);
+	arg->value_list = cli_val_list_create(yuck_arg->nargs);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_MEASURE) {
+		fputs("Wrong command.\n", stderr);
+		destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs == 0) {
+		fputs("You must provide at least 1 value.\n", stderr);
+		destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->measure.address_arg == NULL) {
+		fputs("OPTION -a, --address is required.\n", stderr);
+		destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!cli_parse_address(yuck_arg->measure.address_arg, &arg->address)) {
+		fputs("Invalid address.\n", stderr);
+		destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	enum cli_val_type t = cli_val_type_by_name(yuck_arg->measure.type_arg);
+	cli_val_attr value_attr = cli_val_attr_create(t);
+
+	PARSE_TYPE_ATTRIBUTES(value_attr, yuck_arg->measure)
+
+	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
+		 cli_val v = cli_val_create(value_attr);
+
+		if (!cli_val_parse(v, yuck_arg->args[i])) {
+			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
+			cli_val_destroy(v);
+			cli_val_attr_destroy(value_attr);
+			destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+
+		cli_val_list_set(arg->value_list, i, v);
+	}
+
+	cli_val_attr_destroy(value_attr);
+
+	if (yuck_arg->measure.array_arg != NULL) {
+		if (!cli_parse_int(yuck_arg->measure.array_arg, (int *) &arg->array)) {
+			fputs("Invalid array size.\n", stderr);
+			destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->array = cli_val_list_size(arg->value_list);
+	}
+
+	return arg;
+}
+
 typedef int (*cli_yuck_cmd_handler)(yuck_t *);
 
 static int cli_yuck_cmd_handler_none(yuck_t *argp)
@@ -754,6 +823,7 @@ CLI_YUCK_CMD_HANDLER_COMMON(watch)
 CLI_YUCK_CMD_HANDLER_COMMON(execute)
 CLI_YUCK_CMD_HANDLER_COMMON(alloc)
 CLI_YUCK_CMD_HANDLER_COMMON(dealloc)
+CLI_YUCK_CMD_HANDLER_COMMON(measure)
 
 #undef CLI_YUCK_CMD_HANDLER_COMMON
 
@@ -767,6 +837,7 @@ cli_yuck_cmd_handler cli_yuck_cmd_handlers[] = {
 	[PROCTAL_CMD_EXECUTE] = cli_yuck_cmd_handler_execute,
 	[PROCTAL_CMD_ALLOC] = cli_yuck_cmd_handler_alloc,
 	[PROCTAL_CMD_DEALLOC] = cli_yuck_cmd_handler_dealloc,
+	[PROCTAL_CMD_MEASURE] = cli_yuck_cmd_handler_measure,
 };
 
 int main(int argc, char **argv)
@@ -789,7 +860,7 @@ int main(int argc, char **argv)
 		exit_code = cli_yuck_cmd_handlers[argp.cmd](&argp);
 	} else {
 		fprintf(stderr, "Command not implemented.\n");
-		exit_code = 0;
+		exit_code = 1;
 	}
 
 	yuck_free(&argp);

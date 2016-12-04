@@ -196,3 +196,17 @@ Example:
         proctal dealloc --pid=12345 7fbf7b6b2000
 
   PID_ARGUMENT
+
+Usage: proctal measure VALUES...
+Measure size of values.
+
+If you're in doubt how much space the values you want to write will take you
+can use this command to figure out.
+
+Example:
+        proctal measure --address=1c09346 --type=instruction "call 0x5"
+
+  -a, --address=ADDR    Address where the first value would reside in memory.
+  --array=SIZE          Emulates the same behavior described in the write
+                        command.
+  TYPE_ARGUMENTS

@@ -21,6 +21,7 @@ Features:
 - Assembling instructions to write to any memory location
 - Allocating and deallocating readable/writable/executable memory locations
 - Arbitrary instruction execution
+- Measure size of instructions
 
 Planned:
 - Byte pattern search
@@ -147,6 +148,8 @@ The command line interface can be used in the following ways:
 	proctal alloc [--read] [--write] [--execute] --pid=<pid> <size>
 
 	proctal dealloc --pid=<pid> <address>
+
+	proctal measure [--type=<type>] --address=<address> <value>
 
 For more details run `proctal -h` or read the man page:
 

@@ -23,6 +23,7 @@ proctal_SOURCES = \
 	src/cli/cmd/read.c \
 	src/cli/cmd/write.c \
 	src/cli/cmd/search.c \
+	src/cli/cmd/measure.c \
 	src/cli/val.h \
 	src/cli/val.c \
 	src/cli/val-list.h \
