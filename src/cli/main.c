@@ -204,6 +204,37 @@ static enum cli_cmd_execute_format cli_cmd_execute_format_by_name(const char *na
 		(void *) CLI_CMD_EXECUTE_FORMAT_ASSEMBLY);
 }
 
+static void destroy_val_list(cli_val **first, cli_val **end)
+{
+	if (!*first) {
+		return;
+	}
+
+	for (size_t i = 0; *first + i != *end; ++i) {
+		cli_val_destroy((*first)[i]);
+	}
+}
+
+static size_t create_val_list(cli_val_attr attr, cli_val **first, cli_val **end, char **input, size_t length)
+{
+	*end = *first;
+	size_t i;
+
+	for (i = 0; i < length; ++i) {
+		 cli_val v = cli_val_create(attr);
+
+		if (!cli_val_parse(v, input[i])) {
+			cli_val_destroy(v);
+			return i;
+		}
+
+		(*first)[i] = v;
+		*end = *first + i + 1;
+	}
+
+	return i;
+}
+
 static void destroy_cli_cmd_read_arg_from_yuck_arg(struct cli_cmd_read_arg *arg)
 {
 	if (arg->value_attr) {
@@ -277,10 +308,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg_from_yuck_arg(yuck_t *yu
 static void destroy_cli_cmd_write_arg_from_yuck_arg(struct cli_cmd_write_arg *arg)
 {
 	if (arg->first_value) {
-		for (size_t i = 0; arg->first_value + i != arg->end_value; ++i) {
-			cli_val_destroy(arg->first_value[i]);
-		}
-
+		destroy_val_list(&arg->first_value, &arg->end_value);
 		free(arg->first_value);
 	}
 
@@ -343,23 +371,20 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *
 		return NULL;
 	}
 
-	arg->end_value = arg->first_value;
-	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		 cli_val v = cli_val_create(value_attr);
-
-		if (!cli_val_parse(v, yuck_arg->args[i])) {
-			fprintf(stderr, "Value #%zu is invalid.\n", i);
-			cli_val_destroy(v);
-			cli_val_attr_destroy(value_attr);
-			destroy_cli_cmd_write_arg_from_yuck_arg(arg);
-			return NULL;
-		}
-
-		arg->first_value[i] = v;
-		arg->end_value = arg->first_value + i + 1;
-	}
+	size_t nvalues = create_val_list(
+		value_attr,
+		&arg->first_value,
+		&arg->end_value,
+		yuck_arg->args,
+		yuck_arg->nargs);
 
 	cli_val_attr_destroy(value_attr);
+
+	if (nvalues != yuck_arg->nargs) {
+		fprintf(stderr, "Value #%zu is invalid.\n", nvalues + 1);
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
+		return NULL;
+	}
 
 	if (yuck_arg->read.array_arg != NULL) {
 		if (!cli_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
