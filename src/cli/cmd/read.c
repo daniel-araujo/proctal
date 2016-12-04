@@ -10,6 +10,8 @@ static inline void print_separator(struct cli_cmd_read_arg *arg)
 		break;
 
 	case CLI_VAL_TYPE_BYTE:
+		printf(" ");
+		break;
 	case CLI_VAL_TYPE_INTEGER:
 	case CLI_VAL_TYPE_IEEE754:
 	case CLI_VAL_TYPE_ADDRESS:
