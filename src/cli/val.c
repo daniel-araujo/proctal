@@ -7,6 +7,8 @@
 
 #include "val.h"
 
+static struct cli_val *nil = NULL;
+
 struct cli_val_attr_ieee754 {
 	enum cli_val_type_ieee754_precision precision;
 };
@@ -937,4 +939,9 @@ int cli_val_parse_bin(cli_val v, const char *s, size_t length)
 	}
 
 	return 0;
+}
+
+cli_val cli_val_nil(void)
+{
+	return nil;
 }

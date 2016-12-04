@@ -84,4 +84,6 @@ int cli_val_scan(cli_val v, FILE *f);
 int cli_val_parse(cli_val v, const char *s);
 int cli_val_parse_bin(cli_val v, const char *s, size_t length);
 
+cli_val cli_val_nil(void);
+
 #endif /* VAL_H */

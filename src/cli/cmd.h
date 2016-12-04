@@ -2,6 +2,7 @@
 #define CMD_H
 
 #include "val.h"
+#include "val-list.h"
 
 enum cli_cmd_execute_format {
 	CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,
@@ -33,10 +34,8 @@ struct cli_cmd_write_arg {
 	// Number of values expected to write.
 	size_t array;
 
-	// Points to the first element of the list of values.
-	cli_val *first_value;
-	// Points to the address after the last element of the list of values.
-	cli_val *end_value;
+	// List of values to write.
+	cli_val_list value_list;
 
 	// Whether to write the same value repeatedly until the program is told
 	// to shut down.

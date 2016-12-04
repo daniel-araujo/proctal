@@ -17,15 +17,18 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 	proctal_set_pid(p, arg->pid);
 
 	do {
-		cli_val *v = arg->first_value;
+		size_t list_size = cli_val_list_size(arg->value_list);
 		char *addr = (char *) arg->address;
-		for (size_t i = 0; i < arg->array; ++i) {
-			if (v == arg->end_value) {
-				v = arg->first_value;
+
+		for (size_t i = 0, j = 0; i < arg->array; ++i, ++j) {
+			if (j == list_size) {
+				j = 0;
 			}
 
-			size_t size = cli_val_sizeof(*v);
-			char *input = cli_val_addr(*v);
+			cli_val v = cli_val_list_get(arg->value_list, j);
+
+			size_t size = cli_val_sizeof(v);
+			char *input = cli_val_addr(v);
 
 			proctal_write(p, addr, input, size);
 
@@ -35,7 +38,6 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 				return 1;
 			}
 
-			v += 1;
 			addr += size;
 		}
 
