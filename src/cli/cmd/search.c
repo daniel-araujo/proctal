@@ -2,6 +2,7 @@
 
 #include "cmd.h"
 #include "printer.h"
+#include "scanner.h"
 
 static inline int pass_search_filters(struct cli_cmd_search_arg *arg, void *value)
 {
@@ -182,12 +183,29 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 	cli_val previous_value = cli_val_create(arg->value_attr);
 
 	for (;;) {
-		if (!cli_val_scan(addr, stdin)) {
+		cli_scan_skip_chars(stdin, "\n ");
+
+		if (feof(stdin)) {
+			// It's over.
 			break;
 		}
 
+		if (!cli_val_scan(addr, stdin)) {
+			fprintf(stderr, "Failed to read address.\n");
+
+			cli_scan_skip_until_chars(stdin, "\n");
+			continue;
+		}
+
+		cli_scan_skip_chars(stdin, " ");
+
 		if (!cli_val_scan(previous_value, stdin)) {
-			break;
+			fprintf(stderr, "Failed to parse previous value of address ");
+			cli_val_print(addr, stderr);
+			fprintf(stderr, ".\n");
+
+			cli_scan_skip_until_chars(stdin, "\n");
+			continue;
 		}
 
 		size_t size = cli_val_sizeof(previous_value);
@@ -197,14 +215,14 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 			case PROCTAL_ERROR_PERMISSION_DENIED:
 				fprintf(stderr, "No permission to read from address ");
 				cli_val_print(addr, stderr);
-				fprintf(stderr, "\n");
+				fprintf(stderr, ".\n");
 				proctal_error_ack(p);
 				break;
 
 			default:
 				fprintf(stderr, "Failed to read from address ");
 				cli_val_print(addr, stderr);
-				fprintf(stderr, "\n");
+				fprintf(stderr, ".\n");
 				proctal_error_ack(p);
 				break;
 			}

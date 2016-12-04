@@ -28,6 +28,8 @@ proctal_SOURCES = \
 	src/cli/val.c \
 	src/cli/val-list.h \
 	src/cli/val-list.c \
+	src/cli/scanner.h \
+	src/cli/scanner.c \
 	src/cli/parser.h \
 	src/cli/parser.c \
 	src/cli/printer.h \
