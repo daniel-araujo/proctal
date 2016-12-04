@@ -138,7 +138,7 @@ The command line interface can be used in the following ways:
 		[--changed] [--unchanged] [--increased] [--decreased]
 		[--input] --pid=<pid> --address=<address>
 
-	proctal watch [--read] [--write] [--execute] --pid=<pid>
+	proctal watch [--read] [--write] [--execute] [--unique] --pid=<pid>
 		--address=<address>
 
 	proctal freeze [--input] --pid=<pid>

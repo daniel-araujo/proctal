@@ -151,6 +151,7 @@ Example:
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.
+  --unique              Print an address only once.
 
 Usage: proctal execute
 Executes arbitrary code.

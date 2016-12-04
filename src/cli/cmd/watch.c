@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <signal.h>
 #include <proctal.h>
 
@@ -76,21 +77,49 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_set_execute(pw, arg->execute);
 
 	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-	cli_val addr = cli_val_create(addr_attr);
+	cli_val vaddr = cli_val_create(addr_attr);
 	cli_val_attr_destroy(addr_attr);
 
-	while (!request_quit) {
- 		if (!proctal_watch_next(pw, (void **) cli_val_addr(addr))) {
- 			break;
- 		}
+	// TODO: Should use a data structure that can grow dynamically and has
+	// good lookup performance.
+	void *matches[10000];
+	size_t match_count = 0;
 
-		cli_val_print(addr, stdout);
+	while (!request_quit) {
+		void *addr;
+
+		if (!proctal_watch_next(pw, &addr)) {
+			break;
+		}
+
+		if (arg->unique) {
+			int match = 0;
+
+			for (size_t i = 0; i < match_count; ++i) {
+				void *prev = matches[i];
+
+				if (addr == prev) {
+					match = 1;
+					break;
+				}
+			}
+
+			if (match) {
+				continue;
+			} else {
+				assert(match_count < sizeof matches / sizeof matches[0]);
+				matches[match_count++] = addr;
+			}
+		}
+
+		cli_val_parse_bin(vaddr, (const char*) &addr, sizeof addr);
+		cli_val_print(vaddr, stdout);
 		printf("\n");
 	}
 
 	unregister_signal_handler();
 
-	cli_val_destroy(addr);
+	cli_val_destroy(vaddr);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

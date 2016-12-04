@@ -126,6 +126,9 @@ struct cli_cmd_watch_arg {
 
 	// Whether to watch for instruction execution.
 	int execute;
+
+	// Whether to print an address only once.
+	int unique;
 };
 
 struct cli_cmd_execute_arg {
