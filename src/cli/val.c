@@ -646,7 +646,7 @@ int cli_val_print(cli_val v, FILE *f)
 
 	switch (v->attr.type) {
 	case CLI_VAL_TYPE_BYTE:
-		return PRINTF("%x", unsigned char);
+		return PRINTF("%02x", unsigned char);
 
 	case CLI_VAL_TYPE_INTEGER:
 		switch (((struct cli_val_attr_integer *) v->attr.type_attr)->size) {
