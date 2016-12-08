@@ -12,7 +12,7 @@ extern void *(*proctal_global_malloc)(size_t);
 extern void (*proctal_global_free)(void *);
 
 /*
- * Base structure of an instance of Proctal.
+ * Base structure of an instance.
  */
 struct proctal {
 	// Memory allocator and deallocator with the same signatures (and
@@ -23,56 +23,47 @@ struct proctal {
 
 	// Keeps track of the last error that was set.
 	int error;
-};
 
-/*
- * Base structure of an address iterator.
- */
-struct proctal_addr_iter {
-	// Start address of the next call.
-	void *curr_addr;
+	/*
+	 * Address iterator specific options.
+	 */
+	struct {
+		// Tells which regions are iterated.
+		long region_mask;
 
-	// Tells which regions are iterated.
-	long region_mask;
+		// Address alignment.
+		size_t align;
 
-	// Address alignment.
-	size_t align;
+		// Size of the value of the address. We only want to return addresses
+		// that when dereferenced can return values of up to this size.
+		size_t size;
 
-	// Size of the value of the address. We only want to return addresses
-	// that when dereferenced can return values of up to this size.
-	size_t size;
+		// Whether to iterate over readable addresses.
+		int read;
 
-	// Whether we have started iterating over addresses.
-	int started;
+		// Whether to iterate over writable addresses.
+		int write;
 
-	// Whether to iterate over readable addresses.
-	int read;
+		// Whether to iterate over executable addresses.
+		int execute;
+	} address;
 
-	// Whether to iterate over writable addresses.
-	int write;
+	/*
+	 * Watch specific options.
+	 */
+	struct {
+		// Address to watch.
+		void *addr;
 
-	// Whether to iterate over executable addresses.
-	int execute;
-};
+		// Whether to watch for reads.
+		int read;
 
-/*
- * Base structure of a watch.
- */
-struct proctal_watch {
-	// Address to watch.
-	void *addr;
+		// Whether to watch for writes.
+		int write;
 
-	// Tells us when it has started.
-	int started;
-
-	// Whether to watch for reads.
-	int read;
-
-	// Whether to watch for writes.
-	int write;
-
-	// Whether to watch for instruction execution.
-	int execute;
+		// Whether to watch for instruction execution.
+		int execute;
+	} watch;
 };
 
 /*
@@ -85,16 +76,8 @@ void proctal_init(struct proctal *p);
  */
 void proctal_deinit(struct proctal *p);
 
-void proctal_addr_iter_init(struct proctal *p, struct proctal_addr_iter *iter);
-
-void proctal_addr_iter_deinit(struct proctal *p, struct proctal_addr_iter *iter);
-
-void proctal_watch_init(struct proctal *p, struct proctal_watch *w);
-
-void proctal_watch_deinit(struct proctal *p, struct proctal_watch *w);
-
 /*
- * Sets the error of an instance of Proctal.
+ * Sets error of an instance.
  *
  * The error parameter must be a value available as a macro with the name
  * PROCTAL_ERROR as a prefix, otherwise library users won't have a way to know
@@ -103,7 +86,7 @@ void proctal_watch_deinit(struct proctal *p, struct proctal_watch *w);
 void proctal_set_error(proctal p, int error);
 
 /*
- * Allocates and deallocates memory.
+ * Allocates and deallocates memory for internal data structures.
  */
 void *proctal_malloc(proctal p, size_t size);
 void proctal_free(proctal p, void *addr);

@@ -122,19 +122,13 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 	size_t size = cli_val_sizeof(value);
 
-	proctal_addr_iter iter = proctal_addr_iter_create(p);
+	proctal_address_set_align(p, cli_val_alignof(value));
+	proctal_address_set_size(p, size);
+	proctal_address_set_region(p, 0);
 
-	if (proctal_error(p)) {
-		cli_print_proctal_error(p);
-		proctal_destroy(p);
-		return;
-	}
+	proctal_address_new(p);
 
-	proctal_addr_iter_set_align(iter, cli_val_alignof(value));
-	proctal_addr_iter_set_size(iter, size);
-	proctal_addr_iter_set_region(iter, 0);
-
-	while (proctal_addr_iter_next(iter, (void **) cli_val_addr(addr))) {
+	while (proctal_address(p, (void **) cli_val_addr(addr))) {
 		if (proctal_read(p, *(void **) cli_val_addr(addr), cli_val_addr(value), size) != size) {
 			switch (proctal_error(p)) {
 			case PROCTAL_ERROR_PERMISSION_DENIED:
@@ -168,7 +162,6 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 		return;
 	}
 
-	proctal_addr_iter_destroy(iter);
 	cli_val_destroy(value);
 	cli_val_destroy(addr);
 }

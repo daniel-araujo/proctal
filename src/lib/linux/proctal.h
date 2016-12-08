@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #include <proctal.h>
+#include <linux/proc.h>
 
 /*
  * Linux specific instance of Proctal.
@@ -23,6 +24,19 @@ struct proctal_linux {
 	// Tracks how many times we've attached to the process with
 	// ptrace. It's not attached if the value is 0.
 	int ptrace;
+
+	struct proctal_linux_address {
+		int started;
+
+		// Current address.
+		void *curr;
+
+		// Memory mappings of the address space.
+		FILE *maps;
+
+		// Current region being read.
+		struct proctal_linux_mem_region region;
+	} address;
 };
 
 /*

@@ -1,69 +1,46 @@
 #include <proctal.h>
 
-void proctal_watch_init(struct proctal *p, struct proctal_watch *pw)
+void *proctal_watch_address(proctal p)
 {
-	pw->addr = NULL;
-	pw->started = 0;
-	pw->read = 0;
-	pw->write = 0;
-	pw->execute = 0;
+	return p->watch.addr;
 }
 
-void proctal_watch_deinit(struct proctal *p, struct proctal_watch *pw)
+void proctal_watch_set_address(proctal p, void *addr)
 {
+	p->watch.addr = addr;
 }
 
-proctal_watch proctal_watch_create(proctal p)
+int proctal_watch_read(proctal p)
 {
-	return proctal_impl_watch_create(p);
+	return p->watch.read;
 }
 
-void proctal_watch_destroy(proctal_watch pw)
+void proctal_watch_set_read(proctal p, int r)
 {
-	proctal_impl_watch_destroy(pw);
+	p->watch.read = r != 0;
 }
 
-void *proctal_watch_addr(proctal_watch pw)
+int proctal_watch_write(proctal p)
 {
-	return pw->addr;
+	return p->watch.write;
 }
 
-void proctal_watch_set_addr(proctal_watch pw, void *addr)
+void proctal_watch_set_write(proctal p, int w)
 {
-	pw->addr = addr;
+	p->watch.write = w != 0;
 }
 
-int proctal_watch_read(proctal_watch pw)
+int proctal_watch_execute(proctal p)
 {
-	return pw->read;
+	return p->watch.execute;
 }
 
-void proctal_watch_set_read(proctal_watch pw, int r)
+void proctal_watch_set_execute(proctal p, int x)
 {
-	pw->read = r != 0;
+	p->watch.execute = x != 0;
 }
 
-int proctal_watch_write(proctal_watch pw)
+int proctal_watch(proctal p, void **addr)
 {
-	return pw->write;
-}
-
-void proctal_watch_set_write(proctal_watch pw, int w)
-{
-	pw->write = w != 0;
-}
-
-int proctal_watch_execute(proctal_watch pw)
-{
-	return pw->execute;
-}
-
-void proctal_watch_set_execute(proctal_watch pw, int x)
-{
-	pw->execute = x != 0;
-}
-
-int proctal_watch_next(proctal_watch pw, void **addr)
-{
-	return proctal_impl_watch_next(pw, addr);
+	return proctal_impl_watch(p, addr);
 }

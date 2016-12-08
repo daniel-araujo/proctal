@@ -62,19 +62,10 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	proctal_watch pw = proctal_watch_create(p);
-
-	if (proctal_error(p)) {
-		cli_print_proctal_error(p);
-		proctal_watch_destroy(pw);
-		proctal_destroy(p);
-		return 1;
-	}
-
-	proctal_watch_set_addr(pw, arg->address);
-	proctal_watch_set_read(pw, arg->read);
-	proctal_watch_set_write(pw, arg->write);
-	proctal_watch_set_execute(pw, arg->execute);
+	proctal_watch_set_address(p, arg->address);
+	proctal_watch_set_read(p, arg->read);
+	proctal_watch_set_write(p, arg->write);
+	proctal_watch_set_execute(p, arg->execute);
 
 	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
 	cli_val vaddr = cli_val_create(addr_attr);
@@ -85,10 +76,12 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	void *matches[10000];
 	size_t match_count = 0;
 
+	proctal_freeze(p);
+
 	while (!request_quit) {
 		void *addr;
 
-		if (!proctal_watch_next(pw, &addr)) {
+		if (!proctal_watch(p, &addr)) {
 			break;
 		}
 
@@ -123,18 +116,11 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_watch_destroy(pw);
 		proctal_destroy(p);
 		return 1;
 	}
 
-	proctal_watch_destroy(pw);
-
-	if (proctal_error(p)) {
-		cli_print_proctal_error(p);
-		proctal_destroy(p);
-		return 1;
-	}
+	proctal_unfreeze(p);
 
 	proctal_destroy(p);
 

@@ -46,28 +46,36 @@
 #define PROCTAL_ALLOC_PERM_READ 4
 
 /*
- * Types.
+ * Provides a type name for an instance. The actual definition is an
+ * implementation detail that you shouldn't worry about.
  */
 typedef struct proctal *proctal;
-typedef struct proctal_watch *proctal_watch;
-typedef struct proctal_addr_iter *proctal_addr_iter;
 
 /*
- * Creates and destroys an instance of Proctal.
+ * Creates an instance.
+ *
+ * This would be the first function you'd want to call. Most functions operate
+ * on an instance.
  *
  * There is always a tiny chance that this call may fail such as when the
  * system is running out of memory therefore you should call proctal_error
  * right after. And regardless of it succeeding or failing you still need to
  * call proctal_destroy.
  *
- * Using an instance of Proctal that failed to be created correctly will result
- * in undefined behavior, likely leading to a crash.
+ * Using an instance that failed to be created correctly will result in
+ * undefined behavior, likely leading to a crash.
  */
 proctal proctal_create(void);
+
+/*
+ * Destroys an instance.
+ *
+ * This is definitely the last function you'd call.
+ */
 void proctal_destroy(proctal p);
 
 /*
- * Allows you to check if an error happened with the given instance of Proctal.
+ * Allows you to check if an error happened with the given instance.
  *
  * Any non-zero value that is returned is an error code. Error codes are
  * defined as macros whose name start with PROCTAL_ERROR. A 0 return value
@@ -79,9 +87,9 @@ void proctal_destroy(proctal p);
 int proctal_error(proctal p);
 
 /*
- * Acknowledge the error that occurred with the given instance of Proctal.
+ * Acknowledge the error that occurred with the given instance.
  *
- * This function will do nothing if the given instance of Proctal has no error.
+ * This function will do nothing if the given instance has no error.
  */
 void proctal_error_ack(proctal p);
 
@@ -102,7 +110,7 @@ const char *proctal_error_msg(proctal p);
 void proctal_set_pid(proctal p, int pid);
 
 /*
- * Returns the id of the process.
+ * Returns the id of the process. On Linux this would be a PID (Process ID).
  *
  * This will return 0 if you have never set the id.
  */
@@ -199,117 +207,156 @@ size_t proctal_write_address(proctal p, void *addr, void *in);
 size_t proctal_write_address_array(proctal p, void *addr, const void **in, size_t size);
 
 /*
+ * Puts the address iterator in a clean state.
+ *
+ * You will want to call this function whenever you begin iterating over
+ * addresses to make sure you're starting from the first.
+ *
+ * It will do nothing if the address iterator is already in a clean state.
+ */
+void proctal_address_new(proctal p);
+
+/*
  * Iterates over the entire address space.
  *
- * How to create, configure and use the iterator is a quite elaborated process.
- * You must first call proctal_addr_iter_create which will return a handle to
- * an iterator. Regardless of succeeding or failing, you still have to destroy
- * it.
+ * Any time you call this function it will pass you a different address unless
+ * it fails or has ran out of addresses.
  *
- * After creating the iterator and before you start iterating you can
- * configure its behavior. You can change alignment restrictions for instance.
+ * It will return 1 when it passes an address, 0 on failure or when it has ran
+ * out of addresses.
  *
- * To begin iterating, you call proctal_addr_iter_next and you do so repeatedly
- * to get the next address. It returns 1 on success and 0 when there are either
- * no more addresses to return or a failure has occurred. You will most likely
- * want to call this in a loop.
- *
- * You should call proctal_error to check whether any of these functions failed.
- *
- * Once you're done iterating, you can call proctal_addr_iter_destroy to declare
- * the iterator as garbage or call proctal_addr_iter_restart to get to the same
- * stage after the call to proctal_addr_iter_create while retaining the options
- * you've configured.
+ * You should call proctal_error to verify if 0 meant failure.
  */
-proctal_addr_iter proctal_addr_iter_create(proctal p);
-int proctal_addr_iter_next(proctal_addr_iter iter, void **addr);
-void proctal_addr_iter_destroy(proctal_addr_iter iter);
-void proctal_addr_iter_restart(proctal_addr_iter iter);
+int proctal_address(proctal p, void **addr);
 
 /*
- * Sets and returns the alignment requirements.
+ * Returns the alignment requirements of the addresses you're iterating over.
  *
- * You can only call this function before you start iterating.
+ * The default value is 1.
  */
-size_t proctal_addr_iter_align(proctal_addr_iter iter);
-void proctal_addr_iter_set_align(proctal_addr_iter iter, size_t align);
+size_t proctal_address_align(proctal p);
 
 /*
- * Sets and returns the size of the values pointed to by the addresses.
+ * Sets the alignment requirements of the addresses you want to iterate over.
+ *
+ * If you try to pass 0 it will be treated as 1.
+ *
+ * This call should follow proctal_address_new.
+ */
+void proctal_address_set_align(proctal p, size_t align);
+
+/*
+ * Returns the size of the values pointed by the addresses you're iterating
+ * over.
+ *
+ * The default value is 1.
+ */
+size_t proctal_address_size(proctal p);
+
+/*
+ * Sets the size of the values pointed by the addresses you want to iterate
+ * over.
  *
  * This can prevent the iterator from returning you an address that is not
  * suitable for storing a value of a certain size.
  *
- * You can only call this function before you start iterating.
+ * This call should follow proctal_address_new.
  */
-size_t proctal_addr_iter_size(proctal_addr_iter iter);
-void proctal_addr_iter_set_size(proctal_addr_iter iter, size_t size);
+void proctal_address_set_size(proctal p, size_t size);
 
 /*
- * Sets and returns which regions are iterated.
+ * Returns which regions the addresses iterated could belong to.
  *
- * By default it's set to PROCTAL_ADDR_REGION_STACK | PROCTAL_ADDR_REGION_HEAP.
+ * The default value is 0.
+ */
+long proctal_address_region(proctal p);
+
+/*
+ * Sets which regions the addresses to iterate belong to.
  *
  * Setting the mask to 0 will let the iterator go over all regions.
  *
- * You can only call this function before you start iterating.
+ * This call should follow proctal_address_new.
  */
-long proctal_addr_iter_region(proctal_addr_iter iter);
-void proctal_addr_iter_set_region(proctal_addr_iter iter, long mask);
+void proctal_address_set_region(proctal p, long mask);
 
 /*
- * Sets and returns whether to iterate over readable addresses.
+ * Checks whether it's iterating over addresses marked as readable by the
+ * operating system.
  *
  * 1 means yes, 0 means no.
  *
  * By default this is set to 1.
- *
- * You can only call this function before you start iterating.
  */
-int proctal_addr_iter_read(proctal_addr_iter iter);
-void proctal_addr_iter_set_read(proctal_addr_iter iter, int read);
+int proctal_address_read(proctal p);
 
 /*
- * Sets and returns whether to iterate over writable addresses.
+ * Sets whether to iterate over addresses marked as readable by the operating
+ * system.
  *
  * 1 means yes, 0 means no.
  *
- * By default this is set to 0.
- *
- * You can only call this function before you start iterating.
+ * This call should follow proctal_address_new.
  */
-int proctal_addr_iter_write(proctal_addr_iter iter);
-void proctal_addr_iter_set_write(proctal_addr_iter iter, int write);
+void proctal_address_set_read(proctal p, int read);
 
 /*
- * Sets and returns whether to iterate over executable addresses.
+ * Checks whether it's iterating over addresses marked as writable by the
+ * operating system.
  *
  * 1 means yes, 0 means no.
  *
- * By default this is set to 0.
- *
- * You can only call this function before you start iterating.
+ * By default this is set to 1.
  */
-int proctal_addr_iter_execute(proctal_addr_iter iter);
-void proctal_addr_iter_set_execute(proctal_addr_iter iter, int execute);
+int proctal_address_write(proctal p);
 
 /*
- * Freezes and unfreezes main thread of execution.
+ * Sets whether to iterate over addresses marked as writable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * This call should follow proctal_address_new.
+ */
+void proctal_address_set_write(proctal p, int write);
+
+/*
+ * Checks whether it's iterating over addresses marked as executable by the
+ * operating system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_address_execute(proctal p);
+
+/*
+ * Sets whether to iterate over addresses marked as executable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * This call should follow proctal_address_new.
+ */
+void proctal_address_set_execute(proctal p, int execute);
+
+/*
+ * Freezes main thread of execution.
  *
  * You should unfreeze before exiting your program otherwise something may
  * crash.
  *
- * Destroying the instance of Proctal automatically unfreezes.
+ * Destroying the instance automatically unfreezes.
  */
 int proctal_freeze(proctal p);
+
+/*
+ * Unfreezes execution.
+ */
 int proctal_unfreeze(proctal p);
 
 /*
  * Watches for memory accesses by the main thread of execution.
- *
- * You start by calling proctal_watch_create to create a watch handle. You
- * should check if the watch handle was successfully created by calling
- * proctal_error.
  *
  * You can define the address you want to watch by calling
  * proctal_watch_set_addr.
@@ -318,55 +365,73 @@ int proctal_unfreeze(proctal p);
  * proctal_watch_set_read and proctal_watch_set_write. By default it's set to
  * watch only for reads.
  *
- * Once the watch handler is configured, you can call proctal_watch_next which
- * will block until an access is detected.
- *
- * Once you're done using the handle, you must call proctal_watch_destroy to
- * release it.
+ * This function will block until an access is detected.
  */
-proctal_watch proctal_watch_create(proctal p);
-int proctal_watch_next(proctal_watch pw, void **addr);
-void proctal_watch_destroy(proctal_watch pw);
+int proctal_watch(proctal p, void **addr);
 
 /*
- * Sets and gets the address to watch.
+ * Returns the address that will be watched for accesses.
  */
-void *proctal_watch_addr(proctal_watch pw);
-void proctal_watch_set_addr(proctal_watch pw, void *addr);
+void *proctal_watch_address(proctal p);
 
 /*
- * Sets and gets whether to watch for reads.
- *
- * A value of 1 means yes, 0 means no.
+ * Sets the address to watch.
  */
-int proctal_watch_read(proctal_watch pw);
-void proctal_watch_set_read(proctal_watch pw, int r);
+void proctal_watch_set_address(proctal p, void *addr);
 
 /*
- * Sets and gets whether to watch for writes.
+ * Checks whether it's going to watch for reads.
  *
- * A value of 1 means yes, 0 means no.
+ * 1 means yes, 0 means no.
  */
-int proctal_watch_write(proctal_watch pw);
-void proctal_watch_set_write(proctal_watch pw, int w);
+int proctal_watch_read(proctal p);
 
 /*
- * Sets and gets whether to watch for instruction execution.
+ * Sets whether to watch for reads.
  *
- * A value of 1 means yes, 0 means no.
+ * 1 means yes, 0 means no.
  */
-int proctal_watch_execute(proctal_watch pw);
-void proctal_watch_set_execute(proctal_watch pw, int x);
+void proctal_watch_set_read(proctal p, int r);
+
+/*
+ * Checks whether it's going to watch for writes.
+ *
+ * 1 means yes, 0 means no.
+ */
+int proctal_watch_write(proctal p);
+
+/*
+ * Sets whether to watch for writes.
+ *
+ * 1 means yes, 0 means no.
+ */
+void proctal_watch_set_write(proctal p, int w);
+
+/*
+ * Checks whether it's going to watch for execution.
+ *
+ * 1 means yes, 0 means no.
+ */
+int proctal_watch_execute(proctal p);
+
+/*
+ * Sets whether to watch for execution.
+ *
+ * 1 means yes, 0 means no.
+ */
+void proctal_watch_set_execute(proctal p, int x);
 
 /*
  * Executes arbitrary code.
  *
+ * The code will be executed in the context of the main thread.
+ *
  * You need to pass a pointer to your byte code and its length. It will be
- * embedded at some place in memory and executed in the context of a new stack
- * frame. Your code is free to modify any registers because they will be
- * restored to their original values on return. You can either use a return
- * instruction to explicitly return or let the processor continue executing
- * after the last instruction you gave. 
+ * embedded at some place in memory and executed in a new  stack frame. Your
+ * code is free to modify any registers because they will be restored to their
+ * original values on return. You can either use a return instruction to
+ * explicitly return or let the processor continue executing after the last
+ * instruction you gave.
  *
  * On failure returns 0. Call proctal_error to find out what happened.
  */
@@ -389,7 +454,7 @@ void *proctal_alloc(proctal p, size_t size, int perm);
  * Deallocates memory allocated by proctal_alloc.
  *
  * This command is special in that it can deallocate memory allocated by a
- * different instance of Proctal.
+ * different instance.
  *
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
@@ -408,7 +473,7 @@ void proctal_set_free(proctal p, void (*free)(void *));
 
 /*
  * Global counterparts. These define the values that are used by default when
- * an instance of Proctal is created.
+ * an instance is created.
  *
  * If never called or passed NULL, will use the version of malloc/free that the
  * library was linked to.

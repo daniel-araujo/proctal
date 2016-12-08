@@ -21,19 +21,11 @@ int proctal_impl_freeze(proctal p);
 
 int proctal_impl_unfreeze(proctal p);
 
-proctal_addr_iter proctal_impl_addr_iter_create(proctal p);
+void proctal_impl_address_new(proctal p);
 
-void proctal_impl_addr_iter_destroy(proctal_addr_iter iter);
+int proctal_impl_address(proctal p, void **addr);
 
-int proctal_impl_addr_iter_first(proctal_addr_iter iter);
-
-int proctal_impl_addr_iter_next(proctal_addr_iter iter);
-
-proctal_watch proctal_impl_watch_create(proctal p);
-
-void proctal_impl_watch_destroy(proctal_watch pw);
-
-int proctal_impl_watch_next(proctal_watch pw, void **addr);
+int proctal_impl_watch(proctal p, void **addr);
 
 int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_length);
 

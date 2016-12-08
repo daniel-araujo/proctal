@@ -7,6 +7,10 @@ void proctal_linux_init(struct proctal_linux *pl)
 
 	pl->ptrace = 0;
 	pl->mem = NULL;
+
+	pl->address.started = 0;
+	pl->address.curr = NULL;
+	pl->address.maps = NULL;
 }
 
 void proctal_linux_deinit(struct proctal_linux *pl)

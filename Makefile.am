@@ -49,11 +49,11 @@ libproctal_a_SOURCES = \
 	src/lib/freeze.c \
 	src/lib/write.c \
 	src/lib/read.c \
-	src/lib/addr.c \
+	src/lib/address.c \
 	src/lib/alloc.c \
 	src/lib/execute.c \
-	src/lib/linux/addr.c \
-	src/lib/linux/addr.h \
+	src/lib/linux/address.c \
+	src/lib/linux/address.h \
 	src/lib/linux/alloc.c \
 	src/lib/linux/alloc.h \
 	src/lib/linux/execute.c \

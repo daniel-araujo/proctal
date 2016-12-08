@@ -2,7 +2,7 @@
 #include <linux/proctal.h>
 #include <linux/mem.h>
 #include <linux/ptrace.h>
-#include <linux/addr.h>
+#include <linux/address.h>
 #include <linux/watch.h>
 #include <linux/alloc.h>
 #include <linux/execute.h>
@@ -75,71 +75,25 @@ int proctal_impl_unfreeze(proctal p)
 	return proctal_linux_ptrace_detach(pl);
 }
 
-proctal_addr_iter proctal_impl_addr_iter_create(proctal p)
+void proctal_impl_address_new(proctal p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
-	struct proctal_linux_addr_iter *iterl = proctal_malloc(p, sizeof *iterl);
 
-	if (iterl == NULL) {
-		return NULL;
-	}
-
-	proctal_linux_addr_iter_init(pl, iterl);
-
-	return (proctal_addr_iter) iterl;
+	proctal_linux_address_new(pl);
 }
 
-void proctal_impl_addr_iter_destroy(proctal_addr_iter iter)
-{
-	struct proctal_linux_addr_iter *iterl = (struct proctal_linux_addr_iter *) iter;
-
-	proctal_linux_addr_iter_deinit(iterl->pl, iterl);
-
-	proctal_free(&iterl->pl->p, iterl);
-}
-
-int proctal_impl_addr_iter_first(proctal_addr_iter iter)
-{
-	struct proctal_linux_addr_iter *iterl = (struct proctal_linux_addr_iter *) iter;
-
-	return proctal_linux_addr_iter_first(iterl);
-}
-
-int proctal_impl_addr_iter_next(proctal_addr_iter iter)
-{
-	struct proctal_linux_addr_iter *iterl = (struct proctal_linux_addr_iter *) iter;
-
-	return proctal_linux_addr_iter_next(iterl);
-}
-
-proctal_watch proctal_impl_watch_create(proctal p)
+int proctal_impl_address(proctal p, void **addr)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
-	struct proctal_linux_watch *plw = proctal_malloc(p, sizeof *plw);
 
-	if (plw == NULL) {
-		return NULL;
-	}
-
-	proctal_linux_watch_init(pl, plw);
-
-	return (proctal_watch) plw;
+	return proctal_linux_address(pl, addr);
 }
 
-void proctal_impl_watch_destroy(proctal_watch pw)
+int proctal_impl_watch(proctal p, void **addr)
 {
-	struct proctal_linux_watch *plw = (struct proctal_linux_watch *) pw;
+	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_watch_deinit(plw->pl, plw);
-
-	proctal_free(&plw->pl->p, plw);
-}
-
-int proctal_impl_watch_next(proctal_watch pw, void **addr)
-{
-	struct proctal_linux_watch *plw = (struct proctal_linux_watch *) pw;
-
-	return proctal_linux_watch_next(plw, addr);
+	return proctal_linux_watch(pl, addr);
 }
 
 int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_length)
