@@ -505,6 +505,48 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t
 	return arg;
 }
 
+static void destroy_cli_cmd_pattern_arg_from_yuck_arg(struct cli_cmd_pattern_arg *arg)
+{
+	free(arg);
+}
+
+static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct cli_cmd_pattern_arg *arg = malloc(sizeof *arg);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_PATTERN) {
+		fputs("Wrong command.\n", stderr);
+		destroy_cli_cmd_pattern_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs != 1) {
+		fputs("Incorrect number of arguments.\n", stderr);
+		destroy_cli_cmd_pattern_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->pattern.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		destroy_cli_cmd_pattern_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!cli_parse_int(yuck_arg->pattern.pid_arg, &arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		destroy_cli_cmd_pattern_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	arg->pattern = yuck_arg->args[0];
+
+	arg->read = yuck_arg->pattern.read_flag == 1;
+	arg->write = yuck_arg->pattern.write_flag == 1;
+	arg->execute = yuck_arg->pattern.execute_flag == 1;
+
+	return arg;
+}
+
 static void destroy_cli_cmd_freeze_arg_from_yuck_arg(struct cli_cmd_freeze_arg *arg)
 {
 	free(arg);
@@ -819,6 +861,7 @@ static int cli_yuck_cmd_handler_none(yuck_t *argp)
 CLI_YUCK_CMD_HANDLER_COMMON(read)
 CLI_YUCK_CMD_HANDLER_COMMON(write)
 CLI_YUCK_CMD_HANDLER_COMMON(search)
+CLI_YUCK_CMD_HANDLER_COMMON(pattern)
 CLI_YUCK_CMD_HANDLER_COMMON(freeze)
 CLI_YUCK_CMD_HANDLER_COMMON(watch)
 CLI_YUCK_CMD_HANDLER_COMMON(execute)
@@ -833,6 +876,7 @@ cli_yuck_cmd_handler cli_yuck_cmd_handlers[] = {
 	[PROCTAL_CMD_READ] = cli_yuck_cmd_handler_read,
 	[PROCTAL_CMD_WRITE] = cli_yuck_cmd_handler_write,
 	[PROCTAL_CMD_SEARCH] = cli_yuck_cmd_handler_search,
+	[PROCTAL_CMD_PATTERN] = cli_yuck_cmd_handler_pattern,
 	[PROCTAL_CMD_FREEZE] = cli_yuck_cmd_handler_freeze,
 	[PROCTAL_CMD_WATCH] = cli_yuck_cmd_handler_watch,
 	[PROCTAL_CMD_EXECUTE] = cli_yuck_cmd_handler_execute,

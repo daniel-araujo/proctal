@@ -106,6 +106,24 @@ struct cli_cmd_search_arg {
 	int decreased;
 };
 
+struct cli_cmd_pattern_arg {
+	int pid;
+
+	const char *pattern;
+
+	// Whether to quit when no more input is available.
+	int input;
+
+	// Whether to search readable memory addresses.
+	int read;
+
+	// Whether to search writable memory addresses.
+	int write;
+
+	// Whether to search executable memory addresses.
+	int execute;
+};
+
 struct cli_cmd_freeze_arg {
 	int pid;
 
@@ -174,6 +192,8 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg);
 int cli_cmd_write(struct cli_cmd_write_arg *arg);
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg);
+
+int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg);
 
 int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg);
 

@@ -69,7 +69,6 @@ Example:
                         If type is instruction, additionally prints the
                         byte code of the instruction in hexadecimal.
 
-
 Usage: proctal write VALUES...
 Writes values.
 
@@ -102,7 +101,7 @@ Usage: proctal search
 Searches for values.
 
 Example:
-        proctal search -type=integer --pid=12345 --address=1c09346 --eq 12
+        proctal search --type=integer --pid=12345 --address=1c09346 --eq 12
 
   PID_ARGUMENT
   -i, --input           Reads the output of a previous scan of the same type
@@ -122,6 +121,36 @@ Example:
   --unchanged           Value did not change from previous scan
   --increased           Value increased from previous scan
   --decreased           Value decreased from previous scan
+
+Usage: proctal pattern PATTERN
+Searches for patterns in memory.
+
+Prints the starting address of each match.
+
+The following patterns are available:
+
+ 00 to FF - Exact byte value
+
+   Matches exactly the value of a byte. You must express the value in
+   hexadecimal notation and always with 2 digits.
+
+   Examples:
+     00
+     01
+     7A
+     FF
+
+ ?? - Any byte value
+
+   Matches any byte value.
+
+Example:
+        proctal pattern --pid=12345 -x "E8 ?? ?? ?? ??"
+
+  PID_ARGUMENT
+  -r, --read            Readable memory.
+  -w, --write           Writable memory.
+  -x, --execute         Executable memory.
 
 Usage: proctal freeze
 Freezes main thread of execution.

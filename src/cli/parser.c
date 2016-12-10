@@ -1,6 +1,18 @@
 #include <stdio.h>
+#include <ctype.h>
 
 #include "parser.h"
+
+static inline int match_char(const char *chars, char ch)
+{
+	for (size_t i = 0; chars[i] != '\0'; ++i) {
+		if (chars[i] == ch) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
 
 int cli_parse_char(const char *s, char *val)
 {
@@ -77,4 +89,33 @@ int cli_parse_address(const char *s, void **val)
 {
 	// TODO: figure out how to portably find address format string.
 	return sscanf(s, "%lx", (unsigned long *) val) == 1 ? 1 : 0;
+}
+
+size_t cli_parse_skip_chars(const char *s, const char *chars)
+{
+	int ch;
+	size_t skipped = 0;
+
+	for (size_t i = 0; (ch = s[i]) && match_char(chars, ch); ++i) {
+		++skipped;
+	}
+
+	return skipped;
+}
+
+size_t cli_parse_skip_until_chars(const char *s, const char *chars)
+{
+	int ch;
+	size_t skipped = 0;
+
+	for (size_t i = 0; (ch = s[i]) && !match_char(chars, ch); ++i) {
+		++skipped;
+	}
+
+	return skipped;
+}
+
+int cli_parse_is_hex_digit(int s)
+{
+	return isxdigit(s) != 0;
 }

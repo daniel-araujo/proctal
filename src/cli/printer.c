@@ -2,7 +2,7 @@
 
 #include "printer.h"
 
-static const char *messages[] = {
+static const char *proctal_error_messages[] = {
 	[0] = NULL,
 	[PROCTAL_ERROR_OUT_OF_MEMORY] = "Ran out of memory.",
 	[PROCTAL_ERROR_PERMISSION_DENIED] = "Permission denied.",
@@ -29,6 +29,14 @@ static const char *messages[] = {
 	[PROCTAL_ERROR_PROCESS_UNTAMEABLE] = "Process is in a state that cannot be dealt with.",
 };
 
+static const char *cli_pattern_error_messages[] = {
+	[0] = "Unknown error with pattern.",
+	[CLI_PATTERN_ERROR_INVALID_PATTERN] = "Invalid pattern found at offset %d.",
+	[CLI_PATTERN_ERROR_OUT_OF_MEMORY] = "Ran out of memory.",
+	[CLI_PATTERN_ERROR_EMPTY_PATTERN] = "Pattern cannot match anything because it's empty.",
+	[CLI_PATTERN_ERROR_MISSING_WHITESPACE] = "Missing whitespace at offset %d.",
+};
+
 void cli_print_proctal_error(proctal p)
 {
 	int error = proctal_error(p);
@@ -37,9 +45,34 @@ void cli_print_proctal_error(proctal p)
 		return;
 	}
 
-	if (!((unsigned) error < (sizeof messages / sizeof messages[0]))) {
+	if (!((unsigned) error < (sizeof proctal_error_messages / sizeof proctal_error_messages[0]))) {
 		error = PROCTAL_ERROR_UNKNOWN;
 	}
 
-	fprintf(stderr, "%s\n", messages[error]);
+	fprintf(stderr, "%s\n", proctal_error_messages[error]);
+}
+
+void cli_print_pattern_error(cli_pattern cp)
+{
+	int error = cli_pattern_error(cp);
+
+	if (error == 0) {
+		return;
+	}
+
+	if (!((unsigned) error < (sizeof cli_pattern_error_messages / sizeof cli_pattern_error_messages[0]))) {
+		error = 0;
+	}
+
+	switch (error) {
+	case CLI_PATTERN_ERROR_INVALID_PATTERN:
+	case CLI_PATTERN_ERROR_MISSING_WHITESPACE:
+		fprintf(stderr, cli_pattern_error_messages[error], cli_pattern_error_compile_offset(cp));
+		fprintf(stderr, "\n");
+		break;
+
+	default:
+		fprintf(stderr, "%s\n", cli_pattern_error_messages[error]);
+		break;
+	}
 }

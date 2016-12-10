@@ -17,4 +17,10 @@ int cli_parse_double(const char *s, double *val);
 int cli_parse_longdouble(const char *s, long double *val);
 int cli_parse_address(const char *s, void **val);
 
+size_t cli_parse_skip_chars(const char *s, const char *chars);
+
+size_t cli_parse_skip_until_chars(const char*s, const char *chars);
+
+int cli_parse_is_hex_digit(int s);
+
 #endif /* PARSER_H */

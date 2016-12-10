@@ -23,6 +23,7 @@ proctal_SOURCES = \
 	src/cli/cmd/read.c \
 	src/cli/cmd/write.c \
 	src/cli/cmd/search.c \
+	src/cli/cmd/pattern.c \
 	src/cli/cmd/measure.c \
 	src/cli/val.h \
 	src/cli/val.c \
@@ -34,6 +35,8 @@ proctal_SOURCES = \
 	src/cli/parser.c \
 	src/cli/printer.h \
 	src/cli/printer.c \
+	src/cli/pattern.h \
+	src/cli/pattern.c \
 	src/cli/cmd.h
 proctal_LDADD = libproctal.la $(proctal_capstone_libs) $(proctal_keystone_libs)
 proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
