@@ -248,6 +248,17 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
+	if (!arg->read && !arg->write && !arg->execute) {
+		// By default will search readable memory.
+		proctal_address_set_read(p, 1);
+		proctal_address_set_write(p, 0);
+		proctal_address_set_execute(p, 0);
+	} else {
+		proctal_address_set_read(p, arg->read);
+		proctal_address_set_write(p, arg->write);
+		proctal_address_set_execute(p, arg->execute);
+	}
+
 	if (arg->input) {
 		search_input(arg, p);
 	} else {

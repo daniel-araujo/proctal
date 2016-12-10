@@ -414,6 +414,10 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t
 	arg->dec_up_to = 0;
 	arg->input = 0;
 
+	arg->read = yuck_arg->search.read_flag == 1;
+	arg->write = yuck_arg->search.write_flag == 1;
+	arg->execute = yuck_arg->search.execute_flag == 1;
+
 	if (yuck_arg->cmd != PROCTAL_CMD_SEARCH) {
 		fputs("Wrong command.\n", stderr);
 		destroy_cli_cmd_search_arg_from_yuck_arg(arg);

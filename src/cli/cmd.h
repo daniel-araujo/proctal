@@ -50,6 +50,15 @@ struct cli_cmd_search_arg {
 
 	cli_val_attr value_attr;
 
+	// Whether to search readable memory addresses.
+	int read;
+
+	// Whether to search writable memory addresses.
+	int write;
+
+	// Whether to search executable memory addresses.
+	int execute;
+
 	// Whether we're going to read from stdin.
 	int input;
 

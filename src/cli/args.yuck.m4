@@ -98,7 +98,7 @@ Example:
   TYPE_ARGUMENTS
 
 Usage: proctal search
-Searches for values.
+Searches for values in memory.
 
 Example:
         proctal search --type=integer --pid=12345 --address=1c09346 --eq 12
@@ -107,6 +107,9 @@ Example:
   -i, --input           Reads the output of a previous scan of the same type
                         from standard input.
   TYPE_ARGUMENTS
+  -r, --read            Readable memory.
+  -w, --write           Writable memory.
+  -x, --execute         Executable memory.
   --eq=VAL              Equal to VAL
   --ne=VAL              Not equal to VAL
   --gt=VAL              Greater than VAL
