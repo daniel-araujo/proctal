@@ -116,10 +116,13 @@ static int next(struct proctal_linux *pl)
 
 void proctal_linux_address_new(struct proctal_linux *pl)
 {
-	if (pl->mem) {
-		fclose(pl->mem);
-		pl->mem = NULL;
+	if (pl->address.maps) {
+		fclose(pl->address.maps);
+		pl->address.maps = NULL;
 	}
+
+	pl->address.curr = NULL;
+	pl->address.started = 0;
 }
 
 int proctal_linux_address(struct proctal_linux *pl, void **addr)

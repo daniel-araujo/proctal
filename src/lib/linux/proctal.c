@@ -25,6 +25,11 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 		pl->ptrace = 1;
 		proctal_linux_ptrace_detach(pl);
 	}
+
+	if (pl->address.maps) {
+		fclose(pl->address.maps);
+		pl->address.maps = NULL;
+	}
 }
 
 void proctal_linux_set_pid(struct proctal_linux *pl, pid_t pid)
