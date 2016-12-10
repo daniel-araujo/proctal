@@ -107,6 +107,7 @@ static int next(struct proctal_linux *pl)
 
 	if (has_reached_region_end(pl) && !next_region(pl)) {
 		fclose(pl->address.maps);
+		pl->address.maps = NULL;
 		pl->address.curr = NULL;
 		return 0;
 	}
