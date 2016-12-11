@@ -341,6 +341,105 @@ int proctal_address_execute(proctal p);
 void proctal_address_set_execute(proctal p, int execute);
 
 /*
+ * Puts the region iterator in a clean state.
+ *
+ * You will want to call this function whenever you begin iterating over
+ * regiones to make sure you're starting from the first.
+ *
+ * It will do nothing if the region iterator is already in a clean state.
+ */
+void proctal_region_new(proctal p);
+
+/*
+ * Iterates over the entire address space by region.
+ *
+ * Any time you call this function it will pass you the starting and ending
+ * address of a region unless it fails or has iterated over all.
+ *
+ * It will return 1 on success, 0 on failure or when it has iterated over all
+ * regions.
+ *
+ * You should call proctal_error to verify if 0 meant failure.
+ */
+int proctal_region(proctal p, void **start, void **end);
+
+/*
+ * Returns which regions are being iterated over.
+ *
+ * The default value is 0.
+ */
+long proctal_region_mask(proctal p);
+
+/*
+ * Sets which regions are going to be iterated over.
+ *
+ * Setting the mask to 0 will let the iterator go over all regions.
+ *
+ * This call should follow proctal_region_new.
+ */
+void proctal_region_set_mask(proctal p, long mask);
+
+/*
+ * Checks whether it's iterating over regions marked as readable by the
+ * operating system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_region_read(proctal p);
+
+/*
+ * Sets whether to iterate over regions marked as readable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * This call should follow proctal_region_new.
+ */
+void proctal_region_set_read(proctal p, int read);
+
+/*
+ * Checks whether it's iterating over regions marked as writable by the
+ * operating system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_region_write(proctal p);
+
+/*
+ * Sets whether to iterate over regions marked as writable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * This call should follow proctal_region_new.
+ */
+void proctal_region_set_write(proctal p, int write);
+
+/*
+ * Checks whether it's iterating over regions marked as executable by the
+ * operating system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_region_execute(proctal p);
+
+/*
+ * Sets whether to iterate over regions marked as executable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * This call should follow proctal_region_new.
+ */
+void proctal_region_set_execute(proctal p, int execute);
+
+/*
  * Freezes main thread of execution.
  *
  * You should unfreeze before exiting your program otherwise something may

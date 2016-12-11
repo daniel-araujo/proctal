@@ -53,10 +53,13 @@ libproctal_a_SOURCES = \
 	src/lib/write.c \
 	src/lib/read.c \
 	src/lib/address.c \
+	src/lib/region.c \
 	src/lib/alloc.c \
 	src/lib/execute.c \
 	src/lib/linux/address.c \
 	src/lib/linux/address.h \
+	src/lib/linux/region.c \
+	src/lib/linux/region.h \
 	src/lib/linux/alloc.c \
 	src/lib/linux/alloc.h \
 	src/lib/linux/execute.c \

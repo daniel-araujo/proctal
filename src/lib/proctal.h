@@ -49,6 +49,23 @@ struct proctal {
 	} address;
 
 	/*
+	 * Region iterator specific options.
+	 */
+	struct {
+		// Tells which regions are iterated.
+		long mask;
+
+		// Whether to iterate over regions marked as readable.
+		int read;
+
+		// Whether to iterate over regions marked as writable.
+		int write;
+
+		// Whether to iterate over regions marked as executable.
+		int execute;
+	} region;
+
+	/*
 	 * Watch specific options.
 	 */
 	struct {

@@ -3,6 +3,7 @@
 #include <linux/mem.h>
 #include <linux/ptrace.h>
 #include <linux/address.h>
+#include <linux/region.h>
 #include <linux/watch.h>
 #include <linux/alloc.h>
 #include <linux/execute.h>
@@ -87,6 +88,20 @@ int proctal_impl_address(proctal p, void **addr)
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
 	return proctal_linux_address(pl, addr);
+}
+
+void proctal_impl_region_new(proctal p)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	proctal_linux_region_new(pl);
+}
+
+int proctal_impl_region(proctal p, void **start, void **end)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	return proctal_linux_region(pl, start, end);
 }
 
 int proctal_impl_watch(proctal p, void **addr)

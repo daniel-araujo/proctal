@@ -36,6 +36,11 @@ void proctal_init(struct proctal *p)
 	p->address.write = 0;
 	p->address.execute = 0;
 
+	p->region.mask = 0;
+	p->region.read = 1;
+	p->region.write = 0;
+	p->region.execute = 0;
+
 	p->watch.addr = NULL;
 	p->watch.read = 0;
 	p->watch.write = 0;

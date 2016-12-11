@@ -11,6 +11,9 @@ void proctal_linux_init(struct proctal_linux *pl)
 	pl->address.started = 0;
 	pl->address.curr = NULL;
 	pl->address.maps = NULL;
+
+	pl->region.finished = 0;
+	pl->region.maps = NULL;
 }
 
 void proctal_linux_deinit(struct proctal_linux *pl)
@@ -29,6 +32,11 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 	if (pl->address.maps) {
 		fclose(pl->address.maps);
 		pl->address.maps = NULL;
+	}
+
+	if (pl->region.maps) {
+		fclose(pl->region.maps);
+		pl->region.maps = NULL;
 	}
 }
 

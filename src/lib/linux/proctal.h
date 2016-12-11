@@ -37,6 +37,16 @@ struct proctal_linux {
 		// Current region being read.
 		struct proctal_linux_mem_region region;
 	} address;
+
+	struct proctal_linux_region {
+		int finished;
+
+		// Memory mappings of the address space.
+		FILE *maps;
+
+		// Current region.
+		struct proctal_linux_mem_region curr;
+	} region;
 };
 
 /*

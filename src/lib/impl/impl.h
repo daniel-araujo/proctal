@@ -25,6 +25,10 @@ void proctal_impl_address_new(proctal p);
 
 int proctal_impl_address(proctal p, void **addr);
 
+void proctal_impl_region_new(proctal p);
+
+int proctal_impl_region(proctal p, void **start, void **end);
+
 int proctal_impl_watch(proctal p, void **addr);
 
 int proctal_impl_execute(proctal p, const char *byte_code, size_t byte_code_length);
