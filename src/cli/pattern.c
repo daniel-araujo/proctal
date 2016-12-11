@@ -298,6 +298,8 @@ int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 		n = cp->patterns.first;
 	}
 
+	size_t read = 0;
+
 	for (size_t i = 0; i < size; ++i) {
 		switch (n->pattern->type)  {
 		case PATTERN_TYPE_BYTE_VALUE: {
@@ -305,7 +307,7 @@ int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 
 			if (p->value != data[i]) {
 				cp->finished = 1;
-				return 0;
+				return read;
 			}
 			break;
 		}
@@ -314,6 +316,8 @@ int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 			// Always passes.
 			break;
 		}
+
+		++read;
 
 		cp->last_pattern = n;
 
@@ -325,7 +329,7 @@ int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 		n = n->next;
 	}
 
-	return 1;
+	return read;
 }
 
 int cli_pattern_finished(cli_pattern cp)
