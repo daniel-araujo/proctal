@@ -105,6 +105,11 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 					proctal_read(p, backtrack, &ch, 1);
 					cli_pattern_input(cp, &ch, 1);
 
+					if (cli_pattern_finished(cp)) {
+						cli_pattern_new(cp);
+						start = (char *) start + 1;
+					}
+
 					if (backtrack == curr) {
 						break;
 					}
