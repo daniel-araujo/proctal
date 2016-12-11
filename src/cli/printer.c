@@ -35,6 +35,7 @@ static const char *cli_pattern_error_messages[] = {
 	[CLI_PATTERN_ERROR_OUT_OF_MEMORY] = "Ran out of memory.",
 	[CLI_PATTERN_ERROR_EMPTY_PATTERN] = "Pattern cannot match anything because it's empty.",
 	[CLI_PATTERN_ERROR_MISSING_WHITESPACE] = "Missing whitespace at offset %d.",
+	[CLI_PATTERN_ERROR_COMPILE_PATTERN] = "You must compile a pattern beforehand.",
 };
 
 void cli_print_proctal_error(proctal p)

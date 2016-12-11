@@ -7,6 +7,7 @@
 #define CLI_PATTERN_ERROR_OUT_OF_MEMORY 2
 #define CLI_PATTERN_ERROR_EMPTY_PATTERN 3
 #define CLI_PATTERN_ERROR_MISSING_WHITESPACE 4
+#define CLI_PATTERN_ERROR_COMPILE_PATTERN 5
 
 typedef struct cli_pattern *cli_pattern;
 
@@ -17,6 +18,8 @@ void cli_pattern_destroy(cli_pattern cp);
 int cli_pattern_compile(cli_pattern cp, const char *s);
 
 void cli_pattern_new(cli_pattern cp);
+
+int cli_pattern_ready(cli_pattern cp);
 
 int cli_pattern_input(cli_pattern cp, const char *data, size_t size);
 

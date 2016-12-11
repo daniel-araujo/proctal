@@ -22,9 +22,9 @@ Features:
 - Allocating and deallocating readable/writable/executable memory locations
 - Arbitrary instruction execution
 - Measure size of instructions
+- Byte pattern search
 
 Planned:
-- Byte pattern search
 - Freezing all threads of execution
 - Watch points on all threads of execution
 

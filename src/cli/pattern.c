@@ -15,7 +15,7 @@ struct pattern {
 struct pattern_byte_value {
 	struct pattern p;
 
-	unsigned char value;
+	char value;
 };
 
 struct pattern_any_byte;
@@ -37,7 +37,9 @@ struct cli_pattern {
 
 	struct pattern_list patterns;
 
-	struct pattern_list_node *curr_pattern;
+	struct pattern_list_node *last_pattern;
+
+	int finished;
 };
 
 static void cli_pattern_set_error(cli_pattern cp, int error)
@@ -147,7 +149,7 @@ static int parse_pattern_whitespace(struct cli_pattern *cp, struct pattern_list 
 
 static int parse_pattern_byte_value(struct cli_pattern *cp, struct pattern_list *l, const char **s)
 {
-	unsigned char b;
+	char b;
 
 	if (!cli_parse_is_hex_digit((*s)[0]) || !cli_parse_is_hex_digit((*s)[1])) {
 		return 0;
@@ -242,7 +244,8 @@ cli_pattern cli_pattern_create(void)
 	cp->error = 0;
 	cp->patterns.first = NULL;
 	cp->patterns.last = NULL;
-	cp->curr_pattern = NULL;
+	cp->last_pattern = NULL;
+	cp->finished = 0;
 
 	return cp;
 }
@@ -257,27 +260,82 @@ int cli_pattern_compile(cli_pattern cp, const char *s)
 {
 	clear_pattern_list(&cp->patterns);
 
-	return parse_pattern(cp, &cp->patterns, s);
+	if (!parse_pattern(cp, &cp->patterns, s)) {
+		clear_pattern_list(&cp->patterns);
+	}
+
+	return 1;
+}
+
+int cli_pattern_ready(cli_pattern cp)
+{
+	return cp->patterns.first != NULL;
 }
 
 void cli_pattern_new(cli_pattern cp)
 {
-	cp->curr_pattern = NULL;
+	cp->last_pattern = NULL;
+	cp->finished = 0;
 }
 
 int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 {
-	return 0;
+	if (!cli_pattern_ready(cp)) {
+		cli_pattern_set_error(cp, CLI_PATTERN_ERROR_COMPILE_PATTERN);
+		return 0;
+	}
+
+	if (cli_pattern_finished(cp)) {
+		// Nothing to do anymore.
+		return 0;
+	}
+
+	struct pattern_list_node *n;
+
+	if (cp->last_pattern) {
+		n = cp->last_pattern->next;
+	} else {
+		n = cp->patterns.first;
+	}
+
+	for (size_t i = 0; i < size; ++i) {
+		switch (n->pattern->type)  {
+		case PATTERN_TYPE_BYTE_VALUE: {
+			struct pattern_byte_value *p = (struct pattern_byte_value *) n->pattern;
+
+			if (p->value != data[i]) {
+				cp->finished = 1;
+				return 0;
+			}
+			break;
+		}
+
+		case PATTERN_TYPE_ANY_BYTE:
+			// Always passes.
+			break;
+		}
+
+		cp->last_pattern = n;
+
+		if (cp->last_pattern == cp->patterns.last) {
+			cp->finished = 1;
+			break;
+		}
+
+		n = n->next;
+	}
+
+	return 1;
 }
 
 int cli_pattern_finished(cli_pattern cp)
 {
-	return 1;
+	return cp->finished;
 }
 
 int cli_pattern_matched(cli_pattern cp)
 {
-	return 0;
+	return cp->finished && cp->patterns.last == cp->last_pattern;
 }
 
 int cli_pattern_error(cli_pattern cp)
