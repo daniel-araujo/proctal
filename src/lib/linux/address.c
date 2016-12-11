@@ -4,6 +4,29 @@
 
 static inline int interesting_region(struct proctal_linux *pl)
 {
+	if (pl->p.address.region_mask & PROCTAL_ADDR_REGION_STACK) {
+		if (strncmp(pl->address.region.path, "[stack", 6) == 0) {
+			return 1;
+		}
+	}
+
+	if (pl->p.address.region_mask & PROCTAL_ADDR_REGION_HEAP) {
+		if (strcmp(pl->address.region.path, "[heap]") == 0) {
+			return 1;
+		}
+	}
+
+	if (pl->p.address.region_mask & PROCTAL_ADDR_REGION_PROGRAM_CODE) {
+		if (strcmp(pl->address.region.path, proctal_linux_program_path(pl->pid)) == 0
+			&& pl->address.region.execute) {
+			return 1;
+		}
+	}
+
+	if (pl->p.address.region_mask != 0) {
+		return 0;
+	}
+
 	if (pl->p.address.read) {
 		if (!pl->address.region.read) {
 			return 0;
@@ -26,18 +49,6 @@ static inline int interesting_region(struct proctal_linux *pl)
 
 	if (pl->p.address.region_mask == 0) {
 		return 1;
-	}
-
-	if (pl->p.address.region_mask & PROCTAL_ADDR_REGION_STACK) {
-		if (strncmp(pl->address.region.path, "[stack", 6) == 0) {
-			return 1;
-		}
-	}
-
-	if (pl->p.address.region_mask & PROCTAL_ADDR_REGION_HEAP) {
-		if (strcmp(pl->address.region.path, "[heap]") == 0) {
-			return 1;
-		}
 	}
 
 	return 0;

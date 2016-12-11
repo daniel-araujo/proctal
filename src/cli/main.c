@@ -547,6 +547,7 @@ static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg_from_yuck_arg(yuck
 	arg->read = yuck_arg->pattern.read_flag == 1;
 	arg->write = yuck_arg->pattern.write_flag == 1;
 	arg->execute = yuck_arg->pattern.execute_flag == 1;
+	arg->program_code = yuck_arg->pattern.program_code_flag == 1;
 
 	return arg;
 }

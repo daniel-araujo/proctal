@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 
 #include <linux/proc.h>
@@ -138,4 +139,16 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 	mem_region_skip_nl(maps);
 
 	return 0;
+}
+
+const char *proctal_linux_program_path(pid_t pid)
+{
+	static char path[255];
+
+	const char *link = proctal_linux_proc_path(pid, "exe");
+
+	size_t e = readlink(link, path, sizeof path - 1);
+	path[e] = '\0';
+
+	return path;
 }

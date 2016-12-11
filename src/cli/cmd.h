@@ -131,6 +131,9 @@ struct cli_cmd_pattern_arg {
 
 	// Whether to search executable memory addresses.
 	int execute;
+
+	// Whether to search program code.
+	int program_code;
 };
 
 struct cli_cmd_freeze_arg {

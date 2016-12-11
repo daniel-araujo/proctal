@@ -44,6 +44,14 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		proctal_address_set_execute(p, arg->execute);
 	}
 
+	long mask = 0;
+
+	if (arg->program_code) {
+		mask |= PROCTAL_ADDR_REGION_PROGRAM_CODE;
+	}
+
+	proctal_address_set_region(p, mask);
+
 	proctal_address_new(p);
 
 	cli_pattern cp = cli_pattern_create();

@@ -154,6 +154,7 @@ Example:
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
+  --program-code        Program code in memory.
 
 Usage: proctal freeze
 Freezes main thread of execution.

@@ -37,6 +37,7 @@
  */
 #define PROCTAL_ADDR_REGION_STACK 1
 #define PROCTAL_ADDR_REGION_HEAP 2
+#define PROCTAL_ADDR_REGION_PROGRAM_CODE 4
 
 /*
  * Macro definitions of memory allocation permissions.
