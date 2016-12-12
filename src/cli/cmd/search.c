@@ -1,8 +1,14 @@
+#include <string.h>
 #include <proctal.h>
 
 #include "cmd.h"
 #include "printer.h"
 #include "scanner.h"
+
+struct buffer {
+	char *data;
+	size_t size;
+};
 
 static inline int pass_search_filters(struct cli_cmd_search_arg *arg, void *value)
 {
@@ -112,6 +118,17 @@ static inline void print_search_match(cli_val addr, cli_val value)
 	printf("\n");
 }
 
+static inline void *align_addr(void *addr, size_t align)
+{
+	ptrdiff_t offset = ((unsigned long) addr % align);
+
+	if (offset != 0) {
+		offset = align - offset;
+	}
+
+	return (void *) ((char *) addr + offset);
+}
+
 static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 {
 	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
@@ -121,39 +138,98 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 	cli_val value = cli_val_create(arg->value_attr);
 
 	size_t size = cli_val_sizeof(value);
+	size_t align = cli_val_alignof(value);
 
-	proctal_address_set_align(p, cli_val_alignof(value));
-	proctal_address_set_size(p, size);
-	proctal_address_set_region(p, 0);
+	proctal_region_set_mask(p, 0);
 
-	proctal_address_new(p);
+	proctal_region_new(p);
 
-	while (proctal_address(p, (void **) cli_val_raw(addr))) {
-		if (proctal_read(p, *(void **) cli_val_raw(addr), cli_val_raw(value), size) != size) {
-			switch (proctal_error(p)) {
-			case PROCTAL_ERROR_PERMISSION_DENIED:
-				fprintf(stderr, "No permission to read from address ");
-				cli_val_print(addr, stderr);
-				fprintf(stderr, "\n");
-				proctal_error_ack(p);
+	const size_t buffer_size = 1024 * 1024;
+
+	struct buffer curr_buffer = {
+		.data = malloc(buffer_size),
+		.size = 0
+	};
+	struct buffer prev_buffer = {
+		.data = malloc(buffer_size),
+		.size = 0
+	};
+
+	void *start, *end;
+
+	while (proctal_region(p, &start, &end)) {
+		size_t leftover = 0;
+
+		for (size_t chunk = 0;;++chunk) {
+			// This is the starting address of the current chunk.
+			char *offset = (char *) start + buffer_size * chunk;
+
+			offset = (char *) align_addr(offset, align);
+
+			if (offset >= (char *) end) {
 				break;
+			}
 
-			default:
-				fprintf(stderr, "Failed to read from address ");
-				cli_val_print(addr, stderr);
-				fprintf(stderr, "\n");
+			size_t chunk_size = (char *) end - offset;
+
+			if (chunk_size > buffer_size) {
+				chunk_size = buffer_size;
+			}
+
+			proctal_read(p, offset, curr_buffer.data, chunk_size);
+
+			if (proctal_error(p)) {
+				cli_print_proctal_error(p);
 				proctal_error_ack(p);
 				break;
 			}
 
-			continue;
-		}
+			curr_buffer.size = chunk_size;
 
-		if (!pass_search_filters(arg, value)) {
-			continue;
-		}
+			if (leftover) {
+				// The word rightover isn't even an English
+				// word but serves as a very literal
+				// counterpart to the leftover variable.
+				size_t rightover = size - leftover;
 
-		print_search_match(addr, value);
+				// Read what's left from the previous chunk.
+				memcpy(cli_val_raw(value), prev_buffer.data + prev_buffer.size - leftover, leftover);
+				memcpy(cli_val_raw(value) + leftover, curr_buffer.data + rightover, rightover);
+
+				if (pass_search_filters(arg, value)) {
+					void *a = offset - leftover;
+					cli_val_parse_bin(addr, (char *) &a, sizeof a);
+
+					print_search_match(addr, value);
+				}
+
+				leftover = 0;
+			}
+
+			size_t i = 0; 
+
+			while (i < curr_buffer.size) {
+				if ((i + size) > curr_buffer.size) {
+					leftover = curr_buffer.size - i;
+				}
+
+				memcpy(cli_val_raw(value), curr_buffer.data + i, size);
+
+				if (pass_search_filters(arg, value)) {
+					void *a = offset + i;
+					cli_val_parse_bin(addr, (char *) &a, sizeof a);
+
+					print_search_match(addr, value);
+				}
+
+				i += align;
+			}
+
+			leftover = curr_buffer.size - i;
+
+			memcpy(prev_buffer.data, curr_buffer.data, curr_buffer.size);
+			prev_buffer.size = curr_buffer.size;
+		}
 	}
 
 	if (proctal_error(p)) {
@@ -253,10 +329,18 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 		proctal_address_set_read(p, 1);
 		proctal_address_set_write(p, 0);
 		proctal_address_set_execute(p, 0);
+
+		proctal_region_set_read(p, 1);
+		proctal_region_set_write(p, 0);
+		proctal_region_set_execute(p, 0);
 	} else {
 		proctal_address_set_read(p, arg->read);
 		proctal_address_set_write(p, arg->write);
 		proctal_address_set_execute(p, arg->execute);
+
+		proctal_region_set_read(p, arg->read);
+		proctal_region_set_write(p, arg->write);
+		proctal_region_set_execute(p, arg->execute);
 	}
 
 	if (arg->input) {
