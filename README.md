@@ -25,6 +25,7 @@ Features:
 - Byte pattern search
 
 Planned:
+- Memory dump
 - Freezing all threads of execution
 - Watch points on all threads of execution
 
