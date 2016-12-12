@@ -75,7 +75,7 @@ void cli_val_set_instruction_addr(cli_val v, void *addr);
 enum cli_val_type cli_val_type(cli_val v);
 size_t cli_val_alignof(cli_val v);
 size_t cli_val_sizeof(cli_val v);
-char *cli_val_addr(cli_val v);
+char *cli_val_raw(cli_val v);
 int cli_val_add(cli_val v1, cli_val v2, cli_val vr);
 int cli_val_sub(cli_val v1, cli_val v2, cli_val vr);
 int cli_val_cmp(cli_val v1, cli_val v2);

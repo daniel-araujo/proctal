@@ -426,7 +426,7 @@ size_t cli_val_sizeof(cli_val v)
 	return 1;
 }
 
-char *cli_val_addr(cli_val v)
+char *cli_val_raw(cli_val v)
 {
 	switch (v->attr.type) {
 	case CLI_VAL_TYPE_BYTE:
@@ -909,7 +909,7 @@ int cli_val_parse_bin(cli_val v, const char *s, size_t length)
 			return 0;
 		}
 
-		memcpy(cli_val_addr(v), s, size);
+		memcpy(cli_val_raw(v), s, size);
 
 		return size;
 	}
