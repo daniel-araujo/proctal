@@ -5,22 +5,22 @@
 void *(*proctal_global_malloc)(size_t) = malloc;
 void (*proctal_global_free)(void *) = free;
 
-void proctal_global_set_malloc(void *(*malloc)(size_t))
+void proctal_global_set_malloc(void *(*f)(size_t))
 {
-	if (malloc == NULL) {
+	if (f == NULL) {
 		proctal_global_malloc = malloc;
 	}
 
-	proctal_global_malloc = malloc;
+	proctal_global_malloc = f;
 }
 
-void proctal_global_set_free(void (*free)(void *))
+void proctal_global_set_free(void (*f)(void *))
 {
-	if (free == NULL) {
+	if (f == NULL) {
 		proctal_global_free = free;
 	}
 
-	proctal_global_free = free;
+	proctal_global_free = f;
 }
 
 void proctal_init(struct proctal *p)
