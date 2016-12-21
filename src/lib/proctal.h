@@ -6,10 +6,19 @@
 #include <impl/impl.h>
 
 /*
- * Global variables. Keep these to a minimum.
+ * Global state of the library that can be changed by the library user.
+ *
+ * Better kept small.
  */
-extern void *(*proctal_global_malloc)(size_t);
-extern void (*proctal_global_free)(void *);
+extern struct proctal_global {
+	// Memory allocator with the same signature as the malloc function from
+	// the C standard library.
+	void *(*malloc)(size_t);
+
+	// Memory deallocator with the same signature as the free function from
+	// the C standard library.
+	void (*free)(void *);
+} proctal_global;
 
 /*
  * Base structure of an instance.
@@ -107,6 +116,25 @@ void proctal_set_error(proctal p, int error);
  */
 void *proctal_malloc(proctal p, size_t size);
 void proctal_free(proctal p, void *addr);
+
+/*
+ * Allocates memory.
+ *
+ * This version should only be used for internal data structures needed to
+ * create an instance.
+ */
+inline void *proctal_global_malloc(size_t size)
+{
+	return proctal_global.malloc(size);
+}
+
+/*
+ * Deallocates memory allocated with proctal_global_malloc.
+ */
+inline void proctal_global_free(void *addr)
+{
+	proctal_global.free(addr);
+}
 
 inline void *proctal_align_addr(void *addr, size_t align)
 {

@@ -2,31 +2,33 @@
 
 #include <proctal.h>
 
-void *(*proctal_global_malloc)(size_t) = malloc;
-void (*proctal_global_free)(void *) = free;
+struct proctal_global proctal_global = {
+	.malloc = malloc,
+	.free = free
+};
 
 void proctal_global_set_malloc(void *(*f)(size_t))
 {
 	if (f == NULL) {
-		proctal_global_malloc = malloc;
+		proctal_global.malloc = malloc;
 	}
 
-	proctal_global_malloc = f;
+	proctal_global.malloc = f;
 }
 
 void proctal_global_set_free(void (*f)(void *))
 {
 	if (f == NULL) {
-		proctal_global_free = free;
+		proctal_global.free = free;
 	}
 
-	proctal_global_free = f;
+	proctal_global.free = f;
 }
 
 void proctal_init(struct proctal *p)
 {
-	p->malloc = proctal_global_malloc;
-	p->free = proctal_global_free;
+	p->malloc = proctal_global.malloc;
+	p->free = proctal_global.free;
 	p->error = 0;
 
 	p->address.region_mask = 0;
