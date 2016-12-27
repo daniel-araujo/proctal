@@ -10,7 +10,7 @@ struct proctal_global proctal_global = {
 void proctal_global_set_malloc(void *(*f)(size_t))
 {
 	if (f == NULL) {
-		proctal_global.malloc = malloc;
+		f = malloc;
 	}
 
 	proctal_global.malloc = f;
@@ -19,7 +19,7 @@ void proctal_global_set_malloc(void *(*f)(size_t))
 void proctal_global_set_free(void (*f)(void *))
 {
 	if (f == NULL) {
-		proctal_global.free = free;
+		f = free;
 	}
 
 	proctal_global.free = f;
@@ -99,4 +99,6 @@ void proctal_free(proctal p, void *addr)
 	return p->free(addr);
 }
 
+void *proctal_global_malloc(size_t size);
+void proctal_global_free(void *addr);
 void *proctal_align_addr(void *addr, size_t align);
