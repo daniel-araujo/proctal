@@ -403,11 +403,15 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg_from_yuck_arg(yuck_t *yu
 	}
 
 	if (yuck_arg->read.array_arg != NULL) {
-		if (!cli_parse_int(yuck_arg->read.array_arg, (int *) &arg->array)) {
+		unsigned long v;
+
+		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_read_arg_from_yuck_arg(arg);
 			return NULL;
 		}
+
+		arg->array = v;
 	} else {
 		arg->array = 1;
 	}
@@ -499,11 +503,15 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *
 	}
 
 	if (yuck_arg->write.array_arg != NULL) {
-		if (!cli_parse_int(yuck_arg->write.array_arg, (int *) &arg->array)) {
+		unsigned long v;
+
+		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_write_arg_from_yuck_arg(arg);
 			return NULL;
 		}
+
+		arg->array = v;
 	} else {
 		arg->array = cli_val_list_size(arg->value_list);
 	}
@@ -991,11 +999,15 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg_from_yuck_arg(yuck
 	}
 
 	if (yuck_arg->measure.array_arg != NULL) {
-		if (!cli_parse_int(yuck_arg->measure.array_arg, (int *) &arg->array)) {
+		unsigned long v;
+
+		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
 			return NULL;
 		}
+
+		arg->array = v;
 	} else {
 		arg->array = cli_val_list_size(arg->value_list);
 	}
