@@ -44,12 +44,7 @@ int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg)
 		return 1;
 	}
 
-	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-	cli_val vaddr = cli_val_create(addr_attr);
-	cli_val_attr_destroy(addr_attr);
-	cli_val_parse_bin(vaddr, (const char *) &addr, sizeof addr);
-	cli_val_print(vaddr, stdout);
-	cli_val_destroy(vaddr);
+	cli_print_address(addr);
 	printf("\n");
 
 	proctal_destroy(p);

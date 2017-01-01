@@ -58,7 +58,7 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->inc) {
-		cli_val exactly = cli_val_create(arg->value_attr);
+		cli_val exactly = cli_val_create_clone(arg->value);
 
 		if (cli_val_add(previous_value, arg->inc_value, exactly)
 			&& cli_val_cmp(value, exactly) != 0) {
@@ -70,7 +70,7 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->inc_up_to) {
-		cli_val upto = cli_val_create(arg->value_attr);
+		cli_val upto = cli_val_create_clone(arg->value);
 
 		if (cli_val_add(previous_value, arg->inc_up_to_value, upto)
 			&& !(cli_val_cmp(value, upto) <= 0
@@ -83,7 +83,7 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->dec) {
-		cli_val exactly = cli_val_create(arg->value_attr);
+		cli_val exactly = cli_val_create_clone(arg->value);
 
 		if (cli_val_sub(previous_value, arg->dec_value, exactly)
 			&& cli_val_cmp(value, exactly) != 0) {
@@ -95,7 +95,7 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->dec_up_to) {
-		cli_val upto = cli_val_create(arg->value_attr);
+		cli_val upto = cli_val_create_clone(arg->value);
 
 		if (cli_val_sub(previous_value, arg->dec_up_to_value, upto)
 			&& !(cli_val_cmp(value, upto) >= 0
@@ -131,11 +131,8 @@ static inline void *align_addr(void *addr, size_t align)
 
 static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 {
-	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-	cli_val addr = cli_val_create(addr_attr);
-	cli_val_attr_destroy(addr_attr);
-
-	cli_val value = cli_val_create(arg->value_attr);
+	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val value = arg->value;
 
 	size_t size = cli_val_sizeof(value);
 	size_t align = cli_val_alignof(value);
@@ -194,7 +191,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 				// Read what's left from the previous chunk.
 				memcpy(cli_val_raw(value), prev_buffer.data + prev_buffer.size - leftover, leftover);
-				memcpy(cli_val_raw(value) + leftover, curr_buffer.data + rightover, rightover);
+				memcpy((char *) cli_val_raw(value) + leftover, curr_buffer.data + rightover, rightover);
 
 				if (pass_search_filters(arg, value)) {
 					void *a = offset - leftover;
@@ -232,24 +229,20 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 		}
 	}
 
+	cli_val_destroy(addr);
+
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		proctal_error_ack(p);
 		return;
 	}
-
-	cli_val_destroy(value);
-	cli_val_destroy(addr);
 }
 
 static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 {
-	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-	cli_val addr = cli_val_create(addr_attr);
-	cli_val_attr_destroy(addr_attr);
-
-	cli_val value = cli_val_create(arg->value_attr);
-	cli_val previous_value = cli_val_create(arg->value_attr);
+	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val value = arg->value;
+	cli_val previous_value = cli_val_create_clone(value);
 
 	for (;;) {
 		cli_scan_skip_chars(stdin, "\n ");
@@ -310,6 +303,9 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 
 		print_search_match(addr, value);
 	}
+
+	cli_val_destroy(addr);
+	cli_val_destroy(previous_value);
 }
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg)

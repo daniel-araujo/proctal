@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <inttypes.h>
 
 #include "parser.h"
 
@@ -16,8 +17,7 @@ static inline int match_char(const char *chars, char ch)
 
 int cli_parse_char(const char *s, char *val)
 {
-	// TODO: figure out how to detect sign of char.
-	return sscanf(s, "%hhd", val) == 1 ? 1 : 0;
+	return sscanf(s, "%c", val) == 1 ? 1 : 0;
 }
 
 int cli_parse_uchar(const char *s, unsigned char *val)
@@ -87,8 +87,7 @@ int cli_parse_longdouble(const char *s, long double *val)
 
 int cli_parse_address(const char *s, void **val)
 {
-	// TODO: figure out how to portably find address format string.
-	return sscanf(s, "%lx", (unsigned long *) val) == 1 ? 1 : 0;
+	return sscanf(s, "%" PRIXPTR, (uintptr_t *) val) == 1 ? 1 : 0;
 }
 
 size_t cli_parse_skip_chars(const char *s, const char *chars)

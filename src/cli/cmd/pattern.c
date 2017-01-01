@@ -13,17 +13,7 @@ struct buffer {
 
 static void print_match(void *addr)
 {
-	static cli_val v = NULL;
-
-	if (v == NULL) {
-		cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-		v = cli_val_create(addr_attr);
-		cli_val_attr_destroy(addr_attr);
-	}
-
-	cli_val_parse_bin(v, (const char *) &addr, sizeof addr);
-
-	cli_val_print(v, stdout);
+	cli_print_address(addr);
 	printf("\n");
 }
 

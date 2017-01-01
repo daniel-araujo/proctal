@@ -11,7 +11,8 @@ define(`TYPE_ARGUMENTS', `
                         text
                         address
                         instruction
-  --endianness=ENDIANNESS
+  --integer-endianness=ENDIANNESS
+                        If type is integer, this determines the order of bytes.
                         By default ENDIANNESS is little.
                         ENDIANNESS can be:
                         little
@@ -43,6 +44,12 @@ define(`TYPE_ARGUMENTS', `
                         single
                         double
                         extended
+  --instruction-arch=ARCH
+                        If type is instruction, this determines the
+                        architecture.
+                        By default ARCH is x86-64.
+                        ARCH can be:
+                        x86-64
 ')dnl
 Usage: proctal
 Accesses the address space of a running program.

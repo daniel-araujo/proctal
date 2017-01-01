@@ -1,6 +1,7 @@
 proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
 	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
-	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags)
+	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags) \
+	-Wno-maybe-uninitialized
 proctal_lib_headers_dir = $(srcdir)/src/lib/include
 
 EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
@@ -25,6 +26,18 @@ proctal_SOURCES = \
 	src/cli/cmd/search.c \
 	src/cli/cmd/pattern.c \
 	src/cli/cmd/measure.c \
+	src/cli/val/integer.h \
+	src/cli/val/integer.c \
+	src/cli/val/ieee754.h \
+	src/cli/val/ieee754.c \
+	src/cli/val/address.h \
+	src/cli/val/address.c \
+	src/cli/val/byte.h \
+	src/cli/val/byte.c \
+	src/cli/val/text.h \
+	src/cli/val/text.c \
+	src/cli/val/instruction.h \
+	src/cli/val/instruction.c \
 	src/cli/val.h \
 	src/cli/val.c \
 	src/cli/val-list.h \

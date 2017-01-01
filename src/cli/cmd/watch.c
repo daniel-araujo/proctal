@@ -67,10 +67,6 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_set_write(p, arg->write);
 	proctal_watch_set_execute(p, arg->execute);
 
-	cli_val_attr addr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-	cli_val vaddr = cli_val_create(addr_attr);
-	cli_val_attr_destroy(addr_attr);
-
 	// TODO: Should use a data structure that can grow dynamically and has
 	// good lookup performance.
 	void *matches[10000];
@@ -105,14 +101,11 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			}
 		}
 
-		cli_val_parse_bin(vaddr, (const char*) &addr, sizeof addr);
-		cli_val_print(vaddr, stdout);
+		cli_print_address(addr);
 		printf("\n");
 	}
 
 	unregister_signal_handler();
-
-	cli_val_destroy(vaddr);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

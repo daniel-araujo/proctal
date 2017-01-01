@@ -1,10 +1,21 @@
 #ifndef VAL_H
 #define VAL_H
 
+#include <stdlib.h>
 #include <stdio.h>
-#include <stdalign.h>
 
+#include "val/integer.h"
+#include "val/ieee754.h"
+#include "val/address.h"
+#include "val/byte.h"
+#include "val/text.h"
+#include "val/instruction.h"
+
+/*
+ * Known types.
+ */
 enum cli_val_type {
+	CLI_VAL_TYPE_NIL,
 	CLI_VAL_TYPE_BYTE,
 	CLI_VAL_TYPE_INTEGER,
 	CLI_VAL_TYPE_IEEE754,
@@ -13,77 +24,121 @@ enum cli_val_type {
 	CLI_VAL_TYPE_INSTRUCTION,
 };
 
-enum cli_val_type_endianness {
-	CLI_VAL_TYPE_ENDIANNESS_LITTLE,
-};
-
-enum cli_val_type_integer_size {
-	CLI_VAL_TYPE_INTEGER_SIZE_8,
-	CLI_VAL_TYPE_INTEGER_SIZE_16,
-	CLI_VAL_TYPE_INTEGER_SIZE_32,
-	CLI_VAL_TYPE_INTEGER_SIZE_64,
-};
-
-enum cli_val_type_integer_sign {
-	CLI_VAL_TYPE_INTEGER_SIGN_UNSIGNED,
-	CLI_VAL_TYPE_INTEGER_SIGN_2SCMPL,
-};
-
-enum cli_val_type_text_charset {
-	CLI_VAL_TYPE_TEXT_CHARSET_ASCII,
-};
-
-enum cli_val_type_ieee754_precision {
-	CLI_VAL_TYPE_IEEE754_PRECISION_SINGLE,
-	CLI_VAL_TYPE_IEEE754_PRECISION_DOUBLE,
-	CLI_VAL_TYPE_IEEE754_PRECISION_EXTENDED,
-};
-
-typedef struct cli_val_attr *cli_val_attr;
 typedef struct cli_val *cli_val;
 
-cli_val_attr cli_val_attr_create(enum cli_val_type type);
-void cli_val_attr_destroy(cli_val_attr a);
+/*
+ * Wraps a value.
+ *
+ * Returns nil on failure.
+ */
+cli_val cli_val_wrap(enum cli_val_type type, void *val);
 
-void cli_val_attr_set_endianness(
-	cli_val_attr a,
-	enum cli_val_type_endianness endianness);
+/*
+ * Unwraps a value and destroys the wrapper.
+ */
+void *cli_val_unwrap(cli_val v);
 
-void cli_val_attr_set_integer_size(
-	cli_val_attr a,
-	enum cli_val_type_integer_size size);
-void cli_val_attr_set_integer_sign(
-	cli_val_attr a,
-	enum cli_val_type_integer_sign sign);
+/*
+ * Creates a clone.
+ *
+ * The clone is independent of the original value and must be destroyed after
+ * it's done being used.
+ *
+ * Returns nil on failure.
+ */
+cli_val cli_val_create_clone(cli_val other_v);
 
-void cli_val_attr_set_ieee754_precision(
-	cli_val_attr a,
-	enum cli_val_type_ieee754_precision precision);
-
-void cli_val_attr_set_text_charset(
-	cli_val_attr a,
-	enum cli_val_type_text_charset charset);
-
-enum cli_val_type cli_val_attr_type(cli_val_attr a);
-size_t cli_val_attr_alignof(cli_val_attr a);
-
-cli_val cli_val_create(cli_val_attr a);
+/*
+ * Destroys the value.
+ */
 void cli_val_destroy(cli_val v);
 
-void cli_val_set_instruction_addr(cli_val v, void *addr);
+/*
+ * Defines the address if the value supports it.
+ */
+void cli_val_set_address(cli_val v, void *addr);
 
+/*
+ * Returns the type of the value.
+ */
 enum cli_val_type cli_val_type(cli_val v);
+
+/*
+ * Returns alignment requirements of the value.
+ */
 size_t cli_val_alignof(cli_val v);
+
+/*
+ * Returns the size of the value.
+ */
 size_t cli_val_sizeof(cli_val v);
-char *cli_val_raw(cli_val v);
+
+/*
+ * Returns a pointer to the underlying data.
+ *
+ * The pointer can be dereferenced but you must be sure to know what you're
+ * doing.
+ */
+void *cli_val_raw(cli_val v);
+
+/*
+ * Adds the first 2 values and stores the result in the third.
+ *
+ * The third value can be one of the first 2.
+ */
 int cli_val_add(cli_val v1, cli_val v2, cli_val vr);
+
+/*
+ * Subtracts the second value from the first and stores the result in the
+ * third.
+ *
+ * The third value can be one of the first 2.
+ */
 int cli_val_sub(cli_val v1, cli_val v2, cli_val vr);
+
+/*
+ * Compares two values.
+ *
+ * Returns 0 if they're equal.
+ * Returns 1 if the first is greater than the second.
+ * Returns -1 if the first is less than the second.
+ */
 int cli_val_cmp(cli_val v1, cli_val v2);
+
+/*
+ * Attempts to write the value as text to a file.
+ *
+ * Returns how many characters were written.
+ */
 int cli_val_print(cli_val v, FILE *f);
+
+/*
+ * Attempts to read the value as text from a file.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
 int cli_val_scan(cli_val v, FILE *f);
+
+/*
+ * Attempts to parse the value as text from a C-style string.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
 int cli_val_parse(cli_val v, const char *s);
+
+/*
+ * Attempts to interpret a value from a stream of bytes.
+ *
+ * Returns how many bytes were consumed on success, 0 on failure.
+ */
 int cli_val_parse_bin(cli_val v, const char *s, size_t length);
 
+/*
+ * Returns a value that represents no value. This will always return the same
+ * value.
+ *
+ * Never pass it to a function otherwise the program will crash.
+ */
 cli_val cli_val_nil(void);
 
 #endif /* VAL_H */

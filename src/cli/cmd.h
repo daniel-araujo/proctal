@@ -17,7 +17,8 @@ struct cli_cmd_read_arg {
 	// Number of values expected to read.
 	size_t array;
 
-	cli_val_attr value_attr;
+	// How we're going to interpret values.
+	cli_val value;
 
 	// Whether to additionally print the instruction's address.
 	int show_instruction_address;
@@ -48,7 +49,8 @@ struct cli_cmd_write_arg {
 struct cli_cmd_search_arg {
 	int pid;
 
-	cli_val_attr value_attr;
+	// How we're going to interpret values.
+	cli_val value;
 
 	// Whether to search readable memory addresses.
 	int read;

@@ -5,7 +5,7 @@
 
 static inline void print_separator(struct cli_cmd_read_arg *arg)
 {
-	switch (cli_val_attr_type(arg->value_attr)) {
+	switch (cli_val_type(arg->value)) {
 	case CLI_VAL_TYPE_TEXT:
 		break;
 
@@ -38,7 +38,6 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	cli_val value = cli_val_create(arg->value_attr);
 	char output[16];
 
 	char *addr = (char *) arg->address;
@@ -60,9 +59,9 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 			return 1;
 		}
 
-		cli_val_set_instruction_addr(value, addr);
+		cli_val_set_address(arg->value, addr);
 
-		int size = cli_val_parse_bin(value, output, sizeof output / sizeof output[0]);
+		int size = cli_val_parse_bin(arg->value, output, sizeof output / sizeof output[0]);
 
 		if (size == 0) {
 			if (i == 0) {
@@ -76,25 +75,17 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 		}
 
 		if (arg->show_instruction_address
-			&& cli_val_attr_type(arg->value_attr) == CLI_VAL_TYPE_INSTRUCTION) {
-			cli_val_attr vaddr_attr = cli_val_attr_create(CLI_VAL_TYPE_ADDRESS);
-			cli_val vaddr = cli_val_create(vaddr_attr);
-			cli_val_attr_destroy(vaddr_attr);
-
-			cli_val_parse_bin(vaddr, (const char *) &addr, sizeof addr);
-
-			cli_val_print(vaddr, stdout);
+			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
+			cli_print_address(addr);
 			printf("\t");
-
-			cli_val_destroy(vaddr);
 		}
 
 		addr += size;
 
-		cli_val_print(value, stdout);
+		cli_val_print(arg->value, stdout);
 
 		if (arg->show_instruction_byte_code
-			&& cli_val_attr_type(arg->value_attr) == CLI_VAL_TYPE_INSTRUCTION) {
+			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
 			printf("\n");
 
 			if (arg->show_instruction_address) {
@@ -102,9 +93,9 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 			}
 
 			for (int j = 0; j < size; j++) {
-				printf("%02hhx", output[j]);
+				cli_print_byte(output[j]);
 
-				if (j < size -1) {
+				if (j < size - 1) {
 					printf(" ");
 				}
 			}

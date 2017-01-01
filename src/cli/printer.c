@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <inttypes.h>
 
 #include "printer.h"
 
@@ -76,4 +77,16 @@ void cli_print_pattern_error(cli_pattern cp)
 		fprintf(stderr, "%s\n", cli_pattern_error_messages[error]);
 		break;
 	}
+}
+
+void cli_print_address(void *address)
+{
+	uintptr_t a = (uintptr_t) address;
+
+	printf("%" PRIXPTR, a);
+}
+
+void cli_print_byte(unsigned char byte)
+{
+	printf("%02hhx", byte);
 }
