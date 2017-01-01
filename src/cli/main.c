@@ -589,6 +589,12 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t
 		return NULL;
 	}
 
+	if (yuck_arg->nargs != 0) {
+		fputs("This command only accepts options.\n", stderr);
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
 	if (yuck_arg->search.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
 		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
