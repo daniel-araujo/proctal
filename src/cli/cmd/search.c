@@ -229,6 +229,9 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 		}
 	}
 
+	free(prev_buffer.data);
+	free(curr_buffer.data);
+
 	cli_val_destroy(addr);
 
 	if (proctal_error(p)) {
