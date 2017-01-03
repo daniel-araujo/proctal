@@ -35,6 +35,11 @@ Planned:
 Forces a program — whose Process ID (PID) is 15433 in this example — to print
 Hello, world!
 
+> **Note**
+>
+> Accessing sensitive parts of other processes most likely requires you to have
+> higher privileges. Try running as root.
+
 ### CLI
 
 ```sh
@@ -85,7 +90,7 @@ int main (int argc, char **argv)
 
 	if (proctal_error(p)) {
 		proctal_destroy(p);
-		fprintf(stderr, "Failed to allocate memory.\n");
+		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(p));
 		return EXIT_FAILURE;
 	}
 
@@ -94,7 +99,7 @@ int main (int argc, char **argv)
 	if (proctal_error(p)) {
 		proctal_dealloc(p, allocated_memory);
 		proctal_destroy(p);
-		fprintf(stderr, "Failed to write to memory.\n");
+		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(p));
 		return EXIT_FAILURE;
 	}
 
@@ -112,7 +117,7 @@ int main (int argc, char **argv)
 	if (proctal_error(p)) {
 		proctal_dealloc(p, allocated_memory);
 		proctal_destroy(p);
-		fprintf(stderr, "Failed to execute code.\n");
+		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(p));
 		return EXIT_FAILURE;
 	}
 
