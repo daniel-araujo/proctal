@@ -90,27 +90,28 @@ static int start(struct proctal_linux *pl)
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_cont(pl)) {
-		disable_breakpoint(pl);
-		return 0;
-	}
-
 	return 1;
 }
 
-static void end(struct proctal_linux *pl)
+static int end(struct proctal_linux *pl)
 {
-	proctal_linux_ptrace_stop(pl);
+	// Assuming process is stopped.
 
-	disable_breakpoint(pl);
+	if (!disable_breakpoint(pl)) {
+		return 0;
+	}
 
-	proctal_linux_ptrace_detach(pl);
+	return proctal_linux_ptrace_detach(pl);
 }
 
 int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 {
 	if (!start(pl)) {
 		return 0;
+	}
+
+	if (!proctal_linux_ptrace_cont(pl)) {
+		return end(pl);
 	}
 
 	int wstatus;
@@ -123,6 +124,7 @@ int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 				proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
 			}
 
+			proctal_linux_ptrace_stop(pl);
 			end(pl);
 			return 0;
 		}
@@ -141,8 +143,6 @@ int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 
 				*addr = rip;
 
-				proctal_linux_ptrace_cont(pl);
-
 				break;
 			}
 
@@ -159,6 +159,5 @@ int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 		}
 	}
 
-	end(pl);
-	return 1;
+	return end(pl);
 }
