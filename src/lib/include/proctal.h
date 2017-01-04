@@ -33,11 +33,11 @@
 #define PROCTAL_ERROR_PROCESS_TRAPPED 19
 
 /*
- * Macro definitions of known address regions.
+ * Macro definitions of known memory regions.
  */
-#define PROCTAL_ADDR_REGION_STACK 1
-#define PROCTAL_ADDR_REGION_HEAP 2
-#define PROCTAL_ADDR_REGION_PROGRAM_CODE 4
+#define PROCTAL_REGION_STACK 1
+#define PROCTAL_REGION_HEAP 2
+#define PROCTAL_REGION_PROGRAM_CODE 4
 
 /*
  * Macro definitions of memory allocation permissions.
@@ -266,16 +266,16 @@ size_t proctal_address_size(proctal p);
 void proctal_address_set_size(proctal p, size_t size);
 
 /*
- * Returns which regions the addresses iterated could belong to.
+ * Returns which memory regions the addresses iterated could belong to.
  *
  * The default value is 0.
  */
 long proctal_address_region(proctal p);
 
 /*
- * Sets which regions the addresses to iterate belong to.
+ * Sets which memory regions the addresses to iterate belong to.
  *
- * Setting the mask to 0 will let the iterator go over all regions.
+ * Setting the mask to 0 will let the iterator go over all memory regions.
  *
  * This call should follow proctal_address_new.
  */
@@ -342,46 +342,47 @@ int proctal_address_execute(proctal p);
 void proctal_address_set_execute(proctal p, int execute);
 
 /*
- * Puts the region iterator in a clean state.
+ * Puts the memory region iterator in a clean state.
  *
  * You will want to call this function whenever you begin iterating over
- * regiones to make sure you're starting from the first.
+ * memory regions to make sure you're starting from the first.
  *
- * It will do nothing if the region iterator is already in a clean state.
+ * It will do nothing if the memory region iterator is already in a clean
+ * state.
  */
 void proctal_region_new(proctal p);
 
 /*
- * Iterates over the entire address space by region.
+ * Iterates over the entire address space by memory regions.
  *
  * Any time you call this function it will pass you the starting and ending
- * address of a region unless it fails or has iterated over all.
+ * address of a memory region unless it fails or has iterated over all.
  *
  * It will return 1 on success, 0 on failure or when it has iterated over all
- * regions.
+ * memory regions.
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
 int proctal_region(proctal p, void **start, void **end);
 
 /*
- * Returns which regions are being iterated over.
+ * Returns which memory regions are being iterated over.
  *
  * The default value is 0.
  */
 long proctal_region_mask(proctal p);
 
 /*
- * Sets which regions are going to be iterated over.
+ * Sets which memory regions are going to be iterated over.
  *
- * Setting the mask to 0 will let the iterator go over all regions.
+ * Setting the mask to 0 will let the iterator go over all memory regions.
  *
  * This call should follow proctal_region_new.
  */
 void proctal_region_set_mask(proctal p, long mask);
 
 /*
- * Checks whether it's iterating over regions marked as readable by the
+ * Checks whether it's iterating over memory regions marked as readable by the
  * operating system.
  *
  * 1 means yes, 0 means no.
@@ -391,8 +392,8 @@ void proctal_region_set_mask(proctal p, long mask);
 int proctal_region_read(proctal p);
 
 /*
- * Sets whether to iterate over regions marked as readable by the operating
- * system.
+ * Sets whether to iterate over memory regions marked as readable by the
+ * operating system.
  *
  * 1 means yes, 0 means no.
  *
@@ -401,7 +402,7 @@ int proctal_region_read(proctal p);
 void proctal_region_set_read(proctal p, int read);
 
 /*
- * Checks whether it's iterating over regions marked as writable by the
+ * Checks whether it's iterating over memory regions marked as writable by the
  * operating system.
  *
  * 1 means yes, 0 means no.
@@ -411,8 +412,8 @@ void proctal_region_set_read(proctal p, int read);
 int proctal_region_write(proctal p);
 
 /*
- * Sets whether to iterate over regions marked as writable by the operating
- * system.
+ * Sets whether to iterate over memory regions marked as writable by the
+ * operating system.
  *
  * 1 means yes, 0 means no.
  *
@@ -421,8 +422,8 @@ int proctal_region_write(proctal p);
 void proctal_region_set_write(proctal p, int write);
 
 /*
- * Checks whether it's iterating over regions marked as executable by the
- * operating system.
+ * Checks whether it's iterating over memory regions marked as executable by
+ * the operating system.
  *
  * 1 means yes, 0 means no.
  *
@@ -431,8 +432,8 @@ void proctal_region_set_write(proctal p, int write);
 int proctal_region_execute(proctal p);
 
 /*
- * Sets whether to iterate over regions marked as executable by the operating
- * system.
+ * Sets whether to iterate over memory regions marked as executable by the
+ * operating system.
  *
  * 1 means yes, 0 means no.
  *

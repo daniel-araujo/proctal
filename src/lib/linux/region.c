@@ -6,19 +6,19 @@
 
 static inline int interesting_region(struct proctal_linux *pl)
 {
-	if (pl->p.region.mask & PROCTAL_ADDR_REGION_STACK) {
+	if (pl->p.region.mask & PROCTAL_REGION_STACK) {
 		if (strncmp(pl->region.curr.path, "[stack", 6) == 0) {
 			return 1;
 		}
 	}
 
-	if (pl->p.region.mask & PROCTAL_ADDR_REGION_HEAP) {
+	if (pl->p.region.mask & PROCTAL_REGION_HEAP) {
 		if (strcmp(pl->region.curr.path, "[heap]") == 0) {
 			return 1;
 		}
 	}
 
-	if (pl->p.region.mask & PROCTAL_ADDR_REGION_PROGRAM_CODE) {
+	if (pl->p.region.mask & PROCTAL_REGION_PROGRAM_CODE) {
 		if (strcmp(pl->region.curr.path, proctal_linux_program_path(pl->pid)) == 0
 			&& pl->region.curr.execute) {
 			return 1;

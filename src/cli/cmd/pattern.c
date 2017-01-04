@@ -43,7 +43,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	long mask = 0;
 
 	if (arg->program_code) {
-		mask |= PROCTAL_ADDR_REGION_PROGRAM_CODE;
+		mask |= PROCTAL_REGION_PROGRAM_CODE;
 	}
 
 	proctal_region_set_mask(p, mask);
