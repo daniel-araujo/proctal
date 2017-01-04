@@ -453,6 +453,9 @@ int proctal_freeze(proctal p);
 
 /*
  * Unfreezes execution.
+ *
+ * You may only unfreeze as many times as you have frozen otherwise behavior is
+ * left undefined.
  */
 int proctal_unfreeze(proctal p);
 
