@@ -2,13 +2,12 @@ proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
 	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
 	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags) \
 	-Wno-maybe-uninitialized
-proctal_lib_headers_dir = $(srcdir)/src/lib/include
+proctal_src_lib_include = $(srcdir)/src/lib/include
 
 EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
 CLEANFILES = src/cli/args.yuck src/cli/args.yucc
 
 bin_PROGRAMS = proctal
-lib_LIBRARIES = libproctal.a
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/lib/include/proctal.h
 dist_man_MANS = src/cli/proctal.1
@@ -52,10 +51,10 @@ proctal_SOURCES = \
 	src/cli/pattern.c \
 	src/cli/cmd.h
 proctal_LDADD = libproctal.la $(proctal_capstone_libs) $(proctal_keystone_libs)
-proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_lib_headers_dir) $(proctal_cflags)
+proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_src_lib_include) $(proctal_cflags)
 
-# Static library.
-libproctal_a_SOURCES = \
+# C library.
+libproctal_la_SOURCES = \
 	src/lib/impl/impl.h \
 	src/lib/impl/linux.c \
 	src/lib/proctal.h \
@@ -89,11 +88,7 @@ libproctal_a_SOURCES = \
 	src/lib/linux/watch.h \
 	src/lib/x86/dr.c \
 	src/lib/x86/dr.h
-libproctal_a_CFLAGS = -I$(srcdir)/src/lib -Isrc/lib $(proctal_cflags)
-
-# Shared library.
-libproctal_la_SOURCES = $(libproctal_a_SOURCES)
-libproctal_la_CFLAGS = $(libproctal_a_CFLAGS)
+libproctal_la_CFLAGS = -I$(srcdir)/src/lib -Isrc/lib $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 
 # The following rules specify additional dependencies for object files.
