@@ -65,9 +65,9 @@ int cli_val_integer_add(
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			return NATIVE_ADD(uint64_t);
+			NATIVE_ADD(uint64_t);
 		} else {
-			return NATIVE_ADD(int64_t);
+			NATIVE_ADD(int64_t);
 		}
 	}
 
