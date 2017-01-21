@@ -1,12 +1,3 @@
-proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
-	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
-	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags) \
-	-Wno-maybe-uninitialized
-proctal_src_lib_include = $(srcdir)/src/lib/include
-
-EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
-CLEANFILES = src/cli/args.yuck src/cli/args.yucc
-
 bin_PROGRAMS = proctal
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/lib/include/proctal.h
@@ -14,6 +5,15 @@ dist_man_MANS = src/cli/proctal.1
 check_PROGRAMS = test-invalid-patterns test-valid-patterns
 
 TESTS = $(check_PROGRAMS)
+
+EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
+CLEANFILES = src/cli/args.yuck src/cli/args.yucc
+
+proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
+	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
+	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags) \
+	-Wno-maybe-uninitialized
+proctal_src_lib_include = $(srcdir)/src/lib/include
 
 # Cli tool.
 proctal_SOURCES = \
