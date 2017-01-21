@@ -11,7 +11,7 @@ bin_PROGRAMS = proctal
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/lib/include/proctal.h
 dist_man_MANS = src/cli/proctal.1
-check_PROGRAMS = test-invalid-patterns
+check_PROGRAMS = test-invalid-patterns test-valid-patterns
 
 TESTS = $(check_PROGRAMS)
 
@@ -98,6 +98,10 @@ libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 test_invalid_patterns_SOURCES = tests/invalid-patterns.c
 test_invalid_patterns_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
 test_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+
+test_valid_patterns_SOURCES = tests/valid-patterns.c
+test_valid_patterns_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+test_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
 
 # The following rules specify additional dependencies for object files.
 #
