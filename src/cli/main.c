@@ -6,42 +6,14 @@
 #include "parser.h"
 #include "args.yucc"
 
-/*
- * This macro is used to fill up a struct type_arguments based on the arguments
- * given to a yuck argument structure.
- *
- * The macro expects both to be passed by value.
- */
-#define TYPE_ARGUMENTS_FROM_YUCK_ARG(STRUCT, YUCK) \
-	STRUCT.type = cli_val_type_by_name(YUCK.type_arg); \
-\
-	switch (STRUCT.type) { \
-	case CLI_VAL_TYPE_INTEGER: \
-		STRUCT.integer_endianness = cli_val_integer_endianness_by_name(YUCK.integer_endianness_arg); \
-		STRUCT.integer_size = cli_val_integer_size_by_name(YUCK.integer_size_arg); \
-		STRUCT.integer_sign = cli_val_integer_sign_by_name(YUCK.integer_sign_arg); \
-		break; \
-\
-	case CLI_VAL_TYPE_IEEE754: \
-		STRUCT.ieee754_precision = cli_val_ieee754_precision_by_name(YUCK.ieee754_precision_arg); \
-		break; \
-\
-	case CLI_VAL_TYPE_TEXT: \
-		STRUCT.text_charset = cli_val_text_charset_by_name(YUCK.text_charset_arg); \
-		break; \
-\
-	case CLI_VAL_TYPE_INSTRUCTION: \
-		STRUCT.instruction_arch = cli_val_instruction_arch_by_name(YUCK.instruction_arch_arg); \
-		break; \
-	}
-
-/*
- * Structure used for parsing options by name.
- */
-struct value_options {
-	const char *name;
-	void* value;
-};
+#define CLI_DEFAULT_VAL_TYPE CLI_VAL_TYPE_BYTE
+#define CLI_DEFAULT_VAL_INTEGER_ENDIANNESS CLI_VAL_INTEGER_ENDIANNESS_LITTLE
+#define CLI_DEFAULT_VAL_INTEGER_SIZE CLI_VAL_INTEGER_SIZE_8
+#define CLI_DEFAULT_VAL_INTEGER_SIGN CLI_VAL_INTEGER_SIGN_2SCMPL
+#define CLI_DEFAULT_VAL_IEEE754_PRECISION CLI_VAL_IEEE754_PRECISION_SINGLE;
+#define CLI_DEFAULT_VAL_TEXT_CHARSET CLI_VAL_TEXT_CHARSET_ASCII;
+#define CLI_DEFAULT_VAL_INSTRUCTION_ARCH CLI_VAL_INSTRUCTION_ARCH_X86_64;
+#define CLI_DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
 
 /*
  * This structure contains all type options parsed.
@@ -158,199 +130,303 @@ static cli_val create_cli_val_from_type_arguments(struct type_arguments *ta)
 }
 
 /*
- * Returns the value whose name in options is equal to the given name,
- * otherwise returns fallback.
+ * Searches for name in an array of strings.
+ * Name and options cannot be NULL.
+ * Returns the index of the matching name in the array or -1 if not found.
  */
-static void *value_by_name(struct value_options *options, size_t length, const char *name, void *fallback)
+static int index_by_name(char **options, size_t length, const char *name)
 {
-	if (name == NULL) {
-		return fallback;
-	}
-
 	for (size_t i = 0; i < length; i++) {
-		if (strcmp(options[i].name, name) == 0) {
-			return options[i].value;
+		if (strcmp(options[i], name) == 0) {
+			return i;
 		}
 	}
 
-	return fallback;
+	return -1;
 }
 
-static enum cli_val_type cli_val_type_by_name(const char *name)
+static int cli_val_type_by_name(enum cli_val_type* value, const char *name)
 {
-	static struct value_options options[] = {
-		{
-			.name = "byte",
-			.value = (void *) CLI_VAL_TYPE_BYTE,
-		},
-		{
-			.name = "integer",
-			.value = (void *) CLI_VAL_TYPE_INTEGER,
-		},
-		{
-			.name = "ieee754",
-			.value = (void *) CLI_VAL_TYPE_IEEE754,
-		},
-		{
-			.name = "text",
-			.value = (void *) CLI_VAL_TYPE_TEXT,
-		},
-		{
-			.name = "address",
-			.value = (void *) CLI_VAL_TYPE_ADDRESS,
-		},
-		{
-			.name = "instruction",
-			.value = (void *) CLI_VAL_TYPE_INSTRUCTION,
-		},
+	static char *options[] = {
+		"byte",
+		"integer",
+		"ieee754",
+		"text",
+		"address",
+		"instruction",
 	};
 
-	return (enum cli_val_type) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_TYPE_BYTE);
-}
-
-static enum cli_val_integer_endianness cli_val_integer_endianness_by_name(const char *name)
-{
-	static struct value_options options[] = {
-		{
-			.name = "little",
-			.value = (void *) CLI_VAL_INTEGER_ENDIANNESS_LITTLE,
-		},
+	static enum cli_val_type values[] = {
+		CLI_VAL_TYPE_BYTE,
+		CLI_VAL_TYPE_INTEGER,
+		CLI_VAL_TYPE_IEEE754,
+		CLI_VAL_TYPE_TEXT,
+		CLI_VAL_TYPE_ADDRESS,
+		CLI_VAL_TYPE_INSTRUCTION,
 	};
 
-	return (enum cli_val_integer_endianness) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_INTEGER_ENDIANNESS_LITTLE);
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-static enum cli_val_integer_size cli_val_integer_size_by_name(const char *name)
+static int cli_val_integer_endianness_by_name(enum cli_val_integer_endianness *value, const char *name)
 {
-	static struct value_options options[] = {
-		{
-			.name = "8",
-			.value = (void *) CLI_VAL_INTEGER_SIZE_8,
-		},
-		{
-			.name = "16",
-			.value = (void *) CLI_VAL_INTEGER_SIZE_16,
-		},
-		{
-			.name = "32",
-			.value = (void *) CLI_VAL_INTEGER_SIZE_32,
-		},
-		{
-			.name = "64",
-			.value = (void *) CLI_VAL_INTEGER_SIZE_64,
-		},
+	static char *options[] = {
+		"little",
 	};
 
-	return (enum cli_val_integer_size) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_INTEGER_SIZE_8);
-}
-
-static enum cli_val_integer_sign cli_val_integer_sign_by_name(const char *name)
-{
-	static struct value_options options[] = {
-		{
-			.name = "unsigned",
-			.value = (void *) CLI_VAL_INTEGER_SIGN_UNSIGNED,
-		},
-		{
-			.name = "2scmpl",
-			.value = (void *) CLI_VAL_INTEGER_SIGN_2SCMPL,
-		},
+	static enum cli_val_integer_endianness values[] = {
+		CLI_VAL_INTEGER_ENDIANNESS_LITTLE,
 	};
 
-	return (enum cli_val_integer_sign) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_INTEGER_SIGN_2SCMPL);
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-static enum cli_val_ieee754_precision cli_val_ieee754_precision_by_name(const char *name)
+static int cli_val_integer_size_by_name(enum cli_val_integer_size *value, const char *name)
 {
-	static struct value_options options[] = {
-		{
-			.name = "single",
-			.value = (void *) CLI_VAL_IEEE754_PRECISION_SINGLE,
-		},
-		{
-			.name = "double",
-			.value = (void *) CLI_VAL_IEEE754_PRECISION_DOUBLE,
-		},
-		{
-			.name = "extended",
-			.value = (void *) CLI_VAL_IEEE754_PRECISION_EXTENDED,
-		},
+	static char *options[] = {
+		"8",
+		"16",
+		"32",
+		"64",
 	};
 
-	return (enum cli_val_ieee754_precision) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_IEEE754_PRECISION_SINGLE);
-}
-
-static enum cli_val_text_charset cli_val_text_charset_by_name(const char *name)
-{
-	static struct value_options options[] = {
-		{
-			.name = "ascii",
-			.value = (void *) CLI_VAL_TEXT_CHARSET_ASCII,
-		},
+	static enum cli_val_integer_size values[] = {
+		CLI_VAL_INTEGER_SIZE_8,
+		CLI_VAL_INTEGER_SIZE_16,
+		CLI_VAL_INTEGER_SIZE_32,
+		CLI_VAL_INTEGER_SIZE_64,
 	};
 
-	return (enum cli_val_text_charset) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_TEXT_CHARSET_ASCII);
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
-static enum cli_val_instruction_arch cli_val_instruction_arch_by_name(const char *name)
+static int cli_val_integer_sign_by_name(enum cli_val_integer_sign *value, const char *name)
 {
-	static struct value_options options[] = {
-		{
-			.name = "x86-64",
-			.value = (void *) CLI_VAL_INSTRUCTION_ARCH_X86_64,
-		},
+	static char *options[] = {
+		"unsigned",
+		"2scmpl",
 	};
 
-	return (enum cli_val_instruction_arch) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_VAL_INSTRUCTION_ARCH_X86_64);
-}
-
-static enum cli_cmd_execute_format cli_cmd_execute_format_by_name(const char *name)
-{
-	static struct value_options options[] = {
-		{
-			.name = "assembly",
-			.value = (void *) CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,
-		},
-		{
-			.name = "bytecode",
-			.value = (void *) CLI_CMD_EXECUTE_FORMAT_BYTECODE,
-		},
+	static enum cli_val_integer_sign values[] = {
+		CLI_VAL_INTEGER_SIGN_UNSIGNED,
+		CLI_VAL_INTEGER_SIGN_2SCMPL,
 	};
 
-	return (enum cli_cmd_execute_format) value_by_name(
-		options,
-		sizeof options / sizeof options[0],
-		name,
-		(void *) CLI_CMD_EXECUTE_FORMAT_ASSEMBLY);
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
 }
+
+static int cli_val_ieee754_precision_by_name(enum cli_val_ieee754_precision *value, const char *name)
+{
+	static char *options[] = {
+		"single",
+		"double",
+		"extended",
+	};
+
+	static enum cli_val_ieee754_precision values[] = {
+		CLI_VAL_IEEE754_PRECISION_SINGLE,
+		CLI_VAL_IEEE754_PRECISION_DOUBLE,
+		CLI_VAL_IEEE754_PRECISION_EXTENDED,
+	};
+
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+static int cli_val_text_charset_by_name(enum cli_val_text_charset *value, const char *name)
+{
+	static char *options[] = {
+		"ascii",
+	};
+
+	static enum cli_val_text_charset values[] = {
+		CLI_VAL_TEXT_CHARSET_ASCII,
+	};
+
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+static int cli_val_instruction_arch_by_name(enum cli_val_instruction_arch *value, const char *name)
+{
+	static char *options[] = {
+		"x86-64",
+	};
+
+	static enum cli_val_instruction_arch values[] = {
+		CLI_VAL_INSTRUCTION_ARCH_X86_64,
+	};
+
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+static int cli_cmd_execute_format_by_name(enum cli_cmd_execute_format *value, const char *name)
+{
+	static char *options[] = {
+		"assembly",
+		"bytecode",
+	};
+
+	static enum cli_cmd_execute_format values[] = {
+		CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,
+		CLI_CMD_EXECUTE_FORMAT_BYTECODE,
+	};
+
+	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+
+	if (i >= 0) {
+		*value = values[i];
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/*
+ * This macro will generate a static inline function that is used to fill up a
+ * struct type_arguments based on the arguments given to a yuck argument
+ * structure.
+ *
+ * This is so we can reuse the same code across different yuck argument
+ * structures which share the same arguments/options.
+ *
+ * The function is also responsible for outputting an error message in case of
+ * failure.
+ *
+ * The function returns 1 on success, 0 on failure.
+ */
+#define CLI_PARSE_TYPE_ARGUMENTS_FROM_YUCK_ARG(NAME, YUCK_TYPE) \
+static inline int cli_type_arguments_from_yuck_arg_##NAME(struct type_arguments *type, YUCK_TYPE *yuck_arg) \
+{ \
+	if (yuck_arg->type_arg) { \
+		if (!cli_val_type_by_name(&type->type, yuck_arg->type_arg)) { \
+			fputs("Invalid type.\n", stderr); \
+			return 0; \
+		} \
+	} else { \
+		type->type = CLI_DEFAULT_VAL_TYPE; \
+	} \
+\
+	switch (type->type) { \
+	case CLI_VAL_TYPE_INTEGER: \
+		if (yuck_arg->integer_endianness_arg) { \
+			if (!cli_val_integer_endianness_by_name(&type->integer_endianness, yuck_arg->integer_endianness_arg)) { \
+				fputs("Invalid integer endianness.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->integer_endianness = CLI_DEFAULT_VAL_INTEGER_ENDIANNESS; \
+		} \
+\
+		if (yuck_arg->integer_size_arg) { \
+			if (!cli_val_integer_size_by_name(&type->integer_size, yuck_arg->integer_size_arg)) { \
+				fputs("Invalid integer size.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->integer_size = CLI_DEFAULT_VAL_INTEGER_SIZE; \
+		} \
+\
+		if (yuck_arg->integer_sign_arg) { \
+			if (!cli_val_integer_sign_by_name(&type->integer_sign, yuck_arg->integer_sign_arg)) { \
+				fputs("Invalid integer sign.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->integer_sign = CLI_DEFAULT_VAL_INTEGER_SIGN; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_IEEE754: \
+		if (yuck_arg->ieee754_precision_arg) { \
+			if (!cli_val_ieee754_precision_by_name(&type->ieee754_precision, yuck_arg->ieee754_precision_arg)) { \
+				fputs("Invalid ieee754 precision.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->ieee754_precision = CLI_DEFAULT_VAL_IEEE754_PRECISION; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_TEXT: \
+		if (yuck_arg->text_charset_arg) { \
+			if (!cli_val_text_charset_by_name(&type->text_charset, yuck_arg->text_charset_arg)) { \
+				fputs("Invalid text character set.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->text_charset = CLI_DEFAULT_VAL_TEXT_CHARSET; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_INSTRUCTION: \
+		if (yuck_arg->instruction_arch_arg) { \
+			if (!cli_val_instruction_arch_by_name(&type->instruction_arch, yuck_arg->instruction_arch_arg)) { \
+				fputs("Invalid architecture.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->instruction_arch = CLI_DEFAULT_VAL_INSTRUCTION_ARCH; \
+		} \
+		break; \
+	} \
+\
+	return 1; \
+}
+
+CLI_PARSE_TYPE_ARGUMENTS_FROM_YUCK_ARG(read, struct yuck_cmd_read_s)
+CLI_PARSE_TYPE_ARGUMENTS_FROM_YUCK_ARG(write, struct yuck_cmd_write_s)
+CLI_PARSE_TYPE_ARGUMENTS_FROM_YUCK_ARG(search, struct yuck_cmd_search_s)
+CLI_PARSE_TYPE_ARGUMENTS_FROM_YUCK_ARG(measure, struct yuck_cmd_measure_s)
+
+#undef CLI_TYPE_ARGUMENTS_FROM_YUCK_ARG
 
 static void destroy_cli_cmd_read_arg_from_yuck_arg(struct cli_cmd_read_arg *arg)
 {
@@ -417,7 +493,10 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg_from_yuck_arg(yuck_t *yu
 	}
 
 	struct type_arguments type_args;
-	TYPE_ARGUMENTS_FROM_YUCK_ARG(type_args, yuck_arg->read)
+	if (!cli_type_arguments_from_yuck_arg_read(&type_args, &yuck_arg->read)) {
+		destroy_cli_cmd_read_arg_from_yuck_arg(arg);
+		return NULL;
+	}
 
 	arg->value = create_cli_val_from_type_arguments(&type_args);
 
@@ -481,7 +560,10 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *
 	}
 
 	struct type_arguments type_args;
-	TYPE_ARGUMENTS_FROM_YUCK_ARG(type_args, yuck_arg->write)
+	if (!cli_type_arguments_from_yuck_arg_write(&type_args, &yuck_arg->write)) {
+		destroy_cli_cmd_write_arg_from_yuck_arg(arg);
+		return NULL;
+	}
 
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
 		cli_val v = create_cli_val_from_type_arguments(&type_args);
@@ -607,16 +689,17 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t
 		return NULL;
 	}
 
-	enum cli_val_type t = cli_val_type_by_name(yuck_arg->search.type_arg);
-
-	if (t == CLI_VAL_TYPE_INSTRUCTION) {
-		fprintf(stderr, "Searching for assembly code is not supported.\n");
+	struct type_arguments type_args;
+	if (!cli_type_arguments_from_yuck_arg_search(&type_args, &yuck_arg->search)) {
 		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
 		return NULL;
 	}
 
-	struct type_arguments type_args;
-	TYPE_ARGUMENTS_FROM_YUCK_ARG(type_args, yuck_arg->search)
+	if (type_args.type == CLI_VAL_TYPE_INSTRUCTION) {
+		fprintf(stderr, "Searching for assembly code is not supported.\n");
+		destroy_cli_cmd_search_arg_from_yuck_arg(arg);
+		return NULL;
+	}
 
 	arg->value = create_cli_val_from_type_arguments(&type_args);
 
@@ -854,7 +937,15 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg_from_yuck_arg(yuck
 		return NULL;
 	}
 
-	arg->format = cli_cmd_execute_format_by_name(yuck_arg->execute.format_arg);
+	if (yuck_arg->execute.format_arg) {
+		if (!cli_cmd_execute_format_by_name(&arg->format, yuck_arg->execute.format_arg)) {
+			fputs("Invalid input format.\n", stderr);
+			destroy_cli_cmd_execute_arg_from_yuck_arg(arg);
+			return NULL;
+		}
+	} else {
+		yuck_arg->execute.format_arg = CLI_DEFAULT_CMD_EXECUTE_FORMAT;
+	}
 
 	return arg;
 }
@@ -983,7 +1074,10 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg_from_yuck_arg(yuck
 	}
 
 	struct type_arguments type_args;
-	TYPE_ARGUMENTS_FROM_YUCK_ARG(type_args, yuck_arg->measure)
+	if (!cli_type_arguments_from_yuck_arg_measure(&type_args, &yuck_arg->measure)) {
+		destroy_cli_cmd_measure_arg_from_yuck_arg(arg);
+		return NULL;
+	}
 
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
 		cli_val v = create_cli_val_from_type_arguments(&type_args);
