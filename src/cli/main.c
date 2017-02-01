@@ -944,7 +944,7 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg_from_yuck_arg(yuck
 			return NULL;
 		}
 	} else {
-		yuck_arg->execute.format_arg = CLI_DEFAULT_CMD_EXECUTE_FORMAT;
+		arg->format = CLI_DEFAULT_CMD_EXECUTE_FORMAT;
 	}
 
 	return arg;
