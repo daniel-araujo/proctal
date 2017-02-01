@@ -4,7 +4,7 @@ include_HEADERS = src/lib/include/proctal.h
 dist_man_MANS = src/cli/proctal.1
 check_PROGRAMS = test-invalid-patterns test-valid-patterns
 
-TESTS = $(check_PROGRAMS)
+TESTS = $(check_PROGRAMS) tests/invalid-type-arguments.py
 
 EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
 CLEANFILES = src/cli/args.yuck src/cli/args.yucc
