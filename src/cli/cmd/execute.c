@@ -40,6 +40,7 @@ static size_t read(char **buf)
 
 	if (size == 0) {
 		free_read(buf);
+		return 0;
 	}
 
 	// Although we're returning the size, we're going to need to do some
