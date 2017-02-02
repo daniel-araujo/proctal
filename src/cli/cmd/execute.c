@@ -46,7 +46,7 @@ static size_t read(char **buf)
 	// Although we're returning the size, we're going to need to do some
 	// operations that require the string to be terminated by NUL.
 	// The size will not include the NUL character.
-	(*buf)[size + 1] = '\0';
+	(*buf)[size] = '\0';
 
 	return size;
 }
