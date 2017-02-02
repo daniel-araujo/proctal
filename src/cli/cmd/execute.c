@@ -91,48 +91,48 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	char *buf;
-	size_t size = read(&buf);
+	char *input;
+	size_t input_size = read(&input);
 
-	if (size == 0) {
+	if (input_size == 0) {
 		proctal_destroy(p);
 		return 1;
 	}
 
 	switch (arg->format) {
 	case CLI_CMD_EXECUTE_FORMAT_ASSEMBLY: {
-		char *asmbuf;
-		size_t asmsize = assemble(&asmbuf, buf);
+		char *compiled;
+		size_t compiled_size = assemble(&compiled, input);
 
-		if (asmsize == 0) {
+		if (compiled_size == 0) {
 			proctal_destroy(p);
 			return 1;
 		}
 
-		proctal_execute(p, asmbuf, asmsize);
-		free_assemble(&asmbuf);
+		proctal_execute(p, compiled, compiled_size);
+		free_assemble(&compiled);
 		break;
 	}
 
 	case CLI_CMD_EXECUTE_FORMAT_BYTECODE:
-		proctal_execute(p, buf, size);
+		proctal_execute(p, input, input_size);
 		break;
 
 	default:
 		fprintf(stderr, "Not implemented.\n");
-		free_read(&buf);
+		free_read(&input);
 		proctal_destroy(p);
 		return 1;
 	}
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		free_read(&buf);
+		free_read(&input);
 		proctal_destroy(p);
 		return 1;
 	}
 
-	free_read(&buf);
+	free_read(&input);
 	proctal_destroy(p);
 
 	return 0;
