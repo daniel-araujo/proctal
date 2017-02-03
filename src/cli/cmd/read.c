@@ -48,11 +48,6 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 		case 0:
 			break;
 
-		case PROCTAL_ERROR_PERMISSION_DENIED:
-			cli_print_proctal_error(p);
-			proctal_error_ack(p);
-			return 1;
-
 		default:
 			cli_print_proctal_error(p);
 			proctal_destroy(p);
