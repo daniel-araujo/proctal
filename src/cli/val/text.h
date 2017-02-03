@@ -177,7 +177,9 @@ inline int cli_val_text_scan(struct cli_val_text *v, FILE *f)
  */
 inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
 {
-	return sscanf(s, "%c", v->data) == 1 ? 1 : 0;
+	*(char *) v->data = *s;
+	return 1;
+
 }
 
 /*

@@ -2,7 +2,7 @@ bin_PROGRAMS = proctal
 lib_LTLIBRARIES = libproctal.la
 include_HEADERS = src/lib/include/proctal.h
 dist_man_MANS = src/cli/proctal.1
-check_PROGRAMS = test-invalid-patterns test-valid-patterns
+check_PROGRAMS = test-invalid-patterns test-valid-patterns test-parse-valid-ascii
 
 TESTS = $(check_PROGRAMS) tests/invalid-type-arguments.py
 
@@ -102,6 +102,10 @@ test_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser
 test_valid_patterns_SOURCES = tests/valid-patterns.c
 test_valid_patterns_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
 test_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+
+test_parse_valid_ascii_SOURCES = tests/parse-valid-ascii.c
+test_parse_valid_ascii_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+test_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
 # The following rules specify additional dependencies for object files.
 #
