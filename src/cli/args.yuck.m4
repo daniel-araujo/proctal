@@ -69,9 +69,9 @@ Example:
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
   TYPE_ARGUMENTS
-  --show-instruction-address
-                        If type is instruction, additionally prints the
-                        instruction address.
+  --show-address        Additionally prints the address before the value.
+                        As a side effect, all values will be separated by new
+                        lines.
   --show-instruction-byte-code
                         If type is instruction, additionally prints the
                         byte code of the instruction in hexadecimal.

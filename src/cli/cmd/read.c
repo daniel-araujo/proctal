@@ -5,6 +5,11 @@
 
 static inline void print_separator(struct cli_cmd_read_arg *arg)
 {
+	if (arg->show_address) {
+		printf("\n");
+		return;
+	}
+
 	switch (cli_val_type(arg->value)) {
 	case CLI_VAL_TYPE_TEXT:
 		break;
@@ -69,13 +74,10 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 			return 1;
 		}
 
-		if (arg->show_instruction_address
-			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
+		if (arg->show_address) {
 			cli_print_address(addr);
 			printf("\t");
 		}
-
-		addr += size;
 
 		cli_val_print(arg->value, stdout);
 
@@ -83,7 +85,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
 			printf("\n");
 
-			if (arg->show_instruction_address) {
+			if (arg->show_address) {
 				printf("\t");
 			}
 
@@ -94,11 +96,15 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 					printf(" ");
 				}
 			}
+
+			// Rely on the separator being a new line.
 		}
 
 		if (i < arg->array - 1) {
 			print_separator(arg);
 		}
+
+		addr += size;
 	}
 
 	print_ending(arg);
