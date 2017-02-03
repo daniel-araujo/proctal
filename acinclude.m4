@@ -1,18 +1,67 @@
 dnl PROCTAL_FIND_PROG(VAR, PROG, [OPTIONS])
 dnl
-dnl Checks if PROG exists in the PATH variable. If PROG is found, an absolute
-dnl path to PROG will be assigned to VAR, otherwise VAR is left untouched.
+dnl Adds a --with-PROG option that allows the user to define the value of VAR
+dnl and passes it to AC_ARG_VAR.
+dnl
+dnl If --with-PROG is not provided it will check if PROG exists in the PATH
+dnl variable. If PROG is found, an absolute path to PROG will be assigned to
+dnl VAR.
+dnl
+dnl If PROG is not found anywhere, VAR will be set to PROG literally.
+dnl
+dnl VAR will not be assigned a value if it had already been assigned a
+dnl non-empty value.
 AC_DEFUN([PROCTAL_FIND_PROG], [
-	dnl Reusing AC_PATH_PROG check message and variable assignment.
-	AC_PATH_PROG([$1], [$2])
+	AC_ARG_VAR([$1], [$2 command])
 
-	if test -n "$3" && test "$3" = "required" && test -z "$$1"; then
-		AC_MSG_ERROR(["$2 not found in PATH. Cannot continue without it"])
-	fi
+	PROCTAL_ARG_WITH_PROG([$1], [$2], [Absolute path to $2. If not set, $2 will be searched in directories defined by the PATH environment variable.])
 
+	PROCTAL_PATH_PROG([$1], [$2], [$3])
+
+	PROCTAL_ASSIGN_VAR([$1], [$2])
+])
+
+dnl PROCTAL_PATH_PROG(VAR, PROG, [OPTIONS])
+dnl
+dnl Checks if PROG exists in the PATH variable. If PROG is found, an absolute
+dnl path to PROG will be assigned to VAR.
+dnl
+dnl VAR will be passed to AC_SUBST.
+dnl
+dnl This macro will do nothing if VAR had already been assigned a value.
+AC_DEFUN([PROCTAL_PATH_PROG], [
 	if test -z "$$1"; then
-		AC_MSG_WARN(["$2 not found in PATH. Some files may fail to compile without it"])
-		$1="$2"
+		dnl Reusing AC_PATH_PROG check message and passing VAR to
+		dnl AC_SUBST.
+		AC_PATH_PROG([$1], [$2])
+
+		if test -n "$3" && test "$3" = "required" && test -z "$$1"; then
+			AC_MSG_ERROR(["$2 not found in PATH. Cannot continue without it"])
+		fi
+
+		if test -z "$$1"; then
+			AC_MSG_WARN(["$2 not found in PATH. Some files may fail to compile without it"])
+		fi
+	fi
+])
+
+dnl PROCTAL_ARG_WITH_PROG(VAR, NAME, DESCRIPTION)
+dnl
+dnl Assigns the value given to the --with-NAME option to VAR if it had not
+dnl already been assigned a value.
+dnl
+dnl VAR will be passed to AC_SUBST.
+dnl
+dnl This macro will do nothing if VAR had already been assigned a value.
+AC_DEFUN([PROCTAL_ARG_WITH_PROG], [
+	if test -z "$$1"; then
+		AC_SUBST([$1])
+
+		AC_ARG_WITH([$2], [AS_HELP_STRING([--with-$2=PATH], [$3])], [
+			if test -n "$withval"; then
+				PROCTAL_ASSIGN_VAR([$1], [$withval])
+			fi
+		])
 	fi
 ])
 
