@@ -171,15 +171,31 @@ inline int cli_val_text_scan(struct cli_val_text *v, FILE *f)
 }
 
 /*
- * Attempts to parse the text value as text from a C-style string.
+ * Attempts to parse text from a C-style string.
  *
  * Returns 1 on success, 0 on failure.
  */
 inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
 {
-	*(char *) v->data = *s;
-	return 1;
+	switch (v->attr.charset) {
+	case CLI_VAL_TEXT_CHARSET_ASCII:
+		if (*s == '\0') {
+			// End of the string.
+			return 0;
+		}
 
+		if ((unsigned char) *s > 127) {
+			// Not a valid ASCII character.
+			return 0;
+		}
+
+		*(char *) v->data = *s;
+
+		return 1;
+	}
+
+	// Not expecting to ever reach here.
+	assert(0);
 }
 
 /*
