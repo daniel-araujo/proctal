@@ -1,7 +1,7 @@
 # Proctal 0.0.0
 
 Proctal provides a command line interface and a C library to manipulate the
-address space of a running program on Linux.
+address space of a program on Linux.
 
 Currently only tested on x86-64 Linux.
 
