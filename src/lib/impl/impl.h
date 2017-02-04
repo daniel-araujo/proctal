@@ -1,5 +1,5 @@
-#ifndef PROCTAL_IMPL_H
-#define PROCTAL_IMPL_H
+#ifndef LIB_PROCTAL_IMPL_H
+#define LIB_PROCTAL_IMPL_H
 
 /*
  * These are the functions that an implementation must define.
@@ -37,4 +37,4 @@ void *proctal_impl_alloc(proctal p, size_t size, int perm);
 
 void proctal_impl_dealloc(proctal p, void *addr);
 
-#endif /* PROCTAL_IMPL_H */
+#endif /* LIB_PROCTAL_IMPL_H */

@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef CLI_PARSER_H
+#define CLI_PARSER_H
 
 int cli_parse_char(const char *s, char *val);
 int cli_parse_uchar(const char *s, unsigned char *val);
@@ -23,4 +23,4 @@ size_t cli_parse_skip_until_chars(const char*s, const char *chars);
 
 int cli_parse_is_hex_digit(int s);
 
-#endif /* PARSER_H */
+#endif /* CLI_PARSER_H */

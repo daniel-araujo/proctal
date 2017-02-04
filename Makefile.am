@@ -12,11 +12,12 @@ TESTS = $(check_PROGRAMS) $(dist_check_SCRIPTS)
 EXTRA_DIST = src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
 CLEANFILES = src/cli/args.yuck src/cli/args.yucc
 
-proctal_cflags = -std=c11 -Wfatal-errors -Wall -Wextra -Wpointer-arith \
-	-Wmissing-prototypes -Wno-switch $(proctal_xopen_flags) \
-	-Wno-unused-parameter -Wno-unused-function $(proctal_posix_flags) \
-	-Wno-maybe-uninitialized
-proctal_src_lib_include = $(srcdir)/src/lib/include
+proctal_cflags_src_include = -iquote$(srcdir)/src -iquotesrc
+proctal_cflags_src_lib_include = -I$(srcdir)/src/lib/include -Isrc/lib/include
+proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
+	-Wextra -Wpointer-arith -Wmissing-prototypes \
+	-Wno-switch $(proctal_xopen_flags) -Wno-unused-parameter \
+	-Wno-unused-function $(proctal_posix_flags) -Wno-maybe-uninitialized
 
 # Cli tool.
 proctal_SOURCES = \
@@ -57,7 +58,7 @@ proctal_SOURCES = \
 	src/cli/pattern.c \
 	src/cli/cmd.h
 proctal_LDADD = libproctal.la $(proctal_capstone_libs) $(proctal_keystone_libs)
-proctal_CFLAGS = -I$(srcdir)/src/cli -Isrc/cli -I$(proctal_src_lib_include) $(proctal_cflags)
+proctal_CFLAGS = $(proctal_cflags)
 
 # C library.
 libproctal_la_SOURCES = \
@@ -94,26 +95,26 @@ libproctal_la_SOURCES = \
 	src/lib/linux/watch.h \
 	src/lib/x86/dr.c \
 	src/lib/x86/dr.h
-libproctal_la_CFLAGS = -I$(srcdir)/src/lib -Isrc/lib $(proctal_cflags)
+libproctal_la_CFLAGS = $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 
 # Tests.
-tests_invalid_patterns_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_invalid_patterns_CFLAGS = $(proctal_cflags)
 tests_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
 
-tests_valid_patterns_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_valid_patterns_CFLAGS = $(proctal_cflags)
 tests_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
 
-tests_parse_valid_ascii_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_parse_valid_ascii_CFLAGS = $(proctal_cflags)
 tests_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-tests_parse_bin_valid_ascii_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
 tests_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-tests_parse_invalid_ascii_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
 tests_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-tests_parse_bin_invalid_ascii_CFLAGS = -I$(srcdir)/src $(proctal_cflags)
+tests_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
 tests_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
 # The following rules specify additional dependencies for object files.

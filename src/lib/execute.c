@@ -1,4 +1,4 @@
-#include <proctal.h>
+#include "lib/proctal.h"
 
 int proctal_execute(proctal p, const char *byte_code, size_t byte_code_length)
 {

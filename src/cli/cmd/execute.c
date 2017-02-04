@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <proctal.h>
 #include <keystone/keystone.h>
 
-#include "cmd.h"
-#include "printer.h"
+#include "lib/include/proctal.h"
+#include "cli/cmd.h"
+#include "cli/printer.h"
 
 static void free_read(char **buf)
 {

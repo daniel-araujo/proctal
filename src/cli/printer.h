@@ -1,9 +1,8 @@
-#ifndef PRINTER_H
-#define PRINTER_H
+#ifndef CLI_PRINTER_H
+#define CLI_PRINTER_H
 
-#include <proctal.h>
-
-#include "pattern.h"
+#include "lib/include/proctal.h"
+#include "cli/pattern.h"
 
 void cli_print_proctal_error(proctal p);
 
@@ -13,4 +12,4 @@ void cli_print_address(void *address);
 
 void cli_print_byte(unsigned char byte);
 
-#endif /* PRINTER_H */
+#endif /* CLI_PRINTER_H */

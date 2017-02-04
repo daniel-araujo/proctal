@@ -1,7 +1,6 @@
-#include <proctal.h>
-
-#include "cmd.h"
-#include "printer.h"
+#include "lib/include/proctal.h"
+#include "cli/cmd.h"
+#include "cli/printer.h"
 
 int cli_cmd_measure(struct cli_cmd_measure_arg *arg)
 {

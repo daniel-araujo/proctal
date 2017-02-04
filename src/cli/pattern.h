@@ -1,5 +1,5 @@
-#ifndef PATTERN_H
-#define PATTERN_H
+#ifndef CLI_PATTERN_H
+#define CLI_PATTERN_H
 
 #include <stdlib.h>
 
@@ -31,4 +31,4 @@ int cli_pattern_error(cli_pattern cp);
 
 int cli_pattern_error_compile_offset(cli_pattern cp);
 
-#endif /* PATTERN_H */
+#endif /* CLI_PATTERN_H */

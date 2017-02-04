@@ -1,8 +1,8 @@
-#include <linux/execute.h>
-#include <linux/proc.h>
-#include <linux/alloc.h>
-#include <linux/mem.h>
-#include <linux/ptrace.h>
+#include "lib/linux/execute.h"
+#include "lib/linux/proc.h"
+#include "lib/linux/alloc.h"
+#include "lib/linux/mem.h"
+#include "lib/linux/ptrace.h"
 
 #define RED_ZONE_SIZE 128
 

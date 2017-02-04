@@ -1,8 +1,8 @@
-#ifndef CMD_H
-#define CMD_H
+#ifndef CLI_CMD_H
+#define CLI_CMD_H
 
-#include "val.h"
-#include "val-list.h"
+#include "cli/val.h"
+#include "cli/val-list.h"
 
 enum cli_cmd_execute_format {
 	CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,
@@ -222,4 +222,4 @@ int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg);
 
 int cli_cmd_measure(struct cli_cmd_measure_arg *arg);
 
-#endif /* CMD_H */
+#endif /* CLI_CMD_H */

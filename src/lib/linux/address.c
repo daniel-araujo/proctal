@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <linux/address.h>
+#include "lib/linux/address.h"
 
 static inline int interesting_region(struct proctal_linux *pl)
 {

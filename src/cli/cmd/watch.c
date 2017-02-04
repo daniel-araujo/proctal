@@ -1,9 +1,9 @@
 #include <assert.h>
 #include <signal.h>
-#include <proctal.h>
 
-#include "cmd.h"
-#include "printer.h"
+#include "lib/include/proctal.h"
+#include "cli/cmd.h"
+#include "cli/printer.h"
 
 static int request_quit = 0;
 

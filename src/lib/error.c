@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include <proctal.h>
+#include "lib/proctal.h"
 
 static const char *a[] = {
 	[0] = NULL,

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <cli/pattern.h>
+#include "cli/pattern.h"
 
 int main(void)
 {

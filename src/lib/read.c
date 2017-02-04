@@ -1,4 +1,4 @@
-#include <proctal.h>
+#include "lib/proctal.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
 	proctal_read(P, ADDR, (char *) VAL, sizeof *VAL)

@@ -1,5 +1,5 @@
-#ifndef X86_DBGREG_H
-#define X86_DBGREG_H
+#ifndef LIB_X86_DBGREG_H
+#define LIB_X86_DBGREG_H
 
 /*
  * From what I understood reading AMD64 Architecture Programmer's Manual, there
@@ -98,4 +98,4 @@ void proctal_x86_dr_enable_l(unsigned long long *dr7, int r, int enable);
  */
 int proctal_x86_dr_is_l_enabled(unsigned long long dr7, int r);
 
-#endif /* X86_DBGREG_H */
+#endif /* LIB_X86_DBGREG_H */

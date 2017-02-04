@@ -1,4 +1,4 @@
-#include <proctal.h>
+#include "lib/proctal.h"
 
 int proctal_freeze(proctal p)
 {

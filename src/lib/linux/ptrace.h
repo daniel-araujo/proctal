@@ -1,7 +1,7 @@
-#ifndef LINUX_PTRACE_H
-#define LINUX_PTRACE_H
+#ifndef LIB_LINUX_PTRACE_H
+#define LIB_LINUX_PTRACE_H
 
-#include <linux/proctal.h>
+#include "lib/linux/proctal.h"
 
 #define PROCTAL_LINUX_PTRACE_X86_REG_RAX 0x0
 #define PROCTAL_LINUX_PTRACE_X86_REG_RBX 0x1
@@ -46,4 +46,4 @@ int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, void 
 int proctal_linux_ptrace_set_x86_reg(struct proctal_linux *pl, int reg, unsigned long long v);
 int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, int reg, unsigned long long *v);
 
-#endif /* LINUX_PTRACE_H */
+#endif /* LIB_LINUX_PTRACE_H */

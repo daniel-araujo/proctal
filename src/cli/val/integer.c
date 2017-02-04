@@ -1,4 +1,4 @@
-#include "integer.h"
+#include "cli/val/integer.h"
 
 void cli_val_integer_attr_init(struct cli_val_integer_attr *a);
 

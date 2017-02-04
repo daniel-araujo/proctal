@@ -1,5 +1,5 @@
-#ifndef VAL_IEEE754_H
-#define VAL_IEEE754_H
+#ifndef CLI_VAL_IEEE754_H
+#define CLI_VAL_IEEE754_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -248,4 +248,4 @@ int cli_val_ieee754_scan(struct cli_val_ieee754 *v, FILE *f);
  */
 int cli_val_ieee754_parse(struct cli_val_ieee754 *v, const char *s);
 
-#endif /* VAL_IEEE754_H */
+#endif /* CLI_VAL_IEEE754_H */

@@ -5,7 +5,7 @@
 #include <capstone/capstone.h>
 #include <keystone/keystone.h>
 
-#include "val.h"
+#include "cli/val.h"
 
 /*
  * This is the data structure that implementations must fill to be wrapped.

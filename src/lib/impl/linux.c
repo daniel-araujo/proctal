@@ -1,12 +1,12 @@
-#include <proctal.h>
-#include <linux/proctal.h>
-#include <linux/mem.h>
-#include <linux/ptrace.h>
-#include <linux/address.h>
-#include <linux/region.h>
-#include <linux/watch.h>
-#include <linux/alloc.h>
-#include <linux/execute.h>
+#include "lib/proctal.h"
+#include "lib/linux/proctal.h"
+#include "lib/linux/mem.h"
+#include "lib/linux/ptrace.h"
+#include "lib/linux/address.h"
+#include "lib/linux/region.h"
+#include "lib/linux/watch.h"
+#include "lib/linux/alloc.h"
+#include "lib/linux/execute.h"
 
 proctal proctal_impl_create(void)
 {

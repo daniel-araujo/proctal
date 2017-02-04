@@ -1,5 +1,5 @@
-#ifndef VAL_TEXT_H
-#define VAL_TEXT_H
+#ifndef CLI_VAL_TEXT_H
+#define CLI_VAL_TEXT_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -241,4 +241,4 @@ inline struct cli_val_text *cli_val_text_create_clone(struct cli_val_text *other
 	return v;
 }
 
-#endif /* VAL_TEXT_H */
+#endif /* CLI_VAL_TEXT_H */

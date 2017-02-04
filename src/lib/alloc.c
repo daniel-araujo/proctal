@@ -1,4 +1,4 @@
-#include <proctal.h>
+#include "lib/proctal.h"
 
 void *proctal_alloc(proctal p, size_t size, int perm)
 {

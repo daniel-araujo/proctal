@@ -1,5 +1,5 @@
-#include <linux/proctal.h>
-#include <linux/ptrace.h>
+#include "lib/linux/proctal.h"
+#include "lib/linux/ptrace.h"
 
 void proctal_linux_init(struct proctal_linux *pl)
 {

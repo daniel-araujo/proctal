@@ -1,9 +1,9 @@
 #include <string.h>
-#include <proctal.h>
 
-#include "cmd.h"
-#include "printer.h"
-#include "scanner.h"
+#include "lib/include/proctal.h"
+#include "cli/cmd.h"
+#include "cli/printer.h"
+#include "cli/scanner.h"
 
 struct buffer {
 	char *data;

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include <proctal.h>
+#include "lib/proctal.h"
 
 struct proctal_global proctal_global = {
 	.malloc = malloc,

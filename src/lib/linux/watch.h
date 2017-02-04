@@ -1,9 +1,9 @@
-#ifndef LINUX_WATCH_H
-#define LINUX_WATCH_H
+#ifndef LIB_LINUX_WATCH_H
+#define LIB_LINUX_WATCH_H
 
-#include <linux/proctal.h>
-#include <linux/ptrace.h>
+#include "lib/linux/proctal.h"
+#include "lib/linux/ptrace.h"
 
 int proctal_linux_watch(struct proctal_linux *pl, void **addr);
 
-#endif /* LINUX_WATCH_H */
+#endif /* LIB_LINUX_WATCH_H */

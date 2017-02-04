@@ -1,4 +1,4 @@
-#include "instruction.h"
+#include "cli/val/instruction.h"
 
 void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
 

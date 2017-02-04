@@ -1,11 +1,11 @@
-#ifndef LINUX_PROCTAL_H
-#define LINUX_PROCTAL_H
+#ifndef LIB_LINUX_PROCTAL_H
+#define LIB_LINUX_PROCTAL_H
 
 #include <stdio.h>
 #include <sys/types.h>
 
-#include <proctal.h>
-#include <linux/proc.h>
+#include "lib/proctal.h"
+#include "lib/linux/proc.h"
 
 /*
  * Linux specific instance of Proctal.
@@ -69,4 +69,4 @@ void proctal_linux_set_pid(struct proctal_linux *pl, pid_t pid);
  */
 pid_t proctal_linux_pid(struct proctal_linux *pl);
 
-#endif /* LINUX_PROCTAL_H */
+#endif /* LIB_LINUX_PROCTAL_H */

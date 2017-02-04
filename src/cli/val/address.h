@@ -1,5 +1,5 @@
-#ifndef VAL_ADDRESS_H
-#define VAL_ADDRESS_H
+#ifndef CLI_VAL_ADDRESS_H
+#define CLI_VAL_ADDRESS_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -153,4 +153,4 @@ inline struct cli_val_address *cli_val_address_create_clone(struct cli_val_addre
 	return v;
 }
 
-#endif /* VAL_ADDRESS_H */
+#endif /* CLI_VAL_ADDRESS_H */

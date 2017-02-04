@@ -1,5 +1,5 @@
-#ifndef VAL_BYTE_H
-#define VAL_BYTE_H
+#ifndef CLI_VAL_BYTE_H
+#define CLI_VAL_BYTE_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -170,4 +170,4 @@ inline struct cli_val_byte *cli_val_byte_create_clone(struct cli_val_byte *other
 	return v;
 }
 
-#endif /* VAL_BYTE_H */
+#endif /* CLI_VAL_BYTE_H */

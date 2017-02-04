@@ -1,15 +1,15 @@
-#ifndef VAL_H
-#define VAL_H
+#ifndef CLI_VAL_H
+#define CLI_VAL_H
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "val/integer.h"
-#include "val/ieee754.h"
-#include "val/address.h"
-#include "val/byte.h"
-#include "val/text.h"
-#include "val/instruction.h"
+#include "cli/val/integer.h"
+#include "cli/val/ieee754.h"
+#include "cli/val/address.h"
+#include "cli/val/byte.h"
+#include "cli/val/text.h"
+#include "cli/val/instruction.h"
 
 /*
  * Known types.
@@ -141,4 +141,4 @@ int cli_val_parse_bin(cli_val v, const char *s, size_t length);
  */
 cli_val cli_val_nil(void);
 
-#endif /* VAL_H */
+#endif /* CLI_VAL_H */

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <cli/val/text.h>
+#include "cli/val/text.h"
 
 int main(void)
 {

@@ -6,10 +6,10 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 
-#include <linux/proctal.h>
-#include <linux/watch.h>
-#include <linux/address.h>
-#include <x86/dr.h>
+#include "lib/linux/proctal.h"
+#include "lib/linux/watch.h"
+#include "lib/linux/address.h"
+#include "lib/x86/dr.h"
 
 static int enable_breakpoint(struct proctal_linux *pl)
 {

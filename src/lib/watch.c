@@ -1,4 +1,4 @@
-#include <proctal.h>
+#include "lib/proctal.h"
 
 void *proctal_watch_address(proctal p)
 {

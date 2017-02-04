@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <proctal.h>
+#include "lib/proctal.h"
 
 void proctal_region_new(proctal p)
 {

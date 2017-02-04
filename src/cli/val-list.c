@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "val-list.h"
+#include "cli/val-list.h"
 
 struct cli_val_list {
 	size_t size;

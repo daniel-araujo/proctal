@@ -1,7 +1,6 @@
-#include <proctal.h>
-
-#include "cmd.h"
-#include "printer.h"
+#include "lib/include/proctal.h"
+#include "cli/cmd.h"
+#include "cli/printer.h"
 
 static int make_permission(struct cli_cmd_alloc_arg *arg)
 {

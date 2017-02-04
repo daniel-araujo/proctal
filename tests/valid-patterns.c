@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <cli/pattern.h>
+#include "cli/pattern.h"
 
 int main(void)
 {

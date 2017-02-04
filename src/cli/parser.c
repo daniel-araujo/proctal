@@ -2,7 +2,7 @@
 #include <ctype.h>
 #include <inttypes.h>
 
-#include "parser.h"
+#include "cli/parser.h"
 
 static inline int match_char(const char *chars, char ch)
 {

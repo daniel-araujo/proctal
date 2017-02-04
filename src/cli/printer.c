@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 
-#include "printer.h"
+#include "cli/printer.h"
 
 static const char *proctal_error_messages[] = {
 	[0] = NULL,

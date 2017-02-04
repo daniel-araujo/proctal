@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <linux/region.h>
-#include <linux/proc.h>
+#include "lib/linux/region.h"
+#include "lib/linux/proc.h"
 
 static inline int interesting_region(struct proctal_linux *pl)
 {

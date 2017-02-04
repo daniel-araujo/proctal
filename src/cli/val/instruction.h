@@ -1,5 +1,5 @@
-#ifndef VAL_INSTRUCTION_H
-#define VAL_INSTRUCTION_H
+#ifndef CLI_VAL_INSTRUCTION_H
+#define CLI_VAL_INSTRUCTION_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -177,4 +177,4 @@ inline struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_v
 	return v;
 }
 
-#endif /* VAL_INSTRUCTION_H */
+#endif /* CLI_VAL_INSTRUCTION_H */

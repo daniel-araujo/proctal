@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "pattern.h"
-#include "parser.h"
+#include "cli/pattern.h"
+#include "cli/parser.h"
 
 enum pattern_type {
 	PATTERN_TYPE_BYTE_VALUE,

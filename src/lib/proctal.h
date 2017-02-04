@@ -1,9 +1,9 @@
 #ifndef PROCTAL_H
 // Include guard macro will be defined by the following include statement. It
 // just so happens the included header file also uses the same macro name.
-#include <include/proctal.h>
+#include "lib/include/proctal.h"
 
-#include <impl/impl.h>
+#include "lib/impl/impl.h"
 
 /*
  * Global state of the library that can be changed by the library user.

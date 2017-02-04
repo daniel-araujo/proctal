@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <proctal.h>
+#include "lib/proctal.h"
 
 void proctal_address_new(proctal p)
 {

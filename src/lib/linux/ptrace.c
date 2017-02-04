@@ -3,8 +3,8 @@
 #include <sys/wait.h>
 #include <errno.h>
 
-#include <proctal.h>
-#include <linux/ptrace.h>
+#include "lib/proctal.h"
+#include "lib/linux/ptrace.h"
 
 static inline int user_register_offset(int reg)
 {

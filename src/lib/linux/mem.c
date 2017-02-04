@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <linux/mem.h>
-#include <linux/proc.h>
+#include "lib/linux/mem.h"
+#include "lib/linux/proc.h"
 
 static inline FILE *mem(struct proctal_linux *pl)
 {

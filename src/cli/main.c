@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <proctal.h>
 
-#include "cmd.h"
-#include "parser.h"
-#include "args.yucc"
+#include "cli/cmd.h"
+#include "cli/parser.h"
+#include "cli/args.yucc"
 
 #define CLI_DEFAULT_VAL_TYPE CLI_VAL_TYPE_BYTE
 #define CLI_DEFAULT_VAL_INTEGER_ENDIANNESS CLI_VAL_INTEGER_ENDIANNESS_LITTLE

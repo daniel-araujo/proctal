@@ -1,4 +1,4 @@
-#include "text.h"
+#include "cli/val/text.h"
 
 void cli_val_text_attr_init(struct cli_val_text_attr *a);
 

@@ -1,10 +1,10 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#include <linux/alloc.h>
-#include <linux/proc.h>
-#include <linux/mem.h>
-#include <linux/execute.h>
+#include "lib/linux/alloc.h"
+#include "lib/linux/proc.h"
+#include "lib/linux/mem.h"
+#include "lib/linux/execute.h"
 
 struct mem_header {
 	size_t size;

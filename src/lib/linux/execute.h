@@ -1,7 +1,7 @@
-#ifndef LINUX_EXECUTE_H
-#define LINUX_EXECUTE_H
+#ifndef LIB_LINUX_EXECUTE_H
+#define LIB_LINUX_EXECUTE_H
 
-#include <linux/proctal.h>
+#include "lib/linux/proctal.h"
 
 int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_t byte_code_length);
 
@@ -16,4 +16,4 @@ int proctal_linux_execute_syscall(
 	unsigned long long five,
 	unsigned long long six);
 
-#endif /* LINUX_EXECUTE_H */
+#endif /* LIB_LINUX_EXECUTE_H */

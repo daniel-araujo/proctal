@@ -1,4 +1,4 @@
-#include <scanner.h>
+#include "cli/scanner.h"
 
 static inline int match_char(const char *chars, int ch)
 {

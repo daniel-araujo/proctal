@@ -1,5 +1,5 @@
-#ifndef VAL_INTEGER_H
-#define VAL_INTEGER_H
+#ifndef CLI_VAL_INTEGER_H
+#define CLI_VAL_INTEGER_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -296,4 +296,4 @@ int cli_val_integer_scan(struct cli_val_integer *v, FILE *f);
  */
 int cli_val_integer_parse(struct cli_val_integer *v, const char *s);
 
-#endif /* VAL_INTEGER_H */
+#endif /* CLI_VAL_INTEGER_H */
