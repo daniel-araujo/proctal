@@ -251,3 +251,15 @@ Example:
   --array=SIZE          Emulates the same behavior described in the write
                         command.
   TYPE_ARGUMENTS
+
+Usage: proctal dump
+Dumps everything in memory.
+
+Example:
+        proctal dump --pid=12345
+
+  PID_ARGUMENT
+  -r, --read            Readable memory.
+  -w, --write           Writable memory.
+  -x, --execute         Executable memory.
+  --program-code        Program code in memory.

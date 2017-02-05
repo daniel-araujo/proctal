@@ -23,9 +23,9 @@ Features:
 - Arbitrary instruction execution
 - Measure size of instructions
 - Byte pattern search
+- Memory dump
 
 Planned:
-- Memory dump
 - Freezing all threads of execution
 - Watch points on all threads of execution
 

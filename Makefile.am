@@ -33,6 +33,7 @@ proctal_SOURCES = \
 	src/cli/cmd/search.c \
 	src/cli/cmd/pattern.c \
 	src/cli/cmd/measure.c \
+	src/cli/cmd/dump.c \
 	src/cli/val/integer.h \
 	src/cli/val/integer.c \
 	src/cli/val/ieee754.h \

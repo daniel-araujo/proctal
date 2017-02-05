@@ -1114,6 +1114,47 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg_from_yuck_arg(yuck
 	return arg;
 }
 
+static void destroy_cli_cmd_dump_arg_from_yuck_arg(struct cli_cmd_dump_arg *arg)
+{
+	free(arg);
+}
+
+static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg_from_yuck_arg(yuck_t *yuck_arg)
+{
+	struct cli_cmd_dump_arg *arg = malloc(sizeof *arg);
+
+	if (yuck_arg->cmd != PROCTAL_CMD_DUMP) {
+		fputs("Wrong command.\n", stderr);
+		destroy_cli_cmd_dump_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->nargs != 0) {
+		fputs("Incorrect number of arguments.\n", stderr);
+		destroy_cli_cmd_dump_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (yuck_arg->dump.pid_arg == NULL) {
+		fputs("OPTION -p, --pid is required.\n", stderr);
+		destroy_cli_cmd_dump_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	if (!cli_parse_int(yuck_arg->dump.pid_arg, &arg->pid)) {
+		fputs("Invalid pid.\n", stderr);
+		destroy_cli_cmd_dump_arg_from_yuck_arg(arg);
+		return NULL;
+	}
+
+	arg->read = yuck_arg->dump.read_flag == 1;
+	arg->write = yuck_arg->dump.write_flag == 1;
+	arg->execute = yuck_arg->dump.execute_flag == 1;
+	arg->program_code = yuck_arg->dump.program_code_flag == 1;
+
+	return arg;
+}
+
 typedef int (*cli_yuck_cmd_handler)(yuck_t *);
 
 static int cli_yuck_cmd_handler_none(yuck_t *argp)
@@ -1149,6 +1190,7 @@ CLI_YUCK_CMD_HANDLER_COMMON(execute)
 CLI_YUCK_CMD_HANDLER_COMMON(alloc)
 CLI_YUCK_CMD_HANDLER_COMMON(dealloc)
 CLI_YUCK_CMD_HANDLER_COMMON(measure)
+CLI_YUCK_CMD_HANDLER_COMMON(dump)
 
 #undef CLI_YUCK_CMD_HANDLER_COMMON
 
@@ -1164,6 +1206,7 @@ cli_yuck_cmd_handler cli_yuck_cmd_handlers[] = {
 	[PROCTAL_CMD_ALLOC] = cli_yuck_cmd_handler_alloc,
 	[PROCTAL_CMD_DEALLOC] = cli_yuck_cmd_handler_dealloc,
 	[PROCTAL_CMD_MEASURE] = cli_yuck_cmd_handler_measure,
+	[PROCTAL_CMD_DUMP] = cli_yuck_cmd_handler_dump,
 };
 
 int main(int argc, char **argv)

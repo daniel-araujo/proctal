@@ -202,6 +202,22 @@ struct cli_cmd_measure_arg {
 	cli_val_list value_list;
 };
 
+struct cli_cmd_dump_arg {
+	int pid;
+
+	// Whether to dump readable memory addresses.
+	int read;
+
+	// Whether to dump writable memory addresses.
+	int write;
+
+	// Whether to dump executable memory addresses.
+	int execute;
+
+	// Whether to dump program code.
+	int program_code;
+};
+
 int cli_cmd_read(struct cli_cmd_read_arg *arg);
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg);
@@ -221,5 +237,7 @@ int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg);
 int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg);
 
 int cli_cmd_measure(struct cli_cmd_measure_arg *arg);
+
+int cli_cmd_dump(struct cli_cmd_dump_arg *arg);
 
 #endif /* CLI_CMD_H */
