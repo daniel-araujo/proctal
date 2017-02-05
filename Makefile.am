@@ -58,7 +58,7 @@ proctal_SOURCES = \
 	src/cli/pattern.h \
 	src/cli/pattern.c \
 	src/cli/cmd.h
-proctal_LDADD = libproctal.la $(proctal_capstone_libs) $(proctal_keystone_libs)
+proctal_LDADD = libproctal.la libswbuf.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 proctal_CFLAGS = $(proctal_cflags)
 
 # C library.

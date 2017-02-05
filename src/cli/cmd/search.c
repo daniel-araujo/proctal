@@ -1,14 +1,10 @@
 #include <string.h>
 
 #include "lib/include/proctal.h"
+#include "swbuf/swbuf.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
-
-struct buffer {
-	char *data;
-	size_t size;
-};
 
 static inline int pass_search_filters(struct cli_cmd_search_arg *arg, void *value)
 {
@@ -142,16 +138,10 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 	proctal_region_new(p);
 
 	const size_t buffer_size = 1024 * 1024;
+	struct swbuf buf;
+	swbuf_init(&buf, buffer_size);
 
-	struct buffer curr_buffer = {
-		.data = malloc(buffer_size),
-		.size = 0
-	};
-	struct buffer prev_buffer = {
-		.data = malloc(buffer_size),
-		.size = 0
-	};
-
+	size_t prev_size, curr_size;
 	void *start, *end;
 
 	while (proctal_region(p, &start, &end)) {
@@ -159,29 +149,27 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 		for (size_t chunk = 0;;++chunk) {
 			// This is the starting address of the current chunk.
-			char *offset = (char *) start + buffer_size * chunk;
+			char *chunk_offset = (char *) start + buffer_size * chunk;
 
-			offset = (char *) align_addr(offset, align);
+			chunk_offset = (char *) align_addr(chunk_offset, align);
 
-			if (offset >= (char *) end) {
+			if (chunk_offset >= (char *) end) {
 				break;
 			}
 
-			size_t chunk_size = (char *) end - offset;
+			curr_size = (char *) end - chunk_offset;
 
-			if (chunk_size > buffer_size) {
-				chunk_size = buffer_size;
+			if (curr_size > buffer_size) {
+				curr_size = buffer_size;
 			}
 
-			proctal_read(p, offset, curr_buffer.data, chunk_size);
+			proctal_read(p, chunk_offset, swbuf_address_offset(&buf, 0), curr_size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
 				proctal_error_ack(p);
 				break;
 			}
-
-			curr_buffer.size = chunk_size;
 
 			if (leftover) {
 				// The word rightover isn't even an English
@@ -190,11 +178,11 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				size_t rightover = size - leftover;
 
 				// Read what's left from the previous chunk.
-				memcpy(cli_val_raw(value), prev_buffer.data + prev_buffer.size - leftover, leftover);
-				memcpy((char *) cli_val_raw(value) + leftover, curr_buffer.data + rightover, rightover);
+				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, prev_size - leftover - buffer_size), leftover);
+				memcpy((char *) cli_val_raw(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
 
 				if (pass_search_filters(arg, value)) {
-					void *a = offset - leftover;
+					void *a = chunk_offset - leftover;
 					cli_val_parse_bin(addr, (char *) &a, sizeof a);
 
 					print_search_match(addr, value);
@@ -203,17 +191,17 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				leftover = 0;
 			}
 
-			size_t i = 0; 
+			size_t i = 0;
 
-			while (i < curr_buffer.size) {
-				if ((i + size) > curr_buffer.size) {
-					leftover = curr_buffer.size - i;
+			while (i < curr_size) {
+				if ((i + size) > curr_size) {
+					leftover = curr_size - i;
 				}
 
-				memcpy(cli_val_raw(value), curr_buffer.data + i, size);
+				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, i), size);
 
 				if (pass_search_filters(arg, value)) {
-					void *a = offset + i;
+					void *a = chunk_offset + i;
 					cli_val_parse_bin(addr, (char *) &a, sizeof a);
 
 					print_search_match(addr, value);
@@ -222,15 +210,16 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				i += align;
 			}
 
-			leftover = curr_buffer.size - i;
+			leftover = curr_size - i;
 
-			memcpy(prev_buffer.data, curr_buffer.data, curr_buffer.size);
-			prev_buffer.size = curr_buffer.size;
+			swbuf_swap(&buf);
+
+			// Remembering the size of the previous chunk.
+			prev_size = curr_size;
 		}
 	}
 
-	free(prev_buffer.data);
-	free(curr_buffer.data);
+	swbuf_deinit(&buf);
 
 	cli_val_destroy(addr);
 
