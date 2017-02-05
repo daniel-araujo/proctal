@@ -1,5 +1,6 @@
 bin_PROGRAMS = proctal
 lib_LTLIBRARIES = libproctal.la
+noinst_LIBRARIES = libswbuf.a
 include_HEADERS = src/lib/include/proctal.h
 dist_man_MANS = src/cli/proctal.1
 check_PROGRAMS = tests/invalid-patterns tests/valid-patterns \
@@ -98,6 +99,12 @@ libproctal_la_SOURCES = \
 libproctal_la_CFLAGS = $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 
+# Modules.
+libswbuf_a_SOURCES = \
+	src/swbuf/swbuf.h \
+	src/swbuf/swbuf.c
+libswbuf_a_CFLAGS = $(proctal_cflags)
+
 # Tests.
 tests_invalid_patterns_CFLAGS = $(proctal_cflags)
 tests_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
@@ -116,6 +123,27 @@ tests_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
 tests_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
 tests_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+
+check_PROGRAMS += tests/swbuf/init-fail-alloc
+tests_swbuf_init_fail_alloc_CFLAGS = $(proctal_cflags)
+tests_swbuf_init_fail_alloc_LDADD = libswbuf.a
+
+check_PROGRAMS += tests/swbuf/init-succeed-alloc
+tests_swbuf_init_succeed_alloc_CFLAGS = $(proctal_cflags)
+tests_swbuf_init_succeed_alloc_LDADD = libswbuf.a
+
+check_PROGRAMS += tests/swbuf/swap
+tests_swbuf_swap_CFLAGS = $(proctal_cflags)
+tests_swbuf_swap_LDADD = libswbuf.a
+
+check_PROGRAMS += tests/swbuf/address-offset
+tests_swbuf_address_offset_CFLAGS = $(proctal_cflags)
+tests_swbuf_address_offset_LDADD = libswbuf.a
+
+check_PROGRAMS += tests/swbuf/size
+tests_swbuf_size_CFLAGS = $(proctal_cflags)
+tests_swbuf_size_LDADD = libswbuf.a
+
 
 # The following rules specify additional dependencies for object files.
 #
