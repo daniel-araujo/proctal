@@ -1,8 +1,7 @@
-#ifndef PROCTAL_H
-// Include guard macro will be defined by the following include statement. It
-// just so happens the included header file also uses the same macro name.
-#include "lib/include/proctal.h"
+#ifndef LIB_PROCTAL_H
+#define LIB_PROCTAL_H
 
+#include "lib/include/proctal.h"
 #include "lib/impl/impl.h"
 
 /*
@@ -165,4 +164,4 @@ inline void *proctal_align_addr(void *addr, size_t align)
 	return (void *) ((char *) addr + offset);
 }
 
-#endif /* PROCTAL_H */
+#endif /* LIB_PROCTAL_H */
