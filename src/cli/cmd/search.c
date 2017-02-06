@@ -2,6 +2,7 @@
 
 #include "lib/include/proctal.h"
 #include "swbuf/swbuf.h"
+#include "chunk/chunk.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
@@ -144,26 +145,18 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 	size_t prev_size, curr_size;
 	void *start, *end;
 
+	struct chunk chunk;
+
 	while (proctal_region(p, &start, &end)) {
 		size_t leftover = 0;
 
-		for (size_t chunk = 0;;++chunk) {
-			// This is the starting address of the current chunk.
-			char *chunk_offset = (char *) start + buffer_size * chunk;
+		chunk_init(&chunk, start, end, buffer_size);
 
-			chunk_offset = (char *) align_addr(chunk_offset, align);
+		do {
+			char *offset = align_addr(chunk_offset(&chunk), align);
+			curr_size = chunk_size(&chunk);
 
-			if (chunk_offset >= (char *) end) {
-				break;
-			}
-
-			curr_size = (char *) end - chunk_offset;
-
-			if (curr_size > buffer_size) {
-				curr_size = buffer_size;
-			}
-
-			proctal_read(p, chunk_offset, swbuf_address_offset(&buf, 0), curr_size);
+			proctal_read(p, offset, swbuf_address_offset(&buf, 0), curr_size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -182,7 +175,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				memcpy((char *) cli_val_raw(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
 
 				if (pass_search_filters(arg, value)) {
-					void *a = chunk_offset - leftover;
+					void *a = offset - leftover;
 					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
@@ -201,7 +194,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, i), size);
 
 				if (pass_search_filters(arg, value)) {
-					void *a = chunk_offset + i;
+					void *a = offset + i;
 					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
@@ -216,7 +209,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 			// Remembering the size of the previous chunk.
 			prev_size = curr_size;
-		}
+		} while (chunk_next(&chunk));
 	}
 
 	swbuf_deinit(&buf);

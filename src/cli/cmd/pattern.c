@@ -3,6 +3,7 @@
 
 #include "lib/include/proctal.h"
 #include "swbuf/swbuf.h"
+#include "chunk/chunk.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
@@ -63,33 +64,20 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	size_t prev_size, curr_size;
 	void *start, *end;
 
+	struct chunk chunk;
+
 	while (proctal_region(p, &start, &end)) {
 		// Starting address of the matching pattern.
 		char *pattern_start = start;
 		cli_pattern_new(cp);
 
-		for (size_t chunk = 0;; ++chunk) {
-			// This is the starting address of the current chunk.
-			char *chunk_offset = (char *) start + buffer_size * chunk;
+		chunk_init(&chunk, start, end, buffer_size);
 
-			if (chunk_offset >= (char *) end) {
-				// We'd be going past the end so we're going to
-				// discard any progress made until now and go
-				// to the next region.
-				break;
-			}
+		do {
+			char *offset = chunk_offset(&chunk);
+			curr_size = chunk_size(&chunk);
 
-			// Going to attempt to read everything to the end...
-			curr_size = (char *) end - chunk_offset;
-
-			if (curr_size > buffer_size) {
-				// Cannot copy everything to the end. Limited
-				// to our buffer size. We'll get the remaining
-				// stuff in the next chunk.
-				curr_size = buffer_size;
-			}
-
-			proctal_read(p, chunk_offset, swbuf_address_offset(&buf, 0), curr_size);
+			proctal_read(p, offset, swbuf_address_offset(&buf, 0), curr_size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -115,17 +103,17 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 						cli_pattern_new(cp);
 						remaining -= read;
 
-						if (pattern_start < chunk_offset) {
+						if (pattern_start < offset) {
 							// Count reads from
 							// previous chunk.
-							read += chunk_offset - pattern_start;
+							read += offset - pattern_start;
 						}
 
 						pattern_start = pattern_start + read;
 					} else {
 						cli_pattern_new(cp);
 
-						if (pattern_start < chunk_offset) {
+						if (pattern_start < offset) {
 							// The pattern match
 							// started in the
 							// previous chunk.
@@ -139,11 +127,11 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 							// This calculation can
 							// result in a 0 when
 							// pattern_start equals
-							// chunk_offset but
+							// offset but
 							// that will do no harm
 							// because it's going
 							// to do nothing.
-							size_t prev_remaining = chunk_offset - pattern_start;
+							size_t prev_remaining = offset - pattern_start;
 
 							assert(prev_remaining < buffer_size);
 
@@ -167,7 +155,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 			// Remembering the size of the previous chunk.
 			prev_size = curr_size;
-		}
+		} while (chunk_next(&chunk));
 	}
 
 	swbuf_deinit(&buf);

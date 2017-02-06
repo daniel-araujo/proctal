@@ -1,6 +1,7 @@
 #include "lib/include/proctal.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
+#include "chunk/chunk.h"
 
 int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 {
@@ -40,23 +41,16 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	void *start, *end;
 
+	struct chunk chunk;
+
 	while (proctal_region(p, &start, &end)) {
-		for (size_t chunk = 0;; ++chunk) {
-			// This is the starting address of the current chunk.
-			char *chunk_offset = (char *) start + output_block_size * chunk;
+		chunk_init(&chunk, start, end, output_block_size);
 
-			if (chunk_offset >= (char *) end) {
-				// Went past the end of this region.
-				break;
-			}
+		do {
+			char *offset = chunk_offset(&chunk);
+			size_t size = chunk_size(&chunk);
 
-			size_t chunk_size = (char *) end - chunk_offset;
-
-			if (chunk_size > output_block_size) {
-				chunk_size = output_block_size;
-			}
-
-			proctal_read(p, chunk_offset, output_block, chunk_size);
+			proctal_read(p, offset, output_block, size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -67,8 +61,8 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 				continue;
 			}
 
-			fwrite(output_block, 1, chunk_size, stdout);
-		}
+			fwrite(output_block, 1, size, stdout);
+		} while (chunk_next(&chunk));
 	}
 
 	free(output_block);
