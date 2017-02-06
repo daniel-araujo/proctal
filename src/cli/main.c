@@ -4,6 +4,7 @@
 #include "cli/cmd.h"
 #include "cli/parser.h"
 #include "cli/args.yucc"
+#include "magic/magic.h"
 
 #define CLI_DEFAULT_VAL_TYPE CLI_VAL_TYPE_BYTE
 #define CLI_DEFAULT_VAL_INTEGER_ENDIANNESS CLI_VAL_INTEGER_ENDIANNESS_LITTLE
@@ -164,7 +165,7 @@ static int cli_val_type_by_name(enum cli_val_type* value, const char *name)
 		CLI_VAL_TYPE_INSTRUCTION,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -184,7 +185,7 @@ static int cli_val_integer_endianness_by_name(enum cli_val_integer_endianness *v
 		CLI_VAL_INTEGER_ENDIANNESS_LITTLE,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -210,7 +211,7 @@ static int cli_val_integer_size_by_name(enum cli_val_integer_size *value, const 
 		CLI_VAL_INTEGER_SIZE_64,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -232,7 +233,7 @@ static int cli_val_integer_sign_by_name(enum cli_val_integer_sign *value, const 
 		CLI_VAL_INTEGER_SIGN_2SCMPL,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -256,7 +257,7 @@ static int cli_val_ieee754_precision_by_name(enum cli_val_ieee754_precision *val
 		CLI_VAL_IEEE754_PRECISION_EXTENDED,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -276,7 +277,7 @@ static int cli_val_text_charset_by_name(enum cli_val_text_charset *value, const 
 		CLI_VAL_TEXT_CHARSET_ASCII,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -296,7 +297,7 @@ static int cli_val_instruction_arch_by_name(enum cli_val_instruction_arch *value
 		CLI_VAL_INSTRUCTION_ARCH_X86_64,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -318,7 +319,7 @@ static int cli_cmd_execute_format_by_name(enum cli_cmd_execute_format *value, co
 		CLI_CMD_EXECUTE_FORMAT_BYTECODE,
 	};
 
-	int i = index_by_name(options, sizeof(options) / sizeof(options[0]), name);
+	int i = index_by_name(options, ARRAY_SIZE(options), name);
 
 	if (i >= 0) {
 		*value = values[i];
@@ -438,7 +439,7 @@ static void destroy_cli_cmd_read_arg_from_yuck_arg(struct cli_cmd_read_arg *arg)
 
 static struct cli_cmd_read_arg *create_cli_cmd_read_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_read_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_read_arg *arg = malloc(sizeof(*arg));
 	arg->value = cli_val_nil();
 
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
@@ -519,7 +520,7 @@ static void destroy_cli_cmd_write_arg_from_yuck_arg(struct cli_cmd_write_arg *ar
 
 static struct cli_cmd_write_arg *create_cli_cmd_write_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_write_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_write_arg *arg = malloc(sizeof(*arg));
 	arg->value_list = cli_val_list_create(yuck_arg->nargs);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
@@ -646,7 +647,7 @@ static void destroy_cli_cmd_search_arg_from_yuck_arg(struct cli_cmd_search_arg *
 
 static struct cli_cmd_search_arg *create_cli_cmd_search_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_search_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_search_arg *arg = malloc(sizeof(*arg));
 	arg->value = cli_val_nil();
 	arg->eq = 0;
 	arg->ne = 0;
@@ -776,7 +777,7 @@ static void destroy_cli_cmd_pattern_arg_from_yuck_arg(struct cli_cmd_pattern_arg
 
 static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_pattern_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_pattern_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_PATTERN) {
 		fputs("Wrong command.\n", stderr);
@@ -819,7 +820,7 @@ static void destroy_cli_cmd_freeze_arg_from_yuck_arg(struct cli_cmd_freeze_arg *
 
 static struct cli_cmd_freeze_arg *create_cli_cmd_freeze_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_freeze_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_freeze_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_FREEZE) {
 		fputs("Wrong command.\n", stderr);
@@ -857,7 +858,7 @@ static void destroy_cli_cmd_watch_arg_from_yuck_arg(struct cli_cmd_watch_arg *ar
 
 static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_watch_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_watch_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WATCH) {
 		fputs("Wrong command.\n", stderr);
@@ -910,7 +911,7 @@ static void destroy_cli_cmd_execute_arg_from_yuck_arg(struct cli_cmd_execute_arg
 
 static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_execute_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_execute_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_EXECUTE) {
 		fputs("Wrong command.\n", stderr);
@@ -956,7 +957,7 @@ static void destroy_cli_cmd_alloc_arg_from_yuck_arg(struct cli_cmd_alloc_arg *ar
 
 static struct cli_cmd_alloc_arg *create_cli_cmd_alloc_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_alloc_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_alloc_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_ALLOC) {
 		fputs("Wrong command.\n", stderr);
@@ -1002,7 +1003,7 @@ static void destroy_cli_cmd_dealloc_arg_from_yuck_arg(struct cli_cmd_dealloc_arg
 
 static struct cli_cmd_dealloc_arg *create_cli_cmd_dealloc_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_dealloc_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_dealloc_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_DEALLOC) {
 		fputs("Wrong command.\n", stderr);
@@ -1045,7 +1046,7 @@ static void destroy_cli_cmd_measure_arg_from_yuck_arg(struct cli_cmd_measure_arg
 
 static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_measure_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_measure_arg *arg = malloc(sizeof(*arg));
 	arg->value_list = cli_val_list_create(yuck_arg->nargs);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_MEASURE) {
@@ -1121,7 +1122,7 @@ static void destroy_cli_cmd_dump_arg_from_yuck_arg(struct cli_cmd_dump_arg *arg)
 
 static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg_from_yuck_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_dump_arg *arg = malloc(sizeof *arg);
+	struct cli_cmd_dump_arg *arg = malloc(sizeof(*arg));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_DUMP) {
 		fputs("Wrong command.\n", stderr);
@@ -1225,7 +1226,7 @@ int main(int argc, char **argv)
 		yuck_auto_help(&argp);
 	} else if (argp.version_flag) {
 		yuck_auto_version(&argp);
-	} else if (argp.cmd < (sizeof cli_yuck_cmd_handlers / sizeof cli_yuck_cmd_handlers[0])) {
+	} else if (argp.cmd < ARRAY_SIZE(cli_yuck_cmd_handlers)) {
 		exit_code = cli_yuck_cmd_handlers[argp.cmd](&argp);
 	} else {
 		fprintf(stderr, "Command not implemented.\n");

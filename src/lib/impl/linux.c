@@ -10,7 +10,7 @@
 
 proctal proctal_impl_create(void)
 {
-	struct proctal_linux *pl = proctal_global_malloc(sizeof *pl);
+	struct proctal_linux *pl = proctal_global_malloc(sizeof(*pl));
 
 	if (pl == NULL) {
 		return NULL;

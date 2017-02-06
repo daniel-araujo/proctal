@@ -3,6 +3,7 @@
 #include "lib/linux/alloc.h"
 #include "lib/linux/mem.h"
 #include "lib/linux/ptrace.h"
+#include "magic/magic.h"
 
 #define RED_ZONE_SIZE 128
 
@@ -188,14 +189,14 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 {
 	char code[] = { 0x0F, 0x05 };
 
-	void *inject_addr = find_inject_addr(pl, sizeof code / sizeof code[0]);
+	void *inject_addr = find_inject_addr(pl, ARRAY_SIZE(code));
 
 	if (inject_addr == NULL) {
 		proctal_set_error(&pl->p, PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND);
 		return 0;
 	}
 
-	if (!proctal_linux_mem_swap(pl, inject_addr, code, code, sizeof code / sizeof code[0])) {
+	if (!proctal_linux_mem_swap(pl, inject_addr, code, code, ARRAY_SIZE(code))) {
 		return 0;
 	}
 
@@ -211,7 +212,7 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 		return 0;
 	}
 
-	if (!proctal_linux_mem_swap(pl, inject_addr, code, code, sizeof code / sizeof code[0])) {
+	if (!proctal_linux_mem_swap(pl, inject_addr, code, code, ARRAY_SIZE(code))) {
 		return 0;
 	}
 
@@ -284,8 +285,8 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		0xcd, 0x03,
 	};
 
-	size_t prologue_size = sizeof prologue / sizeof prologue[0];
-	size_t epilogue_size = sizeof epilogue / sizeof epilogue[0];
+	size_t prologue_size = ARRAY_SIZE(prologue);
+	size_t epilogue_size = ARRAY_SIZE(epilogue);
 
 	void *addr = proctal_linux_alloc(
 		pl,
@@ -308,7 +309,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	unsigned long long stack_pointer = orig.rsp - RED_ZONE_SIZE - sizeof epilogue_start_addr;
+	unsigned long long stack_pointer = orig.rsp - RED_ZONE_SIZE - sizeof(epilogue_start_addr);
 	unsigned long long base_pointer = stack_pointer;
 
 	// New stack frame.
@@ -320,7 +321,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		return 0;
 	}
 
-	if (!proctal_linux_mem_write(pl, (void *) base_pointer, (char *) &epilogue_start_addr, sizeof epilogue_start_addr)) {
+	if (!proctal_linux_mem_write(pl, (void *) base_pointer, (char *) &epilogue_start_addr, sizeof(epilogue_start_addr))) {
 		execute_load_state(pl, &orig);
 		proctal_linux_dealloc(pl, addr);
 		proctal_linux_ptrace_detach(pl);

@@ -2,6 +2,7 @@
 #include <inttypes.h>
 
 #include "cli/printer.h"
+#include "magic/magic.h"
 
 static const char *proctal_error_messages[] = {
 	[0] = NULL,
@@ -47,7 +48,7 @@ void cli_print_proctal_error(proctal p)
 		return;
 	}
 
-	if (!((unsigned) error < (sizeof proctal_error_messages / sizeof proctal_error_messages[0]))) {
+	if (!((unsigned) error < ARRAY_SIZE(proctal_error_messages))) {
 		error = PROCTAL_ERROR_UNKNOWN;
 	}
 
@@ -62,7 +63,7 @@ void cli_print_pattern_error(cli_pattern cp)
 		return;
 	}
 
-	if (!((unsigned) error < (sizeof cli_pattern_error_messages / sizeof cli_pattern_error_messages[0]))) {
+	if (!((unsigned) error < ARRAY_SIZE(cli_pattern_error_messages))) {
 		error = 0;
 	}
 

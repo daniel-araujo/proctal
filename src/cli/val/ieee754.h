@@ -146,13 +146,13 @@ inline size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v)
 {
 	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
-		return sizeof (float);
+		return sizeof(float);
 
 	case CLI_VAL_IEEE754_PRECISION_DOUBLE:
-		return sizeof (double);
+		return sizeof(double);
 
 	case CLI_VAL_IEEE754_PRECISION_EXTENDED:
-		return sizeof (long double);
+		return sizeof(long double);
 	}
 
 	// Not expecting to ever reach here.

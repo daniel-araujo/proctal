@@ -4,6 +4,7 @@
 #include "lib/include/proctal.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
+#include "magic/magic.h"
 
 static int request_quit = 0;
 
@@ -96,7 +97,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			if (match) {
 				continue;
 			} else {
-				assert(match_count < sizeof matches / sizeof matches[0]);
+				assert(match_count < ARRAY_SIZE(matches));
 				matches[match_count++] = addr;
 			}
 		}

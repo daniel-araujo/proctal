@@ -1,4 +1,5 @@
 #include "cli/val/ieee754.h"
+#include "magic/magic.h"
 
 void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a);
 
@@ -30,18 +31,17 @@ int cli_val_ieee754_add(
 	struct cli_val_ieee754 *vr)
 {
 #define NATIVE_ADD(TYPE) \
-	*(TYPE*) vr->data = *(TYPE*) v1->data + *(TYPE*) v2->data; \
-	return 1;
+	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) + DEREF(TYPE, v2->data)), 1
 
 	switch (vr->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
-		NATIVE_ADD(float);
+		return NATIVE_ADD(float);
 
 	case CLI_VAL_IEEE754_PRECISION_DOUBLE:
-		NATIVE_ADD(double);
+		return NATIVE_ADD(double);
 
 	case CLI_VAL_IEEE754_PRECISION_EXTENDED:
-		NATIVE_ADD(long double);
+		return NATIVE_ADD(long double);
 	}
 
 #undef NATIVE_ADD
@@ -56,18 +56,17 @@ int cli_val_ieee754_sub(
 	struct cli_val_ieee754 *vr)
 {
 #define NATIVE_SUB(TYPE) \
-	*(TYPE*) vr->data = *(TYPE*) v1->data - *(TYPE*) v2->data; \
-	return 1;
+	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) - DEREF(TYPE, v2->data)), 1
 
 	switch (vr->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
-		NATIVE_SUB(float);
+		return NATIVE_SUB(float);
 
 	case CLI_VAL_IEEE754_PRECISION_DOUBLE:
-		NATIVE_SUB(double);
+		return NATIVE_SUB(double);
 
 	case CLI_VAL_IEEE754_PRECISION_EXTENDED:
-		NATIVE_SUB(long double);
+		return NATIVE_SUB(long double);
 	}
 
 #undef NATIVE_SUB
@@ -81,9 +80,7 @@ int cli_val_ieee754_cmp(
 	struct cli_val_ieee754 *v2)
 {
 #define NATIVE_CMP(TYPE) \
-	(*(TYPE*) v1->data == *(TYPE*) v2->data \
-		? 0 \
-		: (*(TYPE*) v1->data > *(TYPE*) v2->data ? 1 : -1))
+	COMPARE(DEREF(TYPE, v1->data), DEREF(TYPE, v2->data))
 
 	switch (v1->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
@@ -105,7 +102,7 @@ int cli_val_ieee754_cmp(
 int cli_val_ieee754_print(struct cli_val_ieee754 *v, FILE *f)
 {
 #define PRINTF(FORMAT, TYPE) \
-	fprintf(f, FORMAT, *(TYPE *) v->data)
+	fprintf(f, FORMAT, DEREF(TYPE, v->data))
 
 	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:

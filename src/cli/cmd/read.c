@@ -1,6 +1,7 @@
 #include "lib/include/proctal.h"
 #include "cli/cmd.h"
 #include "cli/printer.h"
+#include "magic/magic.h"
 
 static inline void print_separator(struct cli_cmd_read_arg *arg)
 {
@@ -46,7 +47,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 	char *addr = (char *) arg->address;
 	for (size_t i = 0; i < arg->array; ++i) {
-		proctal_read(p, addr, output, sizeof output / sizeof output[0]);
+		proctal_read(p, addr, output, ARRAY_SIZE(output));
 
 		switch (proctal_error(p)) {
 		case 0:
@@ -60,7 +61,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		cli_val_set_address(arg->value, addr);
 
-		int size = cli_val_parse_bin(arg->value, output, sizeof output / sizeof output[0]);
+		int size = cli_val_parse_bin(arg->value, output, ARRAY_SIZE(output));
 
 		if (size == 0) {
 			if (i == 0) {

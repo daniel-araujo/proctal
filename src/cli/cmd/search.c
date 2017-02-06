@@ -183,7 +183,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 				if (pass_search_filters(arg, value)) {
 					void *a = chunk_offset - leftover;
-					cli_val_parse_bin(addr, (char *) &a, sizeof a);
+					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
 				}
@@ -202,7 +202,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 				if (pass_search_filters(arg, value)) {
 					void *a = chunk_offset + i;
-					cli_val_parse_bin(addr, (char *) &a, sizeof a);
+					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
 				}
@@ -264,7 +264,7 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 
 		size_t size = cli_val_sizeof(previous_value);
 
-		if (proctal_read(p, *(void **) cli_val_raw(addr), cli_val_raw(value), size) != size) {
+		if (proctal_read(p, DEREF(void *, cli_val_raw(addr)), cli_val_raw(value), size) != size) {
 			switch (proctal_error(p)) {
 			case PROCTAL_ERROR_PERMISSION_DENIED:
 				fprintf(stderr, "No permission to read from address ");

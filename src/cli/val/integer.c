@@ -1,4 +1,5 @@
 #include "cli/val/integer.h"
+#include "magic/magic.h"
 
 void cli_val_integer_attr_init(struct cli_val_integer_attr *a);
 
@@ -38,36 +39,35 @@ int cli_val_integer_add(
 	struct cli_val_integer *vr)
 {
 #define NATIVE_ADD(TYPE) \
-	*(TYPE*) vr->data = *(TYPE*) v1->data + *(TYPE*) v2->data; \
-	return 1;
+	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) + DEREF(TYPE, v2->data)), 1
 
 	switch (vr->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_ADD(uint8_t);
+			return NATIVE_ADD(uint8_t);
 		} else {
-			NATIVE_ADD(int8_t);
+			return NATIVE_ADD(int8_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_16:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_ADD(uint16_t);
+			return NATIVE_ADD(uint16_t);
 		} else {
-			NATIVE_ADD(int16_t);
+			return NATIVE_ADD(int16_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_32:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_ADD(uint32_t);
+			return NATIVE_ADD(uint32_t);
 		} else {
-			NATIVE_ADD(int32_t);
+			return NATIVE_ADD(int32_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_ADD(uint64_t);
+			return NATIVE_ADD(uint64_t);
 		} else {
-			NATIVE_ADD(int64_t);
+			return NATIVE_ADD(int64_t);
 		}
 	}
 
@@ -83,36 +83,35 @@ int cli_val_integer_sub(
 	struct cli_val_integer *vr)
 {
 #define NATIVE_SUB(TYPE) \
-	*(TYPE*) vr->data = *(TYPE*) v1->data - *(TYPE*) v2->data; \
-	return 1;
+	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) - DEREF(TYPE, v2->data)), 1
 
 	switch (vr->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_SUB(uint8_t);
+			return NATIVE_SUB(uint8_t);
 		} else {
-			NATIVE_SUB(int8_t);
+			return NATIVE_SUB(int8_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_16:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_SUB(uint16_t);
+			return NATIVE_SUB(uint16_t);
 		} else {
-			NATIVE_SUB(int16_t);
+			return NATIVE_SUB(int16_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_32:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_SUB(uint32_t);
+			return NATIVE_SUB(uint32_t);
 		} else {
-			NATIVE_SUB(int32_t);
+			return NATIVE_SUB(int32_t);
 		}
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		if (vr->attr.sign == CLI_VAL_INTEGER_SIGN_UNSIGNED) {
-			NATIVE_SUB(uint64_t);
+			return NATIVE_SUB(uint64_t);
 		} else {
-			NATIVE_SUB(int64_t);
+			return NATIVE_SUB(int64_t);
 		}
 	}
 
@@ -127,9 +126,7 @@ int cli_val_integer_cmp(
 	struct cli_val_integer *v2)
 {
 #define NATIVE_CMP(TYPE) \
-	(*(TYPE*) v1->data == *(TYPE*) v2->data \
-		? 0 \
-		: (*(TYPE*) v1->data > *(TYPE*) v2->data ? 1 : -1))
+	COMPARE(DEREF(TYPE, v1->data), DEREF(TYPE, v2->data))
 
 	switch (v1->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
@@ -170,7 +167,7 @@ int cli_val_integer_cmp(
 int cli_val_integer_print(struct cli_val_integer *v, FILE *f)
 {
 #define PRINTF(FORMAT, TYPE) \
-	fprintf(f, FORMAT, *(TYPE *) v->data)
+	fprintf(f, FORMAT, DEREF(TYPE, v->data))
 
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:

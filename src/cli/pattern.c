@@ -69,7 +69,7 @@ static void pattern_list_append_node(struct pattern_list *l, struct pattern_list
 
 static struct pattern_list_node *create_pattern_list_node(void)
 {
-	struct pattern_list_node *n = malloc(sizeof *n);
+	struct pattern_list_node *n = malloc(sizeof(*n));
 
 	n->pattern = NULL;
 	n->next = NULL;
@@ -104,7 +104,7 @@ static void clear_pattern_list(struct pattern_list *l)
 
 static struct pattern_byte_value *create_pattern_byte_value()
 {
-	struct pattern_byte_value *p = malloc(sizeof *p);
+	struct pattern_byte_value *p = malloc(sizeof(*p));
 
 	p->p.type = PATTERN_TYPE_BYTE_VALUE;
 
@@ -116,7 +116,7 @@ static struct pattern_any_byte *create_pattern_any_byte()
 	static struct pattern *p = NULL;
 
 	if (p == NULL) {
-		p = malloc(sizeof *p);
+		p = malloc(sizeof(*p));
 		p->type = PATTERN_TYPE_ANY_BYTE;
 	}
 
@@ -235,7 +235,7 @@ static int parse_pattern(struct cli_pattern *cp, struct pattern_list *l, const c
 
 cli_pattern cli_pattern_create(void)
 {
-	struct cli_pattern *cp = malloc(sizeof *cp);
+	struct cli_pattern *cp = malloc(sizeof(*cp));
 
 	if (cp == NULL) {
 		return NULL;

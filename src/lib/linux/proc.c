@@ -105,7 +105,7 @@ const char *proctal_linux_proc_path(pid_t pid, const char *file)
 	const char *path_template = "/proc/%d/%s";
 	static char path[sizeof(path_template) + PID_MAX_DIGITS + PROC_FILE_MAX];
 
-	int e = snprintf(path, sizeof path, path_template, pid, file);
+	int e = snprintf(path, sizeof(path), path_template, pid, file);
 	path[e] = '\0';
 
 	return path;
@@ -131,7 +131,7 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 
 	if (mem_region_is_path_present(maps)) {
 		mem_region_skip_space(maps);
-		int read = read_until_nl(maps, region->path, (sizeof region->path) - 1);
+		int read = read_until_nl(maps, region->path, sizeof(region->path) - 1);
 		region->path[read] = '\0';
 	}
 
@@ -147,7 +147,7 @@ const char *proctal_linux_program_path(pid_t pid)
 
 	const char *link = proctal_linux_proc_path(pid, "exe");
 
-	size_t e = readlink(link, path, sizeof path - 1);
+	size_t e = readlink(link, path, sizeof(path) - 1);
 	path[e] = '\0';
 
 	return path;

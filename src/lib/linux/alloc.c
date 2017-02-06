@@ -35,9 +35,9 @@ static inline int make_prot(int permissions)
 
 static inline void *read_header(struct proctal_linux *pl, struct mem_header *header, void *addr)
 {
-	void *alloc_addr = (char *) addr - sizeof header;
+	void *alloc_addr = (char *) addr - sizeof(header);
 
-	if (!proctal_linux_mem_read(pl, alloc_addr, (char *) header, sizeof header)) {
+	if (!proctal_linux_mem_read(pl, alloc_addr, (char *) header, sizeof(header))) {
 		return NULL;
 	}
 
@@ -46,11 +46,11 @@ static inline void *read_header(struct proctal_linux *pl, struct mem_header *hea
 
 static inline void *write_header(struct proctal_linux *pl, struct mem_header *header, void *alloc_addr)
 {
-	if (!proctal_linux_mem_write(pl, alloc_addr, (char *) header, sizeof header)) {
+	if (!proctal_linux_mem_write(pl, alloc_addr, (char *) header, sizeof(header))) {
 		return NULL;
 	}
 
-	return (char *) alloc_addr + sizeof header;
+	return (char *) alloc_addr + sizeof(header);
 }
 
 void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions)
@@ -59,7 +59,7 @@ void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions
 	int flags = 0x22; // MAP_PRIVATE | MAP_ANONYMOUS
 
 	struct mem_header header;
-	header.size = size + sizeof header;
+	header.size = size + sizeof(header);
 
 	void *alloc_addr = NULL;
 

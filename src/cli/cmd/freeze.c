@@ -93,7 +93,7 @@ static void wait_input_or_signal_handler()
 		}
 
 		for (;;) {
-			ssize_t r = read(0, buf, sizeof buf);
+			ssize_t r = read(0, buf, sizeof(buf));
 
 			if (request_quit) {
 				// No point in reading any further when the

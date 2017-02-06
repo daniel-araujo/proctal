@@ -7,6 +7,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "magic/magic.h"
+
 /*
  * Represents an byte value.
  */
@@ -115,11 +117,7 @@ inline int cli_val_byte_cmp(
 	struct cli_val_byte *v1,
 	struct cli_val_byte *v2)
 {
-	return v1->byte == v2->byte
-		? 0
-		: v1->byte > v2->byte
-			? 1
-			: -1;
+	return COMPARE(v1->byte, v2->byte);
 }
 
 /*

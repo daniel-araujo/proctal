@@ -7,6 +7,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "magic/magic.h"
+
 /*
  * Supported character sets.
  */
@@ -141,7 +143,7 @@ inline int cli_val_text_parse_bin(struct cli_val_text *v, const char *s, size_t 
 			return 0;
 		}
 
-		*(char *) v->data = *s;
+		DEREF(char, v->data) = *s;
 
 		return 1;
 	}
@@ -157,7 +159,7 @@ inline int cli_val_text_parse_bin(struct cli_val_text *v, const char *s, size_t 
  */
 inline int cli_val_text_print(struct cli_val_text *v, FILE *f)
 {
-	return fprintf(f, "%c", *(char *) v->data);
+	return fprintf(f, "%c", DEREF(char, v->data));
 }
 
 /*
@@ -189,7 +191,7 @@ inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
 			return 0;
 		}
 
-		*(char *) v->data = *s;
+		DEREF(char, v->data) = *s;
 
 		return 1;
 	}
@@ -216,7 +218,7 @@ inline int cli_val_text_cmp(
 
 	switch (v1->attr.charset) {
 	case CLI_VAL_TEXT_CHARSET_ASCII:
-		return *(char *) v1->data == *(char *) v2->data ? 0 : -1;
+		return COMPARE(DEREF(char, v1->data), DEREF(char, v2->data));
 	}
 
 	// Not expecting to ever reach here.

@@ -29,14 +29,14 @@ static void destroy_data(cli_val_list list)
 
 cli_val_list cli_val_list_create(size_t size)
 {
-	struct cli_val_list *list = (struct cli_val_list *) malloc((sizeof *list) + (sizeof (cli_val)) * size);
+	struct cli_val_list *list = (struct cli_val_list *) malloc(sizeof(*list) + sizeof(cli_val) * size);
 	list->size = size;
 	list->owner = 1;
 
 	for (size_t i = 0; i < size; ++i) {
 		cli_val nil = cli_val_nil();
 
-		memmove(list->data + i, &nil, sizeof (cli_val));
+		memmove(list->data + i, &nil, sizeof(cli_val));
 	}
 
 	return list;
