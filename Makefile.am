@@ -100,11 +100,30 @@ libproctal_la_SOURCES = \
 libproctal_la_CFLAGS = $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 
-# Modules.
+# Swbuf module.
 libswbuf_a_SOURCES = \
 	src/swbuf/swbuf.h \
 	src/swbuf/swbuf.c
 libswbuf_a_CFLAGS = $(proctal_cflags)
+
+# Chunk module.
+noinst_LIBRARIES += libchunk.a
+libchunk_a_SOURCES = \
+	src/chunk/chunk.h \
+	src/chunk/chunk.c
+libchunk_a_CFLAGS = $(proctal_cflags)
+
+check_PROGRAMS += tests/chunk/leftover
+tests_chunk_leftover_CFLAGS = $(proctal_cflags)
+tests_chunk_leftover_LDADD = libchunk.a
+
+check_PROGRAMS += tests/chunk/evenly
+tests_chunk_evenly_CFLAGS = $(proctal_cflags)
+tests_chunk_evenly_LDADD = libchunk.a
+
+check_PROGRAMS += tests/chunk/finished
+tests_chunk_finished_CFLAGS = $(proctal_cflags)
+tests_chunk_finished_LDADD = libchunk.a
 
 # Tests.
 tests_invalid_patterns_CFLAGS = $(proctal_cflags)
