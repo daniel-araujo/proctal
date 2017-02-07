@@ -6,7 +6,7 @@ LT_INIT([dlopen])
 
 AC_SUBST(PROCTAL_LIBRARY_VERSION, [0:0:0])
 
-AC_CONFIG_SRCDIR([src/lib/proctal.h])
+AC_CONFIG_SRCDIR([src/lib/include/proctal.h])
 AC_CONFIG_HEADERS([config.h:config.h.in])
 AC_CONFIG_FILES([Makefile])
 
