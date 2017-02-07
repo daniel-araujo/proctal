@@ -195,4 +195,8 @@ tests_chunk_finished_CFLAGS = $(proctal_cflags)
 tests_chunk_finished_LDADD = libchunk.a
 
 
+# Magic module.
+EXTRA_DIST += src/magic/magic.h
+
+
 TESTS = $(check_PROGRAMS) $(dist_check_SCRIPTS)
