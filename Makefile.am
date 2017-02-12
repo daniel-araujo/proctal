@@ -198,5 +198,8 @@ tests_chunk_finished_LDADD = libchunk.a
 # Magic module.
 EXTRA_DIST += src/magic/magic.h
 
+check_PROGRAMS += tests/magic/array-size
+tests_magic_array_size_CFLAGS = $(proctal_cflags)
+
 
 TESTS = $(check_PROGRAMS) $(dist_check_SCRIPTS)
