@@ -61,31 +61,37 @@ proctal_SOURCES = \
 proctal_LDADD = libproctal.la libswbuf.a libchunk.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 proctal_CFLAGS = $(proctal_cflags)
 
-check_PROGRAMS += tests/invalid-patterns
-tests_invalid_patterns_CFLAGS = $(proctal_cflags)
-tests_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+check_PROGRAMS += tests/cli/invalid-patterns
+tests_cli_invalid_patterns_SOURCES = src/cli/tests/invalid-patterns.c
+tests_cli_invalid_patterns_CFLAGS = $(proctal_cflags)
+tests_cli_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
 
-check_PROGRAMS += tests/valid-patterns
-tests_valid_patterns_CFLAGS = $(proctal_cflags)
-tests_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+check_PROGRAMS += tests/cli/valid-patterns
+tests_cli_valid_patterns_SOURCES = src/cli/tests/valid-patterns.c
+tests_cli_valid_patterns_CFLAGS = $(proctal_cflags)
+tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
 
-check_PROGRAMS += tests/parse-valid-ascii
-tests_parse_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+check_PROGRAMS += tests/cli/val/parse-valid-ascii
+tests_cli_val_parse_valid_ascii_SOURCES = src/cli/val/tests/parse-valid-ascii.c
+tests_cli_val_parse_valid_ascii_CFLAGS = $(proctal_cflags)
+tests_cli_val_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-check_PROGRAMS += tests/parse-bin-valid-ascii
-tests_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+check_PROGRAMS += tests/cli/val/parse-bin-valid-ascii
+tests_cli_val_parse_bin_valid_ascii_SOURCES = src/cli/val/tests/parse-bin-valid-ascii.c
+tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
+tests_cli_val_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-check_PROGRAMS += tests/parse-invalid-ascii
-tests_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+check_PROGRAMS += tests/cli/val/parse-invalid-ascii
+tests_cli_val_parse_invalid_ascii_SOURCES = src/cli/val/tests/parse-invalid-ascii.c
+tests_cli_val_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
+tests_cli_val_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-check_PROGRAMS += tests/parse-bin-invalid-ascii
-tests_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
+tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
+tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
+tests_cli_val_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
 
-dist_check_SCRIPTS += tests/invalid-type-arguments.py
+dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
 # documentation, automake does not support a convenient method for specifying
@@ -155,22 +161,27 @@ libswbuf_a_SOURCES = \
 libswbuf_a_CFLAGS = $(proctal_cflags)
 
 check_PROGRAMS += tests/swbuf/init-fail-alloc
+tests_swbuf_init_fail_alloc_SOURCES = src/swbuf/tests/init-fail-alloc.c
 tests_swbuf_init_fail_alloc_CFLAGS = $(proctal_cflags)
 tests_swbuf_init_fail_alloc_LDADD = libswbuf.a
 
 check_PROGRAMS += tests/swbuf/init-succeed-alloc
+tests_swbuf_init_succeed_alloc_SOURCES = src/swbuf/tests/init-succeed-alloc.c
 tests_swbuf_init_succeed_alloc_CFLAGS = $(proctal_cflags)
 tests_swbuf_init_succeed_alloc_LDADD = libswbuf.a
 
 check_PROGRAMS += tests/swbuf/swap
+tests_swbuf_swap_SOURCES = src/swbuf/tests/swap.c
 tests_swbuf_swap_CFLAGS = $(proctal_cflags)
 tests_swbuf_swap_LDADD = libswbuf.a
 
 check_PROGRAMS += tests/swbuf/address-offset
+tests_swbuf_address_offset_SOURCES = src/swbuf/tests/address-offset.c
 tests_swbuf_address_offset_CFLAGS = $(proctal_cflags)
 tests_swbuf_address_offset_LDADD = libswbuf.a
 
 check_PROGRAMS += tests/swbuf/size
+tests_swbuf_size_SOURCES = src/swbuf/tests/size.c
 tests_swbuf_size_CFLAGS = $(proctal_cflags)
 tests_swbuf_size_LDADD = libswbuf.a
 
@@ -183,14 +194,17 @@ libchunk_a_SOURCES = \
 libchunk_a_CFLAGS = $(proctal_cflags)
 
 check_PROGRAMS += tests/chunk/leftover
+tests_chunk_leftover_SOURCES = src/chunk/tests/leftover.c
 tests_chunk_leftover_CFLAGS = $(proctal_cflags)
 tests_chunk_leftover_LDADD = libchunk.a
 
 check_PROGRAMS += tests/chunk/evenly
+tests_chunk_evenly_SOURCES = src/chunk/tests/evenly.c
 tests_chunk_evenly_CFLAGS = $(proctal_cflags)
 tests_chunk_evenly_LDADD = libchunk.a
 
 check_PROGRAMS += tests/chunk/finished
+tests_chunk_finished_SOURCES = src/chunk/tests/finished.c
 tests_chunk_finished_CFLAGS = $(proctal_cflags)
 tests_chunk_finished_LDADD = libchunk.a
 
@@ -199,12 +213,15 @@ tests_chunk_finished_LDADD = libchunk.a
 EXTRA_DIST += src/magic/magic.h
 
 check_PROGRAMS += tests/magic/array-size
+tests_magic_array_size_SOURCES = src/magic/tests/array-size.c
 tests_magic_array_size_CFLAGS = $(proctal_cflags)
 
 check_PROGRAMS += tests/magic/compare
+tests_magic_compare_SOURCES = src/magic/tests/compare.c
 tests_magic_compare_CFLAGS = $(proctal_cflags)
 
 check_PROGRAMS += tests/magic/deref
+tests_magic_deref_SOURCES = src/magic/tests/deref.c
 tests_magic_deref_CFLAGS = $(proctal_cflags)
 
 
