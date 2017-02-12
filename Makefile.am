@@ -204,5 +204,8 @@ tests_magic_array_size_CFLAGS = $(proctal_cflags)
 check_PROGRAMS += tests/magic/compare
 tests_magic_compare_CFLAGS = $(proctal_cflags)
 
+check_PROGRAMS += tests/magic/deref
+tests_magic_deref_CFLAGS = $(proctal_cflags)
+
 
 TESTS = $(check_PROGRAMS) $(dist_check_SCRIPTS)
