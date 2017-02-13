@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <keystone/keystone.h>
 
-#include "lib/include/proctal.h"
-#include "cli/cmd.h"
+#include "cli/cmd/execute.h"
 #include "cli/printer.h"
+#include "lib/include/proctal.h"
 
 static void free_read(char **buf)
 {

@@ -21,18 +21,28 @@ dist_man_MANS += src/cli/proctal.1
 EXTRA_DIST += src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
 CLEANFILES += src/cli/args.yuck src/cli/args.yucc
 proctal_SOURCES = \
-	src/cli/main.c \
 	src/cli/cmd/alloc.c \
+	src/cli/cmd/alloc.h \
 	src/cli/cmd/dealloc.c \
+	src/cli/cmd/dealloc.h \
 	src/cli/cmd/execute.c \
+	src/cli/cmd/execute.h \
 	src/cli/cmd/watch.c \
+	src/cli/cmd/watch.h \
 	src/cli/cmd/freeze.c \
+	src/cli/cmd/freeze.h \
 	src/cli/cmd/read.c \
+	src/cli/cmd/read.h \
 	src/cli/cmd/write.c \
+	src/cli/cmd/write.h \
 	src/cli/cmd/search.c \
+	src/cli/cmd/search.h \
 	src/cli/cmd/pattern.c \
+	src/cli/cmd/pattern.h \
 	src/cli/cmd/measure.c \
+	src/cli/cmd/measure.h \
 	src/cli/cmd/dump.c \
+	src/cli/cmd/dump.h \
 	src/cli/val/integer.h \
 	src/cli/val/integer.c \
 	src/cli/val/ieee754.h \
@@ -57,7 +67,7 @@ proctal_SOURCES = \
 	src/cli/printer.c \
 	src/cli/pattern.h \
 	src/cli/pattern.c \
-	src/cli/cmd.h
+	src/cli/main.c
 proctal_LDADD = libproctal.la libswbuf.a libchunk.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 proctal_CFLAGS = $(proctal_cflags)
 

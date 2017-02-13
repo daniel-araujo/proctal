@@ -1,6 +1,6 @@
-#include "lib/include/proctal.h"
-#include "cli/cmd.h"
+#include "cli/cmd/read.h"
 #include "cli/printer.h"
+#include "lib/include/proctal.h"
 #include "magic/magic.h"
 
 static inline void print_separator(struct cli_cmd_read_arg *arg)

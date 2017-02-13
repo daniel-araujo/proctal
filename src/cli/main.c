@@ -1,7 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "cli/cmd.h"
+#include "cli/cmd/alloc.h"
+#include "cli/cmd/dealloc.h"
+#include "cli/cmd/dump.h"
+#include "cli/cmd/execute.h"
+#include "cli/cmd/freeze.h"
+#include "cli/cmd/measure.h"
+#include "cli/cmd/pattern.h"
+#include "cli/cmd/read.h"
+#include "cli/cmd/search.h"
+#include "cli/cmd/watch.h"
+#include "cli/cmd/write.h"
 #include "cli/parser.h"
 #include "cli/args.yucc"
 #include "magic/magic.h"

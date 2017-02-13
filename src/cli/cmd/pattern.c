@@ -1,12 +1,12 @@
 #include <string.h>
 #include <assert.h>
 
+#include "cli/cmd/pattern.h"
+#include "cli/printer.h"
+#include "cli/scanner.h"
 #include "lib/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
-#include "cli/cmd.h"
-#include "cli/printer.h"
-#include "cli/scanner.h"
 
 static void print_match(void *addr)
 {

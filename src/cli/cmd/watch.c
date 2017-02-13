@@ -1,9 +1,10 @@
+#include <stdio.h>
 #include <assert.h>
 #include <signal.h>
 
-#include "lib/include/proctal.h"
-#include "cli/cmd.h"
+#include "cli/cmd/watch.h"
 #include "cli/printer.h"
+#include "lib/include/proctal.h"
 #include "magic/magic.h"
 
 static int request_quit = 0;

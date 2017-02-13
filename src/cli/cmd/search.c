@@ -1,11 +1,11 @@
 #include <string.h>
 
+#include "cli/cmd/search.h"
+#include "cli/printer.h"
+#include "cli/scanner.h"
 #include "lib/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
-#include "cli/cmd.h"
-#include "cli/printer.h"
-#include "cli/scanner.h"
 
 static inline int pass_search_filters(struct cli_cmd_search_arg *arg, void *value)
 {

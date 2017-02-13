@@ -1,8 +1,8 @@
 #include <unistd.h>
 
-#include "lib/include/proctal.h"
-#include "cli/cmd.h"
+#include "cli/cmd/write.h"
 #include "cli/printer.h"
+#include "lib/include/proctal.h"
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg)
 {

@@ -1,12 +1,13 @@
+#include <stdio.h>
 #include <sys/select.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <errno.h>
 
-#include "lib/include/proctal.h"
-#include "cli/cmd.h"
+#include "cli/cmd/freeze.h"
 #include "cli/printer.h"
+#include "lib/include/proctal.h"
 
 static int request_quit = 0;
 
