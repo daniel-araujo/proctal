@@ -157,6 +157,9 @@ The command line interface can be used in the following ways:
 
 	proctal measure [--type=<type>] --address=<address> <value>
 
+	proctal dump --pid=<pid> [--read] [--write] [--execute]
+		[--program-code]
+
 For more details run `proctal -h` or read the man page:
 
 	man 1 proctal
