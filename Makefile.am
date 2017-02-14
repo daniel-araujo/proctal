@@ -18,8 +18,9 @@ proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
 # Cli tool.
 bin_PROGRAMS += proctal
 dist_man_MANS += src/cli/proctal.1
-EXTRA_DIST += src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc
-CLEANFILES += src/cli/args.yuck src/cli/args.yucc
+EXTRA_DIST += src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc \
+	src/cli/parser-name.c.php
+CLEANFILES += src/cli/args.yuck src/cli/args.yucc src/cli/parser-name.c
 proctal_SOURCES = \
 	src/cli/cmd/alloc.c \
 	src/cli/cmd/alloc.h \
@@ -63,6 +64,7 @@ proctal_SOURCES = \
 	src/cli/scanner.c \
 	src/cli/parser.h \
 	src/cli/parser.c \
+	src/cli/parser-name.c \
 	src/cli/printer.h \
 	src/cli/printer.c \
 	src/cli/pattern.h \
@@ -112,6 +114,10 @@ src/cli/proctal-main.$(OBJEXT): src/cli/args.yucc
 # Expands M4 macros.
 src/cli/args.yuck: $(srcdir)/src/cli/args.yuck.m4
 	m4 $^ > $@
+
+# PHP script that generates C code.
+src/cli/parser-name.c: $(srcdir)/src/cli/parser-name.c.php
+	$(PHP) $^ > $@
 
 # Generates argument parsing code.
 src/cli/args.yucc: src/cli/args.yuck

@@ -183,7 +183,6 @@ Dependencies:
 
 - capstone [[3]]
 - keystone [[4]]
-- yuck [[5]]
 
 Proctal provides a 3 step installation process employed by many C/C++ programs
 on Linux:
@@ -200,6 +199,13 @@ installed. For more information type `./configure -h`.
 
 
 ## Development
+
+Dependencies:
+
+- yuck [[5]]
+- php [[6]]
+- autoconf [[7]]
+- automake [[8]]
 
 Proctal uses the autotools to generate build systems for UNIX like operating
 systems. I will provide instructions on how to quickly create a development
@@ -255,3 +261,6 @@ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 [3]: http://www.capstone-engine.org/
 [4]: http://www.keystone-engine.org/
 [5]: http://www.fresse.org/yuck/
+[6]: http://php.net/
+[7]: https://www.gnu.org/software/autoconf/autoconf.html
+[8]: https://www.gnu.org/software/automake/

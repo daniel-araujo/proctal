@@ -1,6 +1,13 @@
 #ifndef CLI_PARSER_H
 #define CLI_PARSER_H
 
+#include "cli/val.h"
+#include "cli/val/integer.h"
+#include "cli/val/ieee754.h"
+#include "cli/val/instruction.h"
+#include "cli/val/text.h"
+#include "cli/cmd/execute.h"
+
 int cli_parse_char(const char *s, char *val);
 int cli_parse_uchar(const char *s, unsigned char *val);
 int cli_parse_schar(const char *s, signed char *val);
@@ -22,5 +29,14 @@ size_t cli_parse_skip_chars(const char *s, const char *chars);
 size_t cli_parse_skip_until_chars(const char*s, const char *chars);
 
 int cli_parse_is_hex_digit(int s);
+
+int cli_parse_val_type(const char *s, enum cli_val_type* val);
+int cli_parse_val_integer_endianness(const char *s, enum cli_val_integer_endianness* val);
+int cli_parse_val_integer_size(const char *s, enum cli_val_integer_size* val);
+int cli_parse_val_integer_sign(const char *s, enum cli_val_integer_sign *val);
+int cli_parse_val_ieee754_precision(const char *s, enum cli_val_ieee754_precision *val);
+int cli_parse_val_text_charset(const char *s, enum cli_val_text_charset *val);
+int cli_parse_val_instruction_arch(const char *s, enum cli_val_instruction_arch *val);
+int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 
 #endif /* CLI_PARSER_H */
