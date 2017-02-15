@@ -11,7 +11,7 @@ noinst_LIBRARIES =
 proctal_cflags_src_include = -iquote$(srcdir)/src -iquotesrc
 proctal_cflags_src_lib_include = -I$(srcdir)/src/lib/include -Isrc/lib/include
 proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
-	-Wextra -Wpointer-arith -Wmissing-prototypes \
+	-Wextra -Wpointer-arith \
 	-Wno-switch $(proctal_xopen_flags) -Wno-unused-parameter \
 	-Wno-unused-function $(proctal_posix_flags) -Wno-maybe-uninitialized
 
@@ -46,6 +46,8 @@ proctal_SOURCES = \
 	src/cli/cmd/dump.h \
 	src/cli/val/integer.h \
 	src/cli/val/integer.c \
+	src/cli/val/integer-sign-unsigned.c \
+	src/cli/val/integer-sign-2scmpl.c \
 	src/cli/val/ieee754.h \
 	src/cli/val/ieee754.c \
 	src/cli/val/address.h \
@@ -102,6 +104,27 @@ check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
 tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
 tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
 tests_cli_val_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+
+check_PROGRAMS += tests/cli/val/integer-add
+tests_cli_val_integer_add_SOURCES = src/cli/val/tests/integer-add.c
+tests_cli_val_integer_add_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_add_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
+
+check_PROGRAMS += tests/cli/val/integer-sub
+tests_cli_val_integer_sub_SOURCES = src/cli/val/tests/integer-sub.c
+tests_cli_val_integer_sub_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_sub_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
+
+check_PROGRAMS += tests/cli/val/integer-cmp
+tests_cli_val_integer_cmp_SOURCES = src/cli/val/tests/integer-cmp.c
+tests_cli_val_integer_cmp_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_cmp_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
 
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 
