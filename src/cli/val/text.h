@@ -207,18 +207,18 @@ inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
  * Returns either 1 or -1 if they're different.
  */
 inline int cli_val_text_cmp(
-	struct cli_val_text *v1,
-	struct cli_val_text *v2)
+	struct cli_val_text *v,
+	struct cli_val_text *other_v)
 {
-	if (v1->attr.charset != v2->attr.charset) {
+	if (v->attr.charset != other_v->attr.charset) {
 		// We're going to consider text characters of different
 		// encodings to be different.
 		return 1;
 	}
 
-	switch (v1->attr.charset) {
+	switch (v->attr.charset) {
 	case CLI_VAL_TEXT_CHARSET_ASCII:
-		return COMPARE(DEREF(char, v1->data), DEREF(char, v2->data));
+		return COMPARE(DEREF(char, v->data), DEREF(char, other_v->data));
 	}
 
 	// Not expecting to ever reach here.

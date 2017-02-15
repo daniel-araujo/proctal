@@ -17,8 +17,8 @@ struct cli_val_impl {
 	size_t (*align)(void *);
 	size_t (*size)(void *);
 	void *(*raw)(void *);
-	int (*add)(void *, void *, void *);
-	int (*sub)(void *, void *, void *);
+	int (*add)(void *, void *);
+	int (*sub)(void *, void *);
 	int (*cmp)(void *, void *);
 	int (*print)(void *, FILE *);
 	int (*scan)(void *, FILE *);
@@ -232,45 +232,43 @@ void *cli_val_raw(cli_val v)
 	return v->impl->raw(v->val);
 }
 
-int cli_val_add(cli_val v1, cli_val v2, cli_val vr)
+int cli_val_add(cli_val v, cli_val other_v)
 {
-	if (v1->impl->type != v2->impl->type
-		|| v1->impl->type != vr->impl->type) {
+	if (v->impl->type != other_v->impl->type) {
 		return 0;
 	}
 
-	if (v1->impl->add == NULL) {
+	if (v->impl->add == NULL) {
 		return 0;
 	}
 
-	return v1->impl->add(v1->val, v2->val, vr->val);
+	return v->impl->add(v->val, other_v->val);
 }
 
-int cli_val_sub(cli_val v1, cli_val v2, cli_val vr)
+int cli_val_sub(cli_val v, cli_val other_v)
 {
-	if (v1->impl->type != v2->impl->type
-		|| v1->impl->type != vr->impl->type) {
+	if (v->impl->type != other_v->impl->type) {
 		return 0;
 	}
 
-	if (v1->impl->sub == NULL) {
+	if (v->impl->sub == NULL) {
 		return 0;
 	}
 
-	return v1->impl->sub(v1->val, v2->val, vr->val);
+	return v->impl->sub(v->val, other_v->val);
 }
 
-int cli_val_cmp(cli_val v1, cli_val v2)
+int cli_val_cmp(cli_val v, cli_val other_v)
 {
-	if (v1->impl->type != v2->impl->type) {
+	if (v->impl->type != other_v->impl->type) {
 		return 0;
 	}
 
-	if (v1->impl->cmp == NULL) {
+	if (v->impl->cmp == NULL) {
 		return 0;
 	}
 
-	return v1->impl->cmp(v1->val, v2->val);
+	return v->impl->cmp(v->val, other_v->val);
 }
 
 int cli_val_print(cli_val v, FILE *f)

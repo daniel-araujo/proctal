@@ -25,7 +25,7 @@ int cli_val_text_scan(struct cli_val_text *v, FILE *f);
 int cli_val_text_parse(struct cli_val_text *v, const char *s);
 
 int cli_val_text_cmp(
-	struct cli_val_text *v1,
-	struct cli_val_text *v2);
+	struct cli_val_text *v,
+	struct cli_val_text *other_v);
 
 struct cli_val_text *cli_val_text_create_clone(struct cli_val_text *other_v);

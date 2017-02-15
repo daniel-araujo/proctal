@@ -76,32 +76,25 @@ inline int cli_val_byte_parse_bin(struct cli_val_byte *v, const char *s, size_t 
 }
 
 /*
- * Adds two byte values and stores the result in the third argument.
- *
- * The third argument can be one of the first 2 arguments.
+ * Adds the other value.
  */
 inline int cli_val_byte_add(
-	struct cli_val_byte *v1,
-	struct cli_val_byte *v2,
-	struct cli_val_byte *vr)
+	struct cli_val_byte *v,
+	struct cli_val_byte *other_v)
 {
-	vr->byte = v1->byte + v2->byte;
+	v->byte = v->byte + other_v->byte;
 
 	return 1;
 }
 
 /*
- * Subtracts the second byte value from the first one and stores the result
- * in the third.
- *
- * The third argument can be one of the first 2 arguments.
+ * Subtracts the other value.
  */
 inline int cli_val_byte_sub(
-	struct cli_val_byte *v1,
-	struct cli_val_byte *v2,
-	struct cli_val_byte *vr)
+	struct cli_val_byte *v,
+	struct cli_val_byte *other_v)
 {
-	vr->byte = v1->byte - v2->byte;
+	v->byte = v->byte - other_v->byte;
 
 	return 1;
 }
@@ -114,10 +107,10 @@ inline int cli_val_byte_sub(
  * Returns -1 if the first value is less than the second one.
  */
 inline int cli_val_byte_cmp(
-	struct cli_val_byte *v1,
-	struct cli_val_byte *v2)
+	struct cli_val_byte *v,
+	struct cli_val_byte *other_v)
 {
-	return COMPARE(v1->byte, v2->byte);
+	return COMPARE(v->byte, other_v->byte);
 }
 
 /*

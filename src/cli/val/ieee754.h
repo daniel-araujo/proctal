@@ -196,25 +196,18 @@ inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee7
 }
 
 /*
- * Adds two floating point values and stores the result in the third argument.
- *
- * The third argument can be one of the first 2 arguments.
+ * Adds the other value.
  */
 int cli_val_ieee754_add(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2,
-	struct cli_val_ieee754 *vr);
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v);
 
 /*
- * Subtracts the second floating point value from the first one and stores the
- * result in the third.
- *
- * The third argument can be one of the first 2 arguments.
+ * Subtracts the other value.
  */
 int cli_val_ieee754_sub(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2,
-	struct cli_val_ieee754 *vr);
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v);
 
 /*
  * Compares two floating point values.
@@ -224,8 +217,8 @@ int cli_val_ieee754_sub(
  * Returns -1 if the first value is less than the second one.
  */
 int cli_val_ieee754_cmp(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2);
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v);
 
 /*
  * Attempts to write the floating point value as text to a file.

@@ -97,12 +97,12 @@ inline int cli_val_address_parse_bin(struct cli_val_address *v, const char *s, s
  * Returns -1 if the first value is less than the second one.
  */
 inline int cli_val_address_cmp(
-	struct cli_val_address *v1,
-	struct cli_val_address *v2)
+	struct cli_val_address *v,
+	struct cli_val_address *other_v)
 {
-	return v1->address == v2->address
+	return v->address == other_v->address
 		? 0
-		: v1->address > v2->address ? 1 : -1;
+		: v->address > other_v->address ? 1 : -1;
 }
 
 /*

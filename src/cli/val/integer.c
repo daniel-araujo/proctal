@@ -4,44 +4,34 @@
 #include "magic/magic.h"
 
 int cli_val_integer_unsigned_add(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_unsigned_sub(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_unsigned_cmp(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s);
 
 int cli_val_integer_2scmpl_add(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_2scmpl_sub(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_2scmpl_cmp(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s);
 
 struct cli_val_integer_sign_impl {
-	int (*add)(
-		struct cli_val_integer *,
-		struct cli_val_integer *,
-		struct cli_val_integer *);
-	int (*sub)(
-		struct cli_val_integer *,
-		struct cli_val_integer *,
-		struct cli_val_integer *);
+	int (*add)(struct cli_val_integer *, struct cli_val_integer *);
+	int (*sub)(struct cli_val_integer *, struct cli_val_integer *);
 	int (*cmp)(struct cli_val_integer *, struct cli_val_integer *);
 	int (*print)(struct cli_val_integer *, FILE *);
 	int (*scan)(struct cli_val_integer *, FILE *);
@@ -107,26 +97,24 @@ int cli_val_integer_parse_bin(struct cli_val_integer *v, const char *s, size_t l
 struct cli_val_integer *cli_val_integer_create_clone(struct cli_val_integer *other_v);
 
 int cli_val_integer_add(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	return get_sign_impl_by_sign(vr->attr.sign)->add(v1, v2, vr);
+	return get_sign_impl_by_sign(v->attr.sign)->add(v, other_v);
 }
 
 int cli_val_integer_sub(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	return get_sign_impl_by_sign(vr->attr.sign)->sub(v1, v2, vr);
+	return get_sign_impl_by_sign(v->attr.sign)->sub(v, other_v);
 }
 
 int cli_val_integer_cmp(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	return get_sign_impl_by_sign(v1->attr.sign)->cmp(v1, v2);
+	return get_sign_impl_by_sign(v->attr.sign)->cmp(v, other_v);
 }
 
 int cli_val_integer_print(struct cli_val_integer *v, FILE *f)

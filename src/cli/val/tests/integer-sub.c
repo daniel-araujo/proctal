@@ -49,7 +49,7 @@ int main(void)
 		struct cli_val_integer *v2 = cli_val_integer_create(&a);
 		cli_val_integer_parse_bin(v2, &test->value2, sizeof(test->value2));
 
-		cli_val_integer_sub(v1, v2, v1);
+		cli_val_integer_sub(v1, v2);
 
 		int8_t *r = cli_val_integer_raw(v1);
 

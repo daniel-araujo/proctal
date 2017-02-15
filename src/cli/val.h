@@ -82,19 +82,14 @@ size_t cli_val_sizeof(cli_val v);
 void *cli_val_raw(cli_val v);
 
 /*
- * Adds the first 2 values and stores the result in the third.
- *
- * The third value can be one of the first 2.
+ * Adds the other value.
  */
-int cli_val_add(cli_val v1, cli_val v2, cli_val vr);
+int cli_val_add(cli_val v, cli_val other_v);
 
 /*
- * Subtracts the second value from the first and stores the result in the
- * third.
- *
- * The third value can be one of the first 2.
+ * Subtracts the other value.
  */
-int cli_val_sub(cli_val v1, cli_val v2, cli_val vr);
+int cli_val_sub(cli_val v, cli_val other_v);
 
 /*
  * Compares two values.
@@ -103,7 +98,7 @@ int cli_val_sub(cli_val v1, cli_val v2, cli_val vr);
  * Returns 1 if the first is greater than the second.
  * Returns -1 if the first is less than the second.
  */
-int cli_val_cmp(cli_val v1, cli_val v2);
+int cli_val_cmp(cli_val v, cli_val other_v);
 
 /*
  * Attempts to write the value as text to a file.

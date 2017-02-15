@@ -13,8 +13,8 @@ void *cli_val_address_raw(struct cli_val_address *v);
 int cli_val_address_parse_bin(struct cli_val_address *v, const char *s, size_t length);
 
 int cli_val_address_cmp(
-	struct cli_val_address *v1,
-	struct cli_val_address *v2);
+	struct cli_val_address *v,
+	struct cli_val_address *other_v);
 
 int cli_val_address_print(struct cli_val_address *v, FILE *f);
 

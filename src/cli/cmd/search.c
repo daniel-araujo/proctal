@@ -55,9 +55,9 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->inc) {
-		cli_val exactly = cli_val_create_clone(arg->value);
+		cli_val exactly = cli_val_create_clone(previous_value);
 
-		if (cli_val_add(previous_value, arg->inc_value, exactly)
+		if (cli_val_add(exactly, arg->inc_value)
 			&& cli_val_cmp(value, exactly) != 0) {
 			cli_val_destroy(exactly);
 			return 0;
@@ -67,9 +67,9 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->inc_up_to) {
-		cli_val upto = cli_val_create_clone(arg->value);
+		cli_val upto = cli_val_create_clone(previous_value);
 
-		if (cli_val_add(previous_value, arg->inc_up_to_value, upto)
+		if (cli_val_add(upto, arg->inc_up_to_value)
 			&& !(cli_val_cmp(value, upto) <= 0
 				&& cli_val_cmp(value, previous_value) > 0)) {
 			cli_val_destroy(upto);
@@ -80,9 +80,9 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->dec) {
-		cli_val exactly = cli_val_create_clone(arg->value);
+		cli_val exactly = cli_val_create_clone(previous_value);
 
-		if (cli_val_sub(previous_value, arg->dec_value, exactly)
+		if (cli_val_sub(exactly, arg->dec_value)
 			&& cli_val_cmp(value, exactly) != 0) {
 			cli_val_destroy(exactly);
 			return 0;
@@ -92,9 +92,9 @@ static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val 
 	}
 
 	if (arg->dec_up_to) {
-		cli_val upto = cli_val_create_clone(arg->value);
+		cli_val upto = cli_val_create_clone(previous_value);
 
-		if (cli_val_sub(previous_value, arg->dec_up_to_value, upto)
+		if (cli_val_sub(upto, arg->dec_up_to_value)
 			&& !(cli_val_cmp(value, upto) >= 0
 				&& cli_val_cmp(value, previous_value) < 0)) {
 			cli_val_destroy(upto);

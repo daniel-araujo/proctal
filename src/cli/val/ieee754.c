@@ -26,14 +26,13 @@ int cli_val_ieee754_parse_bin(struct cli_val_ieee754 *v, const char *s, size_t l
 struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee754 *other_v);
 
 int cli_val_ieee754_add(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2,
-	struct cli_val_ieee754 *vr)
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_ADD(TYPE) \
-	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) + DEREF(TYPE, v2->data)), 1
+	(DEREF(TYPE, v->data) = DEREF(TYPE, v->data) + DEREF(TYPE, other_v->data)), 1
 
-	switch (vr->attr.precision) {
+	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
 		return NATIVE_ADD(float);
 
@@ -51,14 +50,13 @@ int cli_val_ieee754_add(
 }
 
 int cli_val_ieee754_sub(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2,
-	struct cli_val_ieee754 *vr)
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_SUB(TYPE) \
-	(DEREF(TYPE, vr->data) = DEREF(TYPE, v1->data) - DEREF(TYPE, v2->data)), 1
+	(DEREF(TYPE, v->data) = DEREF(TYPE, v->data) - DEREF(TYPE, other_v->data)), 1
 
-	switch (vr->attr.precision) {
+	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
 		return NATIVE_SUB(float);
 
@@ -76,13 +74,13 @@ int cli_val_ieee754_sub(
 }
 
 int cli_val_ieee754_cmp(
-	struct cli_val_ieee754 *v1,
-	struct cli_val_ieee754 *v2)
+	struct cli_val_ieee754 *v,
+	struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_CMP(TYPE) \
-	COMPARE(DEREF(TYPE, v1->data), DEREF(TYPE, v2->data))
+	COMPARE(DEREF(TYPE, v->data), DEREF(TYPE, other_v->data))
 
-	switch (v1->attr.precision) {
+	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
 		return NATIVE_CMP(float);
 

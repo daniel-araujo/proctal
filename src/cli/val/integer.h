@@ -244,25 +244,18 @@ inline struct cli_val_integer *cli_val_integer_create_clone(struct cli_val_integ
 }
 
 /*
- * Adds two integer values and stores the result in the third argument.
- *
- * The third argument can be one of the first 2 arguments.
+ * Adds the other value.
  */
 int cli_val_integer_add(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 
 /*
- * Subtracts the second integer value from the first one and stores the result
- * in the third.
- *
- * The third argument can be one of the first 2 arguments.
+ * Subtracts the other value.
  */
 int cli_val_integer_sub(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 
 /*
  * Compares two integer values.
@@ -272,8 +265,8 @@ int cli_val_integer_sub(
  * Returns -1 if the first integer value is less than the second one.
  */
 int cli_val_integer_cmp(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2);
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v);
 
 /*
  * Attempts to write the integer value as text to a file.
