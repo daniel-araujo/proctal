@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "cli/cmd/alloc.h"
 #include "cli/printer.h"
 #include "lib/include/proctal.h"
