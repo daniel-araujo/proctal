@@ -56,6 +56,7 @@ proctal_SOURCES = \
 	src/cli/val/byte.c \
 	src/cli/val/text.h \
 	src/cli/val/text.c \
+	src/cli/val/text-charset-ascii.c \
 	src/cli/val/instruction.h \
 	src/cli/val/instruction.c \
 	src/cli/val.h \
@@ -88,22 +89,26 @@ tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-par
 check_PROGRAMS += tests/cli/val/parse-valid-ascii
 tests_cli_val_parse_valid_ascii_SOURCES = src/cli/val/tests/parse-valid-ascii.c
 tests_cli_val_parse_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+tests_cli_val_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
+	src/cli/val/proctal-text-charset-ascii.o
 
 check_PROGRAMS += tests/cli/val/parse-bin-valid-ascii
 tests_cli_val_parse_bin_valid_ascii_SOURCES = src/cli/val/tests/parse-bin-valid-ascii.c
 tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+tests_cli_val_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
+	src/cli/val/proctal-text-charset-ascii.o
 
 check_PROGRAMS += tests/cli/val/parse-invalid-ascii
 tests_cli_val_parse_invalid_ascii_SOURCES = src/cli/val/tests/parse-invalid-ascii.c
 tests_cli_val_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+tests_cli_val_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
+	src/cli/val/proctal-text-charset-ascii.o
 
 check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
 tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
 tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o
+tests_cli_val_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
+	src/cli/val/proctal-text-charset-ascii.o
 
 check_PROGRAMS += tests/cli/val/integer-add
 tests_cli_val_integer_add_SOURCES = src/cli/val/tests/integer-add.c

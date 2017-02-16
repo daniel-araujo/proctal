@@ -114,91 +114,7 @@ inline void *cli_val_text_raw(struct cli_val_text *v)
 /*
  * Size of text character.
  */
-inline size_t cli_val_text_sizeof(struct cli_val_text *v)
-{
-	switch (v->attr.charset) {
-	case CLI_VAL_TEXT_CHARSET_ASCII:
-		return 1;
-	}
-
-	// Not expecting to ever reach here.
-	assert(0);
-}
-
-/*
- * Attempts to interpret a text value from a stream of bytes.
- *
- * Returns how many bytes were consumed on success, 0 on failure.
- */
-inline int cli_val_text_parse_bin(struct cli_val_text *v, const char *s, size_t length)
-{
-	switch (v->attr.charset) {
-	case CLI_VAL_TEXT_CHARSET_ASCII:
-		if (length == 0) {
-			return 0;
-		}
-
-		if ((unsigned char) *s > 127) {
-			// Not a valid ASCII character.
-			return 0;
-		}
-
-		DEREF(char, v->data) = *s;
-
-		return 1;
-	}
-
-	// Not expecting to ever reach here.
-	assert(0);
-}
-
-/*
- * Attempts to write the text value as text to a file.
- *
- * Returns how many characters were written.
- */
-inline int cli_val_text_print(struct cli_val_text *v, FILE *f)
-{
-	return fprintf(f, "%c", DEREF(char, v->data));
-}
-
-/*
- * Attempts to read the text value as text from a file.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_text_scan(struct cli_val_text *v, FILE *f)
-{
-	return fscanf(f, "%c", v->data) == 1 ? 1 : 0;
-}
-
-/*
- * Attempts to parse text from a C-style string.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
-{
-	switch (v->attr.charset) {
-	case CLI_VAL_TEXT_CHARSET_ASCII:
-		if (*s == '\0') {
-			// End of the string.
-			return 0;
-		}
-
-		if ((unsigned char) *s > 127) {
-			// Not a valid ASCII character.
-			return 0;
-		}
-
-		DEREF(char, v->data) = *s;
-
-		return 1;
-	}
-
-	// Not expecting to ever reach here.
-	assert(0);
-}
+size_t cli_val_text_sizeof(struct cli_val_text *v);
 
 /*
  * Compares two text characters.
@@ -206,24 +122,37 @@ inline int cli_val_text_parse(struct cli_val_text *v, const char *s)
  * Returns 0 if they're equal.
  * Returns either 1 or -1 if they're different.
  */
-inline int cli_val_text_cmp(
+int cli_val_text_cmp(
 	struct cli_val_text *v,
-	struct cli_val_text *other_v)
-{
-	if (v->attr.charset != other_v->attr.charset) {
-		// We're going to consider text characters of different
-		// encodings to be different.
-		return 1;
-	}
+	struct cli_val_text *other_v);
 
-	switch (v->attr.charset) {
-	case CLI_VAL_TEXT_CHARSET_ASCII:
-		return COMPARE(DEREF(char, v->data), DEREF(char, other_v->data));
-	}
+/*
+ * Attempts to write the text value as text to a file.
+ *
+ * Returns how many characters were written.
+ */
+int cli_val_text_print(struct cli_val_text *v, FILE *f);
 
-	// Not expecting to ever reach here.
-	assert(0);
-}
+/*
+ * Attempts to read the text value as text from a file.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_text_scan(struct cli_val_text *v, FILE *f);
+
+/*
+ * Attempts to parse text from a C-style string.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_text_parse(struct cli_val_text *v, const char *s);
+
+/*
+ * Attempts to interpret a text value from a stream of bytes.
+ *
+ * Returns how many bytes were consumed on success, 0 on failure.
+ */
+int cli_val_text_parse_bin(struct cli_val_text *v, const char *s, size_t length);
 
 /*
  * Creates a new text value based off an existing one.
