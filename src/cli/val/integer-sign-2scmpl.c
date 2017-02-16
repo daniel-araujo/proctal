@@ -4,22 +4,21 @@
 #include "cli/val/native.h"
 
 int cli_val_integer_2scmpl_add(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	switch (vr->attr.size) {
+	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_ADD(int8_t, v1->data, v2->data, vr->data);
+		return NATIVE_ADD(int8_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_ADD(int16_t, v1->data, v2->data, vr->data);
+		return NATIVE_ADD(int16_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_ADD(int32_t, v1->data, v2->data, vr->data);
+		return NATIVE_ADD(int32_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_ADD(int64_t, v1->data, v2->data, vr->data);
+		return NATIVE_ADD(int64_t, v->data, other_v->data);
 	}
 
 	// Not expecting to ever reach here.
@@ -27,22 +26,21 @@ int cli_val_integer_2scmpl_add(
 }
 
 int cli_val_integer_2scmpl_sub(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2,
-	struct cli_val_integer *vr)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	switch (vr->attr.size) {
+	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_SUB(int8_t, v1->data, v2->data, vr->data);
+		return NATIVE_SUB(int8_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_SUB(int16_t, v1->data, v2->data, vr->data);
+		return NATIVE_SUB(int16_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_SUB(int32_t, v1->data, v2->data, vr->data);
+		return NATIVE_SUB(int32_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_SUB(int64_t, v1->data, v2->data, vr->data);
+		return NATIVE_SUB(int64_t, v->data, other_v->data);
 	}
 
 	// Not expecting to ever reach here.
@@ -50,21 +48,21 @@ int cli_val_integer_2scmpl_sub(
 }
 
 int cli_val_integer_2scmpl_cmp(
-	struct cli_val_integer *v1,
-	struct cli_val_integer *v2)
+	struct cli_val_integer *v,
+	struct cli_val_integer *other_v)
 {
-	switch (v1->attr.size) {
+	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_CMP(int8_t, v1->data, v2->data);
+		return NATIVE_CMP(int8_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_CMP(int16_t, v1->data, v2->data);
+		return NATIVE_CMP(int16_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_CMP(int32_t, v1->data, v2->data);
+		return NATIVE_CMP(int32_t, v->data, other_v->data);
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_CMP(int64_t, v1->data, v2->data);
+		return NATIVE_CMP(int64_t, v->data, other_v->data);
 	}
 
 	// Not expecting to ever reach here.
