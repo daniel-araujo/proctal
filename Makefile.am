@@ -59,7 +59,6 @@ proctal_SOURCES = \
 	src/cli/val/text-charset-ascii.c \
 	src/cli/val/instruction.h \
 	src/cli/val/instruction.c \
-	src/cli/val/native.h \
 	src/cli/val.h \
 	src/cli/val.c \
 	src/cli/val-list.h \

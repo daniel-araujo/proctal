@@ -1,7 +1,7 @@
 #include <assert.h>
 
 #include "cli/val/integer.h"
-#include "cli/val/native.h"
+#include "magic/magic.h"
 
 int cli_val_integer_unsigned_add(
 	struct cli_val_integer *v,
@@ -9,20 +9,24 @@ int cli_val_integer_unsigned_add(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_ADD(uint8_t, v->data, other_v->data);
+		DEREF(uint8_t, v->data) = DEREF(uint8_t, v->data) + DEREF(uint8_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_ADD(uint16_t, v->data, other_v->data);
+		DEREF(uint16_t, v->data) = DEREF(uint16_t, v->data) + DEREF(uint16_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_ADD(uint32_t, v->data, other_v->data);
+		DEREF(uint32_t, v->data) = DEREF(uint32_t, v->data) + DEREF(uint32_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_ADD(uint64_t, v->data, other_v->data);
-	}
+		DEREF(uint64_t, v->data) = DEREF(uint64_t, v->data) + DEREF(uint64_t, other_v->data);
+		return 1;
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_unsigned_sub(
@@ -31,20 +35,24 @@ int cli_val_integer_unsigned_sub(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_SUB(uint8_t, v->data, other_v->data);
+		DEREF(uint8_t, v->data) = DEREF(uint8_t, v->data) - DEREF(uint8_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_SUB(uint16_t, v->data, other_v->data);
+		DEREF(uint16_t, v->data) = DEREF(uint16_t, v->data) - DEREF(uint16_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_SUB(uint32_t, v->data, other_v->data);
+		DEREF(uint32_t, v->data) = DEREF(uint32_t, v->data) - DEREF(uint32_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_SUB(uint64_t, v->data, other_v->data);
-	}
+		DEREF(uint64_t, v->data) = DEREF(uint64_t, v->data) - DEREF(uint64_t, other_v->data);
+		return 1;
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_unsigned_cmp(
@@ -53,20 +61,20 @@ int cli_val_integer_unsigned_cmp(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_CMP(uint8_t, v->data, other_v->data);
+		return COMPARE(DEREF(uint8_t, v->data), DEREF(uint8_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_CMP(uint16_t, v->data, other_v->data);
+		return COMPARE(DEREF(uint16_t, v->data), DEREF(uint16_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_CMP(uint32_t, v->data, other_v->data);
+		return COMPARE(DEREF(uint32_t, v->data), DEREF(uint32_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_CMP(uint64_t, v->data, other_v->data);
-	}
+		return COMPARE(DEREF(uint64_t, v->data), DEREF(uint64_t, other_v->data));
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f)
@@ -83,10 +91,10 @@ int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fprintf(f, "%" PRIu64, DEREF(uint64_t, v->data));
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f)
@@ -103,10 +111,10 @@ int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fscanf(f, "%" SCNu64, (uint64_t *) v->data) == 1 ? 1 : 0;
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s)
@@ -123,8 +131,8 @@ int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return sscanf(s, "%" SCNu64, (uint64_t *) v->data) == 1 ? 1 : 0;
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }

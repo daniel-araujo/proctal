@@ -1,7 +1,7 @@
 #include <assert.h>
 
 #include "cli/val/integer.h"
-#include "cli/val/native.h"
+#include "magic/magic.h"
 
 int cli_val_integer_2scmpl_add(
 	struct cli_val_integer *v,
@@ -9,20 +9,25 @@ int cli_val_integer_2scmpl_add(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_ADD(int8_t, v->data, other_v->data);
+		DEREF(int8_t, v->data) = DEREF(int8_t, v->data) + DEREF(int8_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_ADD(int16_t, v->data, other_v->data);
+		DEREF(int16_t, v->data) = DEREF(int16_t, v->data) + DEREF(int16_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_ADD(int32_t, v->data, other_v->data);
+		DEREF(int32_t, v->data) = DEREF(int32_t, v->data) + DEREF(int32_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_ADD(int64_t, v->data, other_v->data);
+		DEREF(int64_t, v->data) = DEREF(int64_t, v->data) + DEREF(int64_t, other_v->data);
+		return 1;
+
+	default:
+		return 0;
 	}
 
-	// Not expecting to ever reach here.
-	assert(0);
 }
 
 int cli_val_integer_2scmpl_sub(
@@ -31,20 +36,24 @@ int cli_val_integer_2scmpl_sub(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_SUB(int8_t, v->data, other_v->data);
+		DEREF(int8_t, v->data) = DEREF(int8_t, v->data) - DEREF(int8_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_SUB(int16_t, v->data, other_v->data);
+		DEREF(int16_t, v->data) = DEREF(int16_t, v->data) - DEREF(int16_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_SUB(int32_t, v->data, other_v->data);
+		DEREF(int32_t, v->data) = DEREF(int32_t, v->data) - DEREF(int32_t, other_v->data);
+		return 1;
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_SUB(int64_t, v->data, other_v->data);
-	}
+		DEREF(int64_t, v->data) = DEREF(int64_t, v->data) - DEREF(int64_t, other_v->data);
+		return 1;
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_2scmpl_cmp(
@@ -53,20 +62,20 @@ int cli_val_integer_2scmpl_cmp(
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
-		return NATIVE_CMP(int8_t, v->data, other_v->data);
+		return COMPARE(DEREF(int8_t, v->data), DEREF(int8_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_16:
-		return NATIVE_CMP(int16_t, v->data, other_v->data);
+		return COMPARE(DEREF(int16_t, v->data), DEREF(int16_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_32:
-		return NATIVE_CMP(int32_t, v->data, other_v->data);
+		return COMPARE(DEREF(int32_t, v->data), DEREF(int32_t, other_v->data));
 
 	case CLI_VAL_INTEGER_SIZE_64:
-		return NATIVE_CMP(int64_t, v->data, other_v->data);
-	}
+		return COMPARE(DEREF(int64_t, v->data), DEREF(int64_t, other_v->data));
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
@@ -83,10 +92,10 @@ int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fprintf(f, "%" PRIi64, DEREF(int64_t, v->data));
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
@@ -103,10 +112,10 @@ int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fscanf(f, "%" SCNi64, (int64_t *) v->data) == 1 ? 1 : 0;
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
 
 int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s)
@@ -123,8 +132,8 @@ int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return sscanf(s, "%" SCNi64, (int64_t *) v->data) == 1 ? 1 : 0;
-	}
 
-	// Not expecting to ever reach here.
-	assert(0);
+	default:
+		return 0;
+	}
 }
