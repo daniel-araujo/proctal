@@ -44,10 +44,10 @@ int main(void)
 		struct test *test = &tests[i];
 
 		struct cli_val_integer *v1 = cli_val_integer_create(&a);
-		cli_val_integer_parse_bin(v1, &test->value1, sizeof(test->value2));
+		cli_val_integer_parse_bin(v1, (const char *) &test->value1, sizeof(test->value2));
 
 		struct cli_val_integer *v2 = cli_val_integer_create(&a);
-		cli_val_integer_parse_bin(v2, &test->value2, sizeof(test->value2));
+		cli_val_integer_parse_bin(v2, (const char *) &test->value2, sizeof(test->value2));
 
 		cli_val_integer_sub(v1, v2);
 
