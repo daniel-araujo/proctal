@@ -184,6 +184,8 @@ Functions, types and macros are documented in the header file.
 
 Dependencies:
 
+- GCC [[9]]
+- libtool [[10]]
 - capstone [[3]]
 - keystone [[4]]
 
@@ -267,3 +269,5 @@ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 [6]: http://php.net/
 [7]: https://www.gnu.org/software/autoconf/autoconf.html
 [8]: https://www.gnu.org/software/automake/
+[9]: https://gcc.gnu.org/
+[10]: https://www.gnu.org/software/libtool/libtool.html
