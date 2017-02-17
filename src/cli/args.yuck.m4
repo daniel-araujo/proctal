@@ -1,5 +1,5 @@
 define(`PID_ARGUMENT', `
-  -p, --pid=PID         Process ID (PID) of a running program.
+  -p, --pid=PID         Process ID (PID) of a program.
 ')dnl
 define(`TYPE_ARGUMENTS', `
   -t, --type=TYPE
@@ -166,8 +166,8 @@ Example:
 Usage: proctal freeze
 Freezes main thread of execution.
 
-The running program will be frozen as long as the command is executing. It will
-stop executing when it receives the SIGINT signal.
+The program will be frozen as long as the command is executing. It will stop
+executing when it receives the SIGINT signal.
 
 Example:
         proctal freeze --pid=12345
