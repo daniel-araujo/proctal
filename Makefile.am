@@ -131,6 +131,30 @@ tests_cli_val_integer_cmp_LDFLAGS = src/cli/val/proctal-integer.o \
 	src/cli/val/proctal-integer-sign-unsigned.o \
 	src/cli/val/proctal-integer-sign-2scmpl.o
 
+check_PROGRAMS += tests/cli/val/integer-print
+tests_cli_val_integer_print_SOURCES = src/cli/val/tests/integer-print.c
+tests_cli_val_integer_print_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_print_LDADD = libotrap.a
+tests_cli_val_integer_print_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
+
+check_PROGRAMS += tests/cli/val/integer-scan
+tests_cli_val_integer_scan_SOURCES = src/cli/val/tests/integer-scan.c
+tests_cli_val_integer_scan_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_scan_LDADD = libotrap.a
+tests_cli_val_integer_scan_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
+
+check_PROGRAMS += tests/cli/val/integer-parse
+tests_cli_val_integer_parse_SOURCES = src/cli/val/tests/integer-parse.c
+tests_cli_val_integer_parse_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_parse_LDADD = libotrap.a
+tests_cli_val_integer_parse_LDFLAGS = src/cli/val/proctal-integer.o \
+	src/cli/val/proctal-integer-sign-unsigned.o \
+	src/cli/val/proctal-integer-sign-2scmpl.o
+
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
