@@ -269,4 +269,52 @@ tests_magic_deref_SOURCES = src/magic/tests/deref.c
 tests_magic_deref_CFLAGS = $(proctal_cflags)
 
 
+# Otrap module.
+noinst_LIBRARIES += libotrap.a
+libotrap_a_SOURCES = \
+	src/otrap/otrap.h \
+	src/otrap/otrap.c
+libotrap_a_CFLAGS = $(proctal_cflags)
+
+check_PROGRAMS += tests/otrap/read
+tests_otrap_read_SOURCES = src/otrap/tests/read.c
+tests_otrap_read_CFLAGS = $(proctal_cflags)
+tests_otrap_read_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/read-twice
+tests_otrap_read_twice_SOURCES = src/otrap/tests/read-twice.c
+tests_otrap_read_twice_CFLAGS = $(proctal_cflags)
+tests_otrap_read_twice_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/read-too-much
+tests_otrap_read_too_much_SOURCES = src/otrap/tests/read-too-much.c
+tests_otrap_read_too_much_CFLAGS = $(proctal_cflags)
+tests_otrap_read_too_much_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/read-nothing
+tests_otrap_read_nothing_SOURCES = src/otrap/tests/read-nothing.c
+tests_otrap_read_nothing_CFLAGS = $(proctal_cflags)
+tests_otrap_read_nothing_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/skip
+tests_otrap_skip_SOURCES = src/otrap/tests/skip.c
+tests_otrap_skip_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/skip-twice
+tests_otrap_skip_twice_SOURCES = src/otrap/tests/skip-twice.c
+tests_otrap_skip_twice_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_twice_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/skip-too-much
+tests_otrap_skip_too_much_SOURCES = src/otrap/tests/skip-too-much.c
+tests_otrap_skip_too_much_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_too_much_LDADD = libotrap.a
+
+check_PROGRAMS += tests/otrap/skip-nothing
+tests_otrap_skip_nothing_SOURCES = src/otrap/tests/skip-nothing.c
+tests_otrap_skip_nothing_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_nothing_LDADD = libotrap.a
+
+
 TESTS = $(check_PROGRAMS) $(dist_check_SCRIPTS)
