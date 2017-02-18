@@ -23,11 +23,9 @@ int cli_val_integer_2scmpl_add(
 	case CLI_VAL_INTEGER_SIZE_64:
 		DEREF(int64_t, v->data) = DEREF(int64_t, v->data) + DEREF(int64_t, other_v->data);
 		return 1;
-
-	default:
-		return 0;
 	}
 
+	return 0;
 }
 
 int cli_val_integer_2scmpl_sub(
@@ -50,10 +48,9 @@ int cli_val_integer_2scmpl_sub(
 	case CLI_VAL_INTEGER_SIZE_64:
 		DEREF(int64_t, v->data) = DEREF(int64_t, v->data) - DEREF(int64_t, other_v->data);
 		return 1;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_2scmpl_cmp(
@@ -72,10 +69,9 @@ int cli_val_integer_2scmpl_cmp(
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return COMPARE(DEREF(int64_t, v->data), DEREF(int64_t, other_v->data));
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
@@ -92,10 +88,9 @@ int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fprintf(f, "%" PRIi64, DEREF(int64_t, v->data));
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
@@ -112,10 +107,9 @@ int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fscanf(f, "%" SCNi64, (int64_t *) v->data) == 1 ? 1 : 0;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s)
@@ -132,8 +126,7 @@ int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return sscanf(s, "%" SCNi64, (int64_t *) v->data) == 1 ? 1 : 0;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }

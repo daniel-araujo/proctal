@@ -134,6 +134,9 @@ static cli_val create_cli_val_from_type_arguments(struct type_arguments *ta)
 
 		return cli_val_wrap(ta->type, v);
 	}
+
+	case CLI_VAL_TYPE_NIL:
+		break;
 	}
 
 	return cli_val_nil();
@@ -226,6 +229,14 @@ static inline int cli_type_arguments_from_yuck_arg_##NAME(struct type_arguments 
 			type->instruction_arch = CLI_DEFAULT_VAL_INSTRUCTION_ARCH; \
 		} \
 		break; \
+\
+	case CLI_VAL_TYPE_BYTE: \
+	case CLI_VAL_TYPE_ADDRESS: \
+		break; \
+\
+	default: \
+		fputs("Unknown type.\n", stderr); \
+		return 0; \
 	} \
 \
 	return 1; \

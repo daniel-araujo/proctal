@@ -45,8 +45,7 @@ int cli_val_ieee754_add(
 
 #undef NATIVE_ADD
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }
 
 int cli_val_ieee754_sub(
@@ -69,8 +68,7 @@ int cli_val_ieee754_sub(
 
 #undef NATIVE_SUB
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }
 
 int cli_val_ieee754_cmp(
@@ -93,8 +91,7 @@ int cli_val_ieee754_cmp(
 
 #undef NATIVE_CMP
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }
 
 int cli_val_ieee754_print(struct cli_val_ieee754 *v, FILE *f)
@@ -115,8 +112,7 @@ int cli_val_ieee754_print(struct cli_val_ieee754 *v, FILE *f)
 
 #undef PRINTF
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }
 
 int cli_val_ieee754_scan(struct cli_val_ieee754 *v, FILE *f)
@@ -137,8 +133,7 @@ int cli_val_ieee754_scan(struct cli_val_ieee754 *v, FILE *f)
 
 #undef SCANF
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }
 
 int cli_val_ieee754_parse(struct cli_val_ieee754 *v, const char *s)
@@ -159,6 +154,5 @@ int cli_val_ieee754_parse(struct cli_val_ieee754 *v, const char *s)
 
 #undef SCANF
 
-	// Not expecting to ever reach here.
-	assert(0);
+	return 0;
 }

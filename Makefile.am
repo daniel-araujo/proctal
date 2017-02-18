@@ -11,9 +11,9 @@ noinst_LIBRARIES =
 proctal_cflags_src_include = -iquote$(srcdir)/src -iquotesrc
 proctal_cflags_src_lib_include = -I$(srcdir)/src/lib/include -Isrc/lib/include
 proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
-	-Wextra -Wpointer-arith \
-	-Wno-switch $(proctal_xopen_flags) -Wno-unused-parameter \
-	-Wno-unused-function $(proctal_posix_flags) -Wno-maybe-uninitialized
+	-Wextra -Wpointer-arith $(proctal_xopen_flags) \
+	-Wno-unused-parameter -Wno-unused-function \
+	$(proctal_posix_flags) -Wno-maybe-uninitialized
 
 # Cli tool.
 bin_PROGRAMS += proctal

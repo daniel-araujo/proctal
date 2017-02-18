@@ -23,10 +23,9 @@ int cli_val_integer_unsigned_add(
 	case CLI_VAL_INTEGER_SIZE_64:
 		DEREF(uint64_t, v->data) = DEREF(uint64_t, v->data) + DEREF(uint64_t, other_v->data);
 		return 1;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_unsigned_sub(
@@ -49,10 +48,9 @@ int cli_val_integer_unsigned_sub(
 	case CLI_VAL_INTEGER_SIZE_64:
 		DEREF(uint64_t, v->data) = DEREF(uint64_t, v->data) - DEREF(uint64_t, other_v->data);
 		return 1;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_unsigned_cmp(
@@ -71,10 +69,9 @@ int cli_val_integer_unsigned_cmp(
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return COMPARE(DEREF(uint64_t, v->data), DEREF(uint64_t, other_v->data));
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f)
@@ -91,10 +88,9 @@ int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fprintf(f, "%" PRIu64, DEREF(uint64_t, v->data));
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f)
@@ -111,10 +107,9 @@ int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return fscanf(f, "%" SCNu64, (uint64_t *) v->data) == 1 ? 1 : 0;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
 
 int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s)
@@ -131,8 +126,7 @@ int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s)
 
 	case CLI_VAL_INTEGER_SIZE_64:
 		return sscanf(s, "%" SCNu64, (uint64_t *) v->data) == 1 ? 1 : 0;
-
-	default:
-		return 0;
 	}
+
+	return 0;
 }
