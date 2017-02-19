@@ -101,13 +101,13 @@ int cli_val_ieee754_print(struct cli_val_ieee754 *v, FILE *f)
 
 	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:
-		return PRINTF("%f", float);
+		return PRINTF("%g", float);
 
 	case CLI_VAL_IEEE754_PRECISION_DOUBLE:
-		return PRINTF("%f", double);
+		return PRINTF("%g", double);
 
 	case CLI_VAL_IEEE754_PRECISION_EXTENDED:
-		return PRINTF("%Lf", long double);
+		return PRINTF("%Lg", long double);
 	}
 
 #undef PRINTF

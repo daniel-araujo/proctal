@@ -44,6 +44,21 @@ proctal_SOURCES = \
 	src/cli/cmd/measure.h \
 	src/cli/cmd/dump.c \
 	src/cli/cmd/dump.h \
+	src/cli/scanner.h \
+	src/cli/scanner.c \
+	src/cli/parser.h \
+	src/cli/parser.c \
+	src/cli/parser-name.c \
+	src/cli/printer.h \
+	src/cli/printer.c \
+	src/cli/pattern.h \
+	src/cli/pattern.c \
+	src/cli/main.c
+proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+proctal_CFLAGS = $(proctal_cflags)
+
+noinst_LIBRARIES += libclival.a
+libclival_a_SOURCES = \
 	src/cli/val/integer.h \
 	src/cli/val/integer.c \
 	src/cli/val/integer-sign-unsigned.c \
@@ -62,19 +77,8 @@ proctal_SOURCES = \
 	src/cli/val.h \
 	src/cli/val.c \
 	src/cli/val-list.h \
-	src/cli/val-list.c \
-	src/cli/scanner.h \
-	src/cli/scanner.c \
-	src/cli/parser.h \
-	src/cli/parser.c \
-	src/cli/parser-name.c \
-	src/cli/printer.h \
-	src/cli/printer.c \
-	src/cli/pattern.h \
-	src/cli/pattern.c \
-	src/cli/main.c
-proctal_LDADD = libproctal.la libswbuf.a libchunk.a $(proctal_capstone_libs) $(proctal_keystone_libs)
-proctal_CFLAGS = $(proctal_cflags)
+	src/cli/val-list.c
+libclival_a_CFLAGS = $(proctal_cflags)
 
 check_PROGRAMS += tests/cli/invalid-patterns
 tests_cli_invalid_patterns_SOURCES = src/cli/tests/invalid-patterns.c
@@ -89,71 +93,47 @@ tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-par
 check_PROGRAMS += tests/cli/val/parse-valid-ascii
 tests_cli_val_parse_valid_ascii_SOURCES = src/cli/val/tests/parse-valid-ascii.c
 tests_cli_val_parse_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
-	src/cli/val/proctal-text-charset-ascii.o
+tests_cli_val_parse_valid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
 check_PROGRAMS += tests/cli/val/parse-bin-valid-ascii
 tests_cli_val_parse_bin_valid_ascii_SOURCES = src/cli/val/tests/parse-bin-valid-ascii.c
 tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_valid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
-	src/cli/val/proctal-text-charset-ascii.o
+tests_cli_val_parse_bin_valid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
 check_PROGRAMS += tests/cli/val/parse-invalid-ascii
 tests_cli_val_parse_invalid_ascii_SOURCES = src/cli/val/tests/parse-invalid-ascii.c
 tests_cli_val_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
-	src/cli/val/proctal-text-charset-ascii.o
+tests_cli_val_parse_invalid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
 check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
 tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
 tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_invalid_ascii_LDFLAGS = src/cli/val/proctal-text.o \
-	src/cli/val/proctal-text-charset-ascii.o
+tests_cli_val_parse_bin_invalid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
-check_PROGRAMS += tests/cli/val/integer-add
-tests_cli_val_integer_add_SOURCES = src/cli/val/tests/integer-add.c
-tests_cli_val_integer_add_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_add_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
+check_PROGRAMS += tests/cli/val/add
+tests_cli_val_add_SOURCES = src/cli/val/tests/add.c
+tests_cli_val_add_CFLAGS = $(proctal_cflags)
+tests_cli_val_add_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
-check_PROGRAMS += tests/cli/val/integer-sub
-tests_cli_val_integer_sub_SOURCES = src/cli/val/tests/integer-sub.c
-tests_cli_val_integer_sub_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_sub_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
+check_PROGRAMS += tests/cli/val/sub
+tests_cli_val_sub_SOURCES = src/cli/val/tests/sub.c
+tests_cli_val_sub_CFLAGS = $(proctal_cflags)
+tests_cli_val_sub_LDADD =  libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
-check_PROGRAMS += tests/cli/val/integer-cmp
-tests_cli_val_integer_cmp_SOURCES = src/cli/val/tests/integer-cmp.c
-tests_cli_val_integer_cmp_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_cmp_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
+check_PROGRAMS += tests/cli/val/cmp
+tests_cli_val_cmp_SOURCES = src/cli/val/tests/cmp.c
+tests_cli_val_cmp_CFLAGS = $(proctal_cflags)
+tests_cli_val_cmp_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
-check_PROGRAMS += tests/cli/val/integer-print
-tests_cli_val_integer_print_SOURCES = src/cli/val/tests/integer-print.c
-tests_cli_val_integer_print_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_print_LDADD = libotrap.a
-tests_cli_val_integer_print_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
+check_PROGRAMS += tests/cli/val/print
+tests_cli_val_print_SOURCES = src/cli/val/tests/print.c
+tests_cli_val_print_CFLAGS = $(proctal_cflags)
+tests_cli_val_print_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
-check_PROGRAMS += tests/cli/val/integer-scan
-tests_cli_val_integer_scan_SOURCES = src/cli/val/tests/integer-scan.c
-tests_cli_val_integer_scan_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_scan_LDADD = libotrap.a
-tests_cli_val_integer_scan_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
-
-check_PROGRAMS += tests/cli/val/integer-parse
-tests_cli_val_integer_parse_SOURCES = src/cli/val/tests/integer-parse.c
-tests_cli_val_integer_parse_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_parse_LDADD = libotrap.a
-tests_cli_val_integer_parse_LDFLAGS = src/cli/val/proctal-integer.o \
-	src/cli/val/proctal-integer-sign-unsigned.o \
-	src/cli/val/proctal-integer-sign-2scmpl.o
+check_PROGRAMS += tests/cli/val/parse
+tests_cli_val_parse_SOURCES = src/cli/val/tests/parse.c
+tests_cli_val_parse_CFLAGS = $(proctal_cflags)
+tests_cli_val_parse_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 

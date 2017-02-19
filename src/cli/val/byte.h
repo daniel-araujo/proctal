@@ -120,7 +120,7 @@ inline int cli_val_byte_cmp(
  */
 inline int cli_val_byte_print(struct cli_val_byte *v, FILE *f)
 {
-	return fprintf(f, "%02x", v->byte);
+	return fprintf(f, "%02X", v->byte);
 }
 
 /*

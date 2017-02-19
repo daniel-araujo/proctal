@@ -142,7 +142,13 @@ inline int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f)
 		return 0;
 	}
 
-	return fprintf(f, "%s\t%s", v->insn->mnemonic, v->insn->op_str);
+	int written = fprintf(f, "%s", v->insn->mnemonic);
+
+	if (*v->insn->op_str) {
+		written += fprintf(f, "\t%s", v->insn->op_str);
+	}
+
+	return written;
 }
 
 /*
