@@ -74,6 +74,8 @@ libclival_a_SOURCES = \
 	src/cli/val/text-charset-ascii.c \
 	src/cli/val/instruction.h \
 	src/cli/val/instruction.c \
+	src/cli/val/filter.h \
+	src/cli/val/filter.c \
 	src/cli/val.h \
 	src/cli/val.c \
 	src/cli/val-list.h \
@@ -134,6 +136,16 @@ check_PROGRAMS += tests/cli/val/parse
 tests_cli_val_parse_SOURCES = src/cli/val/tests/parse.c
 tests_cli_val_parse_CFLAGS = $(proctal_cflags)
 tests_cli_val_parse_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+
+check_PROGRAMS += tests/cli/val/filter-compare
+tests_cli_val_filter_compare_SOURCES = src/cli/val/tests/filter-compare.c
+tests_cli_val_filter_compare_CFLAGS = $(proctal_cflags)
+tests_cli_val_filter_compare_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+
+check_PROGRAMS += tests/cli/val/filter-compare-prev
+tests_cli_val_filter_compare_prev_SOURCES = src/cli/val/tests/filter-compare-prev.c
+tests_cli_val_filter_compare_prev_CFLAGS = $(proctal_cflags)
+tests_cli_val_filter_compare_prev_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 

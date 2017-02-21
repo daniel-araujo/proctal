@@ -3,108 +3,73 @@
 #include "cli/cmd/search.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
+#include "cli/val.h"
+#include "cli/val/filter.h"
 #include "lib/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
 
-static inline int pass_search_filters(struct cli_cmd_search_arg *arg, void *value)
+static inline struct cli_val_filter_compare_arg *create_filter_compare_arg(struct cli_cmd_search_arg *arg)
 {
-	if (arg->eq && cli_val_cmp(value, arg->eq_value) != 0) {
-		return 0;
+	struct cli_val_filter_compare_arg *filter_arg = malloc(sizeof(*filter_arg));
+
+	cli_val nil = cli_val_nil();
+
+#define COPY(NAME) \
+	if (arg->NAME) { \
+		filter_arg->NAME = arg->NAME##_value; \
+	} else { \
+		filter_arg->NAME = nil; \
 	}
 
-	if (arg->gt && cli_val_cmp(value, arg->gt_value) != 1) {
-		return 0;
-	}
+	COPY(eq);
+	COPY(ne);
+	COPY(gt);
+	COPY(gte);
+	COPY(lt);
+	COPY(lte);
 
-	if (arg->gte && cli_val_cmp(value, arg->gte_value) < 0) {
-		return 0;
-	}
+#undef COPY
 
-	if (arg->lt && cli_val_cmp(value, arg->lt_value) != -1) {
-		return 0;
-	}
-
-	if (arg->lte && cli_val_cmp(value, arg->lte_value) > 0) {
-		return 0;
-	}
-
-	if (arg->ne && cli_val_cmp(value, arg->ne_value) == 0) {
-		return 0;
-	}
-
-	return 1;
+	return filter_arg;
 }
 
-static inline int pass_search_filters_p(struct cli_cmd_search_arg *arg, cli_val value, cli_val previous_value)
+static inline void destroy_filter_compare_arg(struct cli_val_filter_compare_arg *filter_arg)
 {
-	if (arg->changed && cli_val_cmp(value, previous_value) == 0) {
-		return 0;
+	free(filter_arg);
+}
+
+static inline struct cli_val_filter_compare_prev_arg *create_filter_compare_prev_arg(struct cli_cmd_search_arg *arg)
+{
+	struct cli_val_filter_compare_prev_arg *filter_arg = malloc(sizeof(*filter_arg));
+
+	filter_arg->changed = arg->changed;
+	filter_arg->unchanged = arg->unchanged;
+	filter_arg->increased = arg->increased;
+	filter_arg->decreased = arg->decreased;
+
+	cli_val nil = cli_val_nil();
+
+#define COPY(NAME) \
+	if (arg->NAME) { \
+		filter_arg->NAME = arg->NAME##_value; \
+	} else { \
+		filter_arg->NAME = nil; \
 	}
 
-	if (arg->unchanged && cli_val_cmp(value, previous_value) != 0) {
-		return 0;
-	}
+	COPY(inc);
+	COPY(inc_up_to);
+	COPY(dec);
+	COPY(dec_up_to);
 
-	if (arg->increased && cli_val_cmp(value, previous_value) < 1) {
-		return 0;
-	}
+#undef COPY
 
-	if (arg->decreased && cli_val_cmp(value, previous_value) > -1) {
-		return 0;
-	}
+	return filter_arg;
+}
 
-	if (arg->inc) {
-		cli_val exactly = cli_val_create_clone(previous_value);
-
-		if (cli_val_add(exactly, arg->inc_value)
-			&& cli_val_cmp(value, exactly) != 0) {
-			cli_val_destroy(exactly);
-			return 0;
-		}
-
-		cli_val_destroy(exactly);
-	}
-
-	if (arg->inc_up_to) {
-		cli_val upto = cli_val_create_clone(previous_value);
-
-		if (cli_val_add(upto, arg->inc_up_to_value)
-			&& !(cli_val_cmp(value, upto) <= 0
-				&& cli_val_cmp(value, previous_value) > 0)) {
-			cli_val_destroy(upto);
-			return 0;
-		}
-
-		cli_val_destroy(upto);
-	}
-
-	if (arg->dec) {
-		cli_val exactly = cli_val_create_clone(previous_value);
-
-		if (cli_val_sub(exactly, arg->dec_value)
-			&& cli_val_cmp(value, exactly) != 0) {
-			cli_val_destroy(exactly);
-			return 0;
-		}
-
-		cli_val_destroy(exactly);
-	}
-
-	if (arg->dec_up_to) {
-		cli_val upto = cli_val_create_clone(previous_value);
-
-		if (cli_val_sub(upto, arg->dec_up_to_value)
-			&& !(cli_val_cmp(value, upto) >= 0
-				&& cli_val_cmp(value, previous_value) < 0)) {
-			cli_val_destroy(upto);
-			return 0;
-		}
-
-		cli_val_destroy(upto);
-	}
-
-	return 1;
+static inline void destroy_filter_compare_prev_arg(struct cli_val_filter_compare_prev_arg *filter_arg)
+{
+	free(filter_arg);
 }
 
 static inline void print_search_match(cli_val addr, cli_val value)
@@ -128,6 +93,8 @@ static inline void *align_addr(void *addr, size_t align)
 
 static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 {
+	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
+
 	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 	cli_val value = arg->value;
 
@@ -174,7 +141,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, prev_size - leftover - buffer_size), leftover);
 				memcpy((char *) cli_val_raw(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
 
-				if (pass_search_filters(arg, value)) {
+				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset - leftover;
 					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
@@ -193,7 +160,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, i), size);
 
-				if (pass_search_filters(arg, value)) {
+				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset + i;
 					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
 
@@ -216,6 +183,8 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 	cli_val_destroy(addr);
 
+	destroy_filter_compare_arg(filter_compare_arg);
+
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		proctal_error_ack(p);
@@ -225,6 +194,9 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 
 static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 {
+	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
+	struct cli_val_filter_compare_prev_arg *filter_compare_prev_arg = create_filter_compare_prev_arg(arg);
+
 	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 	cli_val value = arg->value;
 	cli_val previous_value = cli_val_create_clone(value);
@@ -278,11 +250,11 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 			continue;
 		}
 
-		if (!pass_search_filters(arg, value)) {
+		if (!cli_val_filter_compare(filter_compare_arg, value)) {
 			continue;
 		}
 
-		if (!pass_search_filters_p(arg, value, previous_value)) {
+		if (!cli_val_filter_compare_prev(filter_compare_prev_arg, value, previous_value)) {
 			continue;
 		}
 
@@ -291,6 +263,9 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 
 	cli_val_destroy(addr);
 	cli_val_destroy(previous_value);
+
+	destroy_filter_compare_prev_arg(filter_compare_prev_arg);
+	destroy_filter_compare_arg(filter_compare_arg);
 }
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg)
