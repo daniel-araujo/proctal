@@ -66,7 +66,7 @@ int main(void)
 
 	if (size != 2) {
 		fprintf(stderr, "Last chunk size is not correct.\n");
-		fprintf(stderr, "Expected 2, got %d.\n", size);
+		fprintf(stderr, "Expected 2, got %d.\n", (int) size);
 		chunk_deinit(&c);
 		return 1;
 	}
