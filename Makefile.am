@@ -179,7 +179,6 @@ libproctal_la_SOURCES = \
 	src/lib/impl/impl.h \
 	src/lib/impl/linux.c \
 	src/lib/proctal.h \
-	src/lib/proctal.c \
 	src/lib/error.c \
 	src/lib/watch.c \
 	src/lib/freeze.c \
@@ -189,6 +188,10 @@ libproctal_la_SOURCES = \
 	src/lib/region.c \
 	src/lib/alloc.c \
 	src/lib/execute.c \
+	src/lib/malloc.c \
+	src/lib/global.c \
+	src/lib/proc.c \
+	src/lib/init.c \
 	src/lib/linux/address.c \
 	src/lib/linux/address.h \
 	src/lib/linux/region.c \

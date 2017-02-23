@@ -149,19 +149,4 @@ inline void proctal_global_free(void *addr)
 	proctal_global.free(addr);
 }
 
-/*
- * Helpful function for finding the next suitably aligned address relative to
- * the given one. Will return the given address if it's already aligned.
- */
-inline void *proctal_align_addr(void *addr, size_t align)
-{
-	ptrdiff_t offset = ((unsigned long) addr % align);
-
-	if (offset != 0) {
-		offset = align - offset;
-	}
-
-	return (void *) ((char *) addr + offset);
-}
-
 #endif /* LIB_PROCTAL_H */

@@ -2,6 +2,24 @@
 
 #include "lib/linux/address.h"
 
+/*
+ * Helpful function for finding the next suitably aligned address relative to
+ * the given one. Will return the given address if it's already aligned.
+ *
+ * This should be placed somewhere that can be accessible to the
+ * rest of the code base when needed.
+ */
+static inline void *align_addr(void *addr, size_t align)
+{
+	ptrdiff_t offset = ((unsigned long) addr % align);
+
+	if (offset != 0) {
+		offset = align - offset;
+	}
+
+	return (void *) ((char *) addr + offset);
+}
+
 static inline int interesting_region(struct proctal_linux *pl)
 {
 	if (pl->p.address.region_mask & PROCTAL_REGION_STACK) {
@@ -70,7 +88,7 @@ static inline int next_region(struct proctal_linux *pl)
 			continue;
 		}
 
-		pl->address.curr = proctal_align_addr(pl->address.region.start_addr, pl->p.address.align);
+		pl->address.curr = align_addr(pl->address.region.start_addr, pl->p.address.align);
 
 		// After applying the correct alignment to the address, it is
 		// possible to have reached the end of the memory region. Even
