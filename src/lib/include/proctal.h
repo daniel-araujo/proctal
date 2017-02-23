@@ -568,9 +568,9 @@ void proctal_dealloc(proctal p, void *addr);
 /*
  * Sets the memory allocator/deallocator used for internal data structures.
  *
- * These functions should only be called right after creating an instance of
- * Proctal to avoid having the wrong deallocator being called on an internal
- * data structure that was allocated before you changed it.
+ * These functions should only be called right after creating an instance to
+ * avoid having the new deallocator being called on an internal data structure
+ * that was allocated with the old allocator.
  */
 void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
 void proctal_set_free(proctal p, void (*free)(void *));
