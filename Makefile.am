@@ -377,3 +377,35 @@ check_PROGRAMS += tests/otrap/skip-nothing
 tests_otrap_skip_nothing_SOURCES = src/otrap/tests/skip-nothing.c
 tests_otrap_skip_nothing_CFLAGS = $(proctal_cflags)
 tests_otrap_skip_nothing_LDADD = libotrap.a
+
+
+# Harr module.
+noinst_LIBRARIES += libharr.a
+libharr_a_SOURCES = \
+	src/harr/harr.h \
+	src/harr/harr.c
+libharr_a_CFLAGS = $(proctal_cflags)
+
+TESTS += tests/harr/init-state
+check_PROGRAMS += tests/harr/init-state
+tests_harr_init_state_SOURCES = src/harr/tests/init-state.c
+tests_harr_init_state_CFLAGS = $(proctal_cflags)
+tests_harr_init_state_LDADD = libharr.a
+
+TESTS += tests/harr/resize
+check_PROGRAMS += tests/harr/resize
+tests_harr_resize_SOURCES = src/harr/tests/resize.c
+tests_harr_resize_CFLAGS = $(proctal_cflags)
+tests_harr_resize_LDADD = libharr.a
+
+TESTS += tests/harr/resize-zero
+check_PROGRAMS += tests/harr/resize-zero
+tests_harr_resize_zero_SOURCES = src/harr/tests/resize-zero.c
+tests_harr_resize_zero_CFLAGS = $(proctal_cflags)
+tests_harr_resize_zero_LDADD = libharr.a
+
+TESTS += tests/harr/set-and-get
+check_PROGRAMS += tests/harr/set-and-get
+tests_harr_set_and_get_SOURCES = src/harr/tests/set-and-get.c
+tests_harr_set_and_get_CFLAGS = $(proctal_cflags)
+tests_harr_set_and_get_LDADD = libharr.a
