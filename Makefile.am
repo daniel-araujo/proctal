@@ -1,6 +1,6 @@
 bin_PROGRAMS =
 dist_man_MANS =
-EXTRA_DIST =
+EXTRA_DIST = README.md
 CLEANFILES =
 check_PROGRAMS =
 dist_check_SCRIPTS =
