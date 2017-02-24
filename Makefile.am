@@ -165,6 +165,14 @@ tests_cli_val_filter_compare_prev_LDADD = libclival.a $(proctal_capstone_libs) $
 TESTS += src/cli/tests/invalid-type-arguments.py
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 
+TESTS += src/cli/tests/freeze-multiple-threads.py
+dist_check_SCRIPTS += src/cli/tests/freeze-multiple-threads.py
+
+check_PROGRAMS += tests/cli/program/spit-back-mt
+tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
+tests_cli_program_spit_back_mt_CFLAGS = $(proctal_cflags)
+tests_cli_program_spit_back_mt_LDADD = -lpthread
+
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
 # documentation, automake does not support a convenient method for specifying
 # dependencies for automatically generated object files of *_SOURCES c files
