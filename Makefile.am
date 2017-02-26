@@ -20,9 +20,10 @@ proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
 # Cli tool.
 bin_PROGRAMS += proctal
 dist_man_MANS += src/cli/proctal.1
-EXTRA_DIST += src/cli/args.yuck.m4 src/cli/args.yuck src/cli/args.yucc \
-	src/cli/parser-name.c.php
-CLEANFILES += src/cli/args.yuck src/cli/args.yucc src/cli/parser-name.c
+EXTRA_DIST += src/cli/yuck/args.yuck.m4 src/cli/yuck/args.yuck src/cli/yuck/args.yucc
+CLEANFILES += src/cli/yuck/args.yuck src/cli/yuck/args.yucc
+EXTRA_DIST += src/cli/parser-name.c.php
+CLEANFILES += src/cli/parser-name.c
 proctal_SOURCES = \
 	src/cli/cmd/alloc.c \
 	src/cli/cmd/alloc.h \
@@ -55,6 +56,8 @@ proctal_SOURCES = \
 	src/cli/printer.c \
 	src/cli/pattern.h \
 	src/cli/pattern.c \
+	src/cli/yuck/main.h \
+	src/cli/yuck/main.c \
 	src/cli/main.c
 proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
 proctal_CFLAGS = $(proctal_cflags)
@@ -177,10 +180,10 @@ tests_cli_program_spit_back_mt_LDADD = -lpthread
 # documentation, automake does not support a convenient method for specifying
 # dependencies for automatically generated object files of *_SOURCES c files
 # and that you should be wary of renamed objects when *_CFLAGS is defined.
-src/cli/proctal-main.$(OBJEXT): src/cli/args.yucc
+src/cli/yuck/proctal-main.$(OBJEXT): src/cli/yuck/args.yucc
 
 # Expands M4 macros.
-src/cli/args.yuck: $(srcdir)/src/cli/args.yuck.m4
+src/cli/yuck/args.yuck: $(srcdir)/src/cli/yuck/args.yuck.m4
 	m4 $^ > $@
 
 # PHP script that generates C code.
@@ -188,11 +191,11 @@ src/cli/parser-name.c: $(srcdir)/src/cli/parser-name.c.php
 	$(PHP) $^ > $@
 
 # Generates argument parsing code.
-src/cli/args.yucc: src/cli/args.yuck
+src/cli/yuck/args.yucc: src/cli/yuck/args.yuck
 	$(YUCK) gen --no-auto-flags --no-auto-actions $^ -o $@
 
 # Generates man page.
-src/cli/proctal.1: src/cli/args.yuck
+src/cli/proctal.1: src/cli/yuck/args.yuck
 	$(YUCK) genman $^ -o $@
 
 
