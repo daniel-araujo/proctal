@@ -3,14 +3,6 @@
 Proctal provides a command line interface and a C library to manipulate the
 address space of a program on Linux.
 
-Currently only tested on x86-64 Linux.
-
-> **Note**
->
-> This is work in progress and as such the API is unstable and the
-> documentation is done as an afterthought. This will change as the project
-> matures.
-
 Features:
 - Reading and writing values in memory
 - Searching for values with a vast combination of filters
@@ -28,6 +20,14 @@ Features:
 Planned:
 - Freezing all threads of execution
 - Watch points on all threads of execution
+
+> **Note**
+>
+> This is work in progress and as such the API is unstable and the
+> documentation is done as an afterthought. This will change as the project
+> matures.
+>
+> It's currently only tested on x86-64 Linux.
 
 
 ## Content
