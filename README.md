@@ -5,15 +5,15 @@ address space of a program on Linux.
 
 Features:
 - Reading and writing values in memory
-- Searching for values with a vast combination of filters
-- Writing a value to memory repeatedly fast, essentially freezing it
+- Searching for values in memory
+- Repeatedly writing a value to memory fast so as to make it seem like it's never changing
 - Temporarily freezing execution of a program's main thread
-- Read, write and execution watch points on the main thread
+- Detecting reads, writes and execution of memory addresses on a program's main thread
 - Disassembling instructions from any memory location
 - Assembling instructions to write to any memory location
 - Allocating and deallocating readable/writable/executable memory locations
-- Arbitrary instruction execution
-- Measure size of instructions
+- Stopping the normal flow of execution to run your own instructions
+- Measure size of assembly instructions and values
 - Byte pattern search
 - Memory dump
 
