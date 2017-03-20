@@ -254,7 +254,7 @@ It's important to note that this may not report the actual instruction that
 accessed the address.
 
 Examples:
-  Watching for any instruction reading or writting to 1c09346
+  Watching for any instruction reading or writing to 1c09346
         proctal watch --pid=12345 --address=1c09346 -rw
 
   Watching for 1c09346 being executed as an instruction
