@@ -61,8 +61,24 @@ Manipulates the address space of a program.
 Usage: proctal read
 Reads values.
 
-Example:
+Will output the value found at the given address, then the next one coming
+after it, and so on.
+
+By default it's only going to read 1 value. You can control how many values
+will be read with the --array option.
+
+You can optionally prefix the values with their respective addresses by passing
+the --show-address option.
+
+Examples:
+  Reading single byte
         proctal read --pid=12345 --address=1c09346
+
+  Reading multiple bytes
+        proctal read --pid=12345 --address=1c09346 --array=12
+
+  Reading IEEE754 floating point number
+        proctal read --pid=12345 --address=1c09346 --type=ieee754
 
   PID_ARGUMENT
   -a, --address=ADDR    Start address of values to read.
@@ -82,8 +98,21 @@ Writes values.
 The first value will be written to the given address, then the next one will be
 written to the memory address coming after it, and so on.
 
-Example:
+Examples:
+  Writing 99 to address 1c09346
         proctal write --pid=12345 --address=1c09346 99
+
+  Writing 99 to address 1c09346 and 1c09347
+        proctal write --pid=12345 --address=1c09346 --array=2 99
+
+  Writing 99 to address 1c09346 and 98 to 1c09347
+        proctal write --pid=12345 --address=1c09346 99 98
+
+  Repeatedly writing 99 to address 1c09346
+        proctal write --pid=12345 --address=1c09346 --repeat 99
+
+  Writing floating point number
+        proctal write --pid=12345 --address=1c09346 --type=ieee754 99.999999
 
   PID_ARGUMENT
   -a, --address=ADDR    Start address where to begin writing values.
@@ -107,8 +136,29 @@ Example:
 Usage: proctal search
 Searches for values in memory.
 
-Example:
-        proctal search --type=integer --pid=12345 --address=1c09346 --eq 12
+Outputs a list of addresses and their current values that match the given
+filters.
+
+You can additionally filter against the results of a previous search by passing
+the --input option which expects the output of the previous command to be
+streamed to the standard input stream.
+
+Examples:
+  Searching for all bytes that equal 12
+        proctal search --pid=12345 --eq 12
+
+  Searching for all bytes that are greater than 12 but less than or equal to 16
+        proctal search --pid=12345 --gt 12 --lte 16
+
+  Searching for all floating point values in memory
+        proctal search --pid=12345 --type=ieee754
+
+  Filtering against the search results of a previous search
+        proctal search --pid=12345 --eq 12 > previous-search-results
+        proctal search --pid=12345 --increased < previous-search-results
+
+  Searching in executable memory only
+        proctal search --pid=12345 -x --eq 12
 
   PID_ARGUMENT
   -i, --input           Reads the output of a previous scan of the same type
@@ -127,15 +177,15 @@ Example:
   --inc-up-to=VAL       Incremented up to and including VAL
   --dec=VAL             Decremented by VAL
   --dec-up-to=VAL       Decremented up to and including VAL
-  --changed             Value changed from previous scan
-  --unchanged           Value did not change from previous scan
-  --increased           Value increased from previous scan
-  --decreased           Value decreased from previous scan
+  --changed             Value from previous search changed
+  --unchanged           Value from previous search did not change
+  --increased           Value from previous search increased
+  --decreased           Value from previous search decreased
 
 Usage: proctal pattern PATTERN
 Searches for patterns in memory.
 
-Prints the starting address of each match.
+Outputs the starting address of each match.
 
 The following patterns are available:
 
@@ -144,18 +194,19 @@ The following patterns are available:
    Matches exactly the value of a byte. You must express the value in
    hexadecimal notation and always with 2 digits.
 
-   Examples:
-     00
-     01
-     7A
-     FF
-
  ?? - Any byte value
 
    Matches any byte value.
 
-Example:
-        proctal pattern --pid=12345 -x "E8 ?? ?? ?? ??"
+Examples:
+  Searching for exact sequence of bytes
+        proctal pattern --pid=12345 -x "48 83 C0 01"
+
+  Searching for sequence with any value between E8 and 48 followed by 83 C0 01
+        proctal pattern --pid=12345 -x "E8 ?? ?? ?? ??  48 83 C0 01"
+
+  Searching for patterns in program code
+        proctal pattern --pid=12345 --program-code "48 83 C0 01"
 
   PID_ARGUMENT
   -r, --read            Readable memory.
@@ -169,7 +220,8 @@ Freezes main thread of execution.
 The program will be frozen as long as the command is executing. It will stop
 executing when it receives the SIGINT signal.
 
-Example:
+Examples:
+  Freezing a process
         proctal freeze --pid=12345
 
   PID_ARGUMENT
@@ -183,8 +235,12 @@ Watches for memory accesses in main thread of execution.
 It's important to note that this may not report the actual instruction that
 accessed the address.
 
-Example:
+Examples:
+  Watching for any instruction reading or writting to 1c09346
         proctal watch --pid=12345 --address=1c09346 -rw
+
+  Watching for 1c09346 being executed as an instruction
+        proctal watch --pid=12345 --address=1c09346 -x
 
   PID_ARGUMENT
   -a, --address=ADDR    Address to watch.
@@ -198,12 +254,18 @@ Executes arbitrary code.
 
 The given instructions will be embedded at some place in memory and executed in
 a new stack frame in the context of the main thread. Your code is free to
-modify any registers because they will be restored to their original values on
-return. You can either use the ret instruction to explicitly return or let the
-processor continue executing instructions after the last instruction you gave.
+modify any registers because they will be restored to their original values.
+Control will be given back to the program after the last instruction is
+executed.
 
-Example:
-        proctal execute --pid=12345
+The instructions are expected to be passed through standard input.
+
+Examples:
+  Executing instructions from an assembly file
+        proctal execute --pid=12345 < code.asm
+
+  Executing instructions from a file containing byte code
+        proctal execute --pid=12345 < code.bin
 
   PID_ARGUMENT
   --format=FORMAT       Input format. By default FORMAT is assembly.
@@ -217,11 +279,14 @@ Allocates memory.
 Will output the start address of an allocated chunk of memory with at least
 SIZE bytes.
 
-When you no longer need the space, you should deallocate it with the dealloc
-command.
+When you no longer need it, you should deallocate it with the dealloc command.
 
-Example:
+Examples:
+  Allocating 8 bytes
         proctal alloc --pid=12345 8
+
+  Allocating 8 bytes in readable and executable memory
+        proctal alloc --pid=12345 -rx 8
 
   PID_ARGUMENT
   -r, --read            Read permission.
@@ -233,7 +298,8 @@ Deallocates memory.
 
 Should only be used to deallocate memory allocated by the alloc command.
 
-Example:
+Examples:
+  Deallocating memory starting at 7fbf7b6b2000
         proctal dealloc --pid=12345 7fbf7b6b2000
 
   PID_ARGUMENT
@@ -241,10 +307,11 @@ Example:
 Usage: proctal measure VALUES...
 Measure size of values.
 
-If you're in doubt how much space the values you want to write will take you
-can use this command to figure out.
+If you don't know how much space the values you want to write would take, you
+can use this command to measure them.
 
-Example:
+Examples:
+  Measuring how many bytes a call instruction would take
         proctal measure --address=1c09346 --type=instruction "call 0x5"
 
   -a, --address=ADDR    Address where the first value would reside in memory.
@@ -253,10 +320,19 @@ Example:
   TYPE_ARGUMENTS
 
 Usage: proctal dump
-Dumps everything in memory.
+Dumps memory.
 
-Example:
-        proctal dump --pid=12345
+Will output contents in memory.
+
+Examples:
+  Dumping everything in memory to a file
+        proctal dump --pid=12345 > dump
+
+  Dumping program code in memory to a file
+	proctal dump --pid=12345 --program-code > dump
+
+  Dumping memory marked as executable to a file
+	proctal dump --pid=12345 -x > dump
 
   PID_ARGUMENT
   -r, --read            Readable memory.
