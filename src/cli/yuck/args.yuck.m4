@@ -54,9 +54,12 @@ define(`TYPE_ARGUMENTS', `
 Usage: proctal
 Manipulates the address space of a program.
 
+
   -h, --help            Display help information and exit. If a command is
                         given, also show command specific options.
   -V, --version         Output version information and exit.
+
+
 
 Usage: proctal read
 Reads values.
@@ -80,6 +83,7 @@ Examples:
   Reading IEEE754 floating point number
         proctal read --pid=12345 --address=1c09346 --type=ieee754
 
+
   PID_ARGUMENT
   -a, --address=ADDR    Start address of values to read.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
@@ -91,6 +95,8 @@ Examples:
   --show-instruction-byte-code
                         If type is instruction, additionally prints the
                         byte code of the instruction in hexadecimal.
+
+
 
 Usage: proctal write VALUES...
 Writes values.
@@ -114,6 +120,7 @@ Examples:
   Writing floating point number
         proctal write --pid=12345 --address=1c09346 --type=ieee754 99.999999
 
+
   PID_ARGUMENT
   -a, --address=ADDR    Start address where to begin writing values.
   --array=SIZE          Makes the command write SIZE values in adjacent
@@ -132,6 +139,8 @@ Examples:
                         use every CPU cycle it gets to overwrite the value. By
                         default, DELAY is set to 5.
   TYPE_ARGUMENTS
+
+
 
 Usage: proctal search
 Searches for values in memory.
@@ -160,6 +169,7 @@ Examples:
   Searching in executable memory only
         proctal search --pid=12345 -x --eq 12
 
+
   PID_ARGUMENT
   -i, --input           Reads the output of a previous scan of the same type
                         from standard input.
@@ -181,6 +191,8 @@ Examples:
   --unchanged           Value from previous search did not change
   --increased           Value from previous search increased
   --decreased           Value from previous search decreased
+
+
 
 Usage: proctal pattern PATTERN
 Searches for patterns in memory.
@@ -208,11 +220,14 @@ Examples:
   Searching for patterns in program code
         proctal pattern --pid=12345 --program-code "48 83 C0 01"
 
+
   PID_ARGUMENT
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
   --program-code        Program code in memory.
+
+
 
 Usage: proctal freeze
 Freezes main thread of execution.
@@ -224,10 +239,13 @@ Examples:
   Freezing a process
         proctal freeze --pid=12345
 
+
   PID_ARGUMENT
   -i, --input           Additionally to quitting when receiving SIGINT, will
                         read from standard input and quit when no more input is
                         available, whichever happens first.
+
+
 
 Usage: proctal watch
 Watches for memory accesses in main thread of execution.
@@ -242,12 +260,15 @@ Examples:
   Watching for 1c09346 being executed as an instruction
         proctal watch --pid=12345 --address=1c09346 -x
 
+
   PID_ARGUMENT
   -a, --address=ADDR    Address to watch.
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.
   --unique              Print an address only once.
+
+
 
 Usage: proctal execute
 Executes arbitrary code.
@@ -267,11 +288,14 @@ Examples:
   Executing instructions from a file containing byte code
         proctal execute --pid=12345 < code.bin
 
+
   PID_ARGUMENT
   --format=FORMAT       Input format. By default FORMAT is assembly.
                         FORMAT can be:
                         assembly
                         bytecode
+
+
 
 Usage: proctal alloc SIZE
 Allocates memory.
@@ -288,10 +312,13 @@ Examples:
   Allocating 8 bytes in readable and executable memory
         proctal alloc --pid=12345 -rx 8
 
+
   PID_ARGUMENT
   -r, --read            Read permission.
   -w, --write           Write permission.
   -x, --execute         Execute permission.
+
+
 
 Usage: proctal dealloc ADDRESS
 Deallocates memory.
@@ -302,7 +329,10 @@ Examples:
   Deallocating memory starting at 7fbf7b6b2000
         proctal dealloc --pid=12345 7fbf7b6b2000
 
+
   PID_ARGUMENT
+
+
 
 Usage: proctal measure VALUES...
 Measure size of values.
@@ -314,10 +344,13 @@ Examples:
   Measuring how many bytes a call instruction would take
         proctal measure --address=1c09346 --type=instruction "call 0x5"
 
+
   -a, --address=ADDR    Address where the first value would reside in memory.
   --array=SIZE          Emulates the same behavior described in the write
                         command.
   TYPE_ARGUMENTS
+
+
 
 Usage: proctal dump
 Dumps memory.
@@ -333,6 +366,7 @@ Examples:
 
   Dumping memory marked as executable to a file
 	proctal dump --pid=12345 -x > dump
+
 
   PID_ARGUMENT
   -r, --read            Readable memory.
