@@ -143,34 +143,20 @@ int main (int argc, char **argv)
 
 ### CLI
 
-The command line interface can be used in the following ways:
+The command line interface consists of a group of commands passed to the
+`proctal` program, like so:
 
-	proctal read [--type=<type>] --pid=<pid> --address=<address>
+	proctal COMMAND
 
-	proctal write [--type=<type>] --pid=<pid> --address=<address> <value>
+If you execute `proctal` without a command, or pass it the `-h`, it will print
+help information which includes a list of all available commands.
 
-	proctal search [--type=<type>] [--eq=<val>] [--gt=<val>] [--gte=<val>]
-		[--lt=<val>] [--lte=<val>] [--inc=<val>] [--dec=<val>]
-		[--changed] [--unchanged] [--increased] [--decreased]
-		[--input] --pid=<pid> --address=<address>
+Commands can take required and optional arguments, depending on their
+respective needs. Every command recognizes the `-h` option, which will make it
+describe its functionality and exit without doing anything else.
 
-	proctal watch [--read] [--write] [--execute] [--unique] --pid=<pid>
-		--address=<address>
-
-	proctal freeze [--input] --pid=<pid>
-
-	proctal execute [--format=<format>]--pid=<pid>
-
-	proctal alloc [--read] [--write] [--execute] --pid=<pid> <size>
-
-	proctal dealloc --pid=<pid> <address>
-
-	proctal measure [--type=<type>] --address=<address> <value>
-
-	proctal dump --pid=<pid> [--read] [--write] [--execute]
-		[--program-code]
-
-For more details run `proctal -h` or read the man page:
+For a complete overview of the functionality provided by the tool, you can read
+the man page by running the following command:
 
 	man 1 proctal
 
