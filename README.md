@@ -143,17 +143,16 @@ int main (int argc, char **argv)
 
 ### CLI
 
-The command line interface consists of a group of commands passed to the
-`proctal` program, like so:
+The command line interface consists of a group of commands that are passed to
+the `proctal` program, like so:
 
 	proctal COMMAND
 
-If you execute `proctal` without a command, or pass it the `-h`, it will print
-help information which includes a list of all available commands.
+If you execute `proctal` without a command, or pass it the `-h` option, it will
+print help information which includes a list of all available commands.
 
-Commands can take required and optional arguments, depending on their
-respective needs. Every command recognizes the `-h` option, which will make it
-describe its functionality and exit without doing anything else.
+Commands can also take options. Every command recognizes the `-h` option, which
+will print help information related to it.
 
 For a complete overview of the functionality provided by the tool, you can read
 the man page by running the following command:
