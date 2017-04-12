@@ -246,7 +246,7 @@ over at gnu.org [[1]]
 Found a bug or want to contribute code? Feel free to create an issue or send a
 pull request on GitHub [[2]].
 
-You can also report bugs privately to [bugs@proctal.io].
+You can also report bugs privately to bugs@proctal.io.
 
 
 ## License
