@@ -152,7 +152,8 @@ If you execute `proctal` without a command, or pass it the `-h` option, it will
 print help information which includes a list of all available commands.
 
 Commands can also take options. Every command recognizes the `-h` option, which
-will print help information related to it.
+will make it print help information related to it and then exit without doing
+anything else.
 
 For a complete overview of the functionality provided by the tool, you can read
 the man page by running the following command:
@@ -244,6 +245,8 @@ over at gnu.org [[1]]
 
 Found a bug or want to contribute code? Feel free to create an issue or send a
 pull request on GitHub [[2]].
+
+You can also report bugs privately to [bugs@proctal.io].
 
 
 ## License
