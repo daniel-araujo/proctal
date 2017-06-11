@@ -109,7 +109,7 @@ inline void *swbuf_address_offset(struct swbuf *b, ssize_t offset)
 }
 
 /*
- * Swaps the buffer asimetrically.
+ * Swaps the buffer.
  */
 inline void swbuf_swap(struct swbuf *b)
 {
