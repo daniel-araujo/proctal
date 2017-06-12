@@ -19,7 +19,7 @@ How the source code for Proctal is organized:
 	FILE handle.
 
 - swbuf
-	A buffer on the heap with two halves, where the index beings at the
+	A buffer on the heap with two halves, where the index begins at the
 	middle of the two. You can use negative offsets.
 
 - harr
