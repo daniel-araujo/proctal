@@ -52,7 +52,7 @@ define(`TYPE_ARGUMENTS', `
                         x86-64
 ')dnl
 Usage: proctal
-Manipulates the address space of a program.
+Gives you access to the address space of a program.
 
 
   -h, --help            Display help information and exit. If a command is

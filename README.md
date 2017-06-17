@@ -1,14 +1,14 @@
 # Proctal 0.0.0
 
-Proctal provides a command line interface and a C library to manipulate the
-address space of a program on Linux.
+Proctal gives you access to the address space of a program on Linux with a
+command line tool and a C API.
 
 Features:
 - Reading and writing values in memory
 - Searching for values in memory
 - Repeatedly writing a value to memory fast so as to make it seem like it's never changing
-- Temporarily freezing execution of a program's main thread
-- Detecting reads, writes and execution of memory addresses on a program's main thread
+- Temporarily freezing main thread execution
+- Detecting reads, writes and execution of memory addresses in main thread
 - Disassembling instructions from any memory location
 - Assembling instructions to write to any memory location
 - Allocating and deallocating readable/writable/executable memory locations
@@ -18,8 +18,8 @@ Features:
 - Memory dump
 
 Planned:
-- Freezing all threads of execution
-- Watch points on all threads of execution
+- Freezing all threads
+- Watch points on all threads
 
 > **Note**
 >
