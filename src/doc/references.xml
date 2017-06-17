@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<references>
+	<uri name="gnu" value="https://www.gnu.org/software/" />
+	<uri name="capstone" value="http://www.capstone-engine.org/" />
+	<uri name="keystone" value="http://www.keystone-engine.org/" />
+	<uri name="yuck" value="http://www.fresse.org/yuck/" />
+	<uri name="php" value="http://php.net/" />
+	<uri name="autoconf" value="https://www.gnu.org/software/autoconf/autoconf.html" />
+	<uri name="automake" value="https://www.gnu.org/software/automake/" />
+	<uri name="gcc" value="https://gcc.gnu.org/" />
+	<uri name="libtool" value="https://www.gnu.org/software/libtool/libtool.html" />
+	<uri name="python" value="https://www.python.org/" />
+</references>

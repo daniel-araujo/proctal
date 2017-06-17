@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Overview</title>
+
+	The command line interface of Proctal is designed as a generic tool for
+	humans. Though suppose you have a script that runs the search command
+	several times, passing the output of a previous run to the next one;
+	Proctal has to convert the bits in memory to readable text characters
+	and then back to bits when they're piped to the next search command.
+	This can result in a lot of computing power being wasted in just
+	converting data back and forth. For a one off program this isn't much
+	of a concern but if you were creating your own specialized tool or
+	extending an existing program, using an API is more suitable.
+
+	Proctal provides an API through a C library. To give you an idea of
+	what you can accomplish with the API, the tool itself only accesses the
+	process through it.
+
+	The following sample shows you how you would use the C API to write a
+	tool that forces any program to print Hello, world!
+
+	<code type="c">
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+#include &lt;proctal.h&gt;
+
+int main (int argc, char **argv)
+{
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s PID\n", argv[0]);
+		return 1;
+	}
+
+	int pid = atoi(argv[1]);
+
+	if (pid == 0) {
+		fprintf(stderr, "Given PID is not valid\n");
+		return 1;
+	}
+
+	const char output[] = "Hello, world!\n";
+	char code[] = { 0x48, 0xbe, 0xDE, 0xAD, 0xBE, 0xFF, 0xDE, 0xAD, 0xBE, 0xFF, 0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc2, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x05 };
+
+	proctal p = proctal_create();
+
+	if (proctal_error(p)) {
+		proctal_destroy(p);
+		fprintf(stderr, "Failed to create an instance of Proctal.\n");
+		return EXIT_FAILURE;
+	}
+
+	proctal_set_pid(p, pid);
+
+	void *allocated_memory = proctal_alloc(p, sizeof output, PROCTAL_ALLOC_PERM_READ);
+
+	if (proctal_error(p)) {
+		proctal_destroy(p);
+		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(p));
+		return EXIT_FAILURE;
+	}
+
+	proctal_write(p, allocated_memory, output, sizeof output);
+
+	if (proctal_error(p)) {
+		proctal_dealloc(p, allocated_memory);
+		proctal_destroy(p);
+		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(p));
+		return EXIT_FAILURE;
+	}
+
+	code[2] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 0) &amp; 0xFF;
+	code[3] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 1) &amp; 0xFF;
+	code[4] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 2) &amp; 0xFF;
+	code[5] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 3) &amp; 0xFF;
+	code[6] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 4) &amp; 0xFF;
+	code[7] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 5) &amp; 0xFF;
+	code[8] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 6) &amp; 0xFF;
+	code[9] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 7) &amp; 0xFF;
+
+	proctal_execute(p, code, sizeof code);
+
+	if (proctal_error(p)) {
+		proctal_dealloc(p, allocated_memory);
+		proctal_destroy(p);
+		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(p));
+		return EXIT_FAILURE;
+	}
+
+	proctal_dealloc(p, allocated_memory);
+	proctal_destroy(p);
+
+	return EXIT_SUCCESS;
+}
+	</code>
+</document>

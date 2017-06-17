@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Overview</title>
+
+	Proctal has a command line interface that gives you access to the
+	address space of a program straight from your terminal.
+
+	You're going to learn how to read, write and search for values,
+	allocate memory, execute code, freeze execution, dump memory and watch
+	for memory accesses.
+
+	The following sample is a bash script that can make any program print
+	Hello, world!
+
+	<code type="bash">
+#!/usr/bin/env bash
+
+set -e
+
+pid="$1"
+
+if [[ -z "$pid" ]]; then
+	echo "Usage: $0 PID" 1&gt;&amp;2
+	exit 1
+fi
+
+# Allocates memory to store Hello, world!
+address="$(proctal alloc --pid="$pid" -rw 14)"
+
+# Writes Hello, world! to memory.
+proctal write --pid="$pid" --address="$address" --type=text H e l l o , ' ' w o r l d '!' $'\n'
+
+# Executes code that will print Hello, world! to standard output.
+proctal execute --pid="$pid" &lt;&lt;EOD
+	mov	rax, 1
+	mov	rdi, 1
+	mov	rsi, 0x$address
+	mov	rdx, 14
+	syscall
+EOD
+
+# Deallocates memory that was used to store Hello, world!
+proctal dealloc --pid="$pid" "$address"
+	</code>
+</document>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Introduction</title>
+
+	Proctal has a CLI and an API that gives you access to the address space
+	of a program on Linux.
+
+	It features:
+
+	<list>
+		<item>Reading and writing values in memory</item>
+		<item>Searching for values in memory</item>
+		<item>Repeatedly writing a value to memory fast so as to make it seem like it's never changing</item>
+		<item>Temporarily freezing main thread execution</item>
+		<item>Detecting reads, writes and execution of memory addresses from main thread</item>
+		<item>Disassembling instructions from any memory location</item>
+		<item>Assembling instructions to write to any memory location</item>
+		<item>Allocating and deallocating readable/writable/executable memory locations</item>
+		<item>Stopping the normal flow of execution to run your own instructions</item>
+		<item>Measure size of assembly instructions and values</item>
+		<item>Byte pattern search</item>
+		<item>Memory dump</item>
+	</list>
+
+	I work on this project in my spare time. You can follow my progress on
+	<link ref="proctal:repository:github">GitHub</link>.
+</document>
