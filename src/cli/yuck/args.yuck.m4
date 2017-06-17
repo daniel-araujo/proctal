@@ -286,7 +286,7 @@ Examples:
         proctal execute --pid=12345 < code.asm
 
   Executing instructions from a file containing byte code
-        proctal execute --pid=12345 < code.bin
+        proctal execute --pid=12345 --format=bytecode < code.bin
 
 
   PID_ARGUMENT
