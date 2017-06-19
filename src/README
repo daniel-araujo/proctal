@@ -22,10 +22,6 @@ How the source code for Proctal is organized:
 	A buffer on the heap with two halves, where the index begins at the
 	middle of the two. You can use negative offsets.
 
-- harr
-	An array that is allocated on the heap which also keeps track of its
-	own size.
-
 - chunk
 	A way to partition a large buffer into smaller chunks and iterating
 	over them.
