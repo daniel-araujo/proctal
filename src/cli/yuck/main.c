@@ -303,7 +303,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 	if (yuck_arg->read.array_arg != NULL) {
 		unsigned long v;
 
-		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
+		if (!cli_parse_unsigned_long(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_read_arg(arg);
 			return NULL;
@@ -409,7 +409,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 	if (yuck_arg->write.array_arg != NULL) {
 		unsigned long v;
 
-		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
+		if (!cli_parse_unsigned_long(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_write_arg(arg);
 			return NULL;
@@ -793,7 +793,7 @@ static struct cli_cmd_alloc_arg *create_cli_cmd_alloc_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	if (!cli_parse_ulong(yuck_arg->args[0], &arg->size)) {
+	if (!cli_parse_unsigned_long(yuck_arg->args[0], &arg->size)) {
 		fputs("Invalid size.\n", stderr);
 		destroy_cli_cmd_alloc_arg(arg);
 		return NULL;
@@ -923,7 +923,7 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 	if (yuck_arg->measure.array_arg != NULL) {
 		unsigned long v;
 
-		if (!cli_parse_ulong(yuck_arg->read.array_arg, &v)) {
+		if (!cli_parse_unsigned_long(yuck_arg->read.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_measure_arg(arg);
 			return NULL;
