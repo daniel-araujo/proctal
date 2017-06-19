@@ -47,36 +47,36 @@
 #define PROCTAL_ALLOC_PERM_READ 4
 
 /*
- * Provides a type name for an instance. The actual definition is an
+ * Provides a type name for a handle. The actual definition is an
  * implementation detail that you shouldn't worry about.
  */
 typedef struct proctal *proctal;
 
 /*
- * Creates an instance.
+ * Creates a handle.
  *
  * This would be the first function you'd want to call. Most functions operate
- * on an instance.
+ * on a handle.
  *
  * There is always a tiny chance that this call may fail such as when the
  * system is running out of memory therefore you should call proctal_error
  * right after. And regardless of it succeeding or failing you still need to
  * call proctal_destroy.
  *
- * Using an instance that failed to be created correctly will result in
- * undefined behavior, likely leading to a crash.
+ * Using a handle that failed to be created correctly will result in undefined
+ * behavior, likely leading to a crash.
  */
 proctal proctal_create(void);
 
 /*
- * Destroys an instance.
+ * Destroys a handle.
  *
  * This is definitely the last function you'd call.
  */
 void proctal_destroy(proctal p);
 
 /*
- * Allows you to check if an error happened with the given instance.
+ * Allows you to check if an error happened with the given handle.
  *
  * Any non-zero value that is returned is an error code. Error codes are
  * defined as macros whose name start with PROCTAL_ERROR. A 0 return value
@@ -88,9 +88,9 @@ void proctal_destroy(proctal p);
 int proctal_error(proctal p);
 
 /*
- * Acknowledge the error that occurred with the given instance.
+ * Acknowledge the error that occurred with the given handle.
  *
- * This function will do nothing if the given instance has no error.
+ * This function will do nothing if the given handle has no error.
  */
 void proctal_error_ack(proctal p);
 
@@ -447,7 +447,7 @@ void proctal_region_set_execute(proctal p, int execute);
  * You should unfreeze before exiting your program otherwise something may
  * crash.
  *
- * Destroying the instance automatically unfreezes.
+ * Destroying the handle automatically unfreezes.
  */
 int proctal_freeze(proctal p);
 
@@ -558,7 +558,7 @@ void *proctal_alloc(proctal p, size_t size, int perm);
  * Deallocates memory allocated by proctal_alloc.
  *
  * This command is special in that it can deallocate memory allocated by a
- * different instance.
+ * different handle.
  *
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
@@ -568,16 +568,16 @@ void proctal_dealloc(proctal p, void *addr);
 /*
  * Sets the memory allocator/deallocator used for internal data structures.
  *
- * These functions should only be called right after creating an instance to
- * avoid having the new deallocator being called on an internal data structure
- * that was allocated with the old allocator.
+ * These functions should only be called right after creating a handle to avoid
+ * having the new deallocator being called on an internal data structure that
+ * was allocated with the old allocator.
  */
 void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
 void proctal_set_free(proctal p, void (*free)(void *));
 
 /*
  * Global counterparts. These define the values that are used by default when
- * an instance is created.
+ * a handle is created.
  *
  * If never called or passed NULL, will use the version of malloc/free that the
  * library was linked to.

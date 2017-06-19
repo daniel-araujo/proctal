@@ -90,7 +90,7 @@ int main (int argc, char **argv)
 
 	if (proctal_error(p)) {
 		proctal_destroy(p);
-		fprintf(stderr, "Failed to create an instance of Proctal.\n");
+		fprintf(stderr, "Failed to create a Proctal handle.\n");
 		return EXIT_FAILURE;
 	}
 

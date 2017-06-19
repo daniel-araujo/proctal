@@ -20,7 +20,7 @@ extern struct proctal_global {
 } proctal_global;
 
 /*
- * Base structure of an instance.
+ * Base structure of a handle.
  *
  * Platform agnostic functions work with this structure.
  */
@@ -106,7 +106,7 @@ void proctal_init(struct proctal *p);
 void proctal_deinit(struct proctal *p);
 
 /*
- * Sets the error code of an instance.
+ * Sets the error code of a handle.
  *
  * This is used to tell the library user what made a function fail.
  *
@@ -119,14 +119,14 @@ void proctal_set_error(proctal p, int error);
 /*
  * Allocates memory.
  *
- * Meant for internal data structures of an instance.
+ * Meant for internal data structures of a handle.
  */
 void *proctal_malloc(proctal p, size_t size);
 
 /*
  * Deallocates memory allocated with proctal_malloc.
  *
- * Meant for internal data structures of an instance.
+ * Meant for internal data structures of a handle.
  */
 void proctal_free(proctal p, void *addr);
 
@@ -134,7 +134,7 @@ void proctal_free(proctal p, void *addr);
  * Allocates memory.
  *
  * This version should only be used for internal data structures needed to
- * create an instance.
+ * create a handle.
  */
 inline void *proctal_global_malloc(size_t size)
 {

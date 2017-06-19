@@ -8,7 +8,7 @@
 #include "lib/linux/proc.h"
 
 /*
- * Linux specific instance of Proctal.
+ * Linux specific handle.
  */
 struct proctal_linux {
 	// Base structure.
@@ -50,12 +50,12 @@ struct proctal_linux {
 };
 
 /*
- * Initializes a Linux specific instance of Proctal.
+ * Initializes a Linux specific handle.
  */
 void proctal_linux_init(struct proctal_linux *pl);
 
 /*
- * Deinitializes a Linux specific instance of Proctal.
+ * Deinitializes a Linux specific handle.
  */
 void proctal_linux_deinit(struct proctal_linux *pl);
 
