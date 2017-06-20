@@ -30,7 +30,7 @@ static const char *a[] = {
 	[PROCTAL_ERROR_PROCESS_TRAPPED] = "Process got trapped.",
 };
 
-int proctal_error(proctal p)
+int proctal_error(proctal_t p)
 {
 	if (p == NULL) {
 		return PROCTAL_ERROR_OUT_OF_MEMORY;
@@ -39,17 +39,17 @@ int proctal_error(proctal p)
 	return p->error;
 }
 
-void proctal_set_error(proctal p, int error)
+void proctal_set_error(proctal_t p, int error)
 {
 	p->error = error;
 }
 
-void proctal_error_ack(proctal p)
+void proctal_error_ack(proctal_t p)
 {
 	p->error = 0;
 }
 
-const char *proctal_error_msg(proctal p)
+const char *proctal_error_msg(proctal_t p)
 {
 	return a[proctal_error(p)];
 }

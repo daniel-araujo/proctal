@@ -86,30 +86,30 @@ int main (int argc, char **argv)
 	const char output[] = "Hello, world!\n";
 	char code[] = { 0x48, 0xbe, 0xDE, 0xAD, 0xBE, 0xFF, 0xDE, 0xAD, 0xBE, 0xFF, 0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc2, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x05 };
 
-	proctal p = proctal_create();
+	proctal_t proctal = proctal_create();
 
-	if (proctal_error(p)) {
-		proctal_destroy(p);
+	if (proctal_error(proctal)) {
+		proctal_destroy(proctal);
 		fprintf(stderr, "Failed to create a Proctal handle.\n");
 		return EXIT_FAILURE;
 	}
 
-	proctal_set_pid(p, 15433);
+	proctal_set_pid(proctal, 15433);
 
-	void *allocated_memory = proctal_alloc(p, sizeof output, PROCTAL_ALLOC_PERM_READ);
+	void *allocated_memory = proctal_alloc(proctal, sizeof output, PROCTAL_ALLOC_PERM_READ);
 
-	if (proctal_error(p)) {
-		proctal_destroy(p);
-		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(p));
+	if (proctal_error(proctal)) {
+		proctal_destroy(proctal);
+		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
-	proctal_write(p, allocated_memory, output, sizeof output);
+	proctal_write(proctal, allocated_memory, output, sizeof output);
 
-	if (proctal_error(p)) {
-		proctal_dealloc(p, allocated_memory);
-		proctal_destroy(p);
-		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(p));
+	if (proctal_error(proctal)) {
+		proctal_dealloc(proctal, allocated_memory);
+		proctal_destroy(proctal);
+		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
@@ -122,17 +122,17 @@ int main (int argc, char **argv)
 	code[8] = ((unsigned long long) allocated_memory >> 0x8 * 6) & 0xFF;
 	code[9] = ((unsigned long long) allocated_memory >> 0x8 * 7) & 0xFF;
 
-	proctal_execute(p, code, sizeof code);
+	proctal_execute(proctal, code, sizeof code);
 
-	if (proctal_error(p)) {
-		proctal_dealloc(p, allocated_memory);
-		proctal_destroy(p);
-		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(p));
+	if (proctal_error(proctal)) {
+		proctal_dealloc(proctal, allocated_memory);
+		proctal_destroy(proctal);
+		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
-	proctal_dealloc(p, allocated_memory);
-	proctal_destroy(p);
+	proctal_dealloc(proctal, allocated_memory);
+	proctal_destroy(proctal);
 
 	return EXIT_SUCCESS;
 }

@@ -7,19 +7,19 @@
 	proctal_read(P, ADDR, (char *) VAL, SIZE * sizeof(*VAL))
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	size_t proctal_read_##SUFFIX(proctal p, void *addr, TYPE *out) \
+	size_t proctal_read_##SUFFIX(proctal_t p, void *addr, TYPE *out) \
 	{ \
 		return FORWARD_NATIVE(p, addr, out) / sizeof(TYPE); \
 	} \
 	DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX##_array, TYPE)
 
 #define DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX, TYPE) \
-	size_t proctal_read_##SUFFIX(proctal p, void *addr, TYPE *out, size_t size) \
+	size_t proctal_read_##SUFFIX(proctal_t p, void *addr, TYPE *out, size_t size) \
 	{ \
 		return FORWARD_NATIVE_ARRAY(p, addr, out, size) / sizeof(TYPE); \
 	}
 
-size_t proctal_read(proctal p, void *addr, char *out, size_t size)
+size_t proctal_read(proctal_t p, void *addr, char *out, size_t size)
 {
 	return proctal_impl_read(p, addr, out, size);
 }

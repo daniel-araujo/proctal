@@ -114,21 +114,21 @@ void proctal_deinit(struct proctal *p);
  * PROCTAL_ERROR as a prefix, otherwise library users won't have a way to check
  * what specific error proctal_error is returning.
  */
-void proctal_set_error(proctal p, int error);
+void proctal_set_error(proctal_t p, int error);
 
 /*
  * Allocates memory.
  *
  * Meant for internal data structures of a handle.
  */
-void *proctal_malloc(proctal p, size_t size);
+void *proctal_malloc(proctal_t p, size_t size);
 
 /*
  * Deallocates memory allocated with proctal_malloc.
  *
  * Meant for internal data structures of a handle.
  */
-void proctal_free(proctal p, void *addr);
+void proctal_free(proctal_t p, void *addr);
 
 /*
  * Allocates memory.

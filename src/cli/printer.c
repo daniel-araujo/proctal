@@ -40,7 +40,7 @@ static const char *cli_pattern_error_messages[] = {
 	[CLI_PATTERN_ERROR_COMPILE_PATTERN] = "You must compile a pattern beforehand.",
 };
 
-void cli_print_proctal_error(proctal p)
+void cli_print_proctal_error(proctal_t p)
 {
 	int error = proctal_error(p);
 

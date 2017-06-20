@@ -4,7 +4,7 @@
 
 int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg)
 {
-	proctal p = proctal_create();
+	proctal_t p = proctal_create();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

@@ -1,16 +1,16 @@
 #include "lib/proctal.h"
 
-void proctal_set_malloc(proctal p, void *(*malloc)(size_t))
+void proctal_set_malloc(proctal_t p, void *(*malloc)(size_t))
 {
 	p->malloc = malloc;
 }
 
-void proctal_set_free(proctal p, void (*free)(void *))
+void proctal_set_free(proctal_t p, void (*free)(void *))
 {
 	p->free = free;
 }
 
-void *proctal_malloc(proctal p, size_t size)
+void *proctal_malloc(proctal_t p, size_t size)
 {
 	void *a = p->malloc(size);
 
@@ -21,7 +21,7 @@ void *proctal_malloc(proctal p, size_t size)
 	return a;
 }
 
-void proctal_free(proctal p, void *addr)
+void proctal_free(proctal_t p, void *addr)
 {
 	return p->free(addr);
 }

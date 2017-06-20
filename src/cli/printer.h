@@ -4,7 +4,7 @@
 #include "lib/include/proctal.h"
 #include "cli/pattern.h"
 
-void cli_print_proctal_error(proctal p);
+void cli_print_proctal_error(proctal_t p);
 
 void cli_print_pattern_error(cli_pattern cp);
 

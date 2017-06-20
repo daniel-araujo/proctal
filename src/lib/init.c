@@ -28,12 +28,12 @@ void proctal_deinit(struct proctal *p)
 {
 }
 
-proctal proctal_create(void)
+proctal_t proctal_create(void)
 {
 	return proctal_impl_create();
 }
 
-void proctal_destroy(proctal p)
+void proctal_destroy(proctal_t p)
 {
 	return proctal_impl_destroy(p);
 }

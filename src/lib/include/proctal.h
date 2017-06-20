@@ -50,7 +50,7 @@
  * Provides a type name for a handle. The actual definition is an
  * implementation detail that you shouldn't worry about.
  */
-typedef struct proctal *proctal;
+typedef struct proctal *proctal_t;
 
 /*
  * Creates a handle.
@@ -66,14 +66,14 @@ typedef struct proctal *proctal;
  * Using a handle that failed to be created correctly will result in undefined
  * behavior, likely leading to a crash.
  */
-proctal proctal_create(void);
+proctal_t proctal_create(void);
 
 /*
  * Destroys a handle.
  *
  * This is definitely the last function you'd call.
  */
-void proctal_destroy(proctal p);
+void proctal_destroy(proctal_t p);
 
 /*
  * Allows you to check if an error happened with the given handle.
@@ -85,14 +85,14 @@ void proctal_destroy(proctal p);
  * This function will keep reporting the same error until you acknowledge it
  * with a call to proctal_error_ack.
  */
-int proctal_error(proctal p);
+int proctal_error(proctal_t p);
 
 /*
  * Acknowledge the error that occurred with the given handle.
  *
  * This function will do nothing if the given handle has no error.
  */
-void proctal_error_ack(proctal p);
+void proctal_error_ack(proctal_t p);
 
 /*
  * Similar to proctal_error, but returns pointers to read-only C-style strings
@@ -102,20 +102,20 @@ void proctal_error_ack(proctal p);
  * These messages are in English and are not suitable for displaying to the
  * user.
  */
-const char *proctal_error_msg(proctal p);
+const char *proctal_error_msg(proctal_t p);
 
 /*
  * Sets the process that you want Proctal to manipulate. On Linux you must pass
  * a PID (Process ID).
  */
-void proctal_set_pid(proctal p, int pid);
+void proctal_set_pid(proctal_t p, int pid);
 
 /*
  * Returns the id of the process. On Linux this would be a PID (Process ID).
  *
  * This will return 0 if you have never set the id.
  */
-int proctal_pid(proctal p);
+int proctal_pid(proctal_t p);
 
 /*
  * Reads a specified length of characters starting from the given address. This
@@ -130,37 +130,37 @@ int proctal_pid(proctal p);
  * corresponds to the type's size and the return value is the the number of
  * values read instead of the actual length.
  */
-size_t proctal_read(proctal p, void *addr, char *out, size_t size);
-size_t proctal_read_char(proctal p, void *addr, char *out);
-size_t proctal_read_char_array(proctal p, void *addr, char *out, size_t size);
-size_t proctal_read_signed_char(proctal p, void *addr, signed char *out);
-size_t proctal_read_signed_char_array(proctal p, void *addr, signed char *out, size_t size);
-size_t proctal_read_unsigned_char(proctal p, void *addr, unsigned char *out);
-size_t proctal_read_unsigned_char_array(proctal p, void *addr, unsigned char *out, size_t size);
-size_t proctal_read_short(proctal p, void *addr, short *out);
-size_t proctal_read_short_array(proctal p, void *addr, short *out, size_t size);
-size_t proctal_read_unsigned_short(proctal p, void *addr, unsigned short *out);
-size_t proctal_read_unsigned_short_array(proctal p, void *addr, unsigned short *out, size_t size);
-size_t proctal_read_int(proctal p, void *addr, int *out);
-size_t proctal_read_int_array(proctal p, void *addr, int *out, size_t size);
-size_t proctal_read_unsigned_int(proctal p, void *addr, unsigned int *out);
-size_t proctal_read_unsigned_int_array(proctal p, void *addr, unsigned int *out, size_t size);
-size_t proctal_read_long(proctal p, void *addr, long *out);
-size_t proctal_read_long_array(proctal p, void *addr, long *out, size_t size);
-size_t proctal_read_unsigned_long(proctal p, void *addr, unsigned long *out);
-size_t proctal_read_unsigned_long_array(proctal p, void *addr, unsigned long *out, size_t size);
-size_t proctal_read_long_long(proctal p, void *addr, long long *out);
-size_t proctal_read_long_long_array(proctal p, void *addr, long long *out, size_t size);
-size_t proctal_read_unsigned_long_long(proctal p, void *addr, unsigned long long *out);
-size_t proctal_read_unsigned_long_long_array(proctal p, void *addr, unsigned long long *out, size_t size);
-size_t proctal_read_float(proctal p, void *addr, float *out);
-size_t proctal_read_float_array(proctal p, void *addr, float *out, size_t size);
-size_t proctal_read_double(proctal p, void *addr, double *out);
-size_t proctal_read_double_array(proctal p, void *addr, double *out, size_t size);
-size_t proctal_read_long_double(proctal p, void *addr, long double *out);
-size_t proctal_read_long_double_array(proctal p, void *addr, long double *out, size_t size);
-size_t proctal_read_address(proctal p, void *addr, void **out);
-size_t proctal_read_address_array(proctal p, void *addr, void **out, size_t size);
+size_t proctal_read(proctal_t p, void *addr, char *out, size_t size);
+size_t proctal_read_char(proctal_t p, void *addr, char *out);
+size_t proctal_read_char_array(proctal_t p, void *addr, char *out, size_t size);
+size_t proctal_read_signed_char(proctal_t p, void *addr, signed char *out);
+size_t proctal_read_signed_char_array(proctal_t p, void *addr, signed char *out, size_t size);
+size_t proctal_read_unsigned_char(proctal_t p, void *addr, unsigned char *out);
+size_t proctal_read_unsigned_char_array(proctal_t p, void *addr, unsigned char *out, size_t size);
+size_t proctal_read_short(proctal_t p, void *addr, short *out);
+size_t proctal_read_short_array(proctal_t p, void *addr, short *out, size_t size);
+size_t proctal_read_unsigned_short(proctal_t p, void *addr, unsigned short *out);
+size_t proctal_read_unsigned_short_array(proctal_t p, void *addr, unsigned short *out, size_t size);
+size_t proctal_read_int(proctal_t p, void *addr, int *out);
+size_t proctal_read_int_array(proctal_t p, void *addr, int *out, size_t size);
+size_t proctal_read_unsigned_int(proctal_t p, void *addr, unsigned int *out);
+size_t proctal_read_unsigned_int_array(proctal_t p, void *addr, unsigned int *out, size_t size);
+size_t proctal_read_long(proctal_t p, void *addr, long *out);
+size_t proctal_read_long_array(proctal_t p, void *addr, long *out, size_t size);
+size_t proctal_read_unsigned_long(proctal_t p, void *addr, unsigned long *out);
+size_t proctal_read_unsigned_long_array(proctal_t p, void *addr, unsigned long *out, size_t size);
+size_t proctal_read_long_long(proctal_t p, void *addr, long long *out);
+size_t proctal_read_long_long_array(proctal_t p, void *addr, long long *out, size_t size);
+size_t proctal_read_unsigned_long_long(proctal_t p, void *addr, unsigned long long *out);
+size_t proctal_read_unsigned_long_long_array(proctal_t p, void *addr, unsigned long long *out, size_t size);
+size_t proctal_read_float(proctal_t p, void *addr, float *out);
+size_t proctal_read_float_array(proctal_t p, void *addr, float *out, size_t size);
+size_t proctal_read_double(proctal_t p, void *addr, double *out);
+size_t proctal_read_double_array(proctal_t p, void *addr, double *out, size_t size);
+size_t proctal_read_long_double(proctal_t p, void *addr, long double *out);
+size_t proctal_read_long_double_array(proctal_t p, void *addr, long double *out, size_t size);
+size_t proctal_read_address(proctal_t p, void *addr, void **out);
+size_t proctal_read_address_array(proctal_t p, void *addr, void **out, size_t size);
 
 /*
  * Writes a specified length of characters starting from an address. This
@@ -175,37 +175,37 @@ size_t proctal_read_address_array(proctal p, void *addr, void **out, size_t size
  * corresponds to the type's size and the return value is the the number of
  * values written instead of the actual length.
  */
-size_t proctal_write(proctal p, void *addr, const char *in, size_t size);
-size_t proctal_write_char(proctal p, void *addr, char in);
-size_t proctal_write_char_array(proctal p, void *addr, const char *in, size_t size);
-size_t proctal_write_signed_char(proctal p, void *addr, signed char in);
-size_t proctal_write_signed_char_array(proctal p, void *addr, const signed char *in, size_t size);
-size_t proctal_write_unsigned_char(proctal p, void *addr, unsigned char in);
-size_t proctal_write_unsigned_char_array(proctal p, void *addr, const unsigned char *in, size_t size);
-size_t proctal_write_short(proctal p, void *addr, short in);
-size_t proctal_write_short_array(proctal p, void *addr, const short *in, size_t size);
-size_t proctal_write_unsigned_short(proctal p, void *addr, unsigned short in);
-size_t proctal_write_unsigned_short_array(proctal p, void *addr, const unsigned short *in, size_t size);
-size_t proctal_write_int(proctal p, void *addr, int in);
-size_t proctal_write_int_array(proctal p, void *addr, const int *in, size_t size);
-size_t proctal_write_unsigned_int(proctal p, void *addr, unsigned int in);
-size_t proctal_write_unsigned_int_array(proctal p, void *addr, const unsigned int *in, size_t size);
-size_t proctal_write_long(proctal p, void *addr, long in);
-size_t proctal_write_long_array(proctal p, void *addr, const long *in, size_t size);
-size_t proctal_write_unsigned_long(proctal p, void *addr, unsigned long in);
-size_t proctal_write_unsigned_long_array(proctal p, void *addr, const unsigned long *in, size_t size);
-size_t proctal_write_long_long(proctal p, void *addr, long long in);
-size_t proctal_write_long_long_array(proctal p, void *addr, const long long *in, size_t size);
-size_t proctal_write_unsigned_long_long(proctal p, void *addr, unsigned long long in);
-size_t proctal_write_unsigned_long_long_array(proctal p, void *addr, const unsigned long long *in, size_t size);
-size_t proctal_write_float(proctal p, void *addr, float in);
-size_t proctal_write_float_array(proctal p, void *addr, const float *in, size_t size);
-size_t proctal_write_double(proctal p, void *addr, double in);
-size_t proctal_write_double_array(proctal p, void *addr, const double *in, size_t size);
-size_t proctal_write_long_double(proctal p, void *addr, long double in);
-size_t proctal_write_long_double_array(proctal p, void *addr, const long double *in, size_t size);
-size_t proctal_write_address(proctal p, void *addr, void *in);
-size_t proctal_write_address_array(proctal p, void *addr, const void **in, size_t size);
+size_t proctal_write(proctal_t p, void *addr, const char *in, size_t size);
+size_t proctal_write_char(proctal_t p, void *addr, char in);
+size_t proctal_write_char_array(proctal_t p, void *addr, const char *in, size_t size);
+size_t proctal_write_signed_char(proctal_t p, void *addr, signed char in);
+size_t proctal_write_signed_char_array(proctal_t p, void *addr, const signed char *in, size_t size);
+size_t proctal_write_unsigned_char(proctal_t p, void *addr, unsigned char in);
+size_t proctal_write_unsigned_char_array(proctal_t p, void *addr, const unsigned char *in, size_t size);
+size_t proctal_write_short(proctal_t p, void *addr, short in);
+size_t proctal_write_short_array(proctal_t p, void *addr, const short *in, size_t size);
+size_t proctal_write_unsigned_short(proctal_t p, void *addr, unsigned short in);
+size_t proctal_write_unsigned_short_array(proctal_t p, void *addr, const unsigned short *in, size_t size);
+size_t proctal_write_int(proctal_t p, void *addr, int in);
+size_t proctal_write_int_array(proctal_t p, void *addr, const int *in, size_t size);
+size_t proctal_write_unsigned_int(proctal_t p, void *addr, unsigned int in);
+size_t proctal_write_unsigned_int_array(proctal_t p, void *addr, const unsigned int *in, size_t size);
+size_t proctal_write_long(proctal_t p, void *addr, long in);
+size_t proctal_write_long_array(proctal_t p, void *addr, const long *in, size_t size);
+size_t proctal_write_unsigned_long(proctal_t p, void *addr, unsigned long in);
+size_t proctal_write_unsigned_long_array(proctal_t p, void *addr, const unsigned long *in, size_t size);
+size_t proctal_write_long_long(proctal_t p, void *addr, long long in);
+size_t proctal_write_long_long_array(proctal_t p, void *addr, const long long *in, size_t size);
+size_t proctal_write_unsigned_long_long(proctal_t p, void *addr, unsigned long long in);
+size_t proctal_write_unsigned_long_long_array(proctal_t p, void *addr, const unsigned long long *in, size_t size);
+size_t proctal_write_float(proctal_t p, void *addr, float in);
+size_t proctal_write_float_array(proctal_t p, void *addr, const float *in, size_t size);
+size_t proctal_write_double(proctal_t p, void *addr, double in);
+size_t proctal_write_double_array(proctal_t p, void *addr, const double *in, size_t size);
+size_t proctal_write_long_double(proctal_t p, void *addr, long double in);
+size_t proctal_write_long_double_array(proctal_t p, void *addr, const long double *in, size_t size);
+size_t proctal_write_address(proctal_t p, void *addr, void *in);
+size_t proctal_write_address_array(proctal_t p, void *addr, const void **in, size_t size);
 
 /*
  * Puts the address iterator in a clean state.
@@ -215,7 +215,7 @@ size_t proctal_write_address_array(proctal p, void *addr, const void **in, size_
  *
  * It will do nothing if the address iterator is already in a clean state.
  */
-void proctal_address_new(proctal p);
+void proctal_address_new(proctal_t p);
 
 /*
  * Iterates over the entire address space.
@@ -228,14 +228,14 @@ void proctal_address_new(proctal p);
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_address(proctal p, void **addr);
+int proctal_address(proctal_t p, void **addr);
 
 /*
  * Returns the alignment requirements of the addresses you're iterating over.
  *
  * The default value is 1.
  */
-size_t proctal_address_align(proctal p);
+size_t proctal_address_align(proctal_t p);
 
 /*
  * Sets the alignment requirements of the addresses you want to iterate over.
@@ -244,7 +244,7 @@ size_t proctal_address_align(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_align(proctal p, size_t align);
+void proctal_address_set_align(proctal_t p, size_t align);
 
 /*
  * Returns the size of the values pointed by the addresses you're iterating
@@ -252,7 +252,7 @@ void proctal_address_set_align(proctal p, size_t align);
  *
  * The default value is 1.
  */
-size_t proctal_address_size(proctal p);
+size_t proctal_address_size(proctal_t p);
 
 /*
  * Sets the size of the values pointed by the addresses you want to iterate
@@ -263,14 +263,14 @@ size_t proctal_address_size(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_size(proctal p, size_t size);
+void proctal_address_set_size(proctal_t p, size_t size);
 
 /*
  * Returns which memory regions the addresses iterated could belong to.
  *
  * The default value is 0.
  */
-long proctal_address_region(proctal p);
+long proctal_address_region(proctal_t p);
 
 /*
  * Sets which memory regions the addresses to iterate belong to.
@@ -279,7 +279,7 @@ long proctal_address_region(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_region(proctal p, long mask);
+void proctal_address_set_region(proctal_t p, long mask);
 
 /*
  * Checks whether it's iterating over addresses marked as readable by the
@@ -289,7 +289,7 @@ void proctal_address_set_region(proctal p, long mask);
  *
  * By default this is set to 1.
  */
-int proctal_address_read(proctal p);
+int proctal_address_read(proctal_t p);
 
 /*
  * Sets whether to iterate over addresses marked as readable by the operating
@@ -299,7 +299,7 @@ int proctal_address_read(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_read(proctal p, int read);
+void proctal_address_set_read(proctal_t p, int read);
 
 /*
  * Checks whether it's iterating over addresses marked as writable by the
@@ -309,7 +309,7 @@ void proctal_address_set_read(proctal p, int read);
  *
  * By default this is set to 1.
  */
-int proctal_address_write(proctal p);
+int proctal_address_write(proctal_t p);
 
 /*
  * Sets whether to iterate over addresses marked as writable by the operating
@@ -319,7 +319,7 @@ int proctal_address_write(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_write(proctal p, int write);
+void proctal_address_set_write(proctal_t p, int write);
 
 /*
  * Checks whether it's iterating over addresses marked as executable by the
@@ -329,7 +329,7 @@ void proctal_address_set_write(proctal p, int write);
  *
  * By default this is set to 1.
  */
-int proctal_address_execute(proctal p);
+int proctal_address_execute(proctal_t p);
 
 /*
  * Sets whether to iterate over addresses marked as executable by the operating
@@ -339,7 +339,7 @@ int proctal_address_execute(proctal p);
  *
  * This call should follow proctal_address_new.
  */
-void proctal_address_set_execute(proctal p, int execute);
+void proctal_address_set_execute(proctal_t p, int execute);
 
 /*
  * Puts the memory region iterator in a clean state.
@@ -350,7 +350,7 @@ void proctal_address_set_execute(proctal p, int execute);
  * It will do nothing if the memory region iterator is already in a clean
  * state.
  */
-void proctal_region_new(proctal p);
+void proctal_region_new(proctal_t p);
 
 /*
  * Iterates over the entire address space by memory regions.
@@ -363,14 +363,14 @@ void proctal_region_new(proctal p);
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_region(proctal p, void **start, void **end);
+int proctal_region(proctal_t p, void **start, void **end);
 
 /*
  * Returns which memory regions are being iterated over.
  *
  * The default value is 0.
  */
-long proctal_region_mask(proctal p);
+long proctal_region_mask(proctal_t p);
 
 /*
  * Sets which memory regions are going to be iterated over.
@@ -379,7 +379,7 @@ long proctal_region_mask(proctal p);
  *
  * This call should follow proctal_region_new.
  */
-void proctal_region_set_mask(proctal p, long mask);
+void proctal_region_set_mask(proctal_t p, long mask);
 
 /*
  * Checks whether it's iterating over memory regions marked as readable by the
@@ -389,7 +389,7 @@ void proctal_region_set_mask(proctal p, long mask);
  *
  * By default this is set to 1.
  */
-int proctal_region_read(proctal p);
+int proctal_region_read(proctal_t p);
 
 /*
  * Sets whether to iterate over memory regions marked as readable by the
@@ -399,7 +399,7 @@ int proctal_region_read(proctal p);
  *
  * This call should follow proctal_region_new.
  */
-void proctal_region_set_read(proctal p, int read);
+void proctal_region_set_read(proctal_t p, int read);
 
 /*
  * Checks whether it's iterating over memory regions marked as writable by the
@@ -409,7 +409,7 @@ void proctal_region_set_read(proctal p, int read);
  *
  * By default this is set to 1.
  */
-int proctal_region_write(proctal p);
+int proctal_region_write(proctal_t p);
 
 /*
  * Sets whether to iterate over memory regions marked as writable by the
@@ -419,7 +419,7 @@ int proctal_region_write(proctal p);
  *
  * This call should follow proctal_region_new.
  */
-void proctal_region_set_write(proctal p, int write);
+void proctal_region_set_write(proctal_t p, int write);
 
 /*
  * Checks whether it's iterating over memory regions marked as executable by
@@ -429,7 +429,7 @@ void proctal_region_set_write(proctal p, int write);
  *
  * By default this is set to 1.
  */
-int proctal_region_execute(proctal p);
+int proctal_region_execute(proctal_t p);
 
 /*
  * Sets whether to iterate over memory regions marked as executable by the
@@ -439,7 +439,7 @@ int proctal_region_execute(proctal p);
  *
  * This call should follow proctal_region_new.
  */
-void proctal_region_set_execute(proctal p, int execute);
+void proctal_region_set_execute(proctal_t p, int execute);
 
 /*
  * Freezes main thread of execution.
@@ -449,7 +449,7 @@ void proctal_region_set_execute(proctal p, int execute);
  *
  * Destroying the handle automatically unfreezes.
  */
-int proctal_freeze(proctal p);
+int proctal_freeze(proctal_t p);
 
 /*
  * Unfreezes execution.
@@ -457,7 +457,7 @@ int proctal_freeze(proctal p);
  * You may only unfreeze as many times as you have frozen otherwise behavior is
  * left undefined.
  */
-int proctal_unfreeze(proctal p);
+int proctal_unfreeze(proctal_t p);
 
 /*
  * Watches for memory accesses by the main thread of execution.
@@ -471,59 +471,59 @@ int proctal_unfreeze(proctal p);
  *
  * This function will block until an access is detected.
  */
-int proctal_watch(proctal p, void **addr);
+int proctal_watch(proctal_t p, void **addr);
 
 /*
  * Returns the address that will be watched for accesses.
  */
-void *proctal_watch_address(proctal p);
+void *proctal_watch_address(proctal_t p);
 
 /*
  * Sets the address to watch.
  */
-void proctal_watch_set_address(proctal p, void *addr);
+void proctal_watch_set_address(proctal_t p, void *addr);
 
 /*
  * Checks whether it's going to watch for reads.
  *
  * 1 means yes, 0 means no.
  */
-int proctal_watch_read(proctal p);
+int proctal_watch_read(proctal_t p);
 
 /*
  * Sets whether to watch for reads.
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_read(proctal p, int r);
+void proctal_watch_set_read(proctal_t p, int r);
 
 /*
  * Checks whether it's going to watch for writes.
  *
  * 1 means yes, 0 means no.
  */
-int proctal_watch_write(proctal p);
+int proctal_watch_write(proctal_t p);
 
 /*
  * Sets whether to watch for writes.
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_write(proctal p, int w);
+void proctal_watch_set_write(proctal_t p, int w);
 
 /*
  * Checks whether it's going to watch for execution.
  *
  * 1 means yes, 0 means no.
  */
-int proctal_watch_execute(proctal p);
+int proctal_watch_execute(proctal_t p);
 
 /*
  * Sets whether to watch for execution.
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_execute(proctal p, int x);
+void proctal_watch_set_execute(proctal_t p, int x);
 
 /*
  * Executes arbitrary code.
@@ -539,7 +539,7 @@ void proctal_watch_set_execute(proctal p, int x);
  *
  * On failure returns 0. Call proctal_error to find out what happened.
  */
-int proctal_execute(proctal p, const char *byte_code, size_t byte_code_length);
+int proctal_execute(proctal_t p, const char *byte_code, size_t byte_code_length);
 
 /*
  * Allocates memory.
@@ -552,7 +552,7 @@ int proctal_execute(proctal p, const char *byte_code, size_t byte_code_length);
  * On success it returns the start address. On failure it will return NULL. You
  * can call proctal_error to find out what happened.
  */
-void *proctal_alloc(proctal p, size_t size, int perm);
+void *proctal_alloc(proctal_t p, size_t size, int perm);
 
 /*
  * Deallocates memory allocated by proctal_alloc.
@@ -563,7 +563,7 @@ void *proctal_alloc(proctal p, size_t size, int perm);
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
  */
-void proctal_dealloc(proctal p, void *addr);
+void proctal_dealloc(proctal_t p, void *addr);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.
@@ -572,8 +572,8 @@ void proctal_dealloc(proctal p, void *addr);
  * having the new deallocator being called on an internal data structure that
  * was allocated with the old allocator.
  */
-void proctal_set_malloc(proctal p, void *(*malloc)(size_t));
-void proctal_set_free(proctal p, void (*free)(void *));
+void proctal_set_malloc(proctal_t p, void *(*malloc)(size_t));
+void proctal_set_free(proctal_t p, void (*free)(void *));
 
 /*
  * Global counterparts. These define the values that are used by default when

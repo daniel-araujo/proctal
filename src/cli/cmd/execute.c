@@ -81,7 +81,7 @@ static size_t assemble(char **buf, char *assembly)
 
 int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 {
-	proctal p = proctal_create();
+	proctal_t p = proctal_create();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

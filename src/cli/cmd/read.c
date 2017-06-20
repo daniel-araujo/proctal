@@ -33,7 +33,7 @@ static inline void print_ending(struct cli_cmd_read_arg *arg)
 
 int cli_cmd_read(struct cli_cmd_read_arg *arg)
 {
-	proctal p = proctal_create();
+	proctal_t p = proctal_create();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

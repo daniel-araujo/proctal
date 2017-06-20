@@ -16,7 +16,7 @@ static void print_match(void *addr)
 
 int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 {
-	proctal p = proctal_create();
+	proctal_t p = proctal_create();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

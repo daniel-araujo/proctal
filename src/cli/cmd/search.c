@@ -91,7 +91,7 @@ static inline void *align_addr(void *addr, size_t align)
 	return (void *) ((char *) addr + offset);
 }
 
-static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
+static inline void search_process(struct cli_cmd_search_arg *arg, proctal_t p)
 {
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
@@ -192,7 +192,7 @@ static inline void search_process(struct cli_cmd_search_arg *arg, proctal p)
 	}
 }
 
-static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
+static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 {
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 	struct cli_val_filter_compare_prev_arg *filter_compare_prev_arg = create_filter_compare_prev_arg(arg);
@@ -270,7 +270,7 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal p)
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg)
 {
-	proctal p = proctal_create();
+	proctal_t p = proctal_create();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
