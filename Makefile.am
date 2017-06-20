@@ -10,7 +10,7 @@ noinst_LIBRARIES =
 TESTS =
 
 proctal_cflags_src_include = -iquote$(srcdir)/src -iquotesrc
-proctal_cflags_src_lib_include = -I$(srcdir)/src/lib/include -Isrc/lib/include
+proctal_cflags_src_lib_include = -I$(srcdir)/src/api/include -Isrc/api/include
 proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
 	-Wextra -Wpointer-arith $(proctal_xopen_flags) \
 	-Wno-unused-parameter -Wno-unused-function \
@@ -201,44 +201,44 @@ src/cli/proctal.1: src/cli/yuck/args.yuck
 
 # C library.
 lib_LTLIBRARIES += libproctal.la
-include_HEADERS += src/lib/include/proctal.h
+include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
-	src/lib/impl/impl.h \
-	src/lib/impl/linux.c \
-	src/lib/proctal.h \
-	src/lib/error.c \
-	src/lib/watch.c \
-	src/lib/freeze.c \
-	src/lib/write.c \
-	src/lib/read.c \
-	src/lib/address.c \
-	src/lib/region.c \
-	src/lib/allocate.c \
-	src/lib/execute.c \
-	src/lib/malloc.c \
-	src/lib/global.c \
-	src/lib/proc.c \
-	src/lib/init.c \
-	src/lib/linux/address.c \
-	src/lib/linux/address.h \
-	src/lib/linux/region.c \
-	src/lib/linux/region.h \
-	src/lib/linux/allocate.c \
-	src/lib/linux/allocate.h \
-	src/lib/linux/execute.c \
-	src/lib/linux/execute.h \
-	src/lib/linux/mem.c \
-	src/lib/linux/mem.h \
-	src/lib/linux/proc.c \
-	src/lib/linux/proc.h \
-	src/lib/linux/ptrace.c \
-	src/lib/linux/ptrace.h \
-	src/lib/linux/proctal.c \
-	src/lib/linux/proctal.h \
-	src/lib/linux/watch.c \
-	src/lib/linux/watch.h \
-	src/lib/x86/dr.c \
-	src/lib/x86/dr.h
+	src/api/impl/impl.h \
+	src/api/impl/linux.c \
+	src/api/proctal.h \
+	src/api/error.c \
+	src/api/watch.c \
+	src/api/freeze.c \
+	src/api/write.c \
+	src/api/read.c \
+	src/api/address.c \
+	src/api/region.c \
+	src/api/allocate.c \
+	src/api/execute.c \
+	src/api/malloc.c \
+	src/api/global.c \
+	src/api/proc.c \
+	src/api/init.c \
+	src/api/linux/address.c \
+	src/api/linux/address.h \
+	src/api/linux/region.c \
+	src/api/linux/region.h \
+	src/api/linux/allocate.c \
+	src/api/linux/allocate.h \
+	src/api/linux/execute.c \
+	src/api/linux/execute.h \
+	src/api/linux/mem.c \
+	src/api/linux/mem.h \
+	src/api/linux/proc.c \
+	src/api/linux/proc.h \
+	src/api/linux/ptrace.c \
+	src/api/linux/ptrace.h \
+	src/api/linux/proctal.c \
+	src/api/linux/proctal.h \
+	src/api/linux/watch.c \
+	src/api/linux/watch.h \
+	src/api/x86/dr.c \
+	src/api/x86/dr.h
 libproctal_la_CFLAGS = $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 

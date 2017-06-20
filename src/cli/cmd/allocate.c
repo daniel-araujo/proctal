@@ -2,7 +2,7 @@
 
 #include "cli/cmd/allocate.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 
 static int make_permission(struct cli_cmd_allocate_arg *arg)
 {

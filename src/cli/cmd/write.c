@@ -2,7 +2,7 @@
 
 #include "cli/cmd/write.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg)
 {

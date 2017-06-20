@@ -73,7 +73,7 @@ $ proctal deallocate --pid=15433 7f78fda9c000
 ```
 
 
-### C library
+### API
 
 ```C
 #include <stdlib.h>
@@ -161,7 +161,7 @@ the man page by running the following command:
 	man 1 proctal
 
 
-### C library
+### API
 
 Can be used by linking to `libproctal` and including `proctal.h`
 

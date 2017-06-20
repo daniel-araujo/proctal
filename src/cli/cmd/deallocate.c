@@ -1,6 +1,6 @@
 #include "cli/cmd/deallocate.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 
 int cli_cmd_deallocate(struct cli_cmd_deallocate_arg *arg)
 {

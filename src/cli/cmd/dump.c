@@ -2,7 +2,7 @@
 
 #include "cli/cmd/dump.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 #include "chunk/chunk.h"
 
 int cli_cmd_dump(struct cli_cmd_dump_arg *arg)

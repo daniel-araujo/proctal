@@ -4,7 +4,7 @@
 
 #include "cli/cmd/watch.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 #include "magic/magic.h"
 
 static int request_quit = 0;

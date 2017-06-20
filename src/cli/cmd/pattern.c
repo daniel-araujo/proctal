@@ -4,7 +4,7 @@
 #include "cli/cmd/pattern.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
 

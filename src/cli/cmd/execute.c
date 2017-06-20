@@ -4,7 +4,7 @@
 
 #include "cli/cmd/execute.h"
 #include "cli/printer.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 
 static void free_read(char **buf)
 {

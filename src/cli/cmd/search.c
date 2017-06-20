@@ -5,7 +5,7 @@
 #include "cli/scanner.h"
 #include "cli/val.h"
 #include "cli/val/filter.h"
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
 

@@ -1,7 +1,7 @@
 #ifndef CLI_PRINTER_H
 #define CLI_PRINTER_H
 
-#include "lib/include/proctal.h"
+#include "api/include/proctal.h"
 #include "cli/pattern.h"
 
 void cli_print_proctal_error(proctal_t p);
