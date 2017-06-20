@@ -1,6 +1,6 @@
 #include "lib/linux/execute.h"
 #include "lib/linux/proc.h"
-#include "lib/linux/alloc.h"
+#include "lib/linux/allocate.h"
 #include "lib/linux/mem.h"
 #include "lib/linux/ptrace.h"
 #include "magic/magic.h"
@@ -288,10 +288,10 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	size_t prologue_size = ARRAY_SIZE(prologue);
 	size_t epilogue_size = ARRAY_SIZE(epilogue);
 
-	void *addr = proctal_linux_alloc(
+	void *addr = proctal_linux_allocate(
 		pl,
 		prologue_size + byte_code_length + epilogue_size,
-		PROCTAL_ALLOC_PERM_WRITE | PROCTAL_ALLOC_PERM_EXECUTE | PROCTAL_ALLOC_PERM_READ);
+		PROCTAL_ALLOCATE_PERM_WRITE | PROCTAL_ALLOCATE_PERM_EXECUTE | PROCTAL_ALLOCATE_PERM_READ);
 
 	if (addr == NULL) {
 		proctal_linux_ptrace_detach(pl);
@@ -316,14 +316,14 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, stack_pointer)
 		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, base_pointer)) {
 		execute_load_state(pl, &orig);
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
 	if (!proctal_linux_mem_write(pl, (void *) base_pointer, (char *) &epilogue_start_addr, sizeof(epilogue_start_addr))) {
 		execute_load_state(pl, &orig);
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
@@ -332,14 +332,14 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
 		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)) {
 		execute_load_state(pl, &orig);
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
 	if (!proctal_linux_ptrace_set_instruction_address(pl, landing_zone)) {
 		execute_load_state(pl, &orig);
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
@@ -348,18 +348,18 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	if (!proctal_linux_ptrace_cont(pl)
 		|| !proctal_linux_ptrace_wait_trap(pl)) {
 		execute_load_state(pl, &orig);
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
 	if (!execute_load_state(pl, &orig)) {
-		proctal_linux_dealloc(pl, addr);
+		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
-	proctal_linux_dealloc(pl, addr);
+	proctal_linux_deallocate(pl, addr);
 
 	if (!proctal_linux_ptrace_detach(pl)) {
 		return 0;

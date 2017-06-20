@@ -1,7 +1,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#include "lib/linux/alloc.h"
+#include "lib/linux/allocate.h"
 #include "lib/linux/proc.h"
 #include "lib/linux/mem.h"
 #include "lib/linux/execute.h"
@@ -14,15 +14,15 @@ static inline int make_prot(int permissions)
 {
 	int prot = 0;
 
-	if (permissions & PROCTAL_ALLOC_PERM_READ) {
+	if (permissions & PROCTAL_ALLOCATE_PERM_READ) {
 		prot |= PROT_READ;
 	}
 
-	if (permissions & PROCTAL_ALLOC_PERM_WRITE) {
+	if (permissions & PROCTAL_ALLOCATE_PERM_WRITE) {
 		prot |= PROT_WRITE;
 	}
 
-	if (permissions & PROCTAL_ALLOC_PERM_EXECUTE) {
+	if (permissions & PROCTAL_ALLOCATE_PERM_EXECUTE) {
 		prot |= PROT_EXEC;
 	}
 
@@ -53,7 +53,7 @@ static inline void *write_header(struct proctal_linux *pl, struct mem_header *he
 	return (char *) alloc_addr + sizeof(header);
 }
 
-void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions)
+void *proctal_linux_allocate(struct proctal_linux *pl, size_t size, int permissions)
 {
 	int prot = make_prot(permissions);
 	int flags = 0x22; // MAP_PRIVATE | MAP_ANONYMOUS
@@ -73,7 +73,7 @@ void *proctal_linux_alloc(struct proctal_linux *pl, size_t size, int permissions
 	return addr;
 }
 
-void proctal_linux_dealloc(struct proctal_linux *pl, void *addr)
+void proctal_linux_deallocate(struct proctal_linux *pl, void *addr)
 {
 	struct mem_header header;
 	void *alloc_addr = read_header(pl, &header, addr);

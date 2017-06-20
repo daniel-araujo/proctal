@@ -1,9 +1,9 @@
-#ifndef CLI_CMD_ALLOC_H
-#define CLI_CMD_ALLOC_H
+#ifndef CLI_CMD_ALLOCATE_H
+#define CLI_CMD_ALLOCATE_H
 
 #include <stdlib.h>
 
-struct cli_cmd_alloc_arg {
+struct cli_cmd_allocate_arg {
 	int pid;
 
 	// Requested size.
@@ -19,6 +19,6 @@ struct cli_cmd_alloc_arg {
 	int execute;
 };
 
-int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg);
+int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg);
 
-#endif /* CLI_CMD_ALLOC_H */
+#endif /* CLI_CMD_ALLOCATE_H */

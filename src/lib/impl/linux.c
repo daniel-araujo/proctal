@@ -5,7 +5,7 @@
 #include "lib/linux/address.h"
 #include "lib/linux/region.h"
 #include "lib/linux/watch.h"
-#include "lib/linux/alloc.h"
+#include "lib/linux/allocate.h"
 #include "lib/linux/execute.h"
 
 proctal_t proctal_impl_create(void)
@@ -118,16 +118,16 @@ int proctal_impl_execute(proctal_t p, const char *byte_code, size_t byte_code_le
 	return proctal_linux_execute(pl, byte_code, byte_code_length);
 }
 
-void *proctal_impl_alloc(proctal_t p, size_t size, int perm)
+void *proctal_impl_allocate(proctal_t p, size_t size, int perm)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_alloc(pl, size, perm);
+	return proctal_linux_allocate(pl, size, perm);
 }
 
-void proctal_impl_dealloc(proctal_t p, void *addr)
+void proctal_impl_deallocate(proctal_t p, void *addr)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_dealloc(pl, addr);
+	proctal_linux_deallocate(pl, addr);
 }

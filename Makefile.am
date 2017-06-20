@@ -25,10 +25,10 @@ CLEANFILES += src/cli/yuck/args.yuck src/cli/yuck/args.yucc
 EXTRA_DIST += src/cli/parser-name.c.php
 CLEANFILES += src/cli/parser-name.c
 proctal_SOURCES = \
-	src/cli/cmd/alloc.c \
-	src/cli/cmd/alloc.h \
-	src/cli/cmd/dealloc.c \
-	src/cli/cmd/dealloc.h \
+	src/cli/cmd/allocate.c \
+	src/cli/cmd/allocate.h \
+	src/cli/cmd/deallocate.c \
+	src/cli/cmd/deallocate.h \
 	src/cli/cmd/execute.c \
 	src/cli/cmd/execute.h \
 	src/cli/cmd/watch.c \
@@ -213,7 +213,7 @@ libproctal_la_SOURCES = \
 	src/lib/read.c \
 	src/lib/address.c \
 	src/lib/region.c \
-	src/lib/alloc.c \
+	src/lib/allocate.c \
 	src/lib/execute.c \
 	src/lib/malloc.c \
 	src/lib/global.c \
@@ -223,8 +223,8 @@ libproctal_la_SOURCES = \
 	src/lib/linux/address.h \
 	src/lib/linux/region.c \
 	src/lib/linux/region.h \
-	src/lib/linux/alloc.c \
-	src/lib/linux/alloc.h \
+	src/lib/linux/allocate.c \
+	src/lib/linux/allocate.h \
 	src/lib/linux/execute.c \
 	src/lib/linux/execute.h \
 	src/lib/linux/mem.c \

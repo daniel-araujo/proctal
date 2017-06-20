@@ -33,8 +33,8 @@ int proctal_impl_watch(proctal_t p, void **addr);
 
 int proctal_impl_execute(proctal_t p, const char *byte_code, size_t byte_code_length);
 
-void *proctal_impl_alloc(proctal_t p, size_t size, int perm);
+void *proctal_impl_allocate(proctal_t p, size_t size, int perm);
 
-void proctal_impl_dealloc(proctal_t p, void *addr);
+void proctal_impl_deallocate(proctal_t p, void *addr);
 
 #endif /* LIB_PROCTAL_IMPL_H */

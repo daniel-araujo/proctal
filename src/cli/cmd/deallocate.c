@@ -1,8 +1,8 @@
-#include "cli/cmd/dealloc.h"
+#include "cli/cmd/deallocate.h"
 #include "cli/printer.h"
 #include "lib/include/proctal.h"
 
-int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg)
+int cli_cmd_deallocate(struct cli_cmd_deallocate_arg *arg)
 {
 	proctal_t p = proctal_create();
 
@@ -14,7 +14,7 @@ int cli_cmd_dealloc(struct cli_cmd_dealloc_arg *arg)
 
 	proctal_set_pid(p, arg->pid);
 
-	proctal_dealloc(p, arg->address);
+	proctal_deallocate(p, arg->address);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

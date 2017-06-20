@@ -42,9 +42,9 @@
 /*
  * Macro definitions of memory allocation permissions.
  */
-#define PROCTAL_ALLOC_PERM_EXECUTE 1
-#define PROCTAL_ALLOC_PERM_WRITE 2
-#define PROCTAL_ALLOC_PERM_READ 4
+#define PROCTAL_ALLOCATE_PERM_EXECUTE 1
+#define PROCTAL_ALLOCATE_PERM_WRITE 2
+#define PROCTAL_ALLOCATE_PERM_READ 4
 
 /*
  * Provides a type name for a handle. The actual definition is an
@@ -547,15 +547,15 @@ int proctal_execute(proctal_t p, const char *byte_code, size_t byte_code_length)
  * The size parameter specifies the number of bytes you're interested in
  * allocating. It may allocate more space but you should never rely on that.
  * The perm parameter specifies read, write and execute permissions. You can
- * OR the macros whose name start with PROCTAL_ALLOC_PERM.
+ * OR the macros whose name start with PROCTAL_ALLOCATE_PERM.
  *
  * On success it returns the start address. On failure it will return NULL. You
  * can call proctal_error to find out what happened.
  */
-void *proctal_alloc(proctal_t p, size_t size, int perm);
+void *proctal_allocate(proctal_t p, size_t size, int perm);
 
 /*
- * Deallocates memory allocated by proctal_alloc.
+ * Deallocates memory allocated by proctal_allocate.
  *
  * This command is special in that it can deallocate memory allocated by a
  * different handle.
@@ -563,7 +563,7 @@ void *proctal_alloc(proctal_t p, size_t size, int perm);
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
  */
-void proctal_dealloc(proctal_t p, void *addr);
+void proctal_deallocate(proctal_t p, void *addr);
 
 /*
  * Sets the memory allocator/deallocator used for internal data structures.

@@ -297,20 +297,21 @@ Examples:
 
 
 
-Usage: proctal alloc SIZE
+Usage: proctal allocate SIZE
 Allocates memory.
 
 Will output the start address of an allocated chunk of memory with at least
 SIZE bytes.
 
-When you no longer need it, you should deallocate it with the dealloc command.
+When you no longer need it, you should deallocate it with the deallocate
+command.
 
 Examples:
   Allocating 8 bytes
-        proctal alloc --pid=12345 8
+        proctal allocate --pid=12345 8
 
   Allocating 8 bytes in readable and executable memory
-        proctal alloc --pid=12345 -rx 8
+        proctal allocate --pid=12345 -rx 8
 
 
   PID_ARGUMENT
@@ -320,14 +321,14 @@ Examples:
 
 
 
-Usage: proctal dealloc ADDRESS
+Usage: proctal deallocate ADDRESS
 Deallocates memory.
 
-Should only be used to deallocate memory allocated by the alloc command.
+Should only be used to deallocate memory allocated by the allocate command.
 
 Examples:
   Deallocating memory starting at 7fbf7b6b2000
-        proctal dealloc --pid=12345 7fbf7b6b2000
+        proctal deallocate --pid=12345 7fbf7b6b2000
 
 
   PID_ARGUMENT

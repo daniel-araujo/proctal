@@ -54,7 +54,7 @@ Hello, world!
 
 ```sh
 # Allocates memory to store Hello, world!
-$ proctal alloc --pid=15433 -rw 14
+$ proctal allocate --pid=15433 -rw 14
 7f78fda9c000
 
 # Writes Hello, world! to memory.
@@ -69,7 +69,7 @@ $ proctal execute --pid=15433
 	syscall
 
 # Deallocates memory that was used to store Hello, world!
-$ proctal dealloc --pid=15433 7f78fda9c000
+$ proctal deallocate --pid=15433 7f78fda9c000
 ```
 
 
@@ -96,7 +96,7 @@ int main (int argc, char **argv)
 
 	proctal_set_pid(proctal, 15433);
 
-	void *allocated_memory = proctal_alloc(proctal, sizeof output, PROCTAL_ALLOC_PERM_READ);
+	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOC_PERM_READ);
 
 	if (proctal_error(proctal)) {
 		proctal_destroy(proctal);
@@ -107,7 +107,7 @@ int main (int argc, char **argv)
 	proctal_write(proctal, allocated_memory, output, sizeof output);
 
 	if (proctal_error(proctal)) {
-		proctal_dealloc(proctal, allocated_memory);
+		proctal_deallocate(proctal, allocated_memory);
 		proctal_destroy(proctal);
 		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
@@ -125,13 +125,13 @@ int main (int argc, char **argv)
 	proctal_execute(proctal, code, sizeof code);
 
 	if (proctal_error(proctal)) {
-		proctal_dealloc(proctal, allocated_memory);
+		proctal_deallocate(proctal, allocated_memory);
 		proctal_destroy(proctal);
 		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
-	proctal_dealloc(proctal, allocated_memory);
+	proctal_deallocate(proctal, allocated_memory);
 	proctal_destroy(proctal);
 
 	return EXIT_SUCCESS;

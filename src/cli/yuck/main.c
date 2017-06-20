@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #include "cli/yuck/main.h"
-#include "cli/cmd/alloc.h"
-#include "cli/cmd/dealloc.h"
+#include "cli/cmd/allocate.h"
+#include "cli/cmd/deallocate.h"
 #include "cli/cmd/dump.h"
 #include "cli/cmd/execute.h"
 #include "cli/cmd/freeze.h"
@@ -772,88 +772,88 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 	return arg;
 }
 
-static void destroy_cli_cmd_alloc_arg(struct cli_cmd_alloc_arg *arg)
+static void destroy_cli_cmd_allocate_arg(struct cli_cmd_allocate_arg *arg)
 {
 	free(arg);
 }
 
-static struct cli_cmd_alloc_arg *create_cli_cmd_alloc_arg(yuck_t *yuck_arg)
+static struct cli_cmd_allocate_arg *create_cli_cmd_allocate_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_alloc_arg *arg = malloc(sizeof(*arg));
+	struct cli_cmd_allocate_arg *arg = malloc(sizeof(*arg));
 
-	if (yuck_arg->cmd != PROCTAL_CMD_ALLOC) {
+	if (yuck_arg->cmd != PROCTAL_CMD_ALLOCATE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_cli_cmd_alloc_arg(arg);
+		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 1) {
 		fputs("Incorrect number of arguments.\n", stderr);
-		destroy_cli_cmd_alloc_arg(arg);
+		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
 
 	if (!cli_parse_unsigned_long(yuck_arg->args[0], &arg->size)) {
 		fputs("Invalid size.\n", stderr);
-		destroy_cli_cmd_alloc_arg(arg);
+		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
 
-	if (yuck_arg->alloc.pid_arg == NULL) {
+	if (yuck_arg->allocate.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_cli_cmd_alloc_arg(arg);
+		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
 
-	if (!cli_parse_int(yuck_arg->alloc.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->allocate.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_cli_cmd_alloc_arg(arg);
+		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
 
-	arg->read = yuck_arg->alloc.read_flag == 1;
-	arg->write = yuck_arg->alloc.write_flag == 1;
-	arg->execute = yuck_arg->alloc.execute_flag == 1;
+	arg->read = yuck_arg->allocate.read_flag == 1;
+	arg->write = yuck_arg->allocate.write_flag == 1;
+	arg->execute = yuck_arg->allocate.execute_flag == 1;
 
 	return arg;
 }
 
-static void destroy_cli_cmd_dealloc_arg(struct cli_cmd_dealloc_arg *arg)
+static void destroy_cli_cmd_deallocate_arg(struct cli_cmd_deallocate_arg *arg)
 {
 	free(arg);
 }
 
-static struct cli_cmd_dealloc_arg *create_cli_cmd_dealloc_arg(yuck_t *yuck_arg)
+static struct cli_cmd_deallocate_arg *create_cli_cmd_deallocate_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_dealloc_arg *arg = malloc(sizeof(*arg));
+	struct cli_cmd_deallocate_arg *arg = malloc(sizeof(*arg));
 
-	if (yuck_arg->cmd != PROCTAL_CMD_DEALLOC) {
+	if (yuck_arg->cmd != PROCTAL_CMD_DEALLOCATE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_cli_cmd_dealloc_arg(arg);
+		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 1) {
 		fputs("Incorrect number of arguments.\n", stderr);
-		destroy_cli_cmd_dealloc_arg(arg);
+		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
 
 	if (!cli_parse_address(yuck_arg->args[0], &arg->address)) {
 		fputs("Invalid address.\n", stderr);
-		destroy_cli_cmd_dealloc_arg(arg);
+		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
 
-	if (yuck_arg->dealloc.pid_arg == NULL) {
+	if (yuck_arg->deallocate.pid_arg == NULL) {
 		fputs("OPTION -p, --pid is required.\n", stderr);
-		destroy_cli_cmd_dealloc_arg(arg);
+		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
 
-	if (!cli_parse_int(yuck_arg->dealloc.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->deallocate.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_cli_cmd_dealloc_arg(arg);
+		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
 
@@ -1011,8 +1011,8 @@ CMD_HANDLER_COMMON(pattern)
 CMD_HANDLER_COMMON(freeze)
 CMD_HANDLER_COMMON(watch)
 CMD_HANDLER_COMMON(execute)
-CMD_HANDLER_COMMON(alloc)
-CMD_HANDLER_COMMON(dealloc)
+CMD_HANDLER_COMMON(allocate)
+CMD_HANDLER_COMMON(deallocate)
 CMD_HANDLER_COMMON(measure)
 CMD_HANDLER_COMMON(dump)
 
@@ -1027,8 +1027,8 @@ cmd_handler cmd_handlers[] = {
 	[PROCTAL_CMD_FREEZE] = cmd_handler_freeze,
 	[PROCTAL_CMD_WATCH] = cmd_handler_watch,
 	[PROCTAL_CMD_EXECUTE] = cmd_handler_execute,
-	[PROCTAL_CMD_ALLOC] = cmd_handler_alloc,
-	[PROCTAL_CMD_DEALLOC] = cmd_handler_dealloc,
+	[PROCTAL_CMD_ALLOCATE] = cmd_handler_allocate,
+	[PROCTAL_CMD_DEALLOCATE] = cmd_handler_deallocate,
 	[PROCTAL_CMD_MEASURE] = cmd_handler_measure,
 	[PROCTAL_CMD_DUMP] = cmd_handler_dump,
 };

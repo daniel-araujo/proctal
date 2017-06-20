@@ -1,29 +1,29 @@
 #include <stdio.h>
 
-#include "cli/cmd/alloc.h"
+#include "cli/cmd/allocate.h"
 #include "cli/printer.h"
 #include "lib/include/proctal.h"
 
-static int make_permission(struct cli_cmd_alloc_arg *arg)
+static int make_permission(struct cli_cmd_allocate_arg *arg)
 {
 	int perm = 0;
 
 	if (arg->read) {
-		perm |= PROCTAL_ALLOC_PERM_READ;
+		perm |= PROCTAL_ALLOCATE_PERM_READ;
 	}
 
 	if (arg->write) {
-		perm |= PROCTAL_ALLOC_PERM_WRITE;
+		perm |= PROCTAL_ALLOCATE_PERM_WRITE;
 	}
 
 	if (arg->execute) {
-		perm |= PROCTAL_ALLOC_PERM_EXECUTE;
+		perm |= PROCTAL_ALLOCATE_PERM_EXECUTE;
 	}
 
 	return perm;
 }
 
-int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg)
+int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg)
 {
 	proctal_t p = proctal_create();
 
@@ -37,7 +37,7 @@ int cli_cmd_alloc(struct cli_cmd_alloc_arg *arg)
 
 	int perm = make_permission(arg);
 
-	void *addr = proctal_alloc(p, arg->size, perm);
+	void *addr = proctal_allocate(p, arg->size, perm);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
