@@ -23,11 +23,7 @@ Planned:
 
 > **Note**
 >
-> This is work in progress and as such the API is unstable and the
-> documentation is done as an afterthought. This will change as the project
-> matures.
->
-> It's currently only tested on x86-64 Linux.
+> This is work in progress. It's currently only tested on x86-64 Linux.
 
 
 ## Content
