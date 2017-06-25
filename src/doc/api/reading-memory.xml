@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Reading from memory</title>
+
+	Reading from memory is quite simple. Just call
+	<quote>proctal_read</quote>. Here's how you would read an int at memory
+	location <quote>1C09346</quote>.
+
+	<code type="c">
+void *address = (void *) 0x1C09346;
+int i;
+size_t bytes_read = proctal_read(proctal, address, &amp;i, sizeof(i));
+	</code>
+
+	This call returns the number of bytes read. If that number doesn't match
+	the size of the value, then an error must have occurred. Call
+	<quote>proctal_error</quote> to find out what went wrong.
+</document>

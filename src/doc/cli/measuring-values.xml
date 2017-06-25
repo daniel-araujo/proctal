@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Measuring values</title>
+
+	Suppose you want to allocate memory in a program. It's easy to know how
+	much space you'd need if you were to store three 32-bit integers. Doing
+	the math yields 12 bytes.
+
+	Calculating the storage for fixed sized values is easy, but if you were
+	to store code that you wrote in assembly, you would have to know the
+	size of the byte code resulting from every instruction but even if you
+	knew that information you would still have a lot of math to do if your
+	code was composed of many instructions.
+
+	Proctal provides the <quote>measure</quote> command that takes type
+	parameters and counts the values for you. You can read all about type
+	parameters <link ref="proctal:cli:type-parameters">here</link>.
+
+	Here are some examples:
+
+	<code type="bash-prompt">
+$ proctal measure --address=1c09346 --type=integer --integer-size=32 0
+4
+$ proctal measure --address=1c09346 --type=integer --integer-size=64 0
+8
+$ proctal measure --address=1c09346 --type=instruction "call 0x5"
+5
+	</code>
+
+	You may find it odd that the <quote>--address</quote> parameter is
+	required. That's because assembly instructions may get assembled into
+	different byte code depending on where they are placed in memory.
+</document>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Allocating memory</title>
+
+	You can allocate and deallocate memory for a program by calling
+	<quote>proctal_allocate</quote> and <quote>proctal_deallocate</quote>,
+	respectively.
+
+	The function <quote>proctal_allocate</quote> takes the size of the
+	memory block and a bitset that determines if it will have read, write
+	or executable permissions.
+
+	Here's how you would allocate 8 bytes of readable and writable memory:
+
+	<code type="c">
+void *address = proctal_allocate(proctal, 8, PROCTAL_ALLOCATE_PERM_READ | PROCTAL_ALLOCATE_PERM_WRITE);
+	</code>
+
+	The function returns the address where the memory location starts. On
+	error the address will have the value <quote>NULL</quote> and you can
+	call <quote>proctal_error</quote> to find out what went wrong.
+
+	The following macros are defined to identify permissions:
+
+	<list>
+		<item>PROCTAL_ALLOCATE_PERM_EXECUTE</item>
+		<item>PROCTAL_ALLOCATE_PERM_WRITE</item>
+		<item>PROCTAL_ALLOCATE_PERM_READ</item>
+	</list>
+
+	Once you are done using the memory block, you need to deallocate with
+	<quote>proctal_deallocate</quote>. You just need to pass it the address
+	you got from <quote>proctal_allocate</quote>.
+
+	<code type="c">
+proctal_deallocate(proctal, address);
+	</code>
+</document>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Watching memory</title>
+
+	You can watch for reads, writes and code execution at a chosen address.
+
+	To choose the address, you must call
+	<quote>proctal_watch_set_address</quote>.
+
+	<code type="c">
+proctal_watch_set_address(proctal, (void *) 0x81AC27);
+	</code>
+
+	To choose whether you watch to watch for reads, writes or code
+	execution you either call <quote>proctal_watch_set_read</quote>,
+	<quote>proctal_watch_set_write</quote> or
+	<quote>proctal_watch_set_execute</quote>, respectively.
+
+	<code type="c">
+proctal_watch_set_read(proctal, 1);
+proctal_watch_set_write(proctal, 1);
+proctal_watch_set_execute(proctal, 1);
+	</code>
+
+	With that set you can start watching for memory accesses by calling
+	<quote>proctal_watch</quote>.
+
+	<code type="c">
+void *address;
+int result = proctal_watch(proctal, &amp;address);
+	</code>
+
+	The call will block until an access is detected. 
+
+	<note>
+		The behavior of this function is most likely going to change in
+		the future.
+	</note>
+</document>

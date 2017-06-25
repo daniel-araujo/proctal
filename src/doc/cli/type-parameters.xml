@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Type parameters</title>
+
+	Commands that deal with values such as <quote>read</quote>,
+	<quote>write</quote>, <quote>search</quote> and <quote>measure</quote>
+	take a common set of parameters that are called the type parameters.
+	These parameters are used to describe the value.
+
+	The <quote>--type</quote> parameter specifies the type of the value.
+	The following types are available:
+
+	<list>
+		<item>byte</item>
+		<item>integer</item>
+		<item>ieee754</item>
+		<item>text</item>
+		<item>address</item>
+		<item>instruction</item>
+	</list>
+
+	The following sections will describe each one and their specific
+	parameters.
+
+	<section>
+		<title>Byte</title>
+
+		This is the most basic type of them all. A byte is a sequence
+		of 8-bits. It is printed in hexadecimal notation.
+
+		This type does not have type specific parameters.
+	</section>
+
+	<section>
+		<title>Integer</title>
+
+		An integer number can be represented in various ways. Proctal
+		supports 8, 16, 32 and 64 bit wide integers, either unsigned or
+		using the two's complement representation for negative numbers
+		and in little endian. It's printed with decimal numbers.
+
+		The <quote>--integer-endianness</quote> parameter can be used
+		to set the endianness. At the time, only <quote>little</quote>
+		is supported.
+
+		The <quote>--integer-size</quote> parameter can be used to set
+		the number of bits. Only <quote>8</quote>, <quote>16</quote>,
+		<quote>32</quote> and <quote>64</quote> are supported at the
+		moment.
+
+		The <quote>--integer-sign</quote> parameter can be used to set
+		the sign representation. <quote>2scmpl</quote> uses two's
+		complement. <quote>unsigned</quote> disregards signing
+		altogether.
+
+		By default an integer is 8-bit, signed using two's complement
+		and in little endian notation.
+	</section>
+
+	<section>
+		<title>IEEE754</title>
+
+		These numbers are represented as defined by the IEEE 754-1985
+		standard. It's printed with decimal numbers.
+
+		The <quote>--ieee754-precision</quote> parameter allows you to
+		pick the precision. You may use <quote>single</quote>,
+		<quote>double</quote> or <quote>extended</quote>.
+
+		By the default a floating point number uses single precision.
+	</section>
+
+	<section>
+		<title>Text</title>
+
+		Text is a single character from a character set. It's printed
+		in UTF-8.
+
+		The <quote>--text-charset</quote> parameter defines the
+		charater set to use. At the moment the only value that is
+		supported is <quote>ascii</quote>.
+
+		By default text uses the ASCII encoding.
+	</section>
+
+	<section>
+		<title>Address</title>
+
+		This represents a memory address in the computer. It's printed
+		in hexadecimal notation.
+
+		This type does not have type specific parameters.
+	</section>
+
+	<section>
+		<title>Instruction</title>
+
+		This represents a CPU instruction. It's printed in assembly.
+
+		The <quote>--instruction-arch</quote> parameter defines the
+		architecture of the instruction. At the moment only
+		<quote>x86-64</quote> is supported.
+
+		By default the architecture is the same as the tool was
+		compiled in.
+	</section>
+</document>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Writing values</title>
+
+	With Proctal not only can you read the contents in memory straight from
+	your terminal, you can also easily modify them. The
+	<quote>write</quote> command is able to write text, integers, IEEE754
+	floating point numbers, CPU instructions and more.
+
+	The command accepts type parameters. You can find out all about them
+	<link ref="proctal:cli:type-parameters">here</link>.
+
+	Here's how you would write a 32-bit integer with the value 0 at the
+	memory address <quote>7FFE79DEA90C</quote> in a program whose PID is
+	12345.
+
+	<code type="bash-prompt">
+$ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 0
+	</code>
+
+	<section>
+		<title>Writing arrays</title>
+
+		But what if you had an array of 32-bit integers in memory? One
+		way to write all the elements would be to execute the
+		<quote>write</quote> command at the corresponding address for
+		each element. But a better way is to take advantage of the
+		<quote>--array</quote> parameter. It takes the number of
+		elements as its value.
+
+		Here's how you would write an array of 5 32-bit integers.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 --array=5 0 0 0 0 0
+		</code>
+
+		You can also let the command loop back to the first value if
+		you don't provide the same number of values as the
+		<quote>array</quote> parameter. This means that the previous
+		command is equivalent to this one:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 --array=5 0
+		</code>
+	</section>
+
+	<section>
+		<title>Repeat writing</title>
+
+		With the <quote>--repeat</quote> parameter you can make the
+		command repeatedly write the same values over and over again.
+		With the <quote>--repeat-delay</quote> parameter you can even
+		specify the delay in milliseconds between writes.
+
+		The command will keep running until you tell it to stop. You
+		can stop it by sending it the <quote>SIGINT</quote> signal
+		(<quote>^C</quote> on most terminals).
+
+		By default the delay is set to be 5 milliseconds.
+	</section>
+</document>

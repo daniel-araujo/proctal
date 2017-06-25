@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Error handling</title>
+
+	When a function fails, Proctal keeps track of a code that identifies
+	the cause of the failure. This code can be retrieved with a call to
+	<quote>proctal_error</quote>.
+
+	<code type="c">
+int error_code = proctal_error(proctal);
+	</code>
+
+	If the code is <quote>0</quote> then it means that there was no failure.
+
+	The following macros are defined to identify error codes:
+
+	<list>
+		<item>PROCTAL_ERROR_OUT_OF_MEMORY</item>
+		<item>PROCTAL_ERROR_PERMISSION_DENIED</item>
+		<item>PROCTAL_ERROR_WRITE_FAILURE</item>
+		<item>PROCTAL_ERROR_READ_FAILURE</item>
+		<item>PROCTAL_ERROR_UNKNOWN</item>
+		<item>PROCTAL_ERROR_UNIMPLEMENTED</item>
+		<item>PROCTAL_ERROR_UNSUPPORTED</item>
+		<item>PROCTAL_ERROR_UNSUPPORTED_WATCH_READ</item>
+		<item>PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE</item>
+		<item>PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE</item>
+		<item>PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE</item>
+		<item>PROCTAL_ERROR_PROCESS_NOT_FOUND</item>
+		<item>PROCTAL_ERROR_PROCESS_NOT_SET</item>
+		<item>PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND</item>
+		<item>PROCTAL_ERROR_PROCESS_SEGFAULT</item>
+		<item>PROCTAL_ERROR_PROCESS_EXITED</item>
+		<item>PROCTAL_ERROR_PROCESS_STOPPED</item>
+		<item>PROCTAL_ERROR_PROCESS_UNTAMEABLE</item>
+		<item>PROCTAL_ERROR_PROCESS_TRAPPED</item>
+	</list>
+
+	<quote>proctal_error</quote> will keep reporting the same error until
+	you acknowledge it with a call to <quote>proctal_error_ack</quote> with
+	the exception in the case when <quote>proctal_create</quote> fails,
+	then there's no way to recover.
+
+	<code type="c">
+proctal_error_ack(proctal);
+	</code>
+
+	You can also retrieve a text description by calling
+	<quote>proctal_error_msg</quote>.
+
+	<code type="c">
+const char *error_message = proctal_error_msg(proctal);
+	</code>
+
+	If there is no failure, the returned value is <quote>NULL</quote>.
+
+	<note>
+		The error message is only meant for diagnostic purposes, such
+		as logging and debugging. Don't actually show it to the user.
+		Write messages that make sense in the context of your program.
+	</note>
+</document>

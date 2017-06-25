@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Exploring video games</title>
+
+	This document will list a couple of techniques that you can use to
+	explore your favorite video games with Proctal. The more you know
+	about computers the easier it will be to understand the concepts
+	involved here. This is best read from top to bottom.
+
+	<note>
+		In the examples, 12345 will be used as a game's process id
+		(PID).
+	</note>
+
+	<section>
+		<title>Finding exact values</title>
+
+		With the <link ref="proctal:cli:search">search command</link>
+		we can search for values that we believe could represent game
+		state such as health points, money, score, time, velocity,
+		inventories and so on. The difficult part about finding these
+		is guessing how the programmers decided to store them in
+		memory.
+
+		If the game shows you the exact amount of health points, let's
+		say for example <quote>100%</quote>, then we can guess that
+		it's stored as an 8-bit integer. We can simply search for all
+		8-bit integer values that equal to 100. The command would look
+		like this:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100
+7FCDB1D56638 100
+7FCDB1D567A8 100
+7FCDB1D571B0 100
+7FCDB1D577F8 100
+7FCDB1D57F38 100
+7FCDB1D58738 100
+7FCDB1D58BA8 100
+7FCDB1D58DA8 100
+7FCDB1D58FA8 100
+7FCDB1D591A8 100
+7FCDB1D593A8 100
+7FCDB1D595A8 100
+[...]
+		</code>
+
+		On each line you have an address and its value.
+
+		Depending on the size of the game, you're very likely going to
+		get more than 1 match. Perhaps even hundreds. It would take too
+		long to analyze each one individually. That's because there can
+		be many other things in memory with the same value. When this
+		happens you must find a way to filter out the noise.
+
+		First, let's save the output to a file. This will allow us to
+		analyze the data better. We'll name this file
+		<quote>search-1</quote>. The previous command would look like
+		this now:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100 &gt; search-1
+		</code>
+
+		Using the <quote>wc</quote> program you can count exactly how
+		many matches you have got.
+
+		<code type="bash-prompt">
+$ wc -l &lt; search-1
+3463
+		</code>
+
+		In this example, we got 3463. You might even have more.
+
+		One method that we can use to figure out which of these
+		addresses stores the value we care about, is to play the game
+		so as to change its value and then looking at the addresses we
+		got and seeing which ones have changed.
+
+		The search command accepts the <quote>--input</quote> parameter
+		that allows you to match against the addresses from a previous
+		search result. Since we have conveniently stored the results to
+		a file, we just have to use its contents as input.
+
+		Assuming that the new value is 53, here's how the command would
+		look like, storing the new search results to a file named
+		<quote>search-2</quote>.
+
+		<code type="bash-prompt">
+$ proctal search --input --pid=12345 --type=integer --integer-size=8 --eq=53 &lt; search-1 &gt; search-2
+		</code>
+
+		Let's count how many we have now:
+
+		<code type="bash-prompt">
+$ wc -l &lt; search-2
+34
+		</code>
+
+		Now we're down to 34. That's much easier to handle. We can
+		repeat the previous step until we either end up with 1 value or
+		we're unable to shorten the results any further.
+
+		You can also use the <quote>watch</quote> program to see how
+		the values change as you play the game:
+
+		<code type="bash-prompt">
+$ watch proctal search --input --pid=12345 --type=integer --integer-size=8 &lt; search-2
+7FCDB1D577F8 53
+7FCDB1D57F38 53
+7FCDB1D58738 53
+7FCDB1D58BA8 53
+[...]
+		</code>
+
+		If your guesses were right you should be able to pick the right
+		address from the search results pretty easily now.
+
+		Do note that sometimes programmers store copies of a value in
+		different places in memory. You need to pick the source of the
+		copies. It's usually the one that when modified causes the
+		others to update.
+
+		If you got no results then you may need to rethink how the
+		value might be stored in memory and whether you chose the right
+		filters. Thinking like a programmer will help you guessing
+		right.
+
+		Read more about searching values
+		<link ref="proctal:cli:search">here</link>.
+	</section>
+
+	<section>
+		<title>Finding unknown values</title>
+
+		What if the game did not show you a value? Suppose that health
+		points are represented with a health meter, instead. How would
+		you know what's in memory?
+
+		Still assuming that it might be stored as an 8-bit integer, you
+		can search for all possible 8-bit integers:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-size=8 > search-1
+		</code>
+
+		And then depending on whether you gain and or lose health, you
+		can search for values that have either increased or decreased.
+		Here's how you would search for increased values:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-size=8 --increased &gt; search-2
+		</code>
+
+		And here's how you would search for decreased values:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-size=8 --decreased &gt; search-2
+		</code>
+	</section>
+
+	<section>
+		<title>Modifying values</title>
+
+		Suppose the address where the game stores your health points is
+		726BA1DA. Using the <link ref="proctal:cli:write">write
+		command</link> you can replenish your health to 100% with a
+		single command:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=integer --integer-size=8 --address=726BA1DA 100
+		</code>
+
+		The user interface of the game may not update immediately but
+		you can check the current value using the
+		<link ref="proctal:cli:read">read command</link>:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=integer --integer-size=8 --address=726BA1DA
+100
+		</code>
+	</section>
+
+	<section>
+		<title>Freezing values</title>
+
+		What if instead of having to set your health back to 100%
+		manually you could just make it so that the game cannot change
+		its value?
+
+		You can achieve this by passing the <quote>--repeat</quote>
+		parameter to the <link ref="proctal:cli:write">write command</link>.
+		Let's assume that the address is 726BA1DA, here's how the
+		command would look like:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=integer --integer-size=32 --address=726BA1DA --repeat 1000
+		</code>
+
+		What the command will actually do is repeatedly write the same
+		value over and over, making it seem like the value is never
+		changing when actually any changes that the game attempts to
+		make are just overwritten quickly. The command will keep
+		executing indefinitely until you explicitly terminate it.
+
+		<note>
+			The game may modify and and then access the value
+			faster than the command can overwrite.
+		</note>
+	</section>
+
+	<section>
+		<title>Patching</title>
+
+		<note>
+			You will need to know a bit of assembly to make use of
+			this method.
+		</note>
+
+		It may have happened to you that when you close the game and
+		start it again the addresses you had on the previous run are no
+		longer valid or don't point to the values you were expecting.
+		This can happen if the program chooses to lay out the contents
+		in memory at random places on each run.
+
+		Instead of guessing where the values are stored in memory you
+		could instead modify the instructions that access those values,
+		as they are always the same.
+
+		Let's go about finding out at which address sits the
+		instruction that accesses the health value when it drops.
+		For that you can use the
+		<link ref="proctal:cli:watch">watch command</link>.
+
+		When you run the following command there's a good chance you're
+		going to see a couple of addresses show up immediately. Those
+		are most likely just accesses for displaying the health in the
+		user interface. When you lose some health you should see a new
+		address pop up. That's most likely the one you care about.
+		Let's assume that the address where the health is stored is
+		726BA1DA.
+
+		<code type="bash-prompt">
+$ proctal watch -rw --pid=12345 --address=726BA1DA --unique
+[...]
+418BAC
+		</code>
+
+		So somewhere at address <quote>418BAC</quote> sits the
+		instruction that accessed the health meter after it decreased.
+
+		<note>
+			TODO: This part needs to be written.
+		</note>
+
+		With this technique you're able to patch the game and
+		potentially uncover hidden features and even fix bugs.
+	</section>
+</document>

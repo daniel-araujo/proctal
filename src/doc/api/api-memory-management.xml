@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>API memory management</title>
+
+	The C API makes calls to <quote>malloc</quote> and <quote>free</quote>
+	to allocate and deallocate memory, respectively, to performs its
+	functions.
+
+	If you're the kind of programmer that wants to have complete control
+	over every memory allocation, you can provide your own versions of
+	malloc and free.
+
+	There are 2 pairs of memory allocators: Global and handle specific.
+
+	The global memory allocators are used by functions that do not operate
+	on a handle and <quote>proctal_destroy</quote>.
+
+	Here's how you would override the global allocators:
+
+	<code type="c">
+void *my_malloc(size_t size)
+{
+	// Allocate memory however you like.
+}
+
+void my_free(void *memory)
+{
+	// Deallocate your chunk of memory.
+}
+
+proctal_global_set_malloc(&amp;my_malloc);
+proctal_global_set_free(&amp;my_free);
+	</code>
+
+	When you create a handle after overriding the global allocators, it
+	will inherit them as handle specific allocators.
+
+	Here's how you would override the handle specific allocators:
+
+	<code type="c">
+void *my_malloc(size_t size)
+{
+	// Allocate memory however you like.
+}
+
+void my_free(void *memory)
+{
+	// Deallocate your chunk of memory.
+}
+
+proctal_set_malloc(proctal, &amp;my_malloc);
+proctal_set_free(proctal, &amp;my_free);
+	</code>
+</document>

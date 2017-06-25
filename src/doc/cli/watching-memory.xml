@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Watching memory</title>
+
+	Suppose that you know the address of a value in memory and you're
+	interested in finding out what reads it. With the <quote>watch</quote>
+	command you can do just that.
+
+	You may pass the <quote>--read</quote> parameter to watch for reads,
+	the <quote>--write</quote> parameter to watch for writes and the
+	<quote>--execute</quote> parameter to watch for execution.
+
+	If you wanted to watch for reads and writes at the memory address
+	<quote>1c09346</quote> on the program whose PID is 12345, the command
+	would look like this:
+
+	<code type="bash-prompt">
+$ proctal watch --pid=12345 --address=1c09346 --read --write
+	</code>
+
+	Any time that memory address is accessed, the command will print the
+	address of the instruction when it was detected. That instruction may
+	not actually be the instruction that accessed the memory address.
+
+	You can stop the command by sending it the <quote>SIGINT</quote> signal
+	(<quote>^C</quote> on most terminals).
+
+	If you're seeing the same address get printed several times it might be
+	helpful to use the <quote>--unique</quote> parameter that will make the
+	command print an address only once.
+</document>

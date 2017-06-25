@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Reading values</title>
+
+	With Proctal you can read the contents in memory straight from your
+	terminal. The <quote>read</quote> command is able to read text,
+	integers, IEEE754 floating point numbers, CPU instructions and more.
+
+	The command accepts type parameters. You can find out all about them
+	<link ref="proctal:cli:type-parameters">here</link>.
+
+	Here's how you would read a 32-bit integer that is located at memory
+	address <quote>7FFE79DEA90C</quote> of a program whose PID is 12345.
+
+	<code type="bash-prompt">
+$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32
+	</code>
+
+	This will output the integer value in ASCII.
+
+	<section>
+		<title>Reading arrays</title>
+
+		But what if you had an array of 32-bit integers in memory? One
+		way to read all the elements would be to execute the
+		<quote>read</quote> command at the corresponsing address of
+		each element. But a better way is to take advantage of the
+		<quote>--array</quote> parameter. It takes the number of
+		elements as its value.
+
+		Here's how you would read an array of 5 32-bit integers.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 --array=5
+		</code>
+	</section>
+
+	<section>
+		<title>Showing the address</title>
+
+		The command also accepts the <quote>--show-address</quote>
+		parameter. This makes it print the address of the value. But
+		you might be wondering how that could be useful when you
+		already have to specify the address in the command. This can be
+		useful when you're printing an array of instructions and you're
+		interested in seeing their addresses.
+
+		Here's how that would look like:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=7FFE79DEA90C --type=instruction --array=5 --show-address
+		</code>
+	</section>
+
+	<section>
+		<title>Showing instruction byte code</title>
+
+		The long named <quote>--show-instruction-byte-code</quote>
+		parameter will additionally print the byte code in hexadecimal
+		digits when reading an instruction.
+	</section>
+</document>

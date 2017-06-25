@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Freezing execution</title>
+
+	You can freeze a program's main thread by calling
+	<quote>proctal_freeze</quote>.
+
+	<code type="c">
+int result = proctal_freeze(proctal);
+	</code>
+
+	It returns <quote>1</quote> on success, <quote>0</quote> on failure.
+	In case of failure you can call <quote>proctal_error</quote> to find
+	out what went wrong.
+
+	If freezing was successful, you can call
+	<quote>proctal_unfreeze</quote> to unfreeze the program.
+
+	<code type="c">
+int result = proctal_unfreeze(proctal);
+	</code>
+
+	Again, it returns <quote>1</quote> on success, <quote>0</quote> on
+	failure. You can call <quote>proctal_error</quote> to find out what
+	went wrong.
+</document>

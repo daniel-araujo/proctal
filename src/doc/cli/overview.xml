@@ -9,7 +9,7 @@
 	allocate memory, execute code, freeze execution, dump memory and watch
 	for memory accesses.
 
-	The following sample is a bash script that can make any program print
+	The following sample is a bash script that can make a program print
 	Hello, world!
 
 	<code type="bash">

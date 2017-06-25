@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Allocating memory</title>
+
+	To allocate a block of memory you can use the <quote>allocate</quote>
+	command.
+
+	You may optionally pass the <quote>--read</quote>,
+	<quote>--write</quote> and <quote>--execute</quote> parameters to set
+	the permissions of the block. It is possible to allocate memory without
+	any permissions.
+
+	Here's how you would allocate 8 bytes that are readable and writable
+	for the program whose PID is 12345:
+
+	<code type="bash-prompt">
+$ proctal allocate --pid=12345 --read --write 8 
+	</code>
+
+	It will print the starting address of the block of memory.
+
+	When you're done, you have to deallocate the block by passing the same
+	address to the <quote>deallocate</quote> command. If the address were
+	<quote>7FFE79DEA90C</quote>, the command would look like this:
+
+	<code type="bash-prompt">
+$ proctal deallocate --pid=12345 7FFE79DEA90C
+	</code>
+</document>
