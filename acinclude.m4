@@ -136,3 +136,30 @@ AC_DEFUN([PROCTAL_ASSIGN_VAR], [
 	fi
 	AC_SUBST([$1])
 ])
+
+dnl PROCTAL_INSTALL_GIT_REPOSITORY(DST, SRC, COMMIT)
+dnl
+dnl Fetches git repository SRC and places it in git repository DST and checks
+dnl out commit COMMIT.
+AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
+	if [[ -e $1 ]]; then
+		git --git-dir=$1/.git --work-tree=$1 remote set-url origin $2
+		git --git-dir=$1/.git --work-tree=$1 fetch --all
+
+		if test "$?" -ne 0; then
+			AC_MSG_ERROR([Failed to pull from $2.])
+		fi
+	else
+		git clone $2 $1
+
+		if test "$?" -ne 0; then
+			AC_MSG_ERROR([Failed to clone $2.])
+		fi
+	fi
+
+	if test -z $3; then
+		git --git-dir=$1/.git --work-tree=$1 checkout $3 > /dev/null
+	else
+		git --git-dir=$1/.git --work-tree=$1 checkout master > /dev/null
+	fi
+])

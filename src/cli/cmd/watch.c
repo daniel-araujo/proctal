@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <signal.h>
+#include <darr.h>
 
 #include "cli/cmd/watch.h"
 #include "cli/printer.h"
@@ -69,9 +70,10 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_set_write(p, arg->write);
 	proctal_watch_set_execute(p, arg->execute);
 
-	// TODO: Should use a data structure that can grow dynamically and has
-	// good lookup performance.
-	void *matches[10000];
+	// TODO: Should use a data structure with better lookup performance.
+	struct darr matches;
+	darr_init(&matches, sizeof(void *));
+	darr_resize(&matches, 42);
 	size_t match_count = 0;
 
 	proctal_freeze(p);
@@ -87,9 +89,9 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			int match = 0;
 
 			for (size_t i = 0; i < match_count; ++i) {
-				void *prev = matches[i];
+				void **prev = darr_address(&matches, i);
 
-				if (addr == prev) {
+				if (addr == *prev) {
 					match = 1;
 					break;
 				}
@@ -98,14 +100,23 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			if (match) {
 				continue;
 			} else {
-				assert(match_count < ARRAY_SIZE(matches));
-				matches[match_count++] = addr;
+				match_count += 1;
+
+				if (match_count > darr_size(&matches)) {
+					// We're out of space. Let's double it.
+					darr_resize(&matches, darr_size(&matches) * 2);
+				}
+
+				void **e = darr_address(&matches, match_count - 1);
+				*e = addr;
 			}
 		}
 
 		cli_print_address(addr);
 		printf("\n");
 	}
+
+	darr_deinit(&matches);
 
 	unregister_signal_handler();
 

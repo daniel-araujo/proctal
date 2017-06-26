@@ -9,13 +9,6 @@ include_HEADERS =
 noinst_LIBRARIES =
 TESTS =
 
-proctal_cflags_src_include = -iquote$(srcdir)/src -iquotesrc
-proctal_cflags_src_lib_include = -I$(srcdir)/src/api/include -Isrc/api/include
-proctal_cflags = $(proctal_cflags_src_include) -std=c11 -Wfatal-errors -Wall \
-	-Wextra -Wpointer-arith $(proctal_xopen_flags) \
-	-Wno-unused-parameter -Wno-unused-function \
-	$(proctal_posix_flags) -Wno-maybe-uninitialized
-
 
 # Cli tool.
 bin_PROGRAMS += proctal
@@ -59,8 +52,10 @@ proctal_SOURCES = \
 	src/cli/yuck/main.h \
 	src/cli/yuck/main.c \
 	src/cli/main.c
-proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a $(proctal_darr_ldflags) $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 proctal_CFLAGS = $(proctal_cflags)
+proctal_DEPENDENCIES = \
+	darr/libdarr.a
 
 noinst_LIBRARIES += libclival.a
 libclival_a_SOURCES = \
@@ -103,67 +98,67 @@ TESTS += tests/cli/val/parse-valid-ascii
 check_PROGRAMS += tests/cli/val/parse-valid-ascii
 tests_cli_val_parse_valid_ascii_SOURCES = src/cli/val/tests/parse-valid-ascii.c
 tests_cli_val_parse_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_valid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_parse_valid_ascii_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/parse-bin-valid-ascii
 check_PROGRAMS += tests/cli/val/parse-bin-valid-ascii
 tests_cli_val_parse_bin_valid_ascii_SOURCES = src/cli/val/tests/parse-bin-valid-ascii.c
 tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_valid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_parse_bin_valid_ascii_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/parse-invalid-ascii
 check_PROGRAMS += tests/cli/val/parse-invalid-ascii
 tests_cli_val_parse_invalid_ascii_SOURCES = src/cli/val/tests/parse-invalid-ascii.c
 tests_cli_val_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_invalid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_parse_invalid_ascii_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/parse-bin-invalid-ascii
 check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
 tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
 tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_invalid_ascii_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_parse_bin_invalid_ascii_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/add
 check_PROGRAMS += tests/cli/val/add
 tests_cli_val_add_SOURCES = src/cli/val/tests/add.c
 tests_cli_val_add_CFLAGS = $(proctal_cflags)
-tests_cli_val_add_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_add_LDADD = libotrap.a libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/sub
 check_PROGRAMS += tests/cli/val/sub
 tests_cli_val_sub_SOURCES = src/cli/val/tests/sub.c
 tests_cli_val_sub_CFLAGS = $(proctal_cflags)
-tests_cli_val_sub_LDADD =  libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_sub_LDADD =  libotrap.a libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/cmp
 check_PROGRAMS += tests/cli/val/cmp
 tests_cli_val_cmp_SOURCES = src/cli/val/tests/cmp.c
 tests_cli_val_cmp_CFLAGS = $(proctal_cflags)
-tests_cli_val_cmp_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_cmp_LDADD = libotrap.a libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/print
 check_PROGRAMS += tests/cli/val/print
 tests_cli_val_print_SOURCES = src/cli/val/tests/print.c
 tests_cli_val_print_CFLAGS = $(proctal_cflags)
-tests_cli_val_print_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_print_LDADD = libotrap.a libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/parse
 check_PROGRAMS += tests/cli/val/parse
 tests_cli_val_parse_SOURCES = src/cli/val/tests/parse.c
 tests_cli_val_parse_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_LDADD = libotrap.a libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_parse_LDADD = libotrap.a libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/filter-compare
 check_PROGRAMS += tests/cli/val/filter-compare
 tests_cli_val_filter_compare_SOURCES = src/cli/val/tests/filter-compare.c
 tests_cli_val_filter_compare_CFLAGS = $(proctal_cflags)
-tests_cli_val_filter_compare_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_filter_compare_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += tests/cli/val/filter-compare-prev
 check_PROGRAMS += tests/cli/val/filter-compare-prev
 tests_cli_val_filter_compare_prev_SOURCES = src/cli/val/tests/filter-compare-prev.c
 tests_cli_val_filter_compare_prev_CFLAGS = $(proctal_cflags)
-tests_cli_val_filter_compare_prev_LDADD = libclival.a $(proctal_capstone_libs) $(proctal_keystone_libs)
+tests_cli_val_filter_compare_prev_LDADD = libclival.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += src/cli/tests/invalid-type-arguments.py
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
@@ -380,3 +375,8 @@ check_PROGRAMS += tests/otrap/skip-nothing
 tests_otrap_skip_nothing_SOURCES = src/otrap/tests/skip-nothing.c
 tests_otrap_skip_nothing_CFLAGS = $(proctal_cflags)
 tests_otrap_skip_nothing_LDADD = libotrap.a
+
+
+# Darr.
+darr/libdarr.a:
+	cd darr && autoreconf -i && ./configure && make
