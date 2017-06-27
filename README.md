@@ -7,7 +7,7 @@ Features:
 - Reading and writing values in memory
 - Searching for values in memory
 - Repeatedly writing a value to memory fast so as to make it seem like it's never changing
-- Temporarily freezing main thread execution
+- Freezing program execution
 - Detecting reads, writes and execution of memory addresses in main thread
 - Disassembling instructions from any memory location
 - Assembling instructions to write to any memory location
@@ -18,7 +18,6 @@ Features:
 - Memory dump
 
 Planned:
-- Freezing all threads
 - Watch points on all threads
 
 > **Note**

@@ -2,6 +2,7 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <darr.h>
 
 #include "api/proctal.h"
 #include "api/linux/ptrace.h"
@@ -164,12 +165,12 @@ static int check_errno_ptrace_stop_state(struct proctal_linux *pl)
 	return 1;
 }
 
-static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
+static int wait_ptrace_stop(struct proctal_linux *pl, pid_t tid)
 {
 	int wstatus;
 
 	for (;;) {
-		waitpid(pl->pid, &wstatus, WUNTRACED);
+		waitpid(tid, &wstatus, WUNTRACED);
 
 		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP) {
 			break;
@@ -181,16 +182,97 @@ static int proctal_linux_ptrace_wait_stop(struct proctal_linux *pl)
 	return 1;
 }
 
-static int proctal_linux_ptrace_wait_cont(struct proctal_linux *pl)
+static int wait_ptrace_cont(struct proctal_linux *pl, pid_t tid)
 {
 	int wstatus;
 
 	for (;;) {
-		waitpid(pl->pid, &wstatus, WCONTINUED | WUNTRACED);
+		waitpid(tid, &wstatus, WCONTINUED | WUNTRACED);
 
 		if (WIFCONTINUED(wstatus)) {
 			break;
 		} else if (bad_signal(pl, wstatus)) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+static int detach_threads(struct proctal_linux *pl)
+{
+	pid_t *e = darr_address(&pl->ptrace.tids, 0);
+	for (size_t i = 0; i < darr_size(&pl->ptrace.tids); ++i) {
+		if (ptrace(PTRACE_DETACH, e[i], 0L, 0L) == -1) {
+			check_errno_ptrace_stop_state(pl);
+			return 0;
+		}
+	}
+
+	darr_resize(&pl->ptrace.tids, 0);
+
+	return 1;
+}
+
+static int is_thread_attached(struct proctal_linux *pl, pid_t tid)
+{
+	pid_t *e = darr_address(&pl->ptrace.tids, 0);
+
+	for (size_t i = 0; i < darr_size(&pl->ptrace.tids); ++i) {
+		if (e[i] == tid) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+static int attach_threads(struct proctal_linux *pl)
+{
+	if (ptrace(PTRACE_ATTACH, pl->pid, 0L, 0L) == -1) {
+		check_errno_ptrace_run_state(pl);
+		return 0;
+	}
+
+	darr_resize(&pl->ptrace.tids, 1);
+	pid_t *e = darr_address(&pl->ptrace.tids, 0);
+
+	// It just so happens that the process id is also the id of the main
+	// thread.
+	*e = pl->pid;
+
+	struct darr *tids = proctal_linux_task_ids(pl->pid);
+
+	// Attach to all threads that have not been attached yet.
+	for (size_t i = 0; i < darr_size(tids); ++i) {
+		pid_t *t = darr_address(tids, i);
+
+		if (is_thread_attached(pl, *t)) {
+			continue;
+		}
+
+		if (ptrace(PTRACE_ATTACH, *t, 0L, 0L) == -1) {
+			check_errno_ptrace_run_state(pl);
+			// In case of failure, detach the ones we could.
+			detach_threads(pl);
+			return 0;
+		}
+
+		darr_resize(&pl->ptrace.tids, darr_size(&pl->ptrace.tids) + 1);
+		e = darr_address(&pl->ptrace.tids, darr_size(&pl->ptrace.tids) - 1);
+		*e = *t;
+	}
+
+	proctal_linux_task_ids_dispose(tids);
+
+	// Now that we've attached to all processes, we're going to wait for
+	// the mandatory stop signal for each one.
+	e = darr_address(&pl->ptrace.tids, 0);
+	for (size_t i = 0; i < darr_size(&pl->ptrace.tids); ++i) {
+		if (!wait_ptrace_stop(pl, e[i])) {
+			proctal_linux_ptrace_detach(pl);
+			// In case of failure, detach them all.
+			detach_threads(pl);
 			return 0;
 		}
 	}
@@ -217,39 +299,26 @@ int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl)
 
 int proctal_linux_ptrace_attach(struct proctal_linux *pl)
 {
-	if (pl->ptrace == 0) {
-		if (ptrace(PTRACE_ATTACH, pl->pid, 0L, 0L) == -1) {
-			check_errno_ptrace_run_state(pl);
+	if (pl->ptrace.count == 0) {
+		if (!attach_threads(pl)) {
 			return 0;
 		}
-
-		pl->ptrace = 1;
-
-		if (!proctal_linux_ptrace_wait_stop(pl)) {
-			proctal_linux_ptrace_detach(pl);
-			return 0;
-		}
-	} else {
-		++pl->ptrace;
 	}
+
+	++pl->ptrace.count;
 
 	return 1;
 }
 
 int proctal_linux_ptrace_detach(struct proctal_linux *pl)
 {
-	if (pl->ptrace > 1) {
-		if (--pl->ptrace) {
-			return 1;
+	if (pl->ptrace.count == 1) {
+		if (!detach_threads(pl)) {
+			return 0;
 		}
 	}
 
-	if (ptrace(PTRACE_DETACH, pl->pid, 0L, 0L) == -1) {
-		check_errno_ptrace_stop_state(pl);
-		return 0;
-	}
-
-	pl->ptrace = 0;
+	--pl->ptrace.count;
 
 	return 1;
 }
@@ -314,7 +383,7 @@ int proctal_linux_ptrace_stop(struct proctal_linux *pl)
 {
 	kill(pl->pid, SIGSTOP);
 
-	if (!proctal_linux_ptrace_wait_stop(pl)) {
+	if (!wait_ptrace_stop(pl, pl->pid)) {
 		return 0;
 	}
 

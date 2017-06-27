@@ -2,7 +2,7 @@
 <document>
 	<title>Freezing execution</title>
 
-	You can freeze a program's main thread by calling
+	You can freeze the execution of a program by calling
 	<quote>proctal_freeze</quote>.
 
 	<code type="c">

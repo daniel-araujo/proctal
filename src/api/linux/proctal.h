@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <darr.h>
 
 #include "api/proctal.h"
 #include "api/linux/proc.h"
@@ -21,9 +22,14 @@ struct proctal_linux {
 	// using.
 	FILE *mem;
 
-	// Tracks how many times we've attached to the process with
-	// ptrace. It's not attached if the value is 0.
-	int ptrace;
+	struct proctal_linux_ptrace {
+		// Tracks how many times we've attached to the process with
+		// ptrace. It's not attached if the value is 0.
+		int count;
+
+		// Ids of the threads that have been attached.
+		struct darr tids;
+	} ptrace;
 
 	struct proctal_linux_address {
 		int started;

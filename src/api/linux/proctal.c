@@ -5,8 +5,10 @@ void proctal_linux_init(struct proctal_linux *pl)
 {
 	proctal_init(&pl->p);
 
-	pl->ptrace = 0;
 	pl->mem = NULL;
+
+	pl->ptrace.count = 0;
+	darr_init(&pl->ptrace.tids, sizeof(pid_t));
 
 	pl->address.started = 0;
 	pl->address.curr = NULL;
@@ -24,10 +26,12 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 		fclose(pl->mem);
 	}
 
-	if (pl->ptrace) {
-		pl->ptrace = 1;
+	if (pl->ptrace.count) {
+		pl->ptrace.count = 1;
 		proctal_linux_ptrace_detach(pl);
 	}
+
+	darr_deinit(&pl->ptrace.tids);
 
 	if (pl->address.maps) {
 		fclose(pl->address.maps);
@@ -47,8 +51,8 @@ void proctal_linux_set_pid(struct proctal_linux *pl, pid_t pid)
 		pl->mem = NULL;
 	}
 
-	if (pl->ptrace) {
-		pl->ptrace = 1;
+	if (pl->ptrace.count) {
+		pl->ptrace.count = 1;
 		proctal_linux_ptrace_detach(pl);
 	}
 

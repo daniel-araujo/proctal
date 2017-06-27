@@ -2,7 +2,8 @@
 <document>
 	<title>Freezing execution</title>
 
-	You can use the <quote>freeze</quote> command to pause a program.
+	You can use the <quote>freeze</quote> command to freeze the execution
+	of a program. This essentially gives you the power to pause a program.
 
 	Here's how you would pause a program whose PID is 12345:
 

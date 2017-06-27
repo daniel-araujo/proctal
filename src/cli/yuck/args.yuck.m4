@@ -274,10 +274,10 @@ Usage: proctal execute
 Executes arbitrary code.
 
 The given instructions will be embedded at some place in memory and executed in
-a new stack frame in the context of the main thread. Your code is free to
-modify any registers because they will be restored to their original values.
-Control will be given back to the program after the last instruction is
-executed.
+a new stack frame in the context of the main thread. The other threads will be
+paused. Your code is free to modify any registers because they will be restored
+to their original values. Control will be given back to the program after the
+last instruction is executed.
 
 The instructions are expected to be passed through standard input.
 

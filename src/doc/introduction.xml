@@ -11,7 +11,7 @@
 		<item>Reading and writing values in memory</item>
 		<item>Searching for values in memory</item>
 		<item>Repeatedly writing a value to memory fast so as to make it seem like it's never changing</item>
-		<item>Temporarily freezing main thread execution</item>
+		<item>Freezing program execution</item>
 		<item>Detecting reads, writes and execution of memory addresses in main thread</item>
 		<item>Disassembling instructions from any memory location</item>
 		<item>Assembling instructions to write to any memory location</item>

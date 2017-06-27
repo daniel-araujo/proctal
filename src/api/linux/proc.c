@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <dirent.h>
 
 #include "api/linux/proc.h"
 
@@ -151,4 +152,50 @@ const char *proctal_linux_program_path(pid_t pid)
 	path[e] = '\0';
 
 	return path;
+}
+
+struct darr *proctal_linux_task_ids(pid_t pid)
+{
+	struct darr *tids = malloc(sizeof(struct darr));
+
+	if (tids == NULL) {
+		return NULL;
+	}
+
+	darr_init(tids, sizeof(pid_t));
+
+	DIR *dir = opendir(proctal_linux_proc_path(pid, "task"));
+
+	if (dir == NULL) {
+		return NULL;
+	}
+
+	struct dirent *dirent;
+
+	for (;;) {
+		dirent = readdir(dir);
+
+		if (dirent == NULL) {
+			// We have traversed all.
+			break;
+		}
+
+		if (dirent->d_name[0] == '.') {
+			// Skipping special files.
+			continue;
+		}
+
+		darr_resize(tids, darr_size(tids) + 1);
+		pid_t *e = darr_address(tids, darr_size(tids) - 1);
+		*e = atoi(dirent->d_name);
+	}
+
+	closedir(dir);
+
+	return tids;
+}
+
+void proctal_linux_task_ids_dispose(struct darr *tids)
+{
+	free(tids);
 }
