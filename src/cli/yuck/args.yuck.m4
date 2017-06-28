@@ -64,11 +64,10 @@ Gives you access to the address space of a program.
 Usage: proctal read
 Reads values.
 
-Will output the value found at the given address, then the next one coming
-after it, and so on.
+Will output the value found at the given address.
 
-By default it's only going to read 1 value. You can control how many values
-will be read with the --array option.
+If the --array option is given, it will read values that come after the given
+address.
 
 You can optionally prefix the values with their respective addresses by passing
 the --show-address option.
@@ -101,8 +100,7 @@ Examples:
 Usage: proctal write VALUES...
 Writes values.
 
-The first value will be written to the given address, then the next one will be
-written to the memory address coming after it, and so on.
+Will write the given values starting at the given address.
 
 Examples:
   Writing 99 to address 1c09346
