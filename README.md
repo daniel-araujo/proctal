@@ -10,9 +10,9 @@ Features:
 - Freezing program execution
 - Detecting reads, writes and execution of memory addresses in main thread
 - Disassembling instructions from any memory location
-- Assembling instructions to write to any memory location
-- Allocating and deallocating readable/writable/executable memory locations
-- Stopping the normal flow of execution to run your own instructions
+- Assembling instructions to be written to any memory location
+- Allocating and deallocating readable/writable/executable memory blocks
+- Run your own code in the program
 - Measure size of assembly instructions and values
 - Byte pattern search
 - Memory dump

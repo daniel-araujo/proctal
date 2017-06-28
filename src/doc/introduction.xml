@@ -14,9 +14,9 @@
 		<item>Freezing program execution</item>
 		<item>Detecting reads, writes and execution of memory addresses in main thread</item>
 		<item>Disassembling instructions from any memory location</item>
-		<item>Assembling instructions to write to any memory location</item>
-		<item>Allocating and deallocating readable/writable/executable memory locations</item>
-		<item>Stopping the normal flow of execution to run your own instructions</item>
+		<item>Assembling instructions to be written to any memory location</item>
+		<item>Allocating and deallocating readable/writable/executable memory blocks</item>
+		<item>Run your own code in the program</item>
 		<item>Measure size of assembly instructions and values</item>
 		<item>Byte pattern search</item>
 		<item>Memory dump</item>
