@@ -197,5 +197,6 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 
 void proctal_linux_task_ids_dispose(struct darr *tids)
 {
+	darr_deinit(tids);
 	free(tids);
 }
