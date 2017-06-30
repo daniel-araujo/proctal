@@ -135,7 +135,9 @@ static inline int syscall_load_state(struct proctal_linux *pl, struct syscall_sa
 
 static inline void *find_inject_addr(struct proctal_linux *pl, size_t size)
 {
-	FILE *maps = fopen(proctal_linux_proc_path(pl->pid, "maps"), "r");
+	struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
+	FILE *maps = fopen(darr_address(path, 0), "r");
+	proctal_linux_proc_path_dispose(path);
 
 	if (maps == NULL) {
 		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);

@@ -3,10 +3,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#include "magic/magic.h"
 #include "api/linux/proc.h"
-
-#define PID_MAX_DIGITS 5
-#define PROC_FILE_MAX 40
 
 static inline void mem_region_skip_space(FILE *maps)
 {
@@ -101,15 +99,46 @@ static inline int read_until_nl(FILE *maps, char *buf, int max)
 	return i;
 }
 
-const char *proctal_linux_proc_path(pid_t pid, const char *file)
+struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 {
-	const char *path_template = "/proc/%d/%s";
-	static char path[sizeof(path_template) + PID_MAX_DIGITS + PROC_FILE_MAX];
+#define PID_MAX_DIGITS 5
 
-	int e = snprintf(path, sizeof(path), path_template, pid, file);
-	path[e] = '\0';
+	static char proc_dir[] = "/proc";
+
+	struct darr *path = malloc(sizeof(struct darr));
+
+	if (path == NULL) {
+		return NULL;
+	}
+
+	size_t file_size = strlen(file);
+
+	darr_init(path, sizeof(char));
+	darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + PID_MAX_DIGITS + 1 + file_size + 1);
+
+	int n = snprintf(
+		darr_address(path, 0),
+		darr_size(path),
+		"%s/%d/%s",
+		proc_dir,
+		pid,
+		file);
+
+	if (!(n > 0 && n < (int) (darr_size(path) - 1))) {
+		darr_deinit(path);
+		free(path);
+		return NULL;
+	}
 
 	return path;
+
+#undef PID_MAX_DIGITS
+}
+
+void proctal_linux_proc_path_dispose(struct darr *path)
+{
+	darr_deinit(path);
+	free(path);
 }
 
 int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE *maps)
@@ -142,16 +171,31 @@ int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE 
 	return 0;
 }
 
-const char *proctal_linux_program_path(pid_t pid)
+struct darr *proctal_linux_program_path(pid_t pid)
 {
-	static char path[255];
+	struct darr *path = malloc(sizeof(struct darr));
 
-	const char *link = proctal_linux_proc_path(pid, "exe");
+	if (path == NULL) {
+		return NULL;
+	}
 
-	size_t e = readlink(link, path, sizeof(path) - 1);
-	path[e] = '\0';
+	darr_init(path, sizeof(char));
+	darr_resize(path, 255);
+	char *path_data = darr_address(path, 0);
+
+	struct darr *link = proctal_linux_proc_path(pid, "exe");
+	size_t e = readlink(darr_address(link, 0), path_data, darr_size(path) - 1);
+	proctal_linux_proc_path_dispose(link);
+
+	path_data[e] = '\0';
 
 	return path;
+}
+
+void proctal_linux_program_path_dispose(struct darr *path)
+{
+	darr_deinit(path);
+	free(path);
 }
 
 struct darr *proctal_linux_task_ids(pid_t pid)
@@ -164,7 +208,9 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 
 	darr_init(tids, sizeof(pid_t));
 
-	DIR *dir = opendir(proctal_linux_proc_path(pid, "task"));
+	struct darr *path = proctal_linux_proc_path(pid, "task");
+	DIR *dir = opendir(darr_address(path, 0));
+	proctal_linux_proc_path_dispose(path);
 
 	if (dir == NULL) {
 		return NULL;

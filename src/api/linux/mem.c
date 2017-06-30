@@ -8,7 +8,9 @@
 static inline FILE *mem(struct proctal_linux *pl)
 {
 	if (pl->mem == NULL) {
-		pl->mem = fopen(proctal_linux_proc_path(pl->pid, "mem"), "r+");
+		struct darr *path = proctal_linux_proc_path(pl->pid, "mem");
+		pl->mem = fopen(darr_address(path, 0), "r+");
+		proctal_linux_proc_path_dispose(path);
 
 		if (pl->mem == NULL) {
 			proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);

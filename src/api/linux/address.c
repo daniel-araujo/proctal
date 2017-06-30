@@ -35,8 +35,11 @@ static inline int interesting_region(struct proctal_linux *pl)
 	}
 
 	if (pl->p.address.region_mask & PROCTAL_REGION_PROGRAM_CODE) {
-		if (strcmp(pl->address.region.path, proctal_linux_program_path(pl->pid)) == 0
-			&& pl->address.region.execute) {
+		struct darr *program_path = proctal_linux_program_path(pl->pid);
+		int same_path = strcmp(pl->address.region.path, darr_address(program_path, 0)) == 0;
+		proctal_linux_program_path_dispose(program_path);
+
+		if (same_path && pl->address.region.execute) {
 			return 1;
 		}
 	}
@@ -114,7 +117,9 @@ static inline int has_finished(struct proctal_linux *pl)
 
 static int first(struct proctal_linux *pl)
 {
-	pl->address.maps = fopen(proctal_linux_proc_path(pl->pid, "maps"), "r");
+	struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
+	pl->address.maps = fopen(darr_address(path, 0), "r");
+	proctal_linux_proc_path_dispose(path);
 
 	if (pl->address.maps == NULL) {
 		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
