@@ -36,7 +36,7 @@ static inline int interesting_region(struct proctal_linux *pl)
 
 	if (pl->p.address.region_mask & PROCTAL_REGION_PROGRAM_CODE) {
 		struct darr *program_path = proctal_linux_program_path(pl->pid);
-		int same_path = strcmp(pl->address.region.path, darr_address(program_path, 0)) == 0;
+		int same_path = strcmp(pl->address.region.path, darr_data(program_path)) == 0;
 		proctal_linux_program_path_dispose(program_path);
 
 		if (same_path && pl->address.region.execute) {
@@ -118,7 +118,7 @@ static inline int has_finished(struct proctal_linux *pl)
 static int first(struct proctal_linux *pl)
 {
 	struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
-	pl->address.maps = fopen(darr_address(path, 0), "r");
+	pl->address.maps = fopen(darr_data(path), "r");
 	proctal_linux_proc_path_dispose(path);
 
 	if (pl->address.maps == NULL) {

@@ -20,7 +20,7 @@ static inline int interesting_region(struct proctal_linux *pl)
 
 	if (pl->p.region.mask & PROCTAL_REGION_PROGRAM_CODE) {
 		struct darr *program_path = proctal_linux_program_path(pl->pid);
-		int same_path = strcmp(pl->region.curr.path, darr_address(program_path, 0)) == 0;
+		int same_path = strcmp(pl->region.curr.path, darr_data(program_path)) == 0;
 		proctal_linux_program_path_dispose(program_path);
 
 		if (same_path && pl->region.curr.execute) {
@@ -84,7 +84,7 @@ static int next(struct proctal_linux *pl)
 {
 	if (!has_started(pl)) {
 		struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
-		pl->region.maps = fopen(darr_address(path, 0), "r");
+		pl->region.maps = fopen(darr_data(path), "r");
 		proctal_linux_proc_path_dispose(path);
 
 		if (pl->region.maps == NULL) {

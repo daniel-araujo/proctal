@@ -117,7 +117,7 @@ struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 	darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + PID_MAX_DIGITS + 1 + file_size + 1);
 
 	int n = snprintf(
-		darr_address(path, 0),
+		darr_data(path),
 		darr_size(path),
 		"%s/%d/%s",
 		proc_dir,
@@ -181,10 +181,10 @@ struct darr *proctal_linux_program_path(pid_t pid)
 
 	darr_init(path, sizeof(char));
 	darr_resize(path, 255);
-	char *path_data = darr_address(path, 0);
+	char *path_data = darr_data(path);
 
 	struct darr *link = proctal_linux_proc_path(pid, "exe");
-	size_t e = readlink(darr_address(link, 0), path_data, darr_size(path) - 1);
+	size_t e = readlink(darr_data(link), path_data, darr_size(path) - 1);
 	proctal_linux_proc_path_dispose(link);
 
 	path_data[e] = '\0';
@@ -209,7 +209,7 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 	darr_init(tids, sizeof(pid_t));
 
 	struct darr *path = proctal_linux_proc_path(pid, "task");
-	DIR *dir = opendir(darr_address(path, 0));
+	DIR *dir = opendir(darr_data(path));
 	proctal_linux_proc_path_dispose(path);
 
 	if (dir == NULL) {

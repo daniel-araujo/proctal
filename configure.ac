@@ -43,7 +43,7 @@ PROCTAL_CHECK_LIB([HAVE_LIBCAPSTONE], [capstone], [cs_version],, [required])
 PROCTAL_CHECK_HEADER([HAVE_KEYSTONE_H], [keystone/keystone.h], [required])
 PROCTAL_CHECK_LIB([HAVE_LIBKEYSTONE], [keystone], [ks_version],, [required])
 
-PROCTAL_INSTALL_GIT_REPOSITORY([darr], ["https://github.com/daniel-araujo/darr.git"], ["v1.1.0"])
+PROCTAL_INSTALL_GIT_REPOSITORY([darr], ["https://github.com/daniel-araujo/darr.git"], ["v1.3.0"])
 
 if test -n "$HAVE_USLEEP"; then
 	proctal_xopen_cflags="-D_XOPEN_SOURCE=500"
