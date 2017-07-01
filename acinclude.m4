@@ -157,7 +157,7 @@ AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
 		fi
 	fi
 
-	if test -z $3; then
+	if test -n $3; then
 		git --git-dir=$1/.git --work-tree=$1 checkout $3 > /dev/null
 	else
 		git --git-dir=$1/.git --work-tree=$1 checkout master > /dev/null
