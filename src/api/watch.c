@@ -40,7 +40,17 @@ void proctal_watch_set_execute(proctal_t p, int x)
 	p->watch.execute = x != 0;
 }
 
+int proctal_watch_start(proctal_t p)
+{
+	return proctal_impl_watch_start(p);
+}
+
 int proctal_watch(proctal_t p, void **addr)
 {
 	return proctal_impl_watch(p, addr);
+}
+
+void proctal_watch_stop(proctal_t p)
+{
+	proctal_impl_watch_stop(p);
 }

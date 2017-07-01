@@ -11,6 +11,33 @@
 #include "api/linux/address.h"
 #include "api/x86/dr.h"
 
+static int check_errno_waitpid(struct proctal *p)
+{
+	if (errno == 0) {
+		return 0;
+	}
+
+	switch (errno) {
+	case EPERM:
+		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
+		break;
+
+	case ESRCH:
+		proctal_set_error(p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
+		break;
+
+	case EINTR:
+		proctal_set_error(p, PROCTAL_ERROR_INTERRUPT);
+		break;
+
+	default:
+		proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
+		break;
+	}
+
+	return 1;
+}
+
 static int enable_breakpoint(struct proctal_linux *pl)
 {
 	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR0, (unsigned long long) pl->p.watch.addr)) {
@@ -59,7 +86,7 @@ static int disable_breakpoint(struct proctal_linux *pl)
 	return 1;
 }
 
-static int start(struct proctal_linux *pl)
+int proctal_linux_watch_start(struct proctal_linux *pl)
 {
 	if (pl->p.watch.read && !pl->p.watch.write && !pl->p.watch.execute) {
 		proctal_set_error(&pl->p, PROCTAL_ERROR_UNSUPPORTED_WATCH_READ);
@@ -93,71 +120,57 @@ static int start(struct proctal_linux *pl)
 	return 1;
 }
 
-static int end(struct proctal_linux *pl)
+void proctal_linux_watch_stop(struct proctal_linux *pl)
 {
 	// Assuming process is stopped.
-
-	if (!disable_breakpoint(pl)) {
-		return 0;
-	}
-
-	return proctal_linux_ptrace_detach(pl);
+	disable_breakpoint(pl);
+	proctal_linux_ptrace_detach(pl);
 }
 
 int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 {
-	if (!start(pl)) {
-		return 0;
-	}
-
 	if (!proctal_linux_ptrace_cont(pl)) {
-		return end(pl);
+		return 0;
 	}
 
 	int wstatus;
 
 	for (;;) {
-		if (waitpid(pl->pid, &wstatus, WUNTRACED) != pl->pid) {
-			// If it failed due to an interrupt, we're not going to
-			// consider this an error.
-			if (errno != EINTR) {
-				proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
-			}
+		int wresult = waitpid(pl->pid, &wstatus, WUNTRACED);
 
-			proctal_linux_ptrace_stop(pl);
-			end(pl);
-			return 0;
+		if (wresult != pl->pid) {
+			if (wresult == -1) {
+				check_errno_waitpid(&pl->p);
+				proctal_linux_ptrace_stop(pl);
+				return 0;
+			} else {
+				// We're not interested in this signal.
+				continue;
+			}
 		}
 
 		if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
-			// Process is gone, nothing to do anymore.
-			break;
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
+			return 0;
 		} else if (WIFSTOPPED(wstatus)) {
 			int signal = WSTOPSIG(wstatus);
 
 			switch (signal) {
-			case SIGTRAP: {
-				void *rip;
+			case SIGTRAP:
+				proctal_linux_ptrace_get_instruction_address(pl, addr);
 
-				proctal_linux_ptrace_get_instruction_address(pl, &rip);
-
-				*addr = rip;
-
-				break;
-			}
+				return 1;
 
 			case SIGINT:
 			default:
-				// Process sent signal to be stopped. We're letting go.
+				// Process sent signal to be stopped so we're letting go.
 				kill(pl->pid, signal);
 
-				end(pl);
+				proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
 				return 0;
 			}
 
 			break;
 		}
 	}
-
-	return end(pl);
 }

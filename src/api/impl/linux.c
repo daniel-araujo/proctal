@@ -104,6 +104,20 @@ int proctal_impl_region(proctal_t p, void **start, void **end)
 	return proctal_linux_region(pl, start, end);
 }
 
+int proctal_impl_watch_start(proctal_t p)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	return proctal_linux_watch_start(pl);
+}
+
+void proctal_impl_watch_stop(proctal_t p)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	proctal_linux_watch_stop(pl);
+}
+
 int proctal_impl_watch(proctal_t p, void **addr)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;

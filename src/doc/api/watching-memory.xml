@@ -23,17 +23,29 @@ proctal_watch_set_execute(proctal, 1);
 	</code>
 
 	With that set you can start watching for memory accesses by calling
-	<quote>proctal_watch</quote>.
+	<quote>proctal_watch_start</quote>.
+
+	<code type="c">
+int result = proctal_watch_start(proctal);
+	</code>
+
+	To get an address you need to call <quote>proctal_watch</quote>.
 
 	<code type="c">
 void *address;
 int result = proctal_watch(proctal, &amp;address);
 	</code>
 
-	The call will block until an access is detected. 
+	The call will block until a memory access is detected. 
 
 	<note>
 		The behavior of this function is most likely going to change in
 		the future.
 	</note>
+
+	To stop, you need to call <quote>proctal_watch_stop</quote>.
+
+	<code type="c">
+proctal_watch_stop(proctal);
+	</code>
 </document>

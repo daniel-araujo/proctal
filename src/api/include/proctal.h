@@ -31,6 +31,7 @@
 #define PROCTAL_ERROR_PROCESS_STOPPED 17
 #define PROCTAL_ERROR_PROCESS_UNTAMEABLE 18
 #define PROCTAL_ERROR_PROCESS_TRAPPED 19
+#define PROCTAL_ERROR_INTERRUPT 20
 
 /*
  * Macro definitions of known memory regions.
@@ -460,16 +461,35 @@ int proctal_freeze(proctal_t p);
 int proctal_unfreeze(proctal_t p);
 
 /*
- * Watches for memory accesses by the main thread of execution.
+ * Starts watching for memory accesses by the main thread of execution.
  *
  * You can define the address you want to watch by calling
- * proctal_watch_set_addr.
+ * proctal_watch_set_address.
  *
  * You can set whether you want to watch for reads or writes by calling
  * proctal_watch_set_read and proctal_watch_set_write. By default it's set to
  * watch only for reads.
  *
+ * To stop, you must call proctal_watch_stop.
+ */
+int proctal_watch_start(proctal_t p);
+
+/*
+ * Stops watching for memory accesses.
+ *
+ * You must have previously called proctal_watch_start otherwise behavior is
+ * left undefined.
+ */
+void proctal_watch_stop(proctal_t p);
+
+/*
+ * After proctal_watch_start is called, you can call this function to wait for
+ * an upcoming memory access.
+ *
  * This function will block until an access is detected.
+ *
+ * You must have previously called proctal_watch_start otherwise behavior is
+ * left undefined.
  */
 int proctal_watch(proctal_t p, void **addr);
 
