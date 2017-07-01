@@ -65,7 +65,7 @@ proctal_darr_ldflags=darr/libdarr.a
 proctal_cflags="-iquote${srcdir}/src -iquotesrc -std=c11 -Wfatal-errors -Wall"
 proctal_cflags="$proctal_cflags -Wextra -Wpointer-arith $proctal_xopen_cflags"
 proctal_cflags="$proctal_cflags -Wno-unused-parameter -Wno-unused-function"
-proctal_cflags="$proctal_cflags $proctal_posix_cflag -Wno-maybe-uninitialized"
+proctal_cflags="$proctal_cflags $proctal_posix_cflags -Wno-maybe-uninitialized"
 proctal_cflags="$proctal_cflags $proctal_darr_cflags"
 
 AC_SUBST([proctal_capstone_ldflags])
