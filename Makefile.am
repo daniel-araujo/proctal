@@ -386,5 +386,7 @@ tests_otrap_skip_nothing_LDADD = libotrap.a
 
 
 # Darr.
+CLEANFILES += darr/libdarr.a
+
 darr/libdarr.a:
 	cd darr && autoreconf -i && ./configure && make
