@@ -228,10 +228,10 @@ Examples:
 
 
 Usage: proctal freeze
-Freezes main thread of execution.
+Freezes program execution.
 
-The program will be frozen as long as the command is executing. It will stop
-executing when it receives the SIGINT signal.
+The program will be frozen as long as the command is executing. The command can
+be stopped by sending it the SIGINT signal.
 
 Examples:
   Freezing a process
