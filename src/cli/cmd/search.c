@@ -91,7 +91,7 @@ static inline void *align_addr(void *addr, size_t align)
 	return (void *) ((char *) addr + offset);
 }
 
-static inline void search_process(struct cli_cmd_search_arg *arg, proctal_t p)
+static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 {
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
@@ -302,7 +302,7 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 	if (arg->input) {
 		search_input(arg, p);
 	} else {
-		search_process(arg, p);
+		search_program(arg, p);
 	}
 
 	proctal_destroy(p);

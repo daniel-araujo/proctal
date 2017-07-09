@@ -106,7 +106,7 @@ static int check_errno_waitpid(struct proctal *p)
 		break;
 
 	case ESRCH:
-		proctal_set_error(p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
+		proctal_set_error(p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
 		break;
 
 	case EINTR:
@@ -129,7 +129,7 @@ static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_p
 			task->running = 0;
 		}
 
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_EXITED);
 		return 0;
 	} else if (WIFSTOPPED(wstatus)) {
 		task->running = 0;
@@ -140,19 +140,19 @@ static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_p
 
 		switch (sig) {
 		case SIGSEGV:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_SEGFAULT);
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_SEGFAULT);
 			return 0;
 
 		case SIGTRAP:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_TRAPPED);
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_TRAPPED);
 			return 0;
 
 		case SIGINT:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_INTERRUPT);
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_INTERRUPT);
 			return 0;
 
 		default:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_STOPPED);
+			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_STOPPED);
 			return 0;
 		}
 	}
@@ -172,7 +172,7 @@ static int check_errno_ptrace_run_state(struct proctal_linux *pl)
 		break;
 
 	case ESRCH:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
 		break;
 
 	default:
@@ -195,7 +195,7 @@ static int check_errno_ptrace_stop_state(struct proctal_linux *pl)
 		break;
 
 	case ESRCH:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_UNTAMEABLE);
+		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_UNTAMEABLE);
 		break;
 
 	default:

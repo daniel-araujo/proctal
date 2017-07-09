@@ -23,16 +23,16 @@
 #define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE 9
 #define PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE 10
 #define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE 11
-#define PROCTAL_ERROR_PROCESS_NOT_FOUND 12
-#define PROCTAL_ERROR_PROCESS_NOT_SET 13
+#define PROCTAL_ERROR_PROGRAM_NOT_FOUND 12
+#define PROCTAL_ERROR_PROGRAM_NOT_SET 13
 #define PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND 14
-#define PROCTAL_ERROR_PROCESS_SEGFAULT 15
-#define PROCTAL_ERROR_PROCESS_EXITED 16
-#define PROCTAL_ERROR_PROCESS_STOPPED 17
-#define PROCTAL_ERROR_PROCESS_UNTAMEABLE 18
-#define PROCTAL_ERROR_PROCESS_TRAPPED 19
+#define PROCTAL_ERROR_PROGRAM_SEGFAULT 15
+#define PROCTAL_ERROR_PROGRAM_EXITED 16
+#define PROCTAL_ERROR_PROGRAM_STOPPED 17
+#define PROCTAL_ERROR_PROGRAM_UNTAMEABLE 18
+#define PROCTAL_ERROR_PROGRAM_TRAPPED 19
 #define PROCTAL_ERROR_INTERRUPT 20
-#define PROCTAL_ERROR_PROCESS_INTERRUPT 21
+#define PROCTAL_ERROR_PROGRAM_INTERRUPT 21
 
 /*
  * Macro definitions of known memory regions.
@@ -107,13 +107,16 @@ void proctal_error_ack(proctal_t p);
 const char *proctal_error_msg(proctal_t p);
 
 /*
- * Sets the process that you want Proctal to manipulate. On Linux you must pass
- * a PID (Process ID).
+ * Sets which program you want to access.
+ *
+ * On Linux you must pass a PID (Process ID).
  */
 void proctal_set_pid(proctal_t p, int pid);
 
 /*
- * Returns the id of the process. On Linux this would be a PID (Process ID).
+ * Returns the id of the program.
+ *
+ * On Linux this would be a PID (Process ID).
  *
  * This will return 0 if you have never set the id.
  */

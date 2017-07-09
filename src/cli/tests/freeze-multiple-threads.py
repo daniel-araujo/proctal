@@ -37,7 +37,7 @@ if not ping(guinea):
 freezer = subprocess.Popen(make_freeze_cmd(guinea.pid))
 
 # Waiting for the freeze command to perform. We should probably figure out a
-# reliable way for it to tell us in some way when it has frozen the process
+# reliable way for it to tell us in some way when it has frozen the program
 # instead of guessing when.
 time.sleep(0.033)
 

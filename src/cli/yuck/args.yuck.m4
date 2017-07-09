@@ -234,7 +234,7 @@ The program will be frozen as long as the command is executing. The command can
 be stopped by sending it the SIGINT signal.
 
 Examples:
-  Freezing a process
+  Pause program execution
         proctal freeze --pid=12345
 
 

@@ -23,7 +23,7 @@ struct proctal_linux {
 	// Base structure.
 	struct proctal p;
 
-	// Process ID. This identifies the process we're going to muck with.
+	// Process ID. This identifies the program we're going to muck with.
 	pid_t pid;
 
 	// File handle for reading and writing to memory. Always seek before
