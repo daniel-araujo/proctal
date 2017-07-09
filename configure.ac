@@ -1,5 +1,6 @@
 AC_PREREQ([2.69])
 AC_INIT([proctal], [0.0.0], [bugs@proctal.io])
+AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_PREREQ([2.4])
 LT_INIT([dlopen])
