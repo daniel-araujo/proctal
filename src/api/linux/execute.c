@@ -45,88 +45,88 @@ struct syscall_save_state {
 	unsigned long long r11; // May be modifed.
 };
 
-static inline int execute_save_state(struct proctal_linux *pl, struct execute_save_state *s)
+static inline int execute_save_state(struct proctal_linux *pl, pid_t tid, struct execute_save_state *s)
 {
-	if (!proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, &s->rax)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBX, &s->rbx)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, &s->rcx)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, &s->rdx)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, &s->rsi)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, &s->rdi)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, &s->rbp)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, &s->rsp)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RIP, &s->rip)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, &s->eflags)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, &s->r8)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, &s->r9)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, &s->r10)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, &s->r11)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R12, &s->r12)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R13, &s->r13)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R14, &s->r14)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R15, &s->r15)) {
+	if (!proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, &s->rax)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RBX, &s->rbx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RCX, &s->rcx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDX, &s->rdx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSI, &s->rsi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDI, &s->rdi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RBP, &s->rbp)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSP, &s->rsp)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RIP, &s->rip)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, &s->eflags)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R8, &s->r8)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R9, &s->r9)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R10, &s->r10)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R11, &s->r11)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R12, &s->r12)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R13, &s->r13)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R14, &s->r14)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R15, &s->r15)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static inline int execute_load_state(struct proctal_linux *pl, struct execute_save_state *s)
+static inline int execute_load_state(struct proctal_linux *pl, pid_t tid, struct execute_save_state *s)
 {
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, s->rax)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBX, s->rbx)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, s->rcx)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, s->rdx)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, s->rsi)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, s->rdi)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, s->rbp)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, s->rsp)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RIP, s->rip)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, s->eflags)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, s->r8)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, s->r9)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, s->r10)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, s->r11)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R12, s->r12)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R13, s->r13)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R14, s->r14)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R15, s->r15)) {
+	if (!proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, s->rax)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RBX, s->rbx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RCX, s->rcx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDX, s->rdx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSI, s->rsi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDI, s->rdi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RBP, s->rbp)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSP, s->rsp)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RIP, s->rip)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_EFLAGS, s->eflags)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R8, s->r8)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R9, s->r9)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R10, s->r10)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R11, s->r11)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R12, s->r12)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R13, s->r13)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R14, s->r14)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R15, s->r15)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static inline int syscall_save_state(struct proctal_linux *pl, struct syscall_save_state *s)
+static inline int syscall_save_state(struct proctal_linux *pl, pid_t tid, struct syscall_save_state *s)
 {
-	if (!proctal_linux_ptrace_get_instruction_address(pl, &s->addr)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, &s->rdi)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, &s->rsi)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, &s->rdx)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, &s->r10)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, &s->r8)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, &s->r9)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, &s->rax)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, &s->rcx)
-		|| !proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, &s->r11)) {
+	if (!proctal_linux_ptrace_get_instruction_address(pl, tid, &s->addr)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDI, &s->rdi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSI, &s->rsi)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDX, &s->rdx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R10, &s->r10)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R8, &s->r8)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R9, &s->r9)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, &s->rax)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RCX, &s->rcx)
+		|| !proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R11, &s->r11)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static inline int syscall_load_state(struct proctal_linux *pl, struct syscall_save_state *s)
+static inline int syscall_load_state(struct proctal_linux *pl, pid_t tid, struct syscall_save_state *s)
 {
-	if (!proctal_linux_ptrace_set_instruction_address(pl, s->addr)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, s->rdi)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, s->rsi)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, s->rdx)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, s->r10)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, s->r8)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, s->r9)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, s->rax)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RCX, s->rcx)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R11, s->r11)) {
+	if (!proctal_linux_ptrace_set_instruction_address(pl, tid, s->addr)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDI, s->rdi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSI, s->rsi)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDX, s->rdx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R10, s->r10)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R8, s->r8)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R9, s->r9)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, s->rax)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RCX, s->rcx)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R11, s->r11)) {
 		return 0;
 	}
 
@@ -166,6 +166,7 @@ static inline void *find_inject_addr(struct proctal_linux *pl, size_t size)
 
 static inline int set_syscall6(
 	struct proctal_linux *pl,
+	pid_t tid,
 	int num,
 	unsigned long long one,
 	unsigned long long two,
@@ -174,20 +175,20 @@ static inline int set_syscall6(
 	unsigned long long five,
 	unsigned long long six)
 {
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, num)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDI, one)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSI, two)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RDX, three)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R10, four)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R8, five)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_R9, six)) {
+	if (!proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, num)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDI, one)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RSI, two)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RDX, three)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R10, four)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R8, five)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_R9, six)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
+static inline int do_syscall(struct proctal_linux *pl, pid_t tid, unsigned long long *ret)
 {
 	char code[] = { 0x0F, 0x05 };
 
@@ -202,15 +203,15 @@ static inline int do_syscall(struct proctal_linux *pl, unsigned long long *ret)
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_set_instruction_address(pl, inject_addr)) {
+	if (!proctal_linux_ptrace_set_instruction_address(pl, tid, inject_addr)) {
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_step(pl)) {
+	if (!proctal_linux_ptrace_step(pl, tid)) {
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RAX, ret)) {
+	if (!proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_RAX, ret)) {
 		return 0;
 	}
 
@@ -238,19 +239,19 @@ int proctal_linux_execute_syscall(
 		return 0;
 	}
 
-	if (!syscall_save_state(pl, &orig)) {
+	if (!syscall_save_state(pl, pl->pid, &orig)) {
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
-	if (!set_syscall6(pl, num, one, two, three, four, five, six)
-		|| !do_syscall(pl, ret)) {
-		syscall_load_state(pl, &orig);
+	if (!set_syscall6(pl, pl->pid, num, one, two, three, four, five, six)
+		|| !do_syscall(pl, pl->pid, ret)) {
+		syscall_load_state(pl, pl->pid, &orig);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
-	if (!syscall_load_state(pl, &orig)) {
+	if (!syscall_load_state(pl, pl->pid, &orig)) {
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
@@ -306,7 +307,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 
 	void *landing_zone = (char *) prologue_start_addr + (prologue_size / 2);
 
-	if (!execute_save_state(pl, &orig)) {
+	if (!execute_save_state(pl, pl->pid, &orig)) {
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
@@ -315,16 +316,16 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	unsigned long long base_pointer = stack_pointer;
 
 	// New stack frame.
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RSP, stack_pointer)
-		|| !proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_RBP, base_pointer)) {
-		execute_load_state(pl, &orig);
+	if (!proctal_linux_ptrace_set_x86_reg(pl, pl->pid, PROCTAL_LINUX_PTRACE_X86_REG_RSP, stack_pointer)
+		|| !proctal_linux_ptrace_set_x86_reg(pl, pl->pid, PROCTAL_LINUX_PTRACE_X86_REG_RBP, base_pointer)) {
+		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
 	if (!proctal_linux_mem_write(pl, (void *) base_pointer, (char *) &epilogue_start_addr, sizeof(epilogue_start_addr))) {
-		execute_load_state(pl, &orig);
+		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
@@ -333,29 +334,29 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	if (!proctal_linux_mem_write(pl, prologue_start_addr, prologue, prologue_size)
 		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
 		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)) {
-		execute_load_state(pl, &orig);
+		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_set_instruction_address(pl, landing_zone)) {
-		execute_load_state(pl, &orig);
+	if (!proctal_linux_ptrace_set_instruction_address(pl, pl->pid, landing_zone)) {
+		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
 	// Wait for the code to return control back to the program.
-	if (!proctal_linux_ptrace_cont(pl)
-		|| !proctal_linux_ptrace_wait_trap(pl)) {
-		execute_load_state(pl, &orig);
+	if (!proctal_linux_ptrace_cont(pl, pl->pid)
+		|| !proctal_linux_ptrace_wait_trap(pl, pl->pid)) {
+		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
 
-	if (!execute_load_state(pl, &orig)) {
+	if (!execute_load_state(pl, pl->pid, &orig)) {
 		proctal_linux_deallocate(pl, addr);
 		proctal_linux_ptrace_detach(pl);
 		return 0;

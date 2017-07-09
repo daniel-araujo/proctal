@@ -246,10 +246,13 @@ Examples:
 
 
 Usage: proctal watch
-Watches for memory accesses in main thread of execution.
+Detects when a memory address is accessed.
 
-It's important to note that this may not report the actual instruction that
-accessed the address.
+A way to get the value of the instruction pointer the moment after a memory
+address is read, written or executed.
+
+Note that the instruction pointer may not actually be pointing at the
+instruction that actually accessed the memory address.
 
 Examples:
   Watching for any instruction reading or writing to 1c09346

@@ -8,7 +8,7 @@ Features:
 - Searching for values in memory
 - Repeatedly writing a value to memory fast so as to make it seem like it's never changing
 - Freezing program execution
-- Detecting reads, writes and execution of memory addresses in main thread
+- Watching for instructions that read, write and execute memory
 - Disassembling instructions from any memory location
 - Assembling instructions to be written to any memory location
 - Allocating and deallocating readable/writable/executable memory blocks
@@ -16,9 +16,6 @@ Features:
 - Measure size of assembly instructions and values
 - Byte pattern search
 - Memory dump
-
-Planned:
-- Watch points on all threads
 
 > **Note**
 >

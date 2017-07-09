@@ -34,16 +34,17 @@
 int proctal_linux_ptrace_attach(struct proctal_linux *pl);
 int proctal_linux_ptrace_detach(struct proctal_linux *pl);
 
-int proctal_linux_ptrace_stop(struct proctal_linux *pl);
-int proctal_linux_ptrace_cont(struct proctal_linux *pl);
-int proctal_linux_ptrace_step(struct proctal_linux *pl);
+int proctal_linux_ptrace_stop(struct proctal_linux *pl, pid_t tid);
+int proctal_linux_ptrace_cont(struct proctal_linux *pl, pid_t tid);
+int proctal_linux_ptrace_step(struct proctal_linux *pl, pid_t tid);
 
-int proctal_linux_ptrace_wait_trap(struct proctal_linux *pl);
+pid_t proctal_linux_ptrace_wait_trap(struct proctal_linux *pl, pid_t tid);
+pid_t proctal_linux_ptrace_catch_trap(struct proctal_linux *pl, pid_t tid);
 
-int proctal_linux_ptrace_get_instruction_address(struct proctal_linux *pl, void **addr);
-int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, void *addr);
+int proctal_linux_ptrace_get_instruction_address(struct proctal_linux *pl, pid_t tid, void **addr);
+int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, pid_t tid, void *addr);
 
-int proctal_linux_ptrace_set_x86_reg(struct proctal_linux *pl, int reg, unsigned long long v);
-int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, int reg, unsigned long long *v);
+int proctal_linux_ptrace_set_x86_reg(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long v);
+int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long *v);
 
 #endif /* API_LINUX_PTRACE_H */

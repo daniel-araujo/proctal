@@ -9,6 +9,14 @@
 #include "api/linux/proc.h"
 
 /*
+ * A task managed by ptrace calls.
+ */
+struct proctal_linux_ptrace_task {
+	pid_t tid;
+	int running;
+};
+
+/*
  * Linux specific handle.
  */
 struct proctal_linux {
@@ -27,8 +35,9 @@ struct proctal_linux {
 		// ptrace. It's not attached if the value is 0.
 		int count;
 
-		// Ids of the threads that have been attached.
-		struct darr tids;
+		// Tasks tracked by ptrace. An array of
+		// struct proctal_linux_ptrace_trace.
+		struct darr tasks;
 	} ptrace;
 
 	struct proctal_linux_address {

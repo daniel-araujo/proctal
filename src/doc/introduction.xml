@@ -12,7 +12,7 @@
 		<item>Searching for values in memory</item>
 		<item>Repeatedly writing a value to memory fast so as to make it seem like it's never changing</item>
 		<item>Freezing program execution</item>
-		<item>Detecting reads, writes and execution of memory addresses in main thread</item>
+		<item>Watching for instructions that read, write and execute memory</item>
 		<item>Disassembling instructions from any memory location</item>
 		<item>Assembling instructions to be written to any memory location</item>
 		<item>Allocating and deallocating readable/writable/executable memory blocks</item>

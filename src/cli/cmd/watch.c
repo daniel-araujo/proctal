@@ -92,7 +92,11 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		void *addr;
 
 		if (!proctal_watch(p, &addr)) {
-			break;
+			if (proctal_error(p)) {
+				break;
+			} else {
+				continue;
+			}
 		}
 
 		if (arg->unique) {

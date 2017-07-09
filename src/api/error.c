@@ -29,6 +29,7 @@ static const char *a[] = {
 	[PROCTAL_ERROR_PROCESS_UNTAMEABLE] = "Process is in a state that cannot be dealt with.",
 	[PROCTAL_ERROR_PROCESS_TRAPPED] = "Process got trapped.",
 	[PROCTAL_ERROR_INTERRUPT] = "An interrupt occurred.",
+	[PROCTAL_ERROR_PROCESS_INTERRUPT] = "Process got interrupt.",
 };
 
 int proctal_error(proctal_t p)

@@ -30,6 +30,7 @@ static const char *proctal_error_messages[] = {
 	[PROCTAL_ERROR_PROCESS_STOPPED] = "Process has stopped.",
 	[PROCTAL_ERROR_PROCESS_UNTAMEABLE] = "Process is in a state that cannot be dealt with.",
 	[PROCTAL_ERROR_INTERRUPT] = "An interrupt occurred.",
+	[PROCTAL_ERROR_PROCESS_INTERRUPT] = "Process got interrupt.",
 };
 
 static const char *cli_pattern_error_messages[] = {

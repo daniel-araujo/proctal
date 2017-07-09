@@ -2,48 +2,62 @@
 <document>
 	<title>Watching memory</title>
 
-	You can watch for reads, writes and code execution at a chosen address.
+	The API provides a way to get the value of the instruction pointer the
+	moment after a memory address is read, written or executed.
 
-	To choose the address, you must call
+	To choose the address you want to watch, you must call
 	<quote>proctal_watch_set_address</quote>.
+
+	Here's how you would set to watch the address <quote>81AC27</quote>.
 
 	<code type="c">
 proctal_watch_set_address(proctal, (void *) 0x81AC27);
 	</code>
 
-	To choose whether you watch to watch for reads, writes or code
-	execution you either call <quote>proctal_watch_set_read</quote>,
+	To choose whether you want to watch for instructions that read, write
+	or execute you can call <quote>proctal_watch_set_read</quote>,
 	<quote>proctal_watch_set_write</quote> or
 	<quote>proctal_watch_set_execute</quote>, respectively.
+
+	Here's how you would watch for instructions that read and write but do
+	not execute:
 
 	<code type="c">
 proctal_watch_set_read(proctal, 1);
 proctal_watch_set_write(proctal, 1);
-proctal_watch_set_execute(proctal, 1);
+proctal_watch_set_execute(proctal, 0);
 	</code>
 
-	With that set you can start watching for memory accesses by calling
-	<quote>proctal_watch_start</quote>.
+	To start watching, you need to call <quote>proctal_watch_start</quote>.
+	It will return 1 on success and 0 on failure. In case of failure, call
+	<quote>proctal_error</quote> to find out what went wrong.
 
 	<code type="c">
 int result = proctal_watch_start(proctal);
 	</code>
 
-	To get an address you need to call <quote>proctal_watch</quote>.
+	To check if an instruction was found accessing the memory address, you
+	need to call <quote>proctal_watch</quote>. On success it will write the
+	address out.
 
 	<code type="c">
 void *address;
 int result = proctal_watch(proctal, &amp;address);
 	</code>
 
-	The call will block until a memory access is detected. 
+	It will return 1 on success and 0 on failure or if no instruction was
+	detected yet.
+
+	When 0 is returned, you should check whether it failed because of an
+	error by calling <quote>proctal_error</quote>.
 
 	<note>
-		The behavior of this function is most likely going to change in
-		the future.
+		The address of the instruction that is returned may
+		be the instruction that comes after the actual instruction that
+		accessed the given memory location.
 	</note>
 
-	To stop, you need to call <quote>proctal_watch_stop</quote>.
+	To stop watching, you need to call <quote>proctal_watch_stop</quote>.
 
 	<code type="c">
 proctal_watch_stop(proctal);

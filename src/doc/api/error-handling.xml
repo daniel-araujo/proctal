@@ -34,6 +34,8 @@ int error_code = proctal_error(proctal);
 		<item>PROCTAL_ERROR_PROCESS_STOPPED</item>
 		<item>PROCTAL_ERROR_PROCESS_UNTAMEABLE</item>
 		<item>PROCTAL_ERROR_PROCESS_TRAPPED</item>
+		<item>PROCTAL_ERROR_INTERRUPT</item>
+		<item>PROCTAL_ERROR_PROCESS_INTERRUPT</item>
 	</list>
 
 	<quote>proctal_error</quote> will keep reporting the same error until

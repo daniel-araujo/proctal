@@ -32,6 +32,7 @@
 #define PROCTAL_ERROR_PROCESS_UNTAMEABLE 18
 #define PROCTAL_ERROR_PROCESS_TRAPPED 19
 #define PROCTAL_ERROR_INTERRUPT 20
+#define PROCTAL_ERROR_PROCESS_INTERRUPT 21
 
 /*
  * Macro definitions of known memory regions.
@@ -461,35 +462,41 @@ int proctal_freeze(proctal_t p);
 int proctal_unfreeze(proctal_t p);
 
 /*
- * Starts watching for memory accesses by the main thread of execution.
+ * Starts watching for memory accesses.
  *
  * You can define the address you want to watch by calling
  * proctal_watch_set_address.
  *
- * You can set whether you want to watch for reads or writes by calling
- * proctal_watch_set_read and proctal_watch_set_write. By default it's set to
- * watch only for reads.
+ * You can set whether you want to watch for reads, writes and execution by
+ * calling proctal_watch_set_read, proctal_watch_set_write and
+ * proctal_watch_set_execute, respectively.
  *
- * To stop, you must call proctal_watch_stop.
+ * When the memory address is accessed the thread of execution will be paused
+ * until either proctal_watch or proctal_watch_stop are called.
+ *
+ * On success it will return 1 and on failure it will return 0. Call
+ * proctal_error to find out what went wrong.
+ *
+ * To stop watching, you must call proctal_watch_stop.
  */
 int proctal_watch_start(proctal_t p);
 
 /*
- * Stops watching for memory accesses.
+ * Stops watching the memory address.
  *
- * You must have previously called proctal_watch_start otherwise behavior is
- * left undefined.
+ * You must have previously called proctal_watch_start successfully otherwise
+ * behavior is left undefined.
  */
 void proctal_watch_stop(proctal_t p);
 
 /*
- * After proctal_watch_start is called, you can call this function to wait for
- * an upcoming memory access.
+ * After proctal_watch_start is called, you will want to call this function to
+ * check if the memory address was accessed.
  *
- * This function will block until an access is detected.
+ * On success it will return
  *
- * You must have previously called proctal_watch_start otherwise behavior is
- * left undefined.
+ * You must have previously called proctal_watch_start successfully otherwise
+ * behavior is left undefined.
  */
 int proctal_watch(proctal_t p, void **addr);
 

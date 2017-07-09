@@ -8,7 +8,7 @@ void proctal_linux_init(struct proctal_linux *pl)
 	pl->mem = NULL;
 
 	pl->ptrace.count = 0;
-	darr_init(&pl->ptrace.tids, sizeof(pid_t));
+	darr_init(&pl->ptrace.tasks, sizeof(struct proctal_linux_ptrace_task));
 
 	pl->address.started = 0;
 	pl->address.curr = NULL;
@@ -31,7 +31,7 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 		proctal_linux_ptrace_detach(pl);
 	}
 
-	darr_deinit(&pl->ptrace.tids);
+	darr_deinit(&pl->ptrace.tasks);
 
 	if (pl->address.maps) {
 		fclose(pl->address.maps);

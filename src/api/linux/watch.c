@@ -11,42 +11,15 @@
 #include "api/linux/address.h"
 #include "api/x86/dr.h"
 
-static int check_errno_waitpid(struct proctal *p)
+static int enable_breakpoint(struct proctal_linux *pl, pid_t tid)
 {
-	if (errno == 0) {
-		return 0;
-	}
-
-	switch (errno) {
-	case EPERM:
-		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
-		break;
-
-	case ESRCH:
-		proctal_set_error(p, PROCTAL_ERROR_PROCESS_NOT_FOUND);
-		break;
-
-	case EINTR:
-		proctal_set_error(p, PROCTAL_ERROR_INTERRUPT);
-		break;
-
-	default:
-		proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
-		break;
-	}
-
-	return 1;
-}
-
-static int enable_breakpoint(struct proctal_linux *pl)
-{
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR0, (unsigned long long) pl->p.watch.addr)) {
+	if (!proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_DR0, (unsigned long long) pl->p.watch.addr)) {
 		return 0;
 	}
 
 	unsigned long long dr7;
 
-	if (!proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
+	if (!proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
 		return 0;
 	}
 
@@ -62,24 +35,24 @@ static int enable_breakpoint(struct proctal_linux *pl)
 
 	proctal_x86_dr_enable_l(&dr7, PROCTAL_X86_DR_0, 1);
 
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
+	if (!proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
 	}
 
 	return 1;
 }
 
-static int disable_breakpoint(struct proctal_linux *pl)
+static int disable_breakpoint(struct proctal_linux *pl, pid_t tid)
 {
 	unsigned long long dr7;
 
-	if (!proctal_linux_ptrace_get_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
+	if (!proctal_linux_ptrace_get_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_DR7, &dr7)) {
 		return 0;
 	}
 
 	proctal_x86_dr_enable_l(&dr7, PROCTAL_X86_DR_0, 0);
 
-	if (!proctal_linux_ptrace_set_x86_reg(pl, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
+	if (!proctal_linux_ptrace_set_x86_reg(pl, tid, PROCTAL_LINUX_PTRACE_X86_REG_DR7, dr7)) {
 		return 0;
 	}
 
@@ -112,7 +85,14 @@ int proctal_linux_watch_start(struct proctal_linux *pl)
 		return 0;
 	}
 
-	if (!enable_breakpoint(pl)) {
+	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+		if (!enable_breakpoint(pl, task->tid)) {
+			proctal_linux_ptrace_detach(pl);
+			return 0;
+		}
+	}
+
+	if (!proctal_linux_ptrace_cont(pl, 0)) {
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
@@ -122,55 +102,27 @@ int proctal_linux_watch_start(struct proctal_linux *pl)
 
 void proctal_linux_watch_stop(struct proctal_linux *pl)
 {
-	// Assuming process is stopped.
-	disable_breakpoint(pl);
+	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+		proctal_linux_ptrace_stop(pl, task->tid);
+		disable_breakpoint(pl, task->tid);
+	}
+
 	proctal_linux_ptrace_detach(pl);
 }
 
 int proctal_linux_watch(struct proctal_linux *pl, void **addr)
 {
-	if (!proctal_linux_ptrace_cont(pl)) {
+	pid_t tid = proctal_linux_ptrace_catch_trap(pl, 0);
+
+	if (tid == 0) {
 		return 0;
 	}
 
-	int wstatus;
+	proctal_linux_ptrace_get_instruction_address(pl, tid, addr);
 
-	for (;;) {
-		int wresult = waitpid(pl->pid, &wstatus, WUNTRACED);
-
-		if (wresult != pl->pid) {
-			if (wresult == -1) {
-				check_errno_waitpid(&pl->p);
-				proctal_linux_ptrace_stop(pl);
-				return 0;
-			} else {
-				// We're not interested in this signal.
-				continue;
-			}
-		}
-
-		if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
-			return 0;
-		} else if (WIFSTOPPED(wstatus)) {
-			int signal = WSTOPSIG(wstatus);
-
-			switch (signal) {
-			case SIGTRAP:
-				proctal_linux_ptrace_get_instruction_address(pl, addr);
-
-				return 1;
-
-			case SIGINT:
-			default:
-				// Process sent signal to be stopped so we're letting go.
-				kill(pl->pid, signal);
-
-				proctal_set_error(&pl->p, PROCTAL_ERROR_PROCESS_EXITED);
-				return 0;
-			}
-
-			break;
-		}
+	if (!proctal_linux_ptrace_cont(pl, tid)) {
+		return 0;
 	}
+
+	return 1;
 }
