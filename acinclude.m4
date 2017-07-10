@@ -143,23 +143,35 @@ dnl Fetches git repository SRC and places it in git repository DST and checks
 dnl out commit COMMIT.
 AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
 	if [[ -e $1 ]]; then
-		git --git-dir=$1/.git --work-tree=$1 remote set-url origin $2
-		git --git-dir=$1/.git --work-tree=$1 fetch --all
+		proctal_install_git_repository_args='-c advice.detachedHead=false --git-dir=$1/.git --work-tree=$1'
 
-		if test "$?" -ne 0; then
-			AC_MSG_ERROR([Failed to pull from $2.])
+		if test -n $3; then
+			proctal_install_git_repository_commit=$3
+		else
+			proctal_install_git_repository_commit=master
 		fi
+
+		if ! git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null; then
+			git $proctal_install_git_repository_args remote set-url origin $2
+			git $proctal_install_git_repository_args fetch --all
+
+			if test "$?" -ne 0; then
+				AC_MSG_ERROR([Failed to pull from $2.])
+			fi
+
+			git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null
+
+			if test "$?" -ne 0; then
+				AC_MSG_ERROR([Commit $proctal_install_git_repository_commit does not exist in repository $2.])
+			fi
+		fi
+
+		git $proctal_install_git_repository_args clean -fdx > /dev/null
 	else
 		git clone $2 $1
 
 		if test "$?" -ne 0; then
 			AC_MSG_ERROR([Failed to clone $2.])
 		fi
-	fi
-
-	if test -n $3; then
-		git --git-dir=$1/.git --work-tree=$1 checkout $3 > /dev/null
-	else
-		git --git-dir=$1/.git --work-tree=$1 checkout master > /dev/null
 	fi
 ])
