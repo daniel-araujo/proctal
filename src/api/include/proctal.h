@@ -447,12 +447,12 @@ int proctal_region_execute(proctal_t p);
 void proctal_region_set_execute(proctal_t p, int execute);
 
 /*
- * Freezes main thread of execution.
+ * Freezes program execution.
  *
  * You should unfreeze before exiting your program otherwise something may
  * crash.
  *
- * Destroying the handle automatically unfreezes.
+ * Closing the handle automatically unfreezes.
  */
 int proctal_freeze(proctal_t p);
 
