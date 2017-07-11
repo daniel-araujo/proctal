@@ -33,11 +33,11 @@ static inline void print_ending(struct cli_cmd_read_arg *arg)
 
 int cli_cmd_read(struct cli_cmd_read_arg *arg)
 {
-	proctal_t p = proctal_create();
+	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -55,7 +55,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		default:
 			cli_print_proctal_error(p);
-			proctal_destroy(p);
+			proctal_close(p);
 			return 1;
 		}
 
@@ -70,7 +70,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 				fprintf(stderr, "Failed to parse further values.\n");
 			}
 
-			proctal_destroy(p);
+			proctal_close(p);
 			return 1;
 		}
 
@@ -109,7 +109,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 	print_ending(arg);
 
-	proctal_destroy(p);
+	proctal_close(p);
 
 	return 0;
 }

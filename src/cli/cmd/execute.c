@@ -81,11 +81,11 @@ static size_t assemble(char **buf, char *assembly)
 
 int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 {
-	proctal_t p = proctal_create();
+	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -95,7 +95,7 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 	size_t input_size = read(&input);
 
 	if (input_size == 0) {
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -105,7 +105,7 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 		size_t compiled_size = assemble(&compiled, input);
 
 		if (compiled_size == 0) {
-			proctal_destroy(p);
+			proctal_close(p);
 			return 1;
 		}
 
@@ -121,19 +121,19 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 	default:
 		fprintf(stderr, "Not implemented.\n");
 		free_read(&input);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		free_read(&input);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
 	free_read(&input);
-	proctal_destroy(p);
+	proctal_close(p);
 
 	return 0;
 }

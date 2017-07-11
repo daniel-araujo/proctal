@@ -16,11 +16,11 @@ static void print_match(void *addr)
 
 int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 {
-	proctal_t p = proctal_create();
+	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -53,7 +53,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	if (cli_pattern_error(cp)) {
 		cli_print_pattern_error(cp);
 		cli_pattern_destroy(cp);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -163,12 +163,12 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		cli_pattern_destroy(cp);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
 	cli_pattern_destroy(cp);
-	proctal_destroy(p);
+	proctal_close(p);
 
 	return 0;
 }

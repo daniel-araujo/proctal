@@ -7,10 +7,10 @@
 	associated with it. A handle should not be used in multiple threads but
 	you can use different handles in different threads simultaneously.
 
-	A handle can be created with a call to <quote>proctal_create</quote>.
+	A handle can be created with a call to <quote>proctal_open</quote>.
 
 	<code type="c">
-proctal_t proctal = proctal_create();
+proctal_t proctal = proctal_open();
 	</code>
 
 	This call may fail, for instance if your system has ran out of memory.
@@ -18,7 +18,7 @@ proctal_t proctal = proctal_create();
 	If the returned code is 0, then the handle is ready to be used.
 	Otherwise you cannot use the handle for anything else other than
 	passing it to <quote>proctal_error</quote>,
-	<quote>proctal_error_msg</quote> and <quote>proctal_destroy</quote>.
+	<quote>proctal_error_msg</quote> and <quote>proctal_close</quote>.
 
 	With the handle created the first thing you will want to do is to hook
 	into a program. This is done by passing its PID to
@@ -33,10 +33,10 @@ proctal_set_pid(proctal, 12345);
 	Now you're able to call functions that operate on a program.
 
 	When you're done using the handle you must destroy it by passing it to
-	<quote>proctal_destroy</quote>. Even when <quote>proctal_create</quote>
+	<quote>proctal_close</quote>. Even when <quote>proctal_open</quote>
 	fails you must still do it.
 
 	<code type="c">
-proctal_destroy(proctal);
+proctal_close(proctal);
 	</code>
 </document>

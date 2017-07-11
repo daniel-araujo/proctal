@@ -13,7 +13,7 @@
 	There are 2 pairs of memory allocators: Global and handle specific.
 
 	The global memory allocators are used by functions that do not operate
-	on a handle and <quote>proctal_destroy</quote>.
+	on a handle and <quote>proctal_close</quote>.
 
 	Here's how you would override the global allocators:
 

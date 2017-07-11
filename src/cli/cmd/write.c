@@ -6,11 +6,11 @@
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg)
 {
-	proctal_t p = proctal_create();
+	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -34,7 +34,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
-				proctal_destroy(p);
+				proctal_close(p);
 				return 1;
 			}
 
@@ -46,7 +46,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 		}
 	} while (arg->repeat);
 
-	proctal_destroy(p);
+	proctal_close(p);
 
 	return 0;
 }

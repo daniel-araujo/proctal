@@ -63,19 +63,19 @@ typedef struct proctal *proctal_t;
  * There is always a tiny chance that this call may fail such as when the
  * system is running out of memory therefore you should call proctal_error
  * right after. And regardless of it succeeding or failing you still need to
- * call proctal_destroy.
+ * call proctal_close.
  *
  * Using a handle that failed to be created correctly will result in undefined
  * behavior, likely leading to a crash.
  */
-proctal_t proctal_create(void);
+proctal_t proctal_open(void);
 
 /*
  * Destroys a handle.
  *
  * This is definitely the last function you'd call.
  */
-void proctal_destroy(proctal_t p);
+void proctal_close(proctal_t p);
 
 /*
  * Allows you to check if an error happened with the given handle.

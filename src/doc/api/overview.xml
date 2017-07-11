@@ -42,10 +42,10 @@ int main (int argc, char **argv)
 	const char output[] = "Hello, world!\n";
 	char code[] = { 0x48, 0xbe, 0xDE, 0xAD, 0xBE, 0xFF, 0xDE, 0xAD, 0xBE, 0xFF, 0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc2, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x05 };
 
-	proctal_t proctal = proctal_create();
+	proctal_t proctal = proctal_open();
 
 	if (proctal_error(proctal)) {
-		proctal_destroy(proctal);
+		proctal_close(proctal);
 		fprintf(stderr, "Failed to create a Proctal handle.\n");
 		return EXIT_FAILURE;
 	}
@@ -55,7 +55,7 @@ int main (int argc, char **argv)
 	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOCATE_PERM_READ);
 
 	if (proctal_error(proctal)) {
-		proctal_destroy(proctal);
+		proctal_close(proctal);
 		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
@@ -64,7 +64,7 @@ int main (int argc, char **argv)
 
 	if (proctal_error(proctal)) {
 		proctal_deallocate(proctal, allocated_memory);
-		proctal_destroy(proctal);
+		proctal_close(proctal);
 		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
@@ -82,13 +82,13 @@ int main (int argc, char **argv)
 
 	if (proctal_error(proctal)) {
 		proctal_deallocate(proctal, allocated_memory);
-		proctal_destroy(proctal);
+		proctal_close(proctal);
 		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
 	proctal_deallocate(proctal, allocated_memory);
-	proctal_destroy(proctal);
+	proctal_close(proctal);
 
 	return EXIT_SUCCESS;
 }

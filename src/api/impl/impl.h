@@ -5,9 +5,9 @@
  * These are the functions that an implementation must define.
  */
 
-proctal_t proctal_impl_create(void);
+proctal_t proctal_impl_open(void);
 
-void proctal_impl_destroy(proctal_t p);
+void proctal_impl_close(proctal_t p);
 
 void proctal_impl_set_pid(proctal_t p, int pid);
 

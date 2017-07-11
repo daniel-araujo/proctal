@@ -40,7 +40,7 @@ int error_code = proctal_error(proctal);
 
 	<quote>proctal_error</quote> will keep reporting the same error until
 	you acknowledge it with a call to <quote>proctal_error_ack</quote> with
-	the exception in the case when <quote>proctal_create</quote> fails,
+	the exception in the case when <quote>proctal_open</quote> fails,
 	then there's no way to recover.
 
 	<code type="c">

@@ -8,7 +8,7 @@
 #include "api/linux/allocate.h"
 #include "api/linux/execute.h"
 
-proctal_t proctal_impl_create(void)
+proctal_t proctal_impl_open(void)
 {
 	struct proctal_linux *pl = proctal_global_malloc(sizeof(*pl));
 
@@ -21,7 +21,7 @@ proctal_t proctal_impl_create(void)
 	return (proctal_t) pl;
 }
 
-void proctal_impl_destroy(proctal_t p)
+void proctal_impl_close(proctal_t p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 

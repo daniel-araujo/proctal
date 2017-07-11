@@ -41,19 +41,19 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		return 1;
 	}
 
-	proctal_t p = proctal_create();
+	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		unregister_signal_handler();
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		fprintf(stderr, "Did not specify what to watch for.\n");
 		unregister_signal_handler();
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -62,7 +62,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		&& !(!arg->write && !arg->read && arg->execute)) {
 		fprintf(stderr, "The given combination of read, write and execute options is not supported.\n");
 		unregister_signal_handler();
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -84,7 +84,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		unregister_signal_handler();
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -140,7 +140,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		darr_deinit(&matches);
 		unregister_signal_handler();
 		proctal_watch_stop(p);
-		proctal_destroy(p);
+		proctal_close(p);
 		return 1;
 	}
 
@@ -150,7 +150,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 	unregister_signal_handler();
 
-	proctal_destroy(p);
+	proctal_close(p);
 
 	return 0;
 }
