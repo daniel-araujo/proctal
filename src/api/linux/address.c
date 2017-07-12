@@ -149,7 +149,7 @@ static int next(struct proctal_linux *pl)
 	return 1;
 }
 
-void proctal_linux_address_new(struct proctal_linux *pl)
+void proctal_linux_scan_address_start(struct proctal_linux *pl)
 {
 	if (pl->address.maps) {
 		fclose(pl->address.maps);
@@ -160,7 +160,15 @@ void proctal_linux_address_new(struct proctal_linux *pl)
 	pl->address.started = 0;
 }
 
-int proctal_linux_address(struct proctal_linux *pl, void **addr)
+void proctal_linux_scan_address_stop(struct proctal_linux *pl)
+{
+	if (pl->address.maps) {
+		fclose(pl->address.maps);
+		pl->address.maps = NULL;
+	}
+}
+
+int proctal_linux_scan_address(struct proctal_linux *pl, void **addr)
 {
 	if (!has_started(pl)) {
 		pl->address.started = 1;

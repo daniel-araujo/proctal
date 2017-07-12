@@ -19,13 +19,13 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will dump everything.
-		proctal_region_set_read(p, 0);
-		proctal_region_set_write(p, 0);
-		proctal_region_set_execute(p, 0);
+		proctal_scan_region_set_read(p, 0);
+		proctal_scan_region_set_write(p, 0);
+		proctal_scan_region_set_execute(p, 0);
 	} else {
-		proctal_region_set_read(p, arg->read);
-		proctal_region_set_write(p, arg->write);
-		proctal_region_set_execute(p, arg->execute);
+		proctal_scan_region_set_read(p, arg->read);
+		proctal_scan_region_set_write(p, arg->write);
+		proctal_scan_region_set_execute(p, arg->execute);
 	}
 
 	long mask = 0;
@@ -34,9 +34,9 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 		mask |= PROCTAL_REGION_PROGRAM_CODE;
 	}
 
-	proctal_region_set_mask(p, mask);
+	proctal_scan_region_set_mask(p, mask);
 
-	proctal_region_new(p);
+	proctal_scan_region_start(p);
 
 	const size_t output_block_size = 1024 * 1024 * 2;
 	char *output_block = malloc(output_block_size);
@@ -45,7 +45,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	struct chunk chunk;
 
-	while (proctal_region(p, &start, &end)) {
+	while (proctal_scan_region(p, &start, &end)) {
 		chunk_init(&chunk, start, end, output_block_size);
 
 		do {
@@ -68,6 +68,8 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 	}
 
 	free(output_block);
+
+	proctal_scan_region_stop(p);
 
 	proctal_close(p);
 

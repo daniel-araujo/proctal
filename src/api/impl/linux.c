@@ -76,32 +76,46 @@ int proctal_impl_unfreeze(proctal_t p)
 	return proctal_linux_ptrace_detach(pl);
 }
 
-void proctal_impl_address_new(proctal_t p)
+void proctal_impl_scan_address_start(proctal_t p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_address_new(pl);
+	proctal_linux_scan_address_start(pl);
 }
 
-int proctal_impl_address(proctal_t p, void **addr)
+void proctal_impl_scan_address_stop(proctal_t p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_address(pl, addr);
+	proctal_linux_scan_address_stop(pl);
 }
 
-void proctal_impl_region_new(proctal_t p)
+int proctal_impl_scan_address(proctal_t p, void **addr)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_region_new(pl);
+	return proctal_linux_scan_address(pl, addr);
 }
 
-int proctal_impl_region(proctal_t p, void **start, void **end)
+void proctal_impl_scan_region_start(proctal_t p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_region(pl, start, end);
+	proctal_linux_scan_region_start(pl);
+}
+
+void proctal_impl_scan_region_stop(proctal_t p)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	proctal_linux_scan_region_stop(pl);
+}
+
+int proctal_impl_scan_region(proctal_t p, void **start, void **end)
+{
+	struct proctal_linux *pl = (struct proctal_linux *) p;
+
+	return proctal_linux_scan_region(pl, start, end);
 }
 
 int proctal_impl_watch_start(proctal_t p)

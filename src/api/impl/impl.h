@@ -21,13 +21,17 @@ int proctal_impl_freeze(proctal_t p);
 
 int proctal_impl_unfreeze(proctal_t p);
 
-void proctal_impl_address_new(proctal_t p);
+void proctal_impl_scan_address_start(proctal_t p);
 
-int proctal_impl_address(proctal_t p, void **addr);
+void proctal_impl_scan_address_stop(proctal_t p);
 
-void proctal_impl_region_new(proctal_t p);
+int proctal_impl_scan_address(proctal_t p, void **addr);
 
-int proctal_impl_region(proctal_t p, void **start, void **end);
+void proctal_impl_scan_region_start(proctal_t p);
+
+void proctal_impl_scan_region_stop(proctal_t p);
+
+int proctal_impl_scan_region(proctal_t p, void **start, void **end);
 
 int proctal_impl_watch_start(proctal_t p);
 

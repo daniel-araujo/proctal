@@ -28,13 +28,13 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
-		proctal_region_set_read(p, 1);
-		proctal_region_set_write(p, 0);
-		proctal_region_set_execute(p, 0);
+		proctal_scan_region_set_read(p, 1);
+		proctal_scan_region_set_write(p, 0);
+		proctal_scan_region_set_execute(p, 0);
 	} else {
-		proctal_region_set_read(p, arg->read);
-		proctal_region_set_write(p, arg->write);
-		proctal_region_set_execute(p, arg->execute);
+		proctal_scan_region_set_read(p, arg->read);
+		proctal_scan_region_set_write(p, arg->write);
+		proctal_scan_region_set_execute(p, arg->execute);
 	}
 
 	long mask = 0;
@@ -43,9 +43,9 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		mask |= PROCTAL_REGION_PROGRAM_CODE;
 	}
 
-	proctal_region_set_mask(p, mask);
+	proctal_scan_region_set_mask(p, mask);
 
-	proctal_region_new(p);
+	proctal_scan_region_start(p);
 
 	cli_pattern cp = cli_pattern_create();
 	cli_pattern_compile(cp, arg->pattern);
@@ -53,6 +53,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	if (cli_pattern_error(cp)) {
 		cli_print_pattern_error(cp);
 		cli_pattern_destroy(cp);
+		proctal_scan_region_stop(p);
 		proctal_close(p);
 		return 1;
 	}
@@ -66,7 +67,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 	struct chunk chunk;
 
-	while (proctal_region(p, &start, &end)) {
+	while (proctal_scan_region(p, &start, &end)) {
 		// Starting address of the matching pattern.
 		char *pattern_start = start;
 		cli_pattern_new(cp);
@@ -163,11 +164,13 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		cli_pattern_destroy(cp);
+		proctal_scan_region_stop(p);
 		proctal_close(p);
 		return 1;
 	}
 
 	cli_pattern_destroy(cp);
+	proctal_scan_region_stop(p);
 	proctal_close(p);
 
 	return 0;

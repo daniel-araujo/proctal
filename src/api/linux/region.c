@@ -103,7 +103,7 @@ static int next(struct proctal_linux *pl)
 	return 1;
 }
 
-void proctal_linux_region_new(struct proctal_linux *pl)
+void proctal_linux_scan_region_start(struct proctal_linux *pl)
 {
 	if (pl->region.maps) {
 		fclose(pl->region.maps);
@@ -113,7 +113,15 @@ void proctal_linux_region_new(struct proctal_linux *pl)
 	pl->region.finished = 0;
 }
 
-int proctal_linux_region(struct proctal_linux *pl, void **start, void **end)
+void proctal_linux_scan_region_stop(struct proctal_linux *pl)
+{
+	if (pl->region.maps) {
+		fclose(pl->region.maps);
+		pl->region.maps = NULL;
+	}
+}
+
+int proctal_linux_scan_region(struct proctal_linux *pl, void **start, void **end)
 {
 	if (has_finished(pl)) {
 		return 0;

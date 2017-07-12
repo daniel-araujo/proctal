@@ -101,9 +101,9 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 	size_t size = cli_val_sizeof(value);
 	size_t align = cli_val_alignof(value);
 
-	proctal_region_set_mask(p, 0);
+	proctal_scan_region_set_mask(p, 0);
 
-	proctal_region_new(p);
+	proctal_scan_region_start(p);
 
 	const size_t buffer_size = 1024 * 1024;
 	struct swbuf buf;
@@ -114,7 +114,7 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	struct chunk chunk;
 
-	while (proctal_region(p, &start, &end)) {
+	while (proctal_scan_region(p, &start, &end)) {
 		size_t leftover = 0;
 
 		chunk_init(&chunk, start, end, buffer_size);
@@ -187,9 +187,12 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
+		proctal_scan_region_stop(p);
 		proctal_error_ack(p);
 		return;
 	}
+
+	proctal_scan_region_stop(p);
 }
 
 static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
@@ -282,21 +285,21 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
-		proctal_address_set_read(p, 1);
-		proctal_address_set_write(p, 0);
-		proctal_address_set_execute(p, 0);
+		proctal_scan_address_set_read(p, 1);
+		proctal_scan_address_set_write(p, 0);
+		proctal_scan_address_set_execute(p, 0);
 
-		proctal_region_set_read(p, 1);
-		proctal_region_set_write(p, 0);
-		proctal_region_set_execute(p, 0);
+		proctal_scan_region_set_read(p, 1);
+		proctal_scan_region_set_write(p, 0);
+		proctal_scan_region_set_execute(p, 0);
 	} else {
-		proctal_address_set_read(p, arg->read);
-		proctal_address_set_write(p, arg->write);
-		proctal_address_set_execute(p, arg->execute);
+		proctal_scan_address_set_read(p, arg->read);
+		proctal_scan_address_set_write(p, arg->write);
+		proctal_scan_address_set_execute(p, arg->execute);
 
-		proctal_region_set_read(p, arg->read);
-		proctal_region_set_write(p, arg->write);
-		proctal_region_set_execute(p, arg->execute);
+		proctal_scan_region_set_read(p, arg->read);
+		proctal_scan_region_set_write(p, arg->write);
+		proctal_scan_region_set_execute(p, arg->execute);
 	}
 
 	if (arg->input) {

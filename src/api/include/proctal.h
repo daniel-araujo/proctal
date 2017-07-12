@@ -213,238 +213,235 @@ size_t proctal_write_address(proctal_t p, void *addr, void *in);
 size_t proctal_write_address_array(proctal_t p, void *addr, const void **in, size_t size);
 
 /*
- * Puts the address iterator in a clean state.
+ * Starts scanning for addresses.
  *
- * You will want to call this function whenever you begin iterating over
- * addresses to make sure you're starting from the first.
- *
- * It will do nothing if the address iterator is already in a clean state.
+ * When you're done scanning, you must call proctal_scan_address_stop.
  */
-void proctal_address_new(proctal_t p);
+void proctal_scan_address_start(proctal_t p);
 
 /*
- * Iterates over the entire address space.
+ * Stops scanning for addresses.
  *
- * Any time you call this function it will pass you a different address unless
- * it fails or has ran out of addresses.
+ * You must have previously called proctal_scan_address_start, otherwise
+ * behavior is undefined.
+ */
+void proctal_scan_address_stop(proctal_t p);
+
+/*
+ * After proctal_scan_address_start is called, calling this function allows you
+ * to retrieve a new address.
  *
- * It will return 1 when it passes an address, 0 on failure or when it has ran
- * out of addresses.
+ * It will return 1 on success, 0 on failure or when it has ran out of
+ * addresses.
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_address(proctal_t p, void **addr);
+int proctal_scan_address(proctal_t p, void **addr);
 
 /*
- * Returns the alignment requirements of the addresses you're iterating over.
+ * Returns the alignment requirement of the addresses.
  *
  * The default value is 1.
  */
-size_t proctal_address_align(proctal_t p);
+size_t proctal_scan_address_align(proctal_t p);
 
 /*
- * Sets the alignment requirements of the addresses you want to iterate over.
+ * Sets the alignment requirement of the addresses.
  *
  * If you try to pass 0 it will be treated as 1.
  *
- * This call should follow proctal_address_new.
+ * You should only call this function before proctal_scan_address_start.
  */
-void proctal_address_set_align(proctal_t p, size_t align);
+void proctal_scan_address_set_align(proctal_t p, size_t align);
 
 /*
- * Returns the size of the values pointed by the addresses you're iterating
- * over.
+ * Returns the size that the addresses can be dereferenced up to.
  *
  * The default value is 1.
  */
-size_t proctal_address_size(proctal_t p);
+size_t proctal_scan_address_size(proctal_t p);
 
 /*
- * Sets the size of the values pointed by the addresses you want to iterate
- * over.
+ * Sets the size that the addresses can be dereferenced up to.
  *
- * This can prevent the iterator from returning you an address that is not
+ * This can prevent the scanner from returning you an address that is not
  * suitable for storing a value of a certain size.
  *
- * This call should follow proctal_address_new.
+ * You should only call this function before proctal_scan_address_start.
  */
-void proctal_address_set_size(proctal_t p, size_t size);
+void proctal_scan_address_set_size(proctal_t p, size_t size);
 
 /*
- * Returns which memory regions the addresses iterated could belong to.
+ * Returns which memory regions to scan over.
  *
  * The default value is 0.
  */
-long proctal_address_region(proctal_t p);
+long proctal_scan_address_region(proctal_t p);
 
 /*
- * Sets which memory regions the addresses to iterate belong to.
+ * Sets which memory regions to scan over.
  *
- * Setting the mask to 0 will let the iterator go over all memory regions.
+ * Setting the mask to 0 will let the scanner go over all memory regions.
  *
- * This call should follow proctal_address_new.
+ * You should only call this function before proctal_scan_address_start.
  */
-void proctal_address_set_region(proctal_t p, long mask);
+void proctal_scan_address_set_region(proctal_t p, long mask);
 
 /*
- * Checks whether it's iterating over addresses marked as readable by the
- * operating system.
+ * Checks whether to scan addresses marked as readable by the operating system.
  *
  * 1 means yes, 0 means no.
  *
  * By default this is set to 1.
  */
-int proctal_address_read(proctal_t p);
+int proctal_scan_address_read(proctal_t p);
 
 /*
- * Sets whether to iterate over addresses marked as readable by the operating
- * system.
+ * Sets whether to scan addresses marked as readable by the operating system.
  *
  * 1 means yes, 0 means no.
  *
- * This call should follow proctal_address_new.
+ * You should only call this function before proctal_scan_address_start.
  */
-void proctal_address_set_read(proctal_t p, int read);
+void proctal_scan_address_set_read(proctal_t p, int read);
 
 /*
- * Checks whether it's iterating over addresses marked as writable by the
- * operating system.
- *
- * 1 means yes, 0 means no.
- *
- * By default this is set to 1.
- */
-int proctal_address_write(proctal_t p);
-
-/*
- * Sets whether to iterate over addresses marked as writable by the operating
- * system.
- *
- * 1 means yes, 0 means no.
- *
- * This call should follow proctal_address_new.
- */
-void proctal_address_set_write(proctal_t p, int write);
-
-/*
- * Checks whether it's iterating over addresses marked as executable by the
- * operating system.
+ * Checks whether to scan addresses marked as writable by the operating system.
  *
  * 1 means yes, 0 means no.
  *
  * By default this is set to 1.
  */
-int proctal_address_execute(proctal_t p);
+int proctal_scan_address_write(proctal_t p);
 
 /*
- * Sets whether to iterate over addresses marked as executable by the operating
- * system.
+ * Sets whether to scan addresses marked as writable by the operating system.
  *
  * 1 means yes, 0 means no.
  *
- * This call should follow proctal_address_new.
+ * You should only call this function before proctal_scan_address_start.
  */
-void proctal_address_set_execute(proctal_t p, int execute);
+void proctal_scan_address_set_write(proctal_t p, int write);
 
 /*
- * Puts the memory region iterator in a clean state.
+ * Checks whether to scan addresses marked as executable by the operating system.
  *
- * You will want to call this function whenever you begin iterating over
- * memory regions to make sure you're starting from the first.
+ * 1 means yes, 0 means no.
  *
- * It will do nothing if the memory region iterator is already in a clean
- * state.
+ * By default this is set to 1.
  */
-void proctal_region_new(proctal_t p);
+int proctal_scan_address_execute(proctal_t p);
 
 /*
- * Iterates over the entire address space by memory regions.
+ * Sets whether to scan addresses marked as executable by the operating system.
  *
- * Any time you call this function it will pass you the starting and ending
- * address of a memory region unless it fails or has iterated over all.
+ * 1 means yes, 0 means no.
  *
- * It will return 1 on success, 0 on failure or when it has iterated over all
- * memory regions.
+ * You should only call this function before proctal_scan_address_start.
+ */
+void proctal_scan_address_set_execute(proctal_t p, int execute);
+
+/*
+ * Starts scanning for memory regions.
+ *
+ * When you're done scanning, you must call proctal_scan_region_stop.
+ */
+void proctal_scan_region_start(proctal_t p);
+
+/*
+ * Stops scanning for memory regions.
+ *
+ * You must have previously called proctal_scan_region_start, otherwise
+ * behavior is undefined.
+ */
+void proctal_scan_region_stop(proctal_t p);
+
+/*
+ * After proctal_scan_region_start is called, calling this function allows you
+ * to retrieve the addresses of the start and the end of a new memory region.
+ *
+ * It will return 1 on success, 0 on failure or when there are no more memory
+ * regions.
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_region(proctal_t p, void **start, void **end);
+int proctal_scan_region(proctal_t p, void **start, void **end);
 
 /*
- * Returns which memory regions are being iterated over.
+ * Returns which memory regions to scan over.
  *
  * The default value is 0.
  */
-long proctal_region_mask(proctal_t p);
+long proctal_scan_region_mask(proctal_t p);
 
 /*
- * Sets which memory regions are going to be iterated over.
+ * Sets which memory regions to scan over.
  *
- * Setting the mask to 0 will let the iterator go over all memory regions.
+ * Setting the mask to 0 will let the scanner go over all memory regions.
  *
- * This call should follow proctal_region_new.
+ * You should only call this function before proctal_scan_region_start.
  */
-void proctal_region_set_mask(proctal_t p, long mask);
+void proctal_scan_region_set_mask(proctal_t p, long mask);
 
 /*
- * Checks whether it's iterating over memory regions marked as readable by the
- * operating system.
+ * Checks whether to scan memory regions marked as readable by the operating
+ * system.
  *
  * 1 means yes, 0 means no.
  *
  * By default this is set to 1.
  */
-int proctal_region_read(proctal_t p);
+int proctal_scan_region_read(proctal_t p);
 
 /*
- * Sets whether to iterate over memory regions marked as readable by the
- * operating system.
+ * Sets whether to scan memory regions marked as readable by the operating
+ * system.
  *
  * 1 means yes, 0 means no.
  *
- * This call should follow proctal_region_new.
+ * You should only call this function before proctal_scan_region_start.
  */
-void proctal_region_set_read(proctal_t p, int read);
+void proctal_scan_region_set_read(proctal_t p, int read);
 
 /*
- * Checks whether it's iterating over memory regions marked as writable by the
- * operating system.
- *
- * 1 means yes, 0 means no.
- *
- * By default this is set to 1.
- */
-int proctal_region_write(proctal_t p);
-
-/*
- * Sets whether to iterate over memory regions marked as writable by the
- * operating system.
- *
- * 1 means yes, 0 means no.
- *
- * This call should follow proctal_region_new.
- */
-void proctal_region_set_write(proctal_t p, int write);
-
-/*
- * Checks whether it's iterating over memory regions marked as executable by
- * the operating system.
+ * Checks whether to scan memory regions marked as writable by the operating
+ * system.
  *
  * 1 means yes, 0 means no.
  *
  * By default this is set to 1.
  */
-int proctal_region_execute(proctal_t p);
+int proctal_scan_region_write(proctal_t p);
 
 /*
- * Sets whether to iterate over memory regions marked as executable by the
- * operating system.
+ * Sets whether to scan memory regions marked as writable by the operating
+ * system.
  *
  * 1 means yes, 0 means no.
  *
- * This call should follow proctal_region_new.
+ * You should only call this function before proctal_scan_region_start.
  */
-void proctal_region_set_execute(proctal_t p, int execute);
+void proctal_scan_region_set_write(proctal_t p, int write);
+
+/*
+ * Checks whether to scan memory regions marked as executable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * By default this is set to 1.
+ */
+int proctal_scan_region_execute(proctal_t p);
+
+/*
+ * Sets whether to scan memory regions marked as executable by the operating
+ * system.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * You should only call this function before proctal_scan_region_start.
+ */
+void proctal_scan_region_set_execute(proctal_t p, int execute);
 
 /*
  * Freezes program execution.
