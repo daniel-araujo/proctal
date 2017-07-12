@@ -517,6 +517,8 @@ void proctal_watch_set_address(proctal_t p, void *addr);
  * Checks whether it's going to watch for reads.
  *
  * 1 means yes, 0 means no.
+ *
+ * The default value is 1.
  */
 int proctal_watch_read(proctal_t p);
 
@@ -531,6 +533,8 @@ void proctal_watch_set_read(proctal_t p, int r);
  * Checks whether it's going to watch for writes.
  *
  * 1 means yes, 0 means no.
+ *
+ * The default value is 1.
  */
 int proctal_watch_write(proctal_t p);
 
@@ -545,6 +549,8 @@ void proctal_watch_set_write(proctal_t p, int w);
  * Checks whether it's going to watch for execution.
  *
  * 1 means yes, 0 means no.
+ *
+ * The default value is 0.
  */
 int proctal_watch_execute(proctal_t p);
 
