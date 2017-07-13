@@ -1,7 +1,7 @@
 define(`PID_ARGUMENT', `
   -p, --pid=PID         Process ID (PID) of a program.
 ')dnl
-define(`TYPE_ARGUMENTS', `
+define(`TYPE_OPTIONS', `
   -t, --type=TYPE
                         Type of value. If omitted, TYPE is implicitly byte.
                         TYPE can be:
@@ -87,7 +87,7 @@ Examples:
   -a, --address=ADDR    Start address of values to read.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
-  TYPE_ARGUMENTS
+  TYPE_OPTIONS
   --show-address        Additionally prints the address before the value.
                         As a side effect, all values will be separated by new
                         lines.
@@ -131,12 +131,12 @@ Examples:
   --repeat              Whether to repeatedly write the same values to the
                         address until the command is interrupted by the SIGINT
                         signal.
-  --repeat-delay=DELAY  If the repeat option is passed, this sets the delay in
-                        milliseconds between each write. A delay value of 0
+  --repeat-delay=DELAY  If the repeat option is passed, this sets the delay
+                        in milliseconds between each write. A delay value of 0
                         essentially removes the delay and will let the program
                         use every CPU cycle it gets to overwrite the value. By
                         default, DELAY is set to 5.
-  TYPE_ARGUMENTS
+  TYPE_OPTIONS
 
 
 
@@ -171,7 +171,7 @@ Examples:
   PID_ARGUMENT
   -i, --input           Reads the output of a previous scan of the same type
                         from standard input.
-  TYPE_ARGUMENTS
+  TYPE_OPTIONS
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
@@ -350,7 +350,7 @@ Examples:
   -a, --address=ADDR    Address where the first value would reside in memory.
   --array=SIZE          Emulates the same behavior described in the write
                         command.
-  TYPE_ARGUMENTS
+  TYPE_OPTIONS
 
 
 

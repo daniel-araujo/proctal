@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<title>Type parameters</title>
+	<title>Type options</title>
 
 	Commands that deal with values such as <quote>read</quote>,
 	<quote>write</quote>, <quote>search</quote> and <quote>measure</quote>
-	take a common set of parameters that are called the type parameters.
-	These parameters are used to describe the value.
+	take a common set of options that are called the type options.
+	These options are used to describe the value.
 
-	The <quote>--type</quote> parameter specifies the type of the value.
+	The <quote>--type</quote> option specifies the type of the value.
 	The following types are available:
 
 	<list>
@@ -20,7 +20,7 @@
 	</list>
 
 	The following sections will describe each one and their specific
-	parameters.
+	options.
 
 	<section>
 		<title>Byte</title>
@@ -28,7 +28,7 @@
 		This is the most basic type of them all. A byte is a sequence
 		of 8-bits. It is printed in hexadecimal notation.
 
-		This type does not have type specific parameters.
+		This type does not have type specific options.
 	</section>
 
 	<section>
@@ -39,16 +39,16 @@
 		using the two's complement representation for negative numbers
 		and in little endian. It's printed with decimal numbers.
 
-		The <quote>--integer-endianness</quote> parameter can be used
+		The <quote>--integer-endianness</quote> option can be used
 		to set the endianness. At the time, only <quote>little</quote>
 		is supported.
 
-		The <quote>--integer-size</quote> parameter can be used to set
+		The <quote>--integer-size</quote> option can be used to set
 		the number of bits. Only <quote>8</quote>, <quote>16</quote>,
 		<quote>32</quote> and <quote>64</quote> are supported at the
 		moment.
 
-		The <quote>--integer-sign</quote> parameter can be used to set
+		The <quote>--integer-sign</quote> option can be used to set
 		the sign representation. <quote>2scmpl</quote> uses two's
 		complement. <quote>unsigned</quote> disregards signing
 		altogether.
@@ -63,7 +63,7 @@
 		These numbers are represented as defined by the IEEE 754-1985
 		standard. It's printed with decimal numbers.
 
-		The <quote>--ieee754-precision</quote> parameter allows you to
+		The <quote>--ieee754-precision</quote> option allows you to
 		pick the precision. You may use <quote>single</quote>,
 		<quote>double</quote> or <quote>extended</quote>.
 
@@ -76,7 +76,7 @@
 		Text is a single character from a character set. It's printed
 		in UTF-8.
 
-		The <quote>--text-charset</quote> parameter defines the
+		The <quote>--text-charset</quote> option defines the
 		charater set to use. At the moment the only value that is
 		supported is <quote>ascii</quote>.
 
@@ -89,7 +89,7 @@
 		This represents a memory address in the computer. It's printed
 		in hexadecimal notation.
 
-		This type does not have type specific parameters.
+		This type does not have type specific options.
 	</section>
 
 	<section>
@@ -97,7 +97,7 @@
 
 		This represents a CPU instruction. It's printed in assembly.
 
-		The <quote>--instruction-arch</quote> parameter defines the
+		The <quote>--instruction-arch</quote> option defines the
 		architecture of the instruction. At the moment only
 		<quote>x86-64</quote> is supported.
 

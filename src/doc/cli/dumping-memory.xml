@@ -12,7 +12,7 @@
 $ proctal dump --pid=12345 &gt; dump.bin
 	</code>
 
-	You may optionally pass parameters to only dump certain portions in
+	You may optionally pass options to only dump certain portions in
 	memory. You may pass <quote>--program-code</quote> if you only want to
 	dump the code, <quote>--read</quote> for readable memory,
 	<quote>--write</quote> for writable memory and <quote>--execute</quote>

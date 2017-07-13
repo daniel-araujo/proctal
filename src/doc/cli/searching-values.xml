@@ -11,64 +11,64 @@
 		filters. You can use a combination of filters to achieve better
 		results.
 
-		The <quote>--read</quote> parameter matches values in readable
+		The <quote>--read</quote> option matches values in readable
 		memory.
 
-		The <quote>--write</quote> parameter matches values in writable
+		The <quote>--write</quote> option matches values in writable
 		memory.
 
-		The <quote>--execute</quote> parameter matches values in
+		The <quote>--execute</quote> option matches values in
 		writable memory.
 
-		The <quote>--eq</quote> parameter matches values that equal to
+		The <quote>--eq</quote> option matches values that equal to
 		the given value.
 
-		The <quote>--ne</quote> parameter matches values that do not
+		The <quote>--ne</quote> option matches values that do not
 		equal to the given value.
 
-		The <quote>--gt</quote> parameter matches values that are
+		The <quote>--gt</quote> option matches values that are
 		greater than the given value.
 
-		The <quote>--gte</quote> parameter matches values that are
+		The <quote>--gte</quote> option matches values that are
 		greater than or equal the given value.
 
-		The <quote>--lt</quote> parameter matches values that are
+		The <quote>--lt</quote> option matches values that are
 		lesser than the given value.
 
-		The <quote>--lte</quote> parameter matches values that are
+		The <quote>--lte</quote> option matches values that are
 		lesser than or equal the given value.
 
-		If you pass the <quote>--input</quote> parameter, the command
+		If you pass the <quote>--input</quote> option, the command
 		will expect as input the output of a previous search result and
 		that will allow you to specify filters that compare the old
 		value with the new one.
 
-		The <quote>--inc</quote> parameter matches values that were
+		The <quote>--inc</quote> option matches values that were
 		incremented by the given value.
 
-		The <quote>--inc-up-to</quote> parameter matches values that
+		The <quote>--inc-up-to</quote> option matches values that
 		were incremented up to the given value.
 
-		The <quote>--dec</quote> parameter matches values that were
+		The <quote>--dec</quote> option matches values that were
 		decremented by the given value.
 
-		The <quote>--dec-up-to</quote> parameter matches values that
+		The <quote>--dec-up-to</quote> option matches values that
 		were decremented up to the given value.
 
-		The <quote>--changed</quote> parameter matches values that
+		The <quote>--changed</quote> option matches values that
 		changed.
 
-		The <quote>--unchanged</quote> parameter matches values that
+		The <quote>--unchanged</quote> option matches values that
 		unchanged.
 
-		The <quote>--increased</quote> parameter matches values that
+		The <quote>--increased</quote> option matches values that
 		increased.
 
-		The <quote>--decreased</quote> parameter matches values that
+		The <quote>--decreased</quote> option matches values that
 		decreased.
 
-		The command accepts type parameters. You can find out all about
-		them <link ref="proctal:cli:type-parameters">here</link>.
+		The command accepts type options. You can find out all about
+		them <link ref="proctal:cli:type-options">here</link>.
 
 		Here's how you would find all 32-bit integers greater than 0
 		and less than or equal to 100 in a program whose PID is 12345.
@@ -98,16 +98,16 @@ $ proctal search --pid=12345 --type=integer --integer-size=32 --increased --inpu
 $ proctal pattern --pid=12345 --program-code 'E8 ?? ?? ?? ??'
 		</code>
 
-		The <quote>--read</quote> parameter matches values in readable
+		The <quote>--read</quote> option matches values in readable
 		memory.
 
-		The <quote>--write</quote> parameter matches values in writable
+		The <quote>--write</quote> option matches values in writable
 		memory.
 
-		The <quote>--execute</quote> parameter matches values in
+		The <quote>--execute</quote> option matches values in
 		writable memory.
 
-		The <quote>--program-code</quote> parameter matches values in
+		The <quote>--program-code</quote> option matches values in
 		the program's code.
 	</section>
 </document>

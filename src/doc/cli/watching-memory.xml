@@ -6,9 +6,9 @@
 	instruction pointer the moment after a memory address is read, written
 	or executed.
 
-	You may pass the <quote>--read</quote> parameter to watch for reads,
-	the <quote>--write</quote> parameter to watch for writes and the
-	<quote>--execute</quote> parameter to watch for execution.
+	You may pass the <quote>--read</quote> option to watch for reads,
+	the <quote>--write</quote> option to watch for writes and the
+	<quote>--execute</quote> option to watch for execution.
 
 	If you were to watch the memory address <quote>1c09346</quote> for
 	reads and writes on the program whose PID is 12345, the command would
@@ -27,6 +27,6 @@ $ proctal watch --pid=12345 --address=1c09346 --read --write
 	(<quote>^C</quote> on most terminals).
 
 	If you're seeing the same address get printed several times it might be
-	helpful to use the <quote>--unique</quote> parameter that will make the
+	helpful to use the <quote>--unique</quote> option that will make the
 	command print an address only once.
 </document>

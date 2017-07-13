@@ -77,7 +77,7 @@ $ wc -l &lt; search-1
 		so as to change its value and then looking at the addresses we
 		got and seeing which ones have changed.
 
-		The search command accepts the <quote>--input</quote> parameter
+		The search command accepts the <quote>--input</quote> option
 		that allows you to match against the addresses from a previous
 		search result. Since we have conveniently stored the results to
 		a file, we just have to use its contents as input.
@@ -189,7 +189,7 @@ $ proctal read --pid=12345 --type=integer --integer-size=8 --address=726BA1DA
 		its value?
 
 		You can achieve this by passing the <quote>--repeat</quote>
-		parameter to the <link ref="proctal:cli:write">write command</link>.
+		option to the <link ref="proctal:cli:write">write command</link>.
 		Let's assume that the address is 726BA1DA, here's how the
 		command would look like:
 

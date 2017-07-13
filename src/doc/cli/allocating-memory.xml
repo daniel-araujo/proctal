@@ -6,7 +6,7 @@
 	command.
 
 	You may optionally pass the <quote>--read</quote>,
-	<quote>--write</quote> and <quote>--execute</quote> parameters to set
+	<quote>--write</quote> and <quote>--execute</quote> options to set
 	the permissions of the block. It is possible to allocate memory without
 	any permissions.
 

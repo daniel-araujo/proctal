@@ -7,8 +7,8 @@
 	<quote>write</quote> command is able to write text, integers, IEEE754
 	floating point numbers, CPU instructions and more.
 
-	The command accepts type parameters. You can find out all about them
-	<link ref="proctal:cli:type-parameters">here</link>.
+	The command accepts type options. You can find out all about them
+	<link ref="proctal:cli:type-options">here</link>.
 
 	Here's how you would write a 32-bit integer with the value 0 at the
 	memory address <quote>7FFE79DEA90C</quote> in a program whose PID is
@@ -25,7 +25,7 @@ $ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size
 		way to write all the elements would be to execute the
 		<quote>write</quote> command at the corresponding address for
 		each element. But a better way is to take advantage of the
-		<quote>--array</quote> parameter. It takes the number of
+		<quote>--array</quote> option. It takes the number of
 		elements as its value.
 
 		Here's how you would write an array of 5 32-bit integers.
@@ -36,7 +36,7 @@ $ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size
 
 		You can also let the command loop back to the first value if
 		you don't provide the same number of values as the
-		<quote>array</quote> parameter. This means that the previous
+		<quote>array</quote> option. This means that the previous
 		command is equivalent to this one:
 
 		<code type="bash-prompt">
@@ -47,9 +47,9 @@ $ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size
 	<section>
 		<title>Repeat writing</title>
 
-		With the <quote>--repeat</quote> parameter you can make the
+		With the <quote>--repeat</quote> option you can make the
 		command repeatedly write the same values over and over again.
-		With the <quote>--repeat-delay</quote> parameter you can even
+		With the <quote>--repeat-delay</quote> option you can even
 		specify the delay in milliseconds between writes.
 
 		The command will keep running until you tell it to stop. You

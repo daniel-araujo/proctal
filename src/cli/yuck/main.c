@@ -29,7 +29,7 @@
 /*
  * This structure contains all type options parsed.
  */
-struct type_arguments {
+struct type_options {
 	enum cli_val_type type;
 	enum cli_val_integer_endianness integer_endianness;
 	enum cli_val_integer_sign integer_sign;
@@ -40,14 +40,14 @@ struct type_arguments {
 };
 
 /*
- * Creates a cli_val from a struct type_arguments. You only have to have
+ * Creates a cli_val from a struct type_options. You only have to have
  * initialized the data members that are relevant to the type.
  *
  * You are expected to keep track of the life time of the returned cli_val.
  *
  * Returns a nil value on failure.
  */
-static cli_val create_cli_val_from_type_arguments(struct type_arguments *ta)
+static cli_val create_cli_val_from_type_options(struct type_options *ta)
 {
 	switch (ta->type) {
 	case CLI_VAL_TYPE_INTEGER: {
@@ -145,11 +145,11 @@ static cli_val create_cli_val_from_type_arguments(struct type_arguments *ta)
 
 /*
  * This macro will generate a static inline function that is used to fill up a
- * struct type_arguments based on the arguments given to a yuck argument
+ * struct type_options based on the arguments given to a yuck argument
  * structure.
  *
  * This is so we can reuse the same code across different yuck argument
- * structures which share the same arguments/options.
+ * structures which share the same options.
  *
  * The function is also responsible for outputting an error message in case of
  * failure.
@@ -157,7 +157,7 @@ static cli_val create_cli_val_from_type_arguments(struct type_arguments *ta)
  * The function returns 1 on success, 0 on failure.
  */
 #define CLI_PARSE_TYPE_ARGUMENTS(NAME, YUCK_TYPE) \
-static inline int cli_type_arguments_##NAME(struct type_arguments *type, YUCK_TYPE *yuck_arg) \
+static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *yuck_arg) \
 { \
 	if (yuck_arg->type_arg) { \
 		if (!cli_parse_val_type(yuck_arg->type_arg, &type->type)) { \
@@ -314,16 +314,16 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 		arg->array = 1;
 	}
 
-	struct type_arguments type_args;
-	if (!cli_type_arguments_read(&type_args, &yuck_arg->read)) {
+	struct type_options type_args;
+	if (!cli_type_options_read(&type_args, &yuck_arg->read)) {
 		destroy_cli_cmd_read_arg(arg);
 		return NULL;
 	}
 
-	arg->value = create_cli_val_from_type_arguments(&type_args);
+	arg->value = create_cli_val_from_type_options(&type_args);
 
 	if (arg->value == cli_val_nil()) {
-		fputs("Invalid type arguments.\n", stderr);
+		fputs("Invalid type options.\n", stderr);
 		destroy_cli_cmd_read_arg(arg);
 		return NULL;
 	}
@@ -381,17 +381,17 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	struct type_arguments type_args;
-	if (!cli_type_arguments_write(&type_args, &yuck_arg->write)) {
+	struct type_options type_args;
+	if (!cli_type_options_write(&type_args, &yuck_arg->write)) {
 		destroy_cli_cmd_write_arg(arg);
 		return NULL;
 	}
 
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		cli_val v = create_cli_val_from_type_arguments(&type_args);
+		cli_val v = create_cli_val_from_type_options(&type_args);
 
 		if (v == cli_val_nil()) {
-			fputs("Invalid type arguments.\n", stderr);
+			fputs("Invalid type options.\n", stderr);
 			destroy_cli_cmd_write_arg(arg);
 			return NULL;
 		}
@@ -511,8 +511,8 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	struct type_arguments type_args;
-	if (!cli_type_arguments_search(&type_args, &yuck_arg->search)) {
+	struct type_options type_args;
+	if (!cli_type_options_search(&type_args, &yuck_arg->search)) {
 		destroy_cli_cmd_search_arg(arg);
 		return NULL;
 	}
@@ -523,10 +523,10 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	arg->value = create_cli_val_from_type_arguments(&type_args);
+	arg->value = create_cli_val_from_type_options(&type_args);
 
 	if (arg->value == cli_val_nil()) {
-		fputs("Invalid type arguments.\n", stderr);
+		fputs("Invalid type options.\n", stderr);
 		destroy_cli_cmd_search_arg(arg);
 		return NULL;
 	}
@@ -552,7 +552,7 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 #define GET_COMPARE_ARG(NAME) \
 	if (yuck_arg->search.NAME##_arg != NULL) { \
 		arg->NAME = 1; \
-		arg->NAME##_value = create_cli_val_from_type_arguments(&type_args); \
+		arg->NAME##_value = create_cli_val_from_type_options(&type_args); \
 		if (!cli_val_parse(arg->NAME##_value, yuck_arg->search.NAME##_arg)) { \
 			fputs("Invalid value for --"#NAME".\n", stderr); \
 			destroy_cli_cmd_search_arg(arg); \
@@ -895,17 +895,17 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	struct type_arguments type_args;
-	if (!cli_type_arguments_measure(&type_args, &yuck_arg->measure)) {
+	struct type_options type_args;
+	if (!cli_type_options_measure(&type_args, &yuck_arg->measure)) {
 		destroy_cli_cmd_measure_arg(arg);
 		return NULL;
 	}
 
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		cli_val v = create_cli_val_from_type_arguments(&type_args);
+		cli_val v = create_cli_val_from_type_options(&type_args);
 
 		if (v == cli_val_nil()) {
-			fputs("Invalid type arguments.\n", stderr);
+			fputs("Invalid type options.\n", stderr);
 			destroy_cli_cmd_measure_arg(arg);
 			return NULL;
 		}
