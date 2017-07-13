@@ -2,8 +2,6 @@
 
 void proctal_init(struct proctal *p)
 {
-	p->malloc = proctal_global.malloc;
-	p->free = proctal_global.free;
 	p->error = 0;
 
 	p->address.region_mask = 0;

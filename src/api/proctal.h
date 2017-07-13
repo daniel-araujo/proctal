@@ -25,14 +25,6 @@ extern struct proctal_global {
  * Platform agnostic functions work with this structure.
  */
 struct proctal {
-	// Memory allocator with the same signature as the malloc function from
-	// the C standard library.
-	void *(*malloc)(size_t);
-
-	// Memory deallocator with the same signature as the free function from
-	// the C standard library.
-	void (*free)(void *);
-
 	// Keeps track of the last error that was set.
 	int error;
 
@@ -132,9 +124,6 @@ void proctal_free(proctal_t p, void *addr);
 
 /*
  * Allocates memory.
- *
- * This version should only be used for internal data structures needed to
- * create a handle.
  */
 inline void *proctal_global_malloc(size_t size)
 {

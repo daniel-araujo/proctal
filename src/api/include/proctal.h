@@ -599,27 +599,27 @@ void *proctal_allocate(proctal_t p, size_t size, int perm);
 void proctal_deallocate(proctal_t p, void *addr);
 
 /*
- * Sets the memory allocator/deallocator used for internal data structures.
+ * Sets the memory allocator that will be used for internal data structures.
  *
- * These functions should only be called right after creating a handle to avoid
- * having the new deallocator being called on an internal data structure that
- * was allocated with the old allocator.
- */
-void proctal_set_malloc(proctal_t p, void *(*malloc)(size_t));
-void proctal_set_free(proctal_t p, void (*free)(void *));
-
-/*
- * Global counterparts. These define the values that are used by default when
- * a handle is created.
- *
- * If never called or passed NULL, will use the version of malloc/free that the
+ * If never called or passed NULL, will use the version of malloc that the
  * library was linked to.
  *
- * These functions must be called before any other function of the library so
- * as to avoid having a deallocator being called with an address returned by
- * the incorrect allocator pair.
+ * This function must be called before any other function of the library so as
+ * to avoid having a deallocator being called with an address returned by the
+ * incorrect allocator pair.
  */
 void proctal_global_set_malloc(void *(*malloc)(size_t));
+
+/*
+ * Sets the memory deallocator that will be used for internal data structures.
+ *
+ * If never called or passed NULL, will use the version of free that the
+ * library was linked to.
+ *
+ * This function must be called before any other function of the library so as
+ * to avoid having a deallocator being called with an address returned by the
+ * incorrect allocator pair.
+ */
 void proctal_global_set_free(void (*free)(void *));
 
 #endif /* PROCTAL_H */
