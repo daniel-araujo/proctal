@@ -507,6 +507,8 @@ void *proctal_watch_address(proctal_t p);
 
 /*
  * Sets the address to watch.
+ *
+ * You should only call this function before proctal_watch_start.
  */
 void proctal_watch_address_set(proctal_t p, void *addr);
 
@@ -523,6 +525,8 @@ int proctal_watch_read(proctal_t p);
  * Sets whether to watch for reads.
  *
  * 1 means yes, 0 means no.
+ *
+ * You should only call this function before proctal_watch_start.
  */
 void proctal_watch_read_set(proctal_t p, int r);
 
@@ -539,6 +543,8 @@ int proctal_watch_write(proctal_t p);
  * Sets whether to watch for writes.
  *
  * 1 means yes, 0 means no.
+ *
+ * You should only call this function before proctal_watch_start.
  */
 void proctal_watch_write_set(proctal_t p, int w);
 
@@ -555,6 +561,8 @@ int proctal_watch_execute(proctal_t p);
  * Sets whether to watch for execution.
  *
  * 1 means yes, 0 means no.
+ *
+ * You should only call this function before proctal_watch_start.
  */
 void proctal_watch_execute_set(proctal_t p, int x);
 
