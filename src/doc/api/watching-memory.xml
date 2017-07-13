@@ -6,26 +6,26 @@
 	moment after a memory address is read, written or executed.
 
 	To choose the address you want to watch, you must call
-	<quote>proctal_watch_set_address</quote>.
+	<quote>proctal_watch_address_set</quote>.
 
 	Here's how you would set to watch the address <quote>81AC27</quote>.
 
 	<code type="c">
-proctal_watch_set_address(proctal, (void *) 0x81AC27);
+proctal_watch_address_set(proctal, (void *) 0x81AC27);
 	</code>
 
 	To choose whether you want to watch for instructions that read, write
-	or execute you can call <quote>proctal_watch_set_read</quote>,
-	<quote>proctal_watch_set_write</quote> or
-	<quote>proctal_watch_set_execute</quote>, respectively.
+	or execute you can call <quote>proctal_watch_read_set</quote>,
+	<quote>proctal_watch_write_set</quote> or
+	<quote>proctal_watch_execute_set</quote>, respectively.
 
 	Here's how you would watch for instructions that read and write but do
 	not execute:
 
 	<code type="c">
-proctal_watch_set_read(proctal, 1);
-proctal_watch_set_write(proctal, 1);
-proctal_watch_set_execute(proctal, 0);
+proctal_watch_read_set(proctal, 1);
+proctal_watch_write_set(proctal, 1);
+proctal_watch_execute_set(proctal, 0);
 	</code>
 
 	To start watching, you need to call <quote>proctal_watch_start</quote>.

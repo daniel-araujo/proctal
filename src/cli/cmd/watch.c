@@ -66,12 +66,12 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
-	proctal_watch_set_address(p, arg->address);
-	proctal_watch_set_read(p, arg->read);
-	proctal_watch_set_write(p, arg->write);
-	proctal_watch_set_execute(p, arg->execute);
+	proctal_watch_address_set(p, arg->address);
+	proctal_watch_read_set(p, arg->read);
+	proctal_watch_write_set(p, arg->write);
+	proctal_watch_execute_set(p, arg->execute);
 
 	// TODO: Should use a data structure with better lookup performance.
 	struct darr matches;

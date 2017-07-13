@@ -12,7 +12,7 @@ int cli_cmd_deallocate(struct cli_cmd_deallocate_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	proctal_deallocate(p, arg->address);
 

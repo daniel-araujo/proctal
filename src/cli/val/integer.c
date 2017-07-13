@@ -66,15 +66,15 @@ static struct cli_val_integer_sign_impl *get_sign_impl_by_sign(enum cli_val_inte
 
 void cli_val_integer_attr_init(struct cli_val_integer_attr *a);
 
-void cli_val_integer_attr_set_endianness(
+void cli_val_integer_attr_endianness_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_endianness endianness);
 
-void cli_val_integer_attr_set_size(
+void cli_val_integer_attr_size_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_size size);
 
-void cli_val_integer_attr_set_sign(
+void cli_val_integer_attr_sign_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_sign sign);
 

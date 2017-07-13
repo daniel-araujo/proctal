@@ -42,7 +42,7 @@ struct cli_pattern {
 	int finished;
 };
 
-static void cli_pattern_set_error(cli_pattern cp, int error)
+static void cli_pattern_error_set(cli_pattern cp, int error)
 {
 	cp->error = error;
 }
@@ -202,14 +202,14 @@ static int parse_pattern(struct cli_pattern *cp, struct pattern_list *l, const c
 	}
 
 	if (*s == '\0') {
-		cli_pattern_set_error(cp, CLI_PATTERN_ERROR_EMPTY_PATTERN);
+		cli_pattern_error_set(cp, CLI_PATTERN_ERROR_EMPTY_PATTERN);
 		return 0;
 	}
 
 	while (*s != '\0') {
 		if (parse_pattern_byte_value(cp, l, &s)) {
 			if (*s != '\0' && !parse_pattern_whitespace(cp, l, &s)) {
-				cli_pattern_set_error(cp, CLI_PATTERN_ERROR_MISSING_WHITESPACE);
+				cli_pattern_error_set(cp, CLI_PATTERN_ERROR_MISSING_WHITESPACE);
 				cp->error_compile_offset = s - orig;
 				return 0;
 			}
@@ -218,14 +218,14 @@ static int parse_pattern(struct cli_pattern *cp, struct pattern_list *l, const c
 
 		if (parse_pattern_any_byte(cp, l, &s)) {
 			if (*s != '\0' && !parse_pattern_whitespace(cp, l, &s)) {
-				cli_pattern_set_error(cp, CLI_PATTERN_ERROR_MISSING_WHITESPACE);
+				cli_pattern_error_set(cp, CLI_PATTERN_ERROR_MISSING_WHITESPACE);
 				cp->error_compile_offset = s - orig;
 				return 0;
 			}
 			continue;
 		}
 
-		cli_pattern_set_error(cp, CLI_PATTERN_ERROR_INVALID_PATTERN);
+		cli_pattern_error_set(cp, CLI_PATTERN_ERROR_INVALID_PATTERN);
 		cp->error_compile_offset = s - orig;
 		return 0;
 	}
@@ -281,7 +281,7 @@ void cli_pattern_new(cli_pattern cp)
 int cli_pattern_input(cli_pattern cp, const char* data, size_t size)
 {
 	if (!cli_pattern_ready(cp)) {
-		cli_pattern_set_error(cp, CLI_PATTERN_ERROR_COMPILE_PATTERN);
+		cli_pattern_error_set(cp, CLI_PATTERN_ERROR_COMPILE_PATTERN);
 		return 0;
 	}
 

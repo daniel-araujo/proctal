@@ -74,7 +74,7 @@ inline void cli_val_integer_attr_init(struct cli_val_integer_attr *a)
 /*
  * Sets endianness.
  */
-inline void cli_val_integer_attr_set_endianness(
+inline void cli_val_integer_attr_endianness_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_endianness endianness)
 {
@@ -84,7 +84,7 @@ inline void cli_val_integer_attr_set_endianness(
 /*
  * Sets size
  */
-inline void cli_val_integer_attr_set_size(
+inline void cli_val_integer_attr_size_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_size size)
 {
@@ -94,7 +94,7 @@ inline void cli_val_integer_attr_set_size(
 /*
  * Sets sign type.
  */
-inline void cli_val_integer_attr_set_sign(
+inline void cli_val_integer_attr_sign_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_sign sign)
 {

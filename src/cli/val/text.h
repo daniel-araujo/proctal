@@ -42,7 +42,7 @@ inline void cli_val_text_attr_init(struct cli_val_text_attr *a)
 /*
  * Sets chararacter set.
  */
-inline void cli_val_text_attr_set_charset(
+inline void cli_val_text_attr_charset_set(
 	struct cli_val_text_attr *a,
 	enum cli_val_text_charset charset)
 {

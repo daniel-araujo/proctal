@@ -38,7 +38,7 @@ static struct cli_val_text_charset_impl *get_charset_impl_by_charset(enum cli_va
 
 void cli_val_text_attr_init(struct cli_val_text_attr *a);
 
-void cli_val_text_attr_set_charset(
+void cli_val_text_attr_charset_set(
 	struct cli_val_text_attr *a,
 	enum cli_val_text_charset charset);
 

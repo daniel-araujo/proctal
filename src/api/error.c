@@ -41,7 +41,7 @@ int proctal_error(proctal_t p)
 	return p->error;
 }
 
-void proctal_set_error(proctal_t p, int error)
+void proctal_error_set(proctal_t p, int error)
 {
 	p->error = error;
 }

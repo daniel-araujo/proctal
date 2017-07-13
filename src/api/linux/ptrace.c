@@ -102,19 +102,19 @@ static int check_errno_waitpid(struct proctal *p)
 
 	switch (errno) {
 	case EPERM:
-		proctal_set_error(p, PROCTAL_ERROR_PERMISSION_DENIED);
+		proctal_error_set(p, PROCTAL_ERROR_PERMISSION_DENIED);
 		break;
 
 	case ESRCH:
-		proctal_set_error(p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
+		proctal_error_set(p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
 		break;
 
 	case EINTR:
-		proctal_set_error(p, PROCTAL_ERROR_INTERRUPT);
+		proctal_error_set(p, PROCTAL_ERROR_INTERRUPT);
 		break;
 
 	default:
-		proctal_set_error(p, PROCTAL_ERROR_UNKNOWN);
+		proctal_error_set(p, PROCTAL_ERROR_UNKNOWN);
 		break;
 	}
 
@@ -129,7 +129,7 @@ static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_p
 			task->running = 0;
 		}
 
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_EXITED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_EXITED);
 		return 0;
 	} else if (WIFSTOPPED(wstatus)) {
 		task->running = 0;
@@ -140,19 +140,19 @@ static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_p
 
 		switch (sig) {
 		case SIGSEGV:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_SEGFAULT);
+			proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_SEGFAULT);
 			return 0;
 
 		case SIGTRAP:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_TRAPPED);
+			proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_TRAPPED);
 			return 0;
 
 		case SIGINT:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_INTERRUPT);
+			proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_INTERRUPT);
 			return 0;
 
 		default:
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_STOPPED);
+			proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_STOPPED);
 			return 0;
 		}
 	}
@@ -168,15 +168,15 @@ static int check_errno_ptrace_run_state(struct proctal_linux *pl)
 
 	switch (errno) {
 	case EPERM:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 		break;
 
 	case ESRCH:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_NOT_FOUND);
 		break;
 
 	default:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_UNKNOWN);
 		break;
 	}
 
@@ -191,15 +191,15 @@ static int check_errno_ptrace_stop_state(struct proctal_linux *pl)
 
 	switch (errno) {
 	case EACCES:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 		break;
 
 	case ESRCH:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PROGRAM_UNTAMEABLE);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PROGRAM_UNTAMEABLE);
 		break;
 
 	default:
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_UNKNOWN);
 		break;
 	}
 
@@ -461,30 +461,30 @@ int proctal_linux_ptrace_detach(struct proctal_linux *pl)
 	return 1;
 }
 
-int proctal_linux_ptrace_get_instruction_address(struct proctal_linux *pl, pid_t tid, void **addr)
+int proctal_linux_ptrace_instruction_pointer(struct proctal_linux *pl, pid_t tid, void **addr)
 {
-	return proctal_linux_ptrace_get_x86_reg(
+	return proctal_linux_ptrace_x86_reg(
 		pl,
 		tid,
 		PROCTAL_LINUX_PTRACE_X86_REG_RIP,
 		(unsigned long long *) addr);
 }
 
-int proctal_linux_ptrace_set_instruction_address(struct proctal_linux *pl, pid_t tid, void *addr)
+int proctal_linux_ptrace_instruction_pointer_set(struct proctal_linux *pl, pid_t tid, void *addr)
 {
-	return proctal_linux_ptrace_set_x86_reg(
+	return proctal_linux_ptrace_x86_reg_set(
 		pl,
 		tid,
 		PROCTAL_LINUX_PTRACE_X86_REG_RIP,
 		(unsigned long long) addr);
 }
 
-int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long *v)
+int proctal_linux_ptrace_x86_reg(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long *v)
 {
 	int offset = user_register_offset(reg);
 
 	if (offset == -1) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNSUPPORTED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_UNSUPPORTED);
 		return 0;
 	}
 
@@ -499,12 +499,12 @@ int proctal_linux_ptrace_get_x86_reg(struct proctal_linux *pl, pid_t tid, int re
 	return 1;
 }
 
-int proctal_linux_ptrace_set_x86_reg(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long v)
+int proctal_linux_ptrace_x86_reg_set(struct proctal_linux *pl, pid_t tid, int reg, unsigned long long v)
 {
 	int offset = user_register_offset(reg);
 
 	if (offset == -1) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNSUPPORTED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_UNSUPPORTED);
 		return 0;
 	}
 

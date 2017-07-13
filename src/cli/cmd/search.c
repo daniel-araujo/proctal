@@ -101,7 +101,7 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 	size_t size = cli_val_sizeof(value);
 	size_t align = cli_val_alignof(value);
 
-	proctal_scan_region_set_mask(p, 0);
+	proctal_scan_region_mask_set(p, 0);
 
 	proctal_scan_region_start(p);
 
@@ -281,25 +281,25 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
-		proctal_scan_address_set_read(p, 1);
-		proctal_scan_address_set_write(p, 0);
-		proctal_scan_address_set_execute(p, 0);
+		proctal_scan_address_read_set(p, 1);
+		proctal_scan_address_write_set(p, 0);
+		proctal_scan_address_execute_set(p, 0);
 
-		proctal_scan_region_set_read(p, 1);
-		proctal_scan_region_set_write(p, 0);
-		proctal_scan_region_set_execute(p, 0);
+		proctal_scan_region_read_set(p, 1);
+		proctal_scan_region_write_set(p, 0);
+		proctal_scan_region_execute_set(p, 0);
 	} else {
-		proctal_scan_address_set_read(p, arg->read);
-		proctal_scan_address_set_write(p, arg->write);
-		proctal_scan_address_set_execute(p, arg->execute);
+		proctal_scan_address_read_set(p, arg->read);
+		proctal_scan_address_write_set(p, arg->write);
+		proctal_scan_address_execute_set(p, arg->execute);
 
-		proctal_scan_region_set_read(p, arg->read);
-		proctal_scan_region_set_write(p, arg->write);
-		proctal_scan_region_set_execute(p, arg->execute);
+		proctal_scan_region_read_set(p, arg->read);
+		proctal_scan_region_write_set(p, arg->write);
+		proctal_scan_region_execute_set(p, arg->execute);
 	}
 
 	if (arg->input) {

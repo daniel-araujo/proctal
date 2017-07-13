@@ -33,7 +33,7 @@ int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	int perm = make_permission(arg);
 

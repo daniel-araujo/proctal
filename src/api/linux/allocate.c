@@ -86,6 +86,6 @@ void proctal_linux_deallocate(struct proctal_linux *pl, void *addr)
 	}
 
 	if (ret != 0) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_UNKNOWN);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_UNKNOWN);
 	}
 }

@@ -122,7 +122,7 @@ static int first(struct proctal_linux *pl)
 	proctal_linux_proc_path_dispose(path);
 
 	if (pl->address.maps == NULL) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 		return 0;
 	}
 

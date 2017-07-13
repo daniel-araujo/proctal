@@ -5,7 +5,7 @@ void *proctal_malloc(proctal_t p, size_t size)
 	void *a = proctal_global_malloc(size);
 
 	if (a == NULL) {
-		proctal_set_error(p, PROCTAL_ERROR_OUT_OF_MEMORY);
+		proctal_error_set(p, PROCTAL_ERROR_OUT_OF_MEMORY);
 	}
 
 	return a;

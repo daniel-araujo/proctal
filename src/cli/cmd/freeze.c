@@ -139,7 +139,7 @@ int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	proctal_freeze(p);
 

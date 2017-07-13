@@ -13,7 +13,7 @@ static inline FILE *mem(struct proctal_linux *pl)
 		proctal_linux_proc_path_dispose(path);
 
 		if (pl->mem == NULL) {
-			proctal_set_error(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+			proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
 			return NULL;
 		}
 
@@ -36,7 +36,7 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, s
 	long i = fread(out, size, 1, f);
 
 	if (i != 1) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_READ_FAILURE);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_READ_FAILURE);
 		return 0;
 	}
 
@@ -60,7 +60,7 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
 	long i = fwrite(in, size, 1, f);
 
 	if (i != 1) {
-		proctal_set_error(&pl->p, PROCTAL_ERROR_WRITE_FAILURE);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_WRITE_FAILURE);
 		return 0;
 	}
 

@@ -22,12 +22,12 @@ proctal_t proctal = proctal_open();
 
 	With the handle created the first thing you will want to do is to hook
 	into a program. This is done by passing its PID to
-	<quote>proctal_set_pid</quote>.
+	<quote>proctal_pid_set</quote>.
 
 	Here's how you would choose the program running as process 12345:
 
 	<code type="c">
-proctal_set_pid(proctal, 12345);
+proctal_pid_set(proctal, 12345);
 	</code>
 
 	Now you're able to call functions that operate on a program.

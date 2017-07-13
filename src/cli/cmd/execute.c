@@ -89,7 +89,7 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	char *input;
 	size_t input_size = read(&input);

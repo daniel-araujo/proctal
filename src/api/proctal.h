@@ -106,7 +106,7 @@ void proctal_deinit(struct proctal *p);
  * PROCTAL_ERROR as a prefix, otherwise library users won't have a way to check
  * what specific error proctal_error is returning.
  */
-void proctal_set_error(proctal_t p, int error);
+void proctal_error_set(proctal_t p, int error);
 
 /*
  * Allocates memory.

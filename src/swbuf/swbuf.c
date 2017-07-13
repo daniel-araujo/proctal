@@ -17,12 +17,12 @@ void swbuf_swap(struct swbuf *b);
 
 void *swbuf_address_offset(struct swbuf *b, ssize_t offset);
 
-void swbuf_set_malloc(void *(*f)(size_t))
+void swbuf_malloc_set(void *(*f)(size_t))
 {
 	alloc = f;
 }
 
-void swbuf_set_free(void (*f)(void *))
+void swbuf_free_set(void (*f)(void *))
 {
 	dealloc = f;
 }

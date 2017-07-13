@@ -50,7 +50,7 @@ inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 /*
  * Sets architecture.
  */
-inline void cli_val_instruction_attr_set_arch(
+inline void cli_val_instruction_attr_arch_set(
 	struct cli_val_instruction_attr *a,
 	enum cli_val_instruction_arch arch)
 {
@@ -103,7 +103,7 @@ inline void cli_val_instruction_destroy(struct cli_val_instruction *v)
 /*
  * Sets the address the instruction would be placed at.
  */
-inline void cli_val_instruction_set_address(struct cli_val_instruction *v, void *addr)
+inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void *addr)
 {
 	v->addr = addr;
 }

@@ -2,7 +2,7 @@
 
 void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
 
-void cli_val_instruction_attr_set_arch(
+void cli_val_instruction_attr_arch_set(
 	struct cli_val_instruction_attr *a,
 	enum cli_val_instruction_arch arch);
 
@@ -12,7 +12,7 @@ struct cli_val_instruction *cli_val_instruction_create(struct cli_val_instructio
 
 void cli_val_instruction_destroy(struct cli_val_instruction *v);
 
-void cli_val_instruction_set_address(struct cli_val_instruction *v, void *addr);
+void cli_val_instruction_address_set(struct cli_val_instruction *v, void *addr);
 
 void *cli_val_instruction_raw(struct cli_val_instruction *v);
 

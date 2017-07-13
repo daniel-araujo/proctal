@@ -44,7 +44,7 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 	}
 }
 
-void proctal_linux_set_pid(struct proctal_linux *pl, pid_t pid)
+void proctal_linux_pid_set(struct proctal_linux *pl, pid_t pid)
 {
 	if (pl->mem) {
 		fclose(pl->mem);

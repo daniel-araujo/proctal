@@ -17,14 +17,14 @@ struct swbuf {
  *
  * If never called, the default memory allocator is malloc.
  */
-void swbuf_set_malloc(void *(*f)(size_t));
+void swbuf_malloc_set(void *(*f)(size_t));
 
 /*
  * Sets the memory deallocator.
  *
  * If never called, the default memory deallocator is free.
  */
-void swbuf_set_free(void (*f)(void *));
+void swbuf_free_set(void (*f)(void *));
 
 /*
  * This is an implementation detail. Do not call this function.

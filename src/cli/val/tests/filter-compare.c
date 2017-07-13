@@ -126,8 +126,8 @@ int main(void)
 
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 

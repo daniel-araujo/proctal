@@ -74,7 +74,7 @@ static inline int get_l_offset(int r)
 	}
 }
 
-void proctal_x86_dr_set_rw(unsigned long long *dr7, int r, unsigned int state)
+void proctal_x86_dr_rw_set(unsigned long long *dr7, int r, unsigned int state)
 {
 	int offset = get_rw_offset(r);
 
@@ -103,7 +103,7 @@ unsigned int proctal_x86_dr_rw(unsigned long long dr7, int r)
 	return (dr7 & mask) >> offset;
 }
 
-void proctal_x86_dr_set_len(unsigned long long *dr7, int r, unsigned int state)
+void proctal_x86_dr_len_set(unsigned long long *dr7, int r, unsigned int state)
 {
 	int offset = get_len_offset(r);
 
@@ -132,7 +132,7 @@ unsigned int proctal_x86_dr_len(unsigned long long dr7, int r)
 	return (dr7 & mask) >> offset;
 }
 
-void proctal_x86_dr_enable_l(unsigned long long *dr7, int r, int enable)
+void proctal_x86_dr_l_set(unsigned long long *dr7, int r, int enable)
 {
 	int offset = get_l_offset(r);
 
@@ -148,7 +148,7 @@ void proctal_x86_dr_enable_l(unsigned long long *dr7, int r, int enable)
 	*dr7 |= state;
 }
 
-int proctal_x86_dr_is_l_enabled(unsigned long long dr7, int r)
+int proctal_x86_dr_l(unsigned long long dr7, int r)
 {
 	int offset = get_l_offset(r);
 

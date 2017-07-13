@@ -86,7 +86,7 @@ int main (int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	proctal_set_pid(proctal, 15433);
+	proctal_pid_set(proctal, 15433);
 
 	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOC_PERM_READ);
 

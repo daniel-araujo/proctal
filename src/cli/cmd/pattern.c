@@ -24,17 +24,17 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
-		proctal_scan_region_set_read(p, 1);
-		proctal_scan_region_set_write(p, 0);
-		proctal_scan_region_set_execute(p, 0);
+		proctal_scan_region_read_set(p, 1);
+		proctal_scan_region_write_set(p, 0);
+		proctal_scan_region_execute_set(p, 0);
 	} else {
-		proctal_scan_region_set_read(p, arg->read);
-		proctal_scan_region_set_write(p, arg->write);
-		proctal_scan_region_set_execute(p, arg->execute);
+		proctal_scan_region_read_set(p, arg->read);
+		proctal_scan_region_write_set(p, arg->write);
+		proctal_scan_region_execute_set(p, arg->execute);
 	}
 
 	long mask = 0;
@@ -43,7 +43,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		mask |= PROCTAL_REGION_PROGRAM_CODE;
 	}
 
-	proctal_scan_region_set_mask(p, mask);
+	proctal_scan_region_mask_set(p, mask);
 
 	proctal_scan_region_start(p);
 

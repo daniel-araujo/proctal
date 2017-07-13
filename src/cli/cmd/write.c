@@ -14,7 +14,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	do {
 		size_t list_size = cli_val_list_size(arg->value_list);

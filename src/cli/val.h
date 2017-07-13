@@ -56,7 +56,7 @@ void cli_val_destroy(cli_val v);
 /*
  * Defines the address if the value supports it.
  */
-void cli_val_set_address(cli_val v, void *addr);
+void cli_val_address_set(cli_val v, void *addr);
 
 /*
  * Returns the type of the value.

@@ -12,36 +12,36 @@
 
 		Before you can start iterating, you will want to specify the
 		size of the contents at the addresses. You do that by calling
-		<quote>proctal_scan_address_set_size</quote>.
+		<quote>proctal_scan_address_size_set</quote>.
 
 		Here's how you would specify iterating over addresses that
 		could hold a value of the size of an int:
 
 		<code type="c">
-proctal_scan_address_set_size(proctal, sizeof(int));
+proctal_scan_address_size_set(proctal, sizeof(int));
 		</code>
 
 		Something that you may be aware of is that on x86 ints should
 		be at a memory address which is some multiple of 4. Proctal
 		also lets you specify alignment restrictions with a call to
-		<quote>proctal_scan_address_set_align</quote>.
+		<quote>proctal_scan_address_align_set</quote>.
 
 		This is how you would specify iterating over addresses aligned
 		where ints must be:
 
 		<code type="c">
-proctal_scan_address_set_align(proctal, alignof(int));
+proctal_scan_address_align_set(proctal, alignof(int));
 		</code>
 
 		You can also specify at which memory regions the iterator
 		should go through. You can set that with a call to
-		<quote>proctal_scan_address_set_region</quote>.
+		<quote>proctal_scan_address_region_set</quote>.
 
 		Here's how you would tell Proctal to only iterate over
 		addresses in the heap and the stack:
 
 		<code type="c">
-proctal_scan_address_set_region(proctal, PROCTAL_REGION_HEAP | PROCTAL_REGION_STACK);
+proctal_scan_address_region_set(proctal, PROCTAL_REGION_HEAP | PROCTAL_REGION_STACK);
 		</code>
 
 		The following macros are defined to identify regions:
@@ -54,16 +54,16 @@ proctal_scan_address_set_region(proctal, PROCTAL_REGION_HEAP | PROCTAL_REGION_ST
 
 		You can also specify whether you want to iterate over readable,
 		writable or executable memory addresses. For that you can call
-		<quote>proctal_scan_address_set_read</quote>,
-		<quote>proctal_scan_address_set_write</quote> and
-		<quote>proctal_scan_address_set_execute</quote>, respectively.
+		<quote>proctal_scan_address_read_set</quote>,
+		<quote>proctal_scan_address_write_set</quote> and
+		<quote>proctal_scan_address_execute_set</quote>, respectively.
 
 		Here's how you would only iterate over readable addresses:
 
 		<code type="c">
-proctal_scan_address_set_execute(proctal, 0);
-proctal_scan_address_set_write(proctal, 0);
-proctal_scan_address_set_read(proctal, 1);
+proctal_scan_address_execute_set(proctal, 0);
+proctal_scan_address_write_set(proctal, 0);
+proctal_scan_address_read_set(proctal, 1);
 		</code>
 
 		Those are all the options. To begin iterating you must call
@@ -129,26 +129,26 @@ proctal_scan_address_stop(proctal);
 
 		Before you start iterating you can specify what type of regions
 		are iterated over by calling
-		<quote>proctal_scan_region_set_mask</quote>.
+		<quote>proctal_scan_region_mask_set</quote>.
 
 		Here's how you tell Proctal to iterate over heap memory regions:
 
 		<code type="c">
-proctal_scan_region_set_mask(proctal, PROCTAL_REGION_HEAP);
+proctal_scan_region_mask_set(proctal, PROCTAL_REGION_HEAP);
 		</code>
 
 		You can also specify whether you want to iterate over readable,
 		writable or executable memory addresses. For that you can call
-		<quote>proctal_scan_region_set_read</quote>,
-		<quote>proctal_scan_region_set_write</quote> and
-		<quote>proctal_scan_region_set_execute</quote>, respectively.
+		<quote>proctal_scan_region_read_set</quote>,
+		<quote>proctal_scan_region_write_set</quote> and
+		<quote>proctal_scan_region_execute_set</quote>, respectively.
 
 		Here's how you would only iterate over readable addresses:
 
 		<code type="c">
-proctal_scan_region_set_execute(proctal, 0);
-proctal_scan_region_set_write(proctal, 0);
-proctal_scan_region_set_read(proctal, 1);
+proctal_scan_region_execute_set(proctal, 0);
+proctal_scan_region_write_set(proctal, 0);
+proctal_scan_region_read_set(proctal, 1);
 		</code>
 
 		Those are all the options. To begin iterating you must call

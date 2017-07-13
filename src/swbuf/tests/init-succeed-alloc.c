@@ -22,8 +22,8 @@ static void fake_free(void *b)
  */
 int main(void)
 {
-	swbuf_set_malloc(malloc_succeed);
-	swbuf_set_free(fake_free);
+	swbuf_malloc_set(malloc_succeed);
+	swbuf_free_set(fake_free);
 
 	struct swbuf buf;
 	swbuf_init(&buf, 200);

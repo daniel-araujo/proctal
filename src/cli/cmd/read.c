@@ -41,7 +41,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 		return 1;
 	}
 
-	proctal_set_pid(p, arg->pid);
+	proctal_pid_set(p, arg->pid);
 
 	char output[16];
 
@@ -59,7 +59,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 			return 1;
 		}
 
-		cli_val_set_address(arg->value, addr);
+		cli_val_address_set(arg->value, addr);
 
 		int size = cli_val_parse_bin(arg->value, output, ARRAY_SIZE(output));
 

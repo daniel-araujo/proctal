@@ -118,8 +118,8 @@ static void test_integer_8_2scmpl()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -141,8 +141,8 @@ static void test_integer_8_unsigned()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -163,8 +163,8 @@ static void test_integer_16_2scmpl()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_16);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_16);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -186,8 +186,8 @@ static void test_integer_16_unsigned()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_16);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_16);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -208,8 +208,8 @@ static void test_integer_32_2scmpl()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_32);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_32);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -231,8 +231,8 @@ static void test_integer_32_unsigned()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_32);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_32);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -253,8 +253,8 @@ static void test_integer_64_2scmpl()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_64);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_2SCMPL);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -276,8 +276,8 @@ static void test_integer_64_unsigned()
 {
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_set_sign(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_set_size(&a, CLI_VAL_INTEGER_SIZE_64);
+	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
+	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -298,7 +298,7 @@ static void test_ieee754_single()
 {
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
-	cli_val_ieee754_attr_set_precision(&a, CLI_VAL_IEEE754_PRECISION_SINGLE);
+	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_SINGLE);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
@@ -321,7 +321,7 @@ static void test_ieee754_double()
 {
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
-	cli_val_ieee754_attr_set_precision(&a, CLI_VAL_IEEE754_PRECISION_DOUBLE);
+	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_DOUBLE);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
@@ -344,7 +344,7 @@ static void test_ieee754_extended()
 {
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
-	cli_val_ieee754_attr_set_precision(&a, CLI_VAL_IEEE754_PRECISION_EXTENDED);
+	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_EXTENDED);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
@@ -367,7 +367,7 @@ static void test_text_ascii()
 {
 	struct cli_val_text_attr a;
 	cli_val_text_attr_init(&a);
-	cli_val_text_attr_set_charset(&a, CLI_VAL_TEXT_CHARSET_ASCII);
+	cli_val_text_attr_charset_set(&a, CLI_VAL_TEXT_CHARSET_ASCII);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_TEXT, cli_val_text_create(&a));
 	cli_val_text_attr_deinit(&a);
 
@@ -410,7 +410,7 @@ static void test_instruction_x86_64()
 {
 	struct cli_val_instruction_attr a;
 	cli_val_instruction_attr_init(&a);
-	cli_val_instruction_attr_set_arch(&a, CLI_VAL_INSTRUCTION_ARCH_X86_64);
+	cli_val_instruction_attr_arch_set(&a, CLI_VAL_INSTRUCTION_ARCH_X86_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INSTRUCTION, cli_val_instruction_create(&a));
 	cli_val_instruction_attr_deinit(&a);
 

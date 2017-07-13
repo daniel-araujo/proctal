@@ -7,7 +7,7 @@ struct proctal_global proctal_global = {
 	.free = free
 };
 
-void proctal_global_set_malloc(void *(*f)(size_t))
+void proctal_global_malloc_set(void *(*f)(size_t))
 {
 	if (f == NULL) {
 		f = malloc;
@@ -16,7 +16,7 @@ void proctal_global_set_malloc(void *(*f)(size_t))
 	proctal_global.malloc = f;
 }
 
-void proctal_global_set_free(void (*f)(void *))
+void proctal_global_free_set(void (*f)(void *))
 {
 	if (f == NULL) {
 		f = free;

@@ -24,8 +24,8 @@ void my_free(void *memory)
 	// Deallocate your chunk of memory.
 }
 
-proctal_global_set_malloc(&amp;my_malloc);
-proctal_global_set_free(&amp;my_free);
+proctal_global_malloc_set(&amp;my_malloc);
+proctal_global_free_set(&amp;my_free);
 	</code>
 
 	Just make sure that you do this before calling any other function of

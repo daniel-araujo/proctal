@@ -34,11 +34,11 @@ void proctal_impl_close(proctal_t p)
 	proctal_global_free(pl);
 }
 
-void proctal_impl_set_pid(proctal_t p, int pid)
+void proctal_impl_pid_set(proctal_t p, int pid)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_set_pid(pl, (pid_t) pid);
+	proctal_linux_pid_set(pl, (pid_t) pid);
 }
 
 int proctal_impl_pid(proctal_t p)

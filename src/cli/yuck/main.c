@@ -53,9 +53,9 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_INTEGER: {
 		struct cli_val_integer_attr a;
 		cli_val_integer_attr_init(&a);
-		cli_val_integer_attr_set_size(&a, ta->integer_size);
-		cli_val_integer_attr_set_sign(&a, ta->integer_sign);
-		cli_val_integer_attr_set_endianness(&a, ta->integer_endianness);
+		cli_val_integer_attr_size_set(&a, ta->integer_size);
+		cli_val_integer_attr_sign_set(&a, ta->integer_sign);
+		cli_val_integer_attr_endianness_set(&a, ta->integer_endianness);
 
 		struct cli_val_integer *v = cli_val_integer_create(&a);
 
@@ -71,7 +71,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_IEEE754: {
 		struct cli_val_ieee754_attr a;
 		cli_val_ieee754_attr_init(&a);
-		cli_val_ieee754_attr_set_precision(&a, ta->ieee754_precision);
+		cli_val_ieee754_attr_precision_set(&a, ta->ieee754_precision);
 
 		struct cli_val_ieee754 *v = cli_val_ieee754_create(&a);
 
@@ -87,7 +87,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_TEXT: {
 		struct cli_val_text_attr a;
 		cli_val_text_attr_init(&a);
-		cli_val_text_attr_set_charset(&a, ta->text_charset);
+		cli_val_text_attr_charset_set(&a, ta->text_charset);
 
 		struct cli_val_text *v = cli_val_text_create(&a);
 
@@ -113,7 +113,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_INSTRUCTION: {
 		struct cli_val_instruction_attr a;
 		cli_val_instruction_attr_init(&a);
-		cli_val_instruction_attr_set_arch(&a, ta->instruction_arch);
+		cli_val_instruction_attr_arch_set(&a, ta->instruction_arch);
 
 		struct cli_val_instruction *v = cli_val_instruction_create(&a);
 

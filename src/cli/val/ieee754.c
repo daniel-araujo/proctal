@@ -3,7 +3,7 @@
 
 void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a);
 
-void cli_val_ieee754_attr_set_precision(
+void cli_val_ieee754_attr_precision_set(
 	struct cli_val_ieee754_attr *a,
 	enum cli_val_ieee754_precision precision);
 

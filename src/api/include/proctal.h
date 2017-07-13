@@ -111,7 +111,7 @@ const char *proctal_error_msg(proctal_t p);
  *
  * On Linux you must pass a PID (Process ID).
  */
-void proctal_set_pid(proctal_t p, int pid);
+void proctal_pid_set(proctal_t p, int pid);
 
 /*
  * Returns the id of the program.
@@ -252,7 +252,7 @@ size_t proctal_scan_address_align(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_align(proctal_t p, size_t align);
+void proctal_scan_address_align_set(proctal_t p, size_t align);
 
 /*
  * Returns the size that the addresses can be dereferenced up to.
@@ -269,7 +269,7 @@ size_t proctal_scan_address_size(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_size(proctal_t p, size_t size);
+void proctal_scan_address_size_set(proctal_t p, size_t size);
 
 /*
  * Returns which memory regions to scan over.
@@ -285,7 +285,7 @@ long proctal_scan_address_region(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_region(proctal_t p, long mask);
+void proctal_scan_address_region_set(proctal_t p, long mask);
 
 /*
  * Checks whether to scan addresses marked as readable by the operating system.
@@ -303,7 +303,7 @@ int proctal_scan_address_read(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_read(proctal_t p, int read);
+void proctal_scan_address_read_set(proctal_t p, int read);
 
 /*
  * Checks whether to scan addresses marked as writable by the operating system.
@@ -321,7 +321,7 @@ int proctal_scan_address_write(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_write(proctal_t p, int write);
+void proctal_scan_address_write_set(proctal_t p, int write);
 
 /*
  * Checks whether to scan addresses marked as executable by the operating system.
@@ -339,7 +339,7 @@ int proctal_scan_address_execute(proctal_t p);
  *
  * You should only call this function before proctal_scan_address_start.
  */
-void proctal_scan_address_set_execute(proctal_t p, int execute);
+void proctal_scan_address_execute_set(proctal_t p, int execute);
 
 /*
  * Starts scanning for memory regions.
@@ -381,7 +381,7 @@ long proctal_scan_region_mask(proctal_t p);
  *
  * You should only call this function before proctal_scan_region_start.
  */
-void proctal_scan_region_set_mask(proctal_t p, long mask);
+void proctal_scan_region_mask_set(proctal_t p, long mask);
 
 /*
  * Checks whether to scan memory regions marked as readable by the operating
@@ -401,7 +401,7 @@ int proctal_scan_region_read(proctal_t p);
  *
  * You should only call this function before proctal_scan_region_start.
  */
-void proctal_scan_region_set_read(proctal_t p, int read);
+void proctal_scan_region_read_set(proctal_t p, int read);
 
 /*
  * Checks whether to scan memory regions marked as writable by the operating
@@ -421,7 +421,7 @@ int proctal_scan_region_write(proctal_t p);
  *
  * You should only call this function before proctal_scan_region_start.
  */
-void proctal_scan_region_set_write(proctal_t p, int write);
+void proctal_scan_region_write_set(proctal_t p, int write);
 
 /*
  * Checks whether to scan memory regions marked as executable by the operating
@@ -441,7 +441,7 @@ int proctal_scan_region_execute(proctal_t p);
  *
  * You should only call this function before proctal_scan_region_start.
  */
-void proctal_scan_region_set_execute(proctal_t p, int execute);
+void proctal_scan_region_execute_set(proctal_t p, int execute);
 
 /*
  * Freezes program execution.
@@ -465,11 +465,11 @@ int proctal_unfreeze(proctal_t p);
  * Starts watching for memory accesses.
  *
  * You can define the address you want to watch by calling
- * proctal_watch_set_address.
+ * proctal_watch_address_set.
  *
  * You can set whether you want to watch for reads, writes and execution by
- * calling proctal_watch_set_read, proctal_watch_set_write and
- * proctal_watch_set_execute, respectively.
+ * calling proctal_watch_read_set, proctal_watch_write_set and
+ * proctal_watch_execute_set, respectively.
  *
  * When the memory address is accessed the thread of execution will be paused
  * until either proctal_watch or proctal_watch_stop are called.
@@ -508,7 +508,7 @@ void *proctal_watch_address(proctal_t p);
 /*
  * Sets the address to watch.
  */
-void proctal_watch_set_address(proctal_t p, void *addr);
+void proctal_watch_address_set(proctal_t p, void *addr);
 
 /*
  * Checks whether it's going to watch for reads.
@@ -524,7 +524,7 @@ int proctal_watch_read(proctal_t p);
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_read(proctal_t p, int r);
+void proctal_watch_read_set(proctal_t p, int r);
 
 /*
  * Checks whether it's going to watch for writes.
@@ -540,7 +540,7 @@ int proctal_watch_write(proctal_t p);
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_write(proctal_t p, int w);
+void proctal_watch_write_set(proctal_t p, int w);
 
 /*
  * Checks whether it's going to watch for execution.
@@ -556,7 +556,7 @@ int proctal_watch_execute(proctal_t p);
  *
  * 1 means yes, 0 means no.
  */
-void proctal_watch_set_execute(proctal_t p, int x);
+void proctal_watch_execute_set(proctal_t p, int x);
 
 /*
  * Executes arbitrary code.
@@ -608,7 +608,7 @@ void proctal_deallocate(proctal_t p, void *addr);
  * to avoid having a deallocator being called with an address returned by the
  * incorrect allocator pair.
  */
-void proctal_global_set_malloc(void *(*malloc)(size_t));
+void proctal_global_malloc_set(void *(*malloc)(size_t));
 
 /*
  * Sets the memory deallocator that will be used for internal data structures.
@@ -620,6 +620,6 @@ void proctal_global_set_malloc(void *(*malloc)(size_t));
  * to avoid having a deallocator being called with an address returned by the
  * incorrect allocator pair.
  */
-void proctal_global_set_free(void (*free)(void *));
+void proctal_global_free_set(void (*free)(void *));
 
 #endif /* PROCTAL_H */
