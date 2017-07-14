@@ -37,6 +37,7 @@ int cli_parse_val_integer_sign(const char *s, enum cli_val_integer_sign *val);
 int cli_parse_val_ieee754_precision(const char *s, enum cli_val_ieee754_precision *val);
 int cli_parse_val_text_charset(const char *s, enum cli_val_text_charset *val);
 int cli_parse_val_instruction_arch(const char *s, enum cli_val_instruction_arch *val);
+int cli_parse_val_instruction_syntax(const char *s, enum cli_val_instruction_syntax *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 
 #endif /* CLI_PARSER_H */

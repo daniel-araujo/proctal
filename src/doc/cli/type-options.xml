@@ -98,10 +98,17 @@
 		This represents a CPU instruction. It's printed in assembly.
 
 		The <quote>--instruction-arch</quote> option defines the
-		architecture of the instruction. At the moment only
-		<quote>x86-64</quote> is supported.
+		architecture of the instruction. You may use
+		<quote>x86</quote>, <quote>x86-64</quote>, <quote>arm</quote>
+		and <quote>aarch64</quote>.
 
 		By default the architecture is the same as the tool was
 		compiled in.
+
+		The <quote>--instruction-syntax</quote> option defines the
+		syntax for assembly. You may use either <quote>att</quote> or
+		<quote>intel</quote>.
+
+		By default <quote>intel</quote> is used.
 	</section>
 </document>

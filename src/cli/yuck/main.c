@@ -24,6 +24,7 @@
 #define DEFAULT_VAL_IEEE754_PRECISION CLI_VAL_IEEE754_PRECISION_SINGLE;
 #define DEFAULT_VAL_TEXT_CHARSET CLI_VAL_TEXT_CHARSET_ASCII;
 #define DEFAULT_VAL_INSTRUCTION_ARCH CLI_VAL_INSTRUCTION_ARCH_X86_64;
+#define DEFAULT_VAL_INSTRUCTION_SYNTAX CLI_VAL_INSTRUCTION_SYNTAX_INTEL;
 #define DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
 
 /*
@@ -37,6 +38,7 @@ struct type_options {
 	enum cli_val_ieee754_precision ieee754_precision;
 	enum cli_val_text_charset text_charset;
 	enum cli_val_instruction_arch instruction_arch;
+	enum cli_val_instruction_syntax instruction_syntax;
 };
 
 /*
@@ -114,6 +116,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 		struct cli_val_instruction_attr a;
 		cli_val_instruction_attr_init(&a);
 		cli_val_instruction_attr_arch_set(&a, ta->instruction_arch);
+		cli_val_instruction_attr_syntax_set(&a, ta->instruction_syntax);
 
 		struct cli_val_instruction *v = cli_val_instruction_create(&a);
 
@@ -228,6 +231,15 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 			} \
 		} else { \
 			type->instruction_arch = DEFAULT_VAL_INSTRUCTION_ARCH; \
+		} \
+\
+		if (yuck_arg->instruction_syntax_arg) { \
+			if (!cli_parse_val_instruction_syntax(yuck_arg->instruction_syntax_arg, &type->instruction_syntax)) { \
+				fputs("Invalid assembly syntax.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->instruction_syntax = DEFAULT_VAL_INSTRUCTION_SYNTAX; \
 		} \
 		break; \
 \

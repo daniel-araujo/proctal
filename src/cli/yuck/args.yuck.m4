@@ -47,9 +47,20 @@ define(`TYPE_OPTIONS', `
   --instruction-arch=ARCH
                         If type is instruction, this determines the
                         architecture.
-                        By default ARCH is x86-64.
+                        By default ARCH is the same architecture that the tool
+                        was compiled in.
                         ARCH can be:
+                        x86
                         x86-64
+                        arm
+                        aarch64
+  --instruction-syntax=SYNTAX
+                        If type is architecture, this determines the syntax
+                        used for assembly.
+                        By default SYNTAX is intel.
+                        SYNTAX can be:
+                        att
+                        intel
 ')dnl
 Usage: proctal
 Gives you access to the address space of a program.

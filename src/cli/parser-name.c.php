@@ -58,7 +58,18 @@ $parsers = [
 		"name" => "val_instruction_arch",
 		"type" => "enum cli_val_instruction_arch",
 		"values" => [
+			"x86" => "CLI_VAL_INSTRUCTION_ARCH_X86",
 			"x86-64" => "CLI_VAL_INSTRUCTION_ARCH_X86_64",
+			"arm" => "CLI_VAL_INSTRUCTION_ARCH_ARM",
+			"aarch64" => "CLI_VAL_INSTRUCTION_ARCH_AARCH64",
+		],
+	],
+	[
+		"name" => "val_instruction_syntax",
+		"type" => "enum cli_val_instruction_syntax",
+		"values" => [
+			"intel" => "CLI_VAL_INSTRUCTION_SYNTAX_INTEL",
+			"att" => "CLI_VAL_INSTRUCTION_SYNTAX_ATT",
 		],
 	],
 	[
