@@ -54,7 +54,7 @@ proctal_SOURCES = \
 	src/cli/main.c
 proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a $(proctal_darr_ldflags) $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 proctal_CFLAGS = $(proctal_cflags)
-proctal_DEPENDENCIES = \
+EXTRA_proctal_DEPENDENCIES = \
 	darr/libdarr.a
 
 noinst_LIBRARIES += libclival.a
