@@ -12,7 +12,18 @@
  * Supported architectures.
  */
 enum cli_val_instruction_arch {
+	CLI_VAL_INSTRUCTION_ARCH_X86,
 	CLI_VAL_INSTRUCTION_ARCH_X86_64,
+	CLI_VAL_INSTRUCTION_ARCH_ARM,
+	CLI_VAL_INSTRUCTION_ARCH_AARCH64,
+};
+
+/*
+ * Supported assembly syntaxes.
+ */
+enum cli_val_instruction_syntax {
+	CLI_VAL_INSTRUCTION_SYNTAX_INTEL,
+	CLI_VAL_INSTRUCTION_SYNTAX_ATT,
 };
 
 /*
@@ -20,6 +31,7 @@ enum cli_val_instruction_arch {
  */
 struct cli_val_instruction_attr {
 	enum cli_val_instruction_arch arch;
+	enum cli_val_instruction_syntax syntax;
 };
 
 /*
@@ -45,6 +57,7 @@ struct cli_val_instruction {
 inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 {
 	a->arch = CLI_VAL_INSTRUCTION_ARCH_X86_64;
+	a->syntax = CLI_VAL_INSTRUCTION_SYNTAX_INTEL;
 }
 
 /*
@@ -58,7 +71,17 @@ inline void cli_val_instruction_attr_arch_set(
 }
 
 /*
- * Disposes it off.
+ * Sets syntax.
+ */
+inline void cli_val_instruction_attr_syntax_set(
+	struct cli_val_instruction_attr *a,
+	enum cli_val_instruction_syntax syntax)
+{
+	a->syntax = syntax;
+}
+
+/*
+ * Disposes attributes.
  */
 inline void cli_val_instruction_attr_deinit(struct cli_val_instruction_attr *a)
 {

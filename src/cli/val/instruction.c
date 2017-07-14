@@ -1,10 +1,116 @@
 #include "cli/val/instruction.h"
 
+struct cs_parameters {
+	enum cs_arch arch;
+	enum cs_mode mode;
+};
+
+static int init_cs_parameters(struct cli_val_instruction *v, struct cs_parameters *params)
+{
+	switch (v->attr.arch) {
+	case CLI_VAL_INSTRUCTION_ARCH_X86:
+		params->arch = CS_ARCH_X86;
+		params->mode = CS_MODE_32;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_X86_64:
+		params->arch = CS_ARCH_X86;
+		params->mode = CS_MODE_64;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_ARM:
+		params->arch = CS_ARCH_ARM;
+		params->mode = CS_MODE_ARM;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_AARCH64:
+		params->arch = CS_ARCH_ARM64;
+		params->mode = 0;
+		return 1;
+
+	default:
+		// Not supported.
+		return 0;
+	}
+}
+
+static int set_cs_syntax(struct cli_val_instruction *v, csh handle)
+{
+	switch (v->attr.syntax) {
+	case CLI_VAL_INSTRUCTION_SYNTAX_INTEL:
+		cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_SYNTAX_ATT:
+		cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+		return 1;
+
+	default:
+		// Not supported.
+		return 0;
+	}
+}
+
+struct ks_parameters {
+	enum ks_arch arch;
+	enum ks_mode mode;
+};
+
+static int init_ks_parameters(struct cli_val_instruction *v, struct ks_parameters *params)
+{
+	switch (v->attr.arch) {
+	case CLI_VAL_INSTRUCTION_ARCH_X86:
+		params->arch = KS_ARCH_X86;
+		params->mode = KS_MODE_32;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_X86_64:
+		params->arch = KS_ARCH_X86;
+		params->mode = KS_MODE_64;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_ARM:
+		params->arch = KS_ARCH_ARM;
+		params->mode = KS_MODE_ARM;
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_ARCH_AARCH64:
+		params->arch = KS_ARCH_ARM64;
+		params->mode = 0;
+		return 1;
+
+	default:
+		// Not supported.
+		return 0;
+	}
+}
+
+static int set_ks_syntax(struct cli_val_instruction *v, ks_engine *handle)
+{
+	switch (v->attr.syntax) {
+	case CLI_VAL_INSTRUCTION_SYNTAX_INTEL:
+		ks_option(handle, KS_OPT_SYNTAX, KS_OPT_SYNTAX_INTEL);
+		return 1;
+
+	case CLI_VAL_INSTRUCTION_SYNTAX_ATT:
+		ks_option(handle, KS_OPT_SYNTAX, KS_OPT_SYNTAX_ATT);
+		return 1;
+
+	default:
+		// Not supported.
+		return 0;
+	}
+}
+
 void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
 
 void cli_val_instruction_attr_arch_set(
 	struct cli_val_instruction_attr *a,
 	enum cli_val_instruction_arch arch);
+
+void cli_val_instruction_attr_syntax_set(
+	struct cli_val_instruction_attr *a,
+	enum cli_val_instruction_syntax syntax);
 
 void cli_val_instruction_attr_deinit(struct cli_val_instruction_attr *a);
 
@@ -29,9 +135,19 @@ int cli_val_instruction_parse_bin(struct cli_val_instruction *v, const char *s, 
 		v->insn = NULL;
 	}
 
+	struct cs_parameters params;
+
+	if (!init_cs_parameters(v, &params)) {
+		return 0;
+	}
+
 	csh handle;
 
-	if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK) {
+	if (cs_open(params.arch, params.mode, &handle) != CS_ERR_OK) {
+		return 0;
+	}
+
+	if (!set_cs_syntax(v, handle)) {
 		return 0;
 	}
 
@@ -61,13 +177,23 @@ int cli_val_instruction_parse(struct cli_val_instruction *v, const char *s)
 	// Also, it ensures we only parse the first instruction that shows up
 	// and ignore the rest.
 
+	struct ks_parameters params;
+
+	if (!init_ks_parameters(v, &params)) {
+		return 0;
+	}
+
 	ks_engine *ks;
 
 	size_t count;
 	unsigned char *encode;
 	size_t size;
 
-	if (ks_open(KS_ARCH_X86, KS_MODE_64, &ks) != KS_ERR_OK) {
+	if (ks_open(params.arch, params.mode, &ks) != KS_ERR_OK) {
+		return 0;
+	}
+
+	if (!set_ks_syntax(v, ks)) {
 		return 0;
 	}
 
