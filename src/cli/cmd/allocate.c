@@ -9,15 +9,15 @@ static int make_permission(struct cli_cmd_allocate_arg *arg)
 	int perm = 0;
 
 	if (arg->read) {
-		perm |= PROCTAL_ALLOCATE_PERM_READ;
+		perm |= PROCTAL_ALLOCATE_PERMISSION_READ;
 	}
 
 	if (arg->write) {
-		perm |= PROCTAL_ALLOCATE_PERM_WRITE;
+		perm |= PROCTAL_ALLOCATE_PERMISSION_WRITE;
 	}
 
 	if (arg->execute) {
-		perm |= PROCTAL_ALLOCATE_PERM_EXECUTE;
+		perm |= PROCTAL_ALLOCATE_PERMISSION_EXECUTE;
 	}
 
 	return perm;

@@ -14,15 +14,15 @@ static inline int make_prot(int permissions)
 {
 	int prot = 0;
 
-	if (permissions & PROCTAL_ALLOCATE_PERM_READ) {
+	if (permissions & PROCTAL_ALLOCATE_PERMISSION_READ) {
 		prot |= PROT_READ;
 	}
 
-	if (permissions & PROCTAL_ALLOCATE_PERM_WRITE) {
+	if (permissions & PROCTAL_ALLOCATE_PERMISSION_WRITE) {
 		prot |= PROT_WRITE;
 	}
 
-	if (permissions & PROCTAL_ALLOCATE_PERM_EXECUTE) {
+	if (permissions & PROCTAL_ALLOCATE_PERMISSION_EXECUTE) {
 		prot |= PROT_EXEC;
 	}
 

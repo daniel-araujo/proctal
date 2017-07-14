@@ -195,7 +195,7 @@ static inline int do_syscall(struct proctal_linux *pl, pid_t tid, unsigned long 
 	void *inject_addr = find_inject_addr(pl, ARRAY_SIZE(code));
 
 	if (inject_addr == NULL) {
-		proctal_error_set(&pl->p, PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND);
+		proctal_error_set(&pl->p, PROCTAL_ERROR_INJECTION_LOCATION_NOT_FOUND);
 		return 0;
 	}
 
@@ -294,7 +294,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	void *addr = proctal_linux_allocate(
 		pl,
 		prologue_size + byte_code_length + epilogue_size,
-		PROCTAL_ALLOCATE_PERM_WRITE | PROCTAL_ALLOCATE_PERM_EXECUTE | PROCTAL_ALLOCATE_PERM_READ);
+		PROCTAL_ALLOCATE_PERMISSION_WRITE | PROCTAL_ALLOCATE_PERMISSION_EXECUTE | PROCTAL_ALLOCATE_PERMISSION_READ);
 
 	if (addr == NULL) {
 		proctal_linux_ptrace_detach(pl);

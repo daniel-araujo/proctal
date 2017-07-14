@@ -13,7 +13,7 @@
 	Here's how you would allocate 8 bytes of readable and writable memory:
 
 	<code type="c">
-void *address = proctal_allocate(proctal, 8, PROCTAL_ALLOCATE_PERM_READ | PROCTAL_ALLOCATE_PERM_WRITE);
+void *address = proctal_allocate(proctal, 8, PROCTAL_ALLOCATE_PERMISSION_READ | PROCTAL_ALLOCATE_PERMISSION_WRITE);
 	</code>
 
 	The function returns the address where the memory location starts. On
@@ -23,9 +23,9 @@ void *address = proctal_allocate(proctal, 8, PROCTAL_ALLOCATE_PERM_READ | PROCTA
 	The following macros are defined to identify permissions:
 
 	<list>
-		<item>PROCTAL_ALLOCATE_PERM_EXECUTE</item>
-		<item>PROCTAL_ALLOCATE_PERM_WRITE</item>
-		<item>PROCTAL_ALLOCATE_PERM_READ</item>
+		<item>PROCTAL_ALLOCATE_PERMISSION_EXECUTE</item>
+		<item>PROCTAL_ALLOCATE_PERMISSION_WRITE</item>
+		<item>PROCTAL_ALLOCATE_PERMISSION_READ</item>
 	</list>
 
 	Once you are done using the memory block, you need to deallocate with

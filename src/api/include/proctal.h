@@ -25,7 +25,7 @@
 #define PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE 11
 #define PROCTAL_ERROR_PROGRAM_NOT_FOUND 12
 #define PROCTAL_ERROR_PROGRAM_NOT_SET 13
-#define PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND 14
+#define PROCTAL_ERROR_INJECTION_LOCATION_NOT_FOUND 14
 #define PROCTAL_ERROR_PROGRAM_SEGFAULT 15
 #define PROCTAL_ERROR_PROGRAM_EXITED 16
 #define PROCTAL_ERROR_PROGRAM_STOPPED 17
@@ -44,9 +44,9 @@
 /*
  * Macro definitions of memory allocation permissions.
  */
-#define PROCTAL_ALLOCATE_PERM_EXECUTE 1
-#define PROCTAL_ALLOCATE_PERM_WRITE 2
-#define PROCTAL_ALLOCATE_PERM_READ 4
+#define PROCTAL_ALLOCATE_PERMISSION_EXECUTE 1
+#define PROCTAL_ALLOCATE_PERMISSION_WRITE 2
+#define PROCTAL_ALLOCATE_PERMISSION_READ 4
 
 /*
  * Provides a type name for a handle. The actual definition is an
@@ -588,7 +588,7 @@ int proctal_execute(proctal_t p, const char *byte_code, size_t byte_code_length)
  * The size parameter specifies the number of bytes you're interested in
  * allocating. It may allocate more space but you should never rely on that.
  * The perm parameter specifies read, write and execute permissions. You can
- * OR the macros whose name start with PROCTAL_ALLOCATE_PERM.
+ * OR the macros whose name start with PROCTAL_ALLOCATE_PERMISSION_.
  *
  * On success it returns the start address. On failure it will return NULL. You
  * can call proctal_error to find out what happened.

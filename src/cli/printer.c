@@ -24,7 +24,7 @@ static const char *proctal_error_messages[] = {
 		"Watching for reads, writes and instruction executions at once is not supported.",
 	[PROCTAL_ERROR_PROGRAM_NOT_FOUND] = "Program not found.",
 	[PROCTAL_ERROR_PROGRAM_NOT_SET] = "Program was not set.",
-	[PROCTAL_ERROR_INJECT_ADDR_NOT_FOUND] = "Could not find a suitable address in memory to inject code in.",
+	[PROCTAL_ERROR_INJECTION_LOCATION_NOT_FOUND] = "Could not find a suitable address in memory to inject code in.",
 	[PROCTAL_ERROR_PROGRAM_SEGFAULT] = "Program hit segmentation fault.",
 	[PROCTAL_ERROR_PROGRAM_EXITED] = "Program has exited.",
 	[PROCTAL_ERROR_PROGRAM_STOPPED] = "Program has stopped.",
