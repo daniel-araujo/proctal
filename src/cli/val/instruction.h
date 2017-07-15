@@ -127,11 +127,19 @@ inline void cli_val_instruction_destroy(struct cli_val_instruction *v)
 }
 
 /*
- * Sets the address the instruction would be placed at.
+ * Sets the address the instruction would be executed at.
  */
 inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void *address)
 {
 	v->address = address;
+}
+
+/*
+ * Returns the address that the instruction would be executed at.
+ */
+inline void *cli_val_instruction_address(struct cli_val_instruction *v)
+{
+	return v->address;
 }
 
 /*

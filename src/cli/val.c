@@ -14,6 +14,7 @@ struct cli_val_impl {
 	enum cli_val_type type;
 
 	void (*address_set)(void *, void *);
+	void *(*address)(void *);
 	size_t (*align)(void *);
 	size_t (*size)(void *);
 	void *(*raw)(void *);
@@ -137,6 +138,7 @@ static struct cli_val_impl impls[] = {
 		.type = CLI_VAL_TYPE_INSTRUCTION,
 
 		.address_set = (void *) cli_val_instruction_address_set,
+		.address = (void *) cli_val_instruction_address,
 		.align = (void *) cli_val_instruction_sizeof,
 		.size = (void *) cli_val_instruction_sizeof,
 		.raw = (void *) cli_val_instruction_raw,
@@ -206,6 +208,15 @@ void cli_val_address_set(cli_val v, void *addr)
 	}
 
 	return v->impl->address_set(v->val, addr);
+}
+
+void *cli_val_address(cli_val v)
+{
+	if (v->impl->address == NULL) {
+		return NULL;
+	}
+
+	return v->impl->address(v->val);
 }
 
 enum cli_val_type cli_val_type(cli_val v)

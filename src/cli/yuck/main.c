@@ -402,6 +402,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
+	char *vaddress = arg->address;
 	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
 		cli_val v = create_cli_val_from_type_options(&type_args);
 
@@ -411,6 +412,8 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 			return NULL;
 		}
 
+		cli_val_address_set(v, vaddress);
+
 		if (!cli_val_parse(v, yuck_arg->args[i])) {
 			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
 			cli_val_destroy(v);
@@ -419,6 +422,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 		}
 
 		cli_val_list_set(arg->value_list, i, v);
+		vaddress += cli_val_sizeof(v);
 	}
 
 	if (yuck_arg->write.array_arg != NULL) {

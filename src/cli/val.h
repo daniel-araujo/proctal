@@ -59,6 +59,11 @@ void cli_val_destroy(cli_val v);
 void cli_val_address_set(cli_val v, void *addr);
 
 /*
+ * Returns the address associated with the value.
+ */
+void *cli_val_address(cli_val v);
+
+/*
  * Returns the type of the value.
  */
 enum cli_val_type cli_val_type(cli_val v);
