@@ -8,7 +8,7 @@
 
 	Calculating the storage for fixed sized values is easy, but if you were
 	to store code that you wrote in assembly, you would have to know the
-	size of the byte code resulting from every instruction but even if you
+	size of the bytecode resulting from every instruction but even if you
 	knew that information you would still have a lot of math to do if your
 	code was composed of many instructions.
 
@@ -29,5 +29,5 @@ $ proctal measure --address=1c09346 --type=instruction "call 0x5"
 
 	You may find it odd that the <quote>--address</quote> option is
 	required. That's because assembly instructions may get assembled into
-	different byte code depending on where they are placed in memory.
+	different bytecode depending on where they are placed in memory.
 </document>

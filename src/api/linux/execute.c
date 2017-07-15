@@ -281,7 +281,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
 	};
 
-	// TODO: Should generate byte code instead of hardcoding it, would be
+	// TODO: Should generate bytecode instead of hardcoding it, would be
 	// easier to maintain.
 	const char epilogue[] = {
 		// It's a trap.

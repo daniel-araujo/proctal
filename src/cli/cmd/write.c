@@ -18,7 +18,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 
 	do {
 		size_t list_size = cli_val_list_size(arg->value_list);
-		char *addr = (char *) arg->address;
+		char *address = (char *) arg->address;
 
 		for (size_t i = 0, j = 0; i < arg->array; ++i, ++j) {
 			if (j == list_size) {
@@ -30,7 +30,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 			size_t size = cli_val_sizeof(v);
 			char *input = cli_val_raw(v);
 
-			proctal_write(p, addr, input, size);
+			proctal_write(p, address, input, size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -38,7 +38,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 				return 1;
 			}
 
-			addr += size;
+			address += size;
 		}
 
 		if (arg->repeat && arg->repeat_delay > 0) {

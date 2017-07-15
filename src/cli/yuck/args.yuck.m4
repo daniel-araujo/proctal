@@ -104,7 +104,7 @@ Examples:
                         lines.
   --show-instruction-byte-code
                         If type is instruction, additionally prints the
-                        byte code of the instruction in hexadecimal.
+                        bytecode of the instruction in hexadecimal.
 
 
 
@@ -297,7 +297,7 @@ Examples:
   Executing instructions from an assembly file
         proctal execute --pid=12345 < code.asm
 
-  Executing instructions from a file containing byte code
+  Executing instructions from a file containing bytecode
         proctal execute --pid=12345 --format=bytecode < code.bin
 
 
@@ -306,6 +306,23 @@ Examples:
                         FORMAT can be:
                         assembly
                         bytecode
+  --assembly-arch=ARCH
+                        If type is instruction, this determines the
+                        architecture.
+                        By default ARCH is the same architecture that the tool
+                        was compiled in.
+                        ARCH can be:
+                        x86
+                        x86-64
+                        arm
+                        aarch64
+  --assembly-syntax=SYNTAX
+                        If type is architecture, this determines the syntax
+                        used for assembly.
+                        By default SYNTAX is intel.
+                        SYNTAX can be:
+                        att
+                        intel
 
 
 

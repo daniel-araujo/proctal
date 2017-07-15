@@ -14,6 +14,7 @@
 #include "cli/cmd/watch.h"
 #include "cli/cmd/write.h"
 #include "cli/parser.h"
+#include "cli/assembler.h"
 #include "cli/yuck/args.yucc"
 #include "magic/magic.h"
 
@@ -26,6 +27,8 @@
 #define DEFAULT_VAL_INSTRUCTION_ARCH CLI_VAL_INSTRUCTION_ARCH_X86_64;
 #define DEFAULT_VAL_INSTRUCTION_SYNTAX CLI_VAL_INSTRUCTION_SYNTAX_INTEL;
 #define DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
+#define DEFAULT_ASSEMBLER_ARCH CLI_ASSEMBLER_ARCH_X86_64;
+#define DEFAULT_ASSEMBLER_SYNTAX CLI_ASSEMBLER_SYNTAX_INTEL;
 
 /*
  * This structure contains all type options parsed.
@@ -779,6 +782,26 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 		}
 	} else {
 		arg->format = DEFAULT_CMD_EXECUTE_FORMAT;
+	}
+
+	if (arg->format == CLI_CMD_EXECUTE_FORMAT_ASSEMBLY) {
+		if (yuck_arg->execute.assembly_arch_arg) {
+			if (!cli_parse_assembler_arch(yuck_arg->execute.assembly_arch_arg, &arg->assembly_arch)) {
+				fputs("Invalid architecture.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->assembly_arch = DEFAULT_ASSEMBLER_ARCH;
+		}
+
+		if (yuck_arg->execute.assembly_syntax_arg) {
+			if (!cli_parse_assembler_syntax(yuck_arg->execute.assembly_syntax_arg, &arg->assembly_syntax)) {
+				fputs("Invalid assembly syntax.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->assembly_syntax = DEFAULT_ASSEMBLER_SYNTAX;
+		}
 	}
 
 	return arg;

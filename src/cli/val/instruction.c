@@ -1,104 +1,33 @@
 #include "cli/val/instruction.h"
 
-struct cs_parameters {
-	enum cs_arch arch;
-	enum cs_mode mode;
-};
-
-static int init_cs_parameters(struct cli_val_instruction *v, struct cs_parameters *params)
+static void setup_assembler(struct cli_val_instruction *v, struct cli_assembler *assembler)
 {
 	switch (v->attr.arch) {
 	case CLI_VAL_INSTRUCTION_ARCH_X86:
-		params->arch = CS_ARCH_X86;
-		params->mode = CS_MODE_32;
-		return 1;
+		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_X86);
+		break;
 
 	case CLI_VAL_INSTRUCTION_ARCH_X86_64:
-		params->arch = CS_ARCH_X86;
-		params->mode = CS_MODE_64;
-		return 1;
+		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_X86_64);
+		break;
 
 	case CLI_VAL_INSTRUCTION_ARCH_ARM:
-		params->arch = CS_ARCH_ARM;
-		params->mode = CS_MODE_ARM;
-		return 1;
+		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_ARM);
+		break;
 
 	case CLI_VAL_INSTRUCTION_ARCH_AARCH64:
-		params->arch = CS_ARCH_ARM64;
-		params->mode = 0;
-		return 1;
-
-	default:
-		// Not supported.
-		return 0;
+		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_AARCH64);
+		break;
 	}
-}
 
-static int set_cs_syntax(struct cli_val_instruction *v, csh handle)
-{
 	switch (v->attr.syntax) {
 	case CLI_VAL_INSTRUCTION_SYNTAX_INTEL:
-		cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
-		return 1;
+		cli_assembler_syntax_set(assembler, CLI_ASSEMBLER_SYNTAX_INTEL);
+		break;
 
 	case CLI_VAL_INSTRUCTION_SYNTAX_ATT:
-		cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
-		return 1;
-
-	default:
-		// Not supported.
-		return 0;
-	}
-}
-
-struct ks_parameters {
-	enum ks_arch arch;
-	enum ks_mode mode;
-};
-
-static int init_ks_parameters(struct cli_val_instruction *v, struct ks_parameters *params)
-{
-	switch (v->attr.arch) {
-	case CLI_VAL_INSTRUCTION_ARCH_X86:
-		params->arch = KS_ARCH_X86;
-		params->mode = KS_MODE_32;
-		return 1;
-
-	case CLI_VAL_INSTRUCTION_ARCH_X86_64:
-		params->arch = KS_ARCH_X86;
-		params->mode = KS_MODE_64;
-		return 1;
-
-	case CLI_VAL_INSTRUCTION_ARCH_ARM:
-		params->arch = KS_ARCH_ARM;
-		params->mode = KS_MODE_ARM;
-		return 1;
-
-	case CLI_VAL_INSTRUCTION_ARCH_AARCH64:
-		params->arch = KS_ARCH_ARM64;
-		params->mode = 0;
-		return 1;
-
-	default:
-		// Not supported.
-		return 0;
-	}
-}
-
-static int set_ks_syntax(struct cli_val_instruction *v, ks_engine *handle)
-{
-	switch (v->attr.syntax) {
-	case CLI_VAL_INSTRUCTION_SYNTAX_INTEL:
-		ks_option(handle, KS_OPT_SYNTAX, KS_OPT_SYNTAX_INTEL);
-		return 1;
-
-	case CLI_VAL_INSTRUCTION_SYNTAX_ATT:
-		ks_option(handle, KS_OPT_SYNTAX, KS_OPT_SYNTAX_ATT);
-		return 1;
-
-	default:
-		// Not supported.
-		return 0;
+		cli_assembler_syntax_set(assembler, CLI_ASSEMBLER_SYNTAX_ATT);
+		break;
 	}
 }
 
@@ -118,94 +47,122 @@ struct cli_val_instruction *cli_val_instruction_create(struct cli_val_instructio
 
 void cli_val_instruction_destroy(struct cli_val_instruction *v);
 
-void cli_val_instruction_address_set(struct cli_val_instruction *v, void *addr);
+void cli_val_instruction_address_set(struct cli_val_instruction *v, void *address);
 
 void *cli_val_instruction_raw(struct cli_val_instruction *v);
 
 size_t cli_val_instruction_sizeof(struct cli_val_instruction *v);
 
-int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f);
-
 struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_val_instruction *other_v);
+
+int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f)
+{
+	int ret = 0;
+
+	if (v->bytecode_size == 0) {
+		return 0;
+	}
+
+	struct cli_assembler assembler;
+	cli_assembler_init(&assembler);
+	setup_assembler(v, &assembler);
+	cli_assembler_address_set(&assembler, v->address);
+
+	struct cli_assembler_decompile_result result;
+	if (!cli_assembler_decompile(&assembler, v->bytecode, v->bytecode_size, &result)) {
+		goto exit1;
+	}
+
+	ret = fwrite(result.assembly, result.assembly_size, 1, f);
+
+exit2:
+	cli_assembler_decompile_dispose(&result);
+exit1:
+	cli_assembler_deinit(&assembler);
+exit0:
+	return ret;
+}
 
 int cli_val_instruction_parse_bin(struct cli_val_instruction *v, const char *s, size_t length)
 {
-	if (v->insn) {
-		cs_free(v->insn, 1);
-		v->insn = NULL;
+	int ret = 0;
+
+	// We're going to decompile the bytecode to see if it is a valid
+	// instruction and exactly how long.
+
+	struct cli_assembler assembler;
+	cli_assembler_init(&assembler);
+	setup_assembler(v, &assembler);
+	cli_assembler_address_set(&assembler, v->address);
+
+	struct cli_assembler_decompile_result result;
+	if (!cli_assembler_decompile(&assembler, s, length, &result)) {
+		goto exit1;
 	}
 
-	struct cs_parameters params;
+	// At this point we know that we got valid bytecode and how long it is.
+	// Let's make a copy of it and return how much we read.
 
-	if (!init_cs_parameters(v, &params)) {
-		return 0;
+	char *bytecode = malloc(result.read);
+
+	if (bytecode == NULL) {
+		goto exit2;
 	}
 
-	csh handle;
+	memcpy(bytecode, s, result.read);
 
-	if (cs_open(params.arch, params.mode, &handle) != CS_ERR_OK) {
-		return 0;
+	if (v->bytecode) {
+		// Discard the existing bytecode.
+		free(v->bytecode);
 	}
 
-	if (!set_cs_syntax(v, handle)) {
-		return 0;
-	}
+	v->bytecode = bytecode;
+	v->bytecode_size = result.read;
 
-	int count = cs_disasm(handle, (const unsigned char *) s, length, (unsigned long int) v->addr, 1, &v->insn);
-
-	cs_close(&handle);
-
-	if (count == 0) {
-		return 0;
-	}
-
-	return v->insn->size;
+	ret = result.read;
+exit2:
+	cli_assembler_decompile_dispose(&result);
+exit1:
+	cli_assembler_deinit(&assembler);
+exit0:
+	return ret;
 }
 
 int cli_val_instruction_parse(struct cli_val_instruction *v, const char *s)
 {
-	if (v->insn) {
-		cs_free(v->insn, 1);
-		v->insn = NULL;
+	int ret = 0;
+
+	struct cli_assembler assembler;
+	cli_assembler_init(&assembler);
+	setup_assembler(v, &assembler);
+	cli_assembler_address_set(&assembler, v->address);
+
+	struct cli_assembler_compile_result result;
+	if (!cli_assembler_compile(&assembler, s, strlen(s), &result)) {
+		goto exit1;
 	}
 
-	// The value structure was programmed to hold a reference to a capstone
-	// disassembled instruction because it conveniently provides all the
-	// information we care about. To remain compatible with existing code,
-	// we're going to assemble the code with keystone and then disassemble
-	// the result with capstone so as to keep the remaining code as is.
-	// Also, it ensures we only parse the first instruction that shows up
-	// and ignore the rest.
+	char *bytecode = malloc(result.bytecode_size);
 
-	struct ks_parameters params;
-
-	if (!init_ks_parameters(v, &params)) {
-		return 0;
+	if (bytecode == NULL) {
+		goto exit2;
 	}
 
-	ks_engine *ks;
+	memcpy(bytecode, result.bytecode, result.bytecode_size);
 
-	size_t count;
-	unsigned char *encode;
-	size_t size;
-
-	if (ks_open(params.arch, params.mode, &ks) != KS_ERR_OK) {
-		return 0;
+	if (v->bytecode) {
+		// Discard the existing bytecode.
+		free(v->bytecode);
 	}
 
-	if (!set_ks_syntax(v, ks)) {
-		return 0;
-	}
+	v->bytecode = bytecode;
+	v->bytecode_size = result.bytecode_size;
 
-	if (ks_asm(ks, s, 0, &encode, &size, &count) != KS_ERR_OK) {
-		ks_close(ks);
-		return 0;
-	}
-
-	int parse_bin = cli_val_instruction_parse_bin(v, (const char *) encode, size);
-
-	ks_free(encode);
-	ks_close(ks);
-
-	return parse_bin ? 1 : 0;
+	ret = 1;
+exit2:
+	cli_assembler_compile_dispose(&result);
+exit1:
+	cli_assembler_deinit(&assembler);
+exit0:
+	return ret;
 }

@@ -571,7 +571,7 @@ void proctal_watch_execute_set(proctal_t p, int x);
  *
  * The code will be executed in the context of the main thread.
  *
- * You need to pass a pointer to your byte code and its length. It will be
+ * You need to pass a pointer to your bytecode and its length. It will be
  * embedded at some place in memory and executed in a new  stack frame. Your
  * code is free to modify any registers because they will be restored to their
  * original values on return. You can either use a return instruction to

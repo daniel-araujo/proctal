@@ -18,7 +18,7 @@ struct cli_cmd_read_arg {
 	// printing a lot of adjacent values of variable length.
 	int show_address;
 
-	// Whether to additionally print the byte code of the instruction.
+	// Whether to additionally print the bytecode of the instruction.
 	int show_instruction_byte_code;
 };
 

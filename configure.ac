@@ -44,7 +44,7 @@ PROCTAL_CHECK_LIB([HAVE_LIBCAPSTONE], [capstone], [cs_version],, [required])
 PROCTAL_CHECK_HEADER([HAVE_KEYSTONE_H], [keystone/keystone.h], [required])
 PROCTAL_CHECK_LIB([HAVE_LIBKEYSTONE], [keystone], [ks_version],, [required])
 
-PROCTAL_INSTALL_GIT_REPOSITORY([darr], ["https://github.com/daniel-araujo/darr.git"], ["v1.3.0"])
+PROCTAL_INSTALL_GIT_REPOSITORY([darr], ["https://github.com/daniel-araujo/darr.git"], ["v1.4.0"])
 
 if test -n "$HAVE_USLEEP"; then
 	proctal_xopen_cflags="-D_XOPEN_SOURCE=500"
@@ -67,7 +67,7 @@ proctal_cflags="-iquote${srcdir}/src -iquotesrc -std=c11 -Wfatal-errors -Wall"
 proctal_cflags="$proctal_cflags -Wextra -Wpointer-arith $proctal_xopen_cflags"
 proctal_cflags="$proctal_cflags -Wno-unused-parameter -Wno-unused-function"
 proctal_cflags="$proctal_cflags $proctal_posix_cflags -Wno-maybe-uninitialized"
-proctal_cflags="$proctal_cflags $proctal_darr_cflags"
+proctal_cflags="$proctal_cflags $proctal_darr_cflags -Wno-unused-label"
 
 AC_SUBST([proctal_capstone_ldflags])
 AC_SUBST([proctal_keystone_ldflags])

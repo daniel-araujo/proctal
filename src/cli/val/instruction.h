@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
-#include <capstone/capstone.h>
-#include <keystone/keystone.h>
+
+#include "cli/assembler.h"
 
 /*
  * Supported architectures.
@@ -44,11 +44,13 @@ struct cli_val_instruction {
 	// Address where the instruction would be at. This information is
 	// important when calculating the destination address of a relative
 	// jump instruction supported by certain architectures.
-	void *addr;
+	void *address;
 
-	// Information about the instruction. We'll use capstone's parse
-	// result.
-	cs_insn *insn;
+	// Bytecode.
+	char *bytecode;
+
+	// Bytecode size.
+	size_t bytecode_size;
 };
 
 /*
@@ -103,8 +105,9 @@ inline struct cli_val_instruction *cli_val_instruction_create(struct cli_val_ins
 	}
 
 	v->attr = *a;
-	v->addr = NULL;
-	v->insn = NULL;
+	v->address = NULL;
+	v->bytecode = NULL;
+	v->bytecode_size = 0;
 
 	return v;
 }
@@ -116,8 +119,8 @@ inline struct cli_val_instruction *cli_val_instruction_create(struct cli_val_ins
  */
 inline void cli_val_instruction_destroy(struct cli_val_instruction *v)
 {
-	if (v->insn) {
-		cs_free(v->insn, 1);
+	if (v->bytecode) {
+		free(v->bytecode);
 	}
 
 	free(v);
@@ -126,9 +129,9 @@ inline void cli_val_instruction_destroy(struct cli_val_instruction *v)
 /*
  * Sets the address the instruction would be placed at.
  */
-inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void *addr)
+inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void *address)
 {
-	v->addr = addr;
+	v->address = address;
 }
 
 /*
@@ -139,7 +142,7 @@ inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void 
  */
 inline void *cli_val_instruction_raw(struct cli_val_instruction *v)
 {
-	return v->insn->bytes;
+	return v->bytecode;
 }
 
 /*
@@ -147,11 +150,7 @@ inline void *cli_val_instruction_raw(struct cli_val_instruction *v)
  */
 inline size_t cli_val_instruction_sizeof(struct cli_val_instruction *v)
 {
-	if (v->insn == NULL) {
-		return 0;
-	}
-
-	return v->insn->size;
+	return v->bytecode_size;
 }
 
 /*
@@ -159,20 +158,7 @@ inline size_t cli_val_instruction_sizeof(struct cli_val_instruction *v)
  *
  * Returns how many characters were written.
  */
-inline int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f)
-{
-	if (v->insn == NULL) {
-		return 0;
-	}
-
-	int written = fprintf(f, "%s", v->insn->mnemonic);
-
-	if (*v->insn->op_str) {
-		written += fprintf(f, "\t%s", v->insn->op_str);
-	}
-
-	return written;
-}
+int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f);
 
 /*
  * Attempts to interpret an instruction value from a stream of bytes.
@@ -201,7 +187,9 @@ inline struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_v
 		return NULL;
 	}
 
-	cli_val_instruction_parse_bin(v, (const char *) other_v->insn->bytes, cli_val_instruction_sizeof(v));
+	if (other_v->bytecode) {
+		cli_val_instruction_parse_bin(v, other_v->bytecode, other_v->bytecode_size);
+	}
 
 	return v;
 }

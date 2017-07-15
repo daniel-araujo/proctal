@@ -1,12 +1,15 @@
 #ifndef CLI_PARSER_H
 #define CLI_PARSER_H
 
+#include <stdlib.h>
+
 #include "cli/val.h"
 #include "cli/val/integer.h"
 #include "cli/val/ieee754.h"
 #include "cli/val/instruction.h"
 #include "cli/val/text.h"
 #include "cli/cmd/execute.h"
+#include "cli/assembler.h"
 
 int cli_parse_char(const char *s, char *val);
 int cli_parse_unsigned_char(const char *s, unsigned char *val);
@@ -24,9 +27,37 @@ int cli_parse_double(const char *s, double *val);
 int cli_parse_long_double(const char *s, long double *val);
 int cli_parse_address(const char *s, void **val);
 
+/*
+ * Returns the number of characters to skip to encounter one of the given
+ * characters or the NUL character.
+ *
+ * The characters are also passed in a NUL terminated string.
+ */
 size_t cli_parse_skip_chars(const char *s, const char *chars);
 
-size_t cli_parse_skip_until_chars(const char*s, const char *chars);
+/*
+ * Returns the number of characters to skip to encounter one of the given
+ * characters or reaching the length of the string.
+ *
+ * The characters are also passed in a NUL terminated string.
+ */
+size_t cli_parse_skip_chars2(const char *s, size_t length, const char *chars);
+
+/*
+ * Returns the number of characters to skip before encountering either the NUL
+ * characters or one of the given characters.
+ *
+ * The characters are also passed in a NUL terminated string.
+ */
+size_t cli_parse_skip_until_chars(const char *s, const char *chars);
+
+/*
+ * Returns the number of characters to skip before reaching the length of the
+ * string or one of the given characters.
+ *
+ * The characters are passed in a NUL terminated string.
+ */
+size_t cli_parse_skip_until_chars2(const char *s, size_t length, const char *chars);
 
 int cli_parse_is_hex_digit(int s);
 
@@ -39,5 +70,7 @@ int cli_parse_val_text_charset(const char *s, enum cli_val_text_charset *val);
 int cli_parse_val_instruction_arch(const char *s, enum cli_val_instruction_arch *val);
 int cli_parse_val_instruction_syntax(const char *s, enum cli_val_instruction_syntax *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
+int cli_parse_assembler_arch(const char *s, enum cli_assembler_arch *val);
+int cli_parse_assembler_syntax(const char *s, enum cli_assembler_syntax *val);
 
 #endif /* CLI_PARSER_H */

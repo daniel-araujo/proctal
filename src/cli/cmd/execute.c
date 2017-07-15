@@ -1,82 +1,146 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <keystone/keystone.h>
+#include <darr.h>
 
 #include "cli/cmd/execute.h"
 #include "cli/printer.h"
+#include "cli/parser.h"
+#include "cli/assembler.h"
 #include "api/include/proctal.h"
 
-static void free_read(char **buf)
+static int read(struct darr *buffer)
 {
-	if (*buf == NULL) {
-		return;
+	const float GROWTH_FACTOR = 1.5;
+	const size_t CHUNK_SIZE = 1024;
+	FILE *in = stdin;
+	size_t size = darr_size(buffer);
+
+	if (!darr_grow(buffer, 1024)) {
+		fprintf(stderr, "Failed to allocate memory to store input.\n");
+		return 0;
 	}
 
-	free(*buf);
-	*buf = NULL;
+	do {
+		if ((size + CHUNK_SIZE) >= darr_size(buffer)) {
+			if (!darr_grow(buffer, darr_size(buffer) * GROWTH_FACTOR)) {
+				fprintf(stderr, "Failed to allocate memory to store input.\n");
+				return 0;
+			}
+		}
+
+		char *data = darr_data(buffer);
+
+		size += fread(data + size, 1, CHUNK_SIZE, in);
+	} while (!feof(in));
+
+	darr_resize(buffer, size);
+	return 1;
 }
 
-static size_t read(char **buf)
+static int assemble(struct cli_assembler *assembler, struct darr *assembly, struct darr *bytecode)
 {
-	const size_t CHUNK_SIZE = 128;
-	FILE *in = stdin;
-	size_t size = 0;
+	const float GROWTH_FACTOR = 1.5;
+	size_t bytecode_position = 0;
+	size_t assembly_position = 0;
+	int assembly_line = 1;
+	char *assembly_ch = darr_element(assembly, 0);
 
-	*buf = NULL;
+	if (!darr_grow(bytecode, 1024)) {
+		fprintf(stderr, "Failed to allocate memory to store bytecode.\n");
+		return 0;
+	}
 
-	do {
-		char *mem = realloc(*buf, size + CHUNK_SIZE + 1);
+	for (;;) {
+		// Skip spaces.
+		assembly_position += cli_parse_skip_chars2(
+			darr_element(assembly, assembly_position),
+			darr_size(assembly) - assembly_position,
+			" \t");
 
-		if (mem == NULL) {
-			fprintf(stderr, "Failed to allocate enough memory.\n");
-			free_read(buf);
+		if (assembly_position == darr_size(assembly)) {
+			// No more characters to read.
+			break;
+		}
+
+		if (assembly_ch[assembly_position] == ';') {
+			// This line is a comment. Skip it.
+			assembly_position += cli_parse_skip_until_chars2(
+				darr_element(assembly, assembly_position),
+				darr_size(assembly) - assembly_position,
+				"\n");
+			++assembly_line;
+			continue;
+		}
+
+		if (assembly_ch[assembly_position] == '\n') {
+			// This line is empty.
+			++assembly_position;
+			++assembly_line;
+			continue;
+		}
+
+		// How many characters the next assembly statement takes up.
+		size_t statement_size = cli_parse_skip_until_chars2(
+			darr_element(assembly, assembly_position),
+			darr_size(assembly) - assembly_position,
+			";\n");
+
+		// When we get here we always expect a statement.
+		assert(statement_size != 0);
+
+		struct cli_assembler_compile_result result;
+		int success = cli_assembler_compile(
+			assembler,
+			darr_element(assembly, assembly_position),
+			statement_size,
+			&result);
+		if (!success) {
+			fprintf(
+				stderr,
+				"Failed to parse line %d: %s\n",
+				assembly_line,
+				cli_assembler_error_message(assembler));
 			return 0;
 		}
 
-		*buf = mem;
+		assembly_position += result.read;
 
-		size += fread(*buf + size, 1, CHUNK_SIZE, in);
-	} while (!feof(in));
+		if ((bytecode_position + result.bytecode_size) >= darr_size(bytecode)) {
+			if (!darr_grow(bytecode, darr_size(bytecode) * GROWTH_FACTOR)) {
+				fprintf(stderr, "Failed to allocate memory to store bytecode.\n");
+				cli_assembler_compile_dispose(&result);
+				return 0;
+			}
+		}
 
-	if (size == 0) {
-		free_read(buf);
-		return 0;
+		memcpy(
+			darr_element(bytecode, bytecode_position),
+			result.bytecode,
+			result.bytecode_size);
+
+		bytecode_position += result.bytecode_size;
+
+		cli_assembler_compile_dispose(&result);
+
+		// Get to the next line.
+		assembly_position += cli_parse_skip_until_chars2(
+			darr_element(assembly, assembly_position),
+			darr_size(assembly) - assembly_position,
+			"\n");
+
+		if (assembly_position == darr_size(assembly)) {
+			// No more characters to read.
+			break;
+		}
+
+		++assembly_position;
+		++assembly_line;
 	}
 
-	// Although we're returning the size, we're going to need to do some
-	// operations that require the string to be terminated by NUL.
-	// The size will not include the NUL character.
-	(*buf)[size] = '\0';
+	// Deallocate extra space.
+	darr_resize(bytecode, bytecode_position);
 
-	return size;
-}
-
-static void free_assemble(char **buf)
-{
-	ks_free((unsigned char *) *buf);
-	*buf = NULL;
-}
-
-static size_t assemble(char **buf, char *assembly)
-{
-	ks_engine *ks;
-
-	size_t count;
-	size_t size;
-
-	if (ks_open(KS_ARCH_X86, KS_MODE_64, &ks) != KS_ERR_OK) {
-		return 0;
-	}
-
-	if (ks_asm(ks, assembly, 0, (unsigned char **) buf, &size, &count) != KS_ERR_OK) {
-		fprintf(stderr, "Failed to assemble code: %s\n", ks_strerror(ks_errno(ks)));
-		ks_close(ks);
-		return 0;
-	}
-
-	ks_close(ks);
-
-	return size;
+	return 1;
 }
 
 int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
@@ -91,48 +155,59 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	char *input;
-	size_t input_size = read(&input);
+	struct darr input;
+	darr_init(&input, sizeof(char));
 
-	if (input_size == 0) {
+	if (!read(&input) || darr_empty(&input)) {
+		darr_deinit(&input);
 		proctal_close(p);
 		return 1;
 	}
 
 	switch (arg->format) {
 	case CLI_CMD_EXECUTE_FORMAT_ASSEMBLY: {
-		char *compiled;
-		size_t compiled_size = assemble(&compiled, input);
+		struct cli_assembler assembler;
+		cli_assembler_init(&assembler);
+		cli_assembler_arch_set(&assembler, arg->assembly_arch);
+		cli_assembler_syntax_set(&assembler, arg->assembly_syntax);
 
-		if (compiled_size == 0) {
+		struct darr bytecode;
+		darr_init(&bytecode, sizeof(char));
+
+		if (!assemble(&assembler, &input, &bytecode)) {
+			darr_deinit(&input);
+			darr_deinit(&bytecode);
+			cli_assembler_deinit(&assembler);
 			proctal_close(p);
 			return 1;
 		}
 
-		proctal_execute(p, compiled, compiled_size);
-		free_assemble(&compiled);
+		proctal_execute(p, darr_data(&bytecode), darr_size(&bytecode));
+
+		darr_deinit(&bytecode);
+		cli_assembler_deinit(&assembler);
 		break;
 	}
 
 	case CLI_CMD_EXECUTE_FORMAT_BYTECODE:
-		proctal_execute(p, input, input_size);
+		proctal_execute(p, darr_data(&input), darr_size(&input));
 		break;
 
 	default:
 		fprintf(stderr, "Not implemented.\n");
-		free_read(&input);
+		darr_deinit(&input);
 		proctal_close(p);
 		return 1;
 	}
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		free_read(&input);
+		darr_deinit(&input);
 		proctal_close(p);
 		return 1;
 	}
 
-	free_read(&input);
+	darr_deinit(&input);
 	proctal_close(p);
 
 	return 0;

@@ -4,11 +4,11 @@
 
 	With the <quote>execute</quote> command you can make a program execute
 	your code. You can either provide assembly instructions that will then
-	get assembled into byte code or you can provide the byte code yourself,
+	get assembled into bytecode or you can provide the bytecode yourself,
 	maybe hand-written or assembled by your favorite assembler.
 
-	The command for executing code from an assembly file for a program
-	whose PID is 12345 looks like this:
+	If you wanted to execute instructions from an assembly file on a
+	program whose PID is 12345, the command would look like this:
 
 	<code type="bash-prompt">
 $ proctal execute --pid=12345 &lt; code.asm
@@ -20,11 +20,24 @@ $ proctal execute --pid=12345 &lt; code.asm
 	because they will be restored to their original values. Control will
 	be given back to the program after the last instruction is executed.
 
-	If you'd rather execute byte code instead you would pass the
+	The instructions are expected to be separated by new lines. The
+	<quote>;</quote> character can be used to start a comment that spans to
+	the end of the line.
+
+	The <quote>--assembly-arch</quote> option allows you to set the CPU
+	architecture. By default it's the same architecture that the tool was
+	compiled in. At the moment the available values are <quote>x86</quote>,
+	<quote>x86-64</quote>, <quote>arm</quote> and </quote>aarch64</quote>.
+
+	The <quote>--assembly-syntax</quote> option allows you to change the
+	syntax. By default it uses <quote>intel</quote>. You can switch to
+	<quote>att</quote> if you prefer.
+
+	If you'd rather execute bytecode instead you would pass the
 	<quote>--format</quote> option with the value
 	<quote>bytecode</quote>.
 
-	Here's how you would execute byte code from a binary file:
+	Here's how you would execute bytecode from a binary file:
 
 	<code type="bash-prompt">
 $ proctal execute --pid=12345 --format=bytecode &lt; code.bin

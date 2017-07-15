@@ -80,6 +80,24 @@ $parsers = [
 			"bytecode" => "CLI_CMD_EXECUTE_FORMAT_BYTECODE",
 		],
 	],
+	[
+		"name" => "assembler_arch",
+		"type" => "enum cli_assembler_arch",
+		"values" => [
+			"x86" => "CLI_ASSEMBLER_ARCH_X86",
+			"x86-64" => "CLI_ASSEMBLER_ARCH_X86_64",
+			"arm" => "CLI_ASSEMBLER_ARCH_ARM",
+			"aarch64" => "CLI_ASSEMBLER_ARCH_AARCH64",
+		],
+	],
+	[
+		"name" => "assembler_syntax",
+		"type" => "enum cli_assembler_syntax",
+		"values" => [
+			"intel" => "CLI_ASSEMBLER_SYNTAX_INTEL",
+			"att" => "CLI_ASSEMBLER_SYNTAX_ATT",
+		],
+	],
 ];
 
 ?>
