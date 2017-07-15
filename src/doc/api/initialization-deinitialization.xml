@@ -13,18 +13,16 @@
 proctal_t proctal = proctal_open();
 	</code>
 
-	This call may fail, for instance if your system has ran out of memory.
-	You can check that it failed by calling <quote>proctal_error</quote>.
-	If the returned code is 0, then the handle is ready to be used.
-	Otherwise you cannot use the handle for anything else other than
-	passing it to <quote>proctal_error</quote>,
-	<quote>proctal_error_msg</quote> and <quote>proctal_close</quote>.
+	This call may fail. You can check if it failed by calling
+	<quote>proctal_error</quote>. The error will not be recoverable so you
+	will have to proceed to destroying the handle. How to destroy a handle
+	will be explained in a few sentences below.
 
 	With the handle created the first thing you will want to do is to hook
-	into a program. This is done by passing its PID to
+	into a program. This is done by passing the process ID (PID) to
 	<quote>proctal_pid_set</quote>.
 
-	Here's how you would choose the program running as process 12345:
+	Here's how you would choose the program running with PID 12345:
 
 	<code type="c">
 proctal_pid_set(proctal, 12345);
@@ -33,8 +31,7 @@ proctal_pid_set(proctal, 12345);
 	Now you're able to call functions that operate on a program.
 
 	When you're done using the handle you must destroy it by passing it to
-	<quote>proctal_close</quote>. Even when <quote>proctal_open</quote>
-	fails you must still do it.
+	<quote>proctal_close</quote>.
 
 	<code type="c">
 proctal_close(proctal);

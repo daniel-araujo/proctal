@@ -84,17 +84,26 @@ void proctal_close(proctal_t p);
  * defined as macros whose name start with PROCTAL_ERROR. A 0 return value
  * means there is no error.
  *
- * This function will keep reporting the same error until you acknowledge it
- * with a call to proctal_error_ack.
+ * You can call proctal_error_recover to try to recover from an error.
+ *
+ * Using a handle without recovering from an error may result in undefined
+ * behavior.
  */
 int proctal_error(proctal_t p);
 
 /*
- * Acknowledge the error that occurred with the given handle.
+ * Attempts to recover from an error.
  *
- * This function will do nothing if the given handle has no error.
+ * Returns 1 on success and 0 on failure.
+ *
+ * On success, proctal_error will begin returning 0 again.
+ *
+ * On failure, the handle is deemed unusable and should be destroyed.
+ *
+ * If the handle has no error, this function will do nothing and report that it
+ * succeeded.
  */
-void proctal_error_ack(proctal_t p);
+int proctal_error_recover(proctal_t p);
 
 /*
  * Similar to proctal_error, but returns pointers to read-only C-style strings
@@ -104,7 +113,7 @@ void proctal_error_ack(proctal_t p);
  * These messages are in English and are not suitable for displaying to the
  * user.
  */
-const char *proctal_error_msg(proctal_t p);
+const char *proctal_error_message(proctal_t p);
 
 /*
  * Sets which program you want to access.

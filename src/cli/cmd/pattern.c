@@ -83,7 +83,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
 
-				proctal_error_ack(p);
+				proctal_error_recover(p);
 
 				// Since we cannot read this chunk of memory
 				// we're going to discard any progress there

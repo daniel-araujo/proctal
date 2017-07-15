@@ -38,23 +38,28 @@ int error_code = proctal_error(proctal);
 		<item>PROCTAL_ERROR_PROGRAM_INTERRUPT</item>
 	</list>
 
-	<quote>proctal_error</quote> will keep reporting the same error until
-	you acknowledge it with a call to <quote>proctal_error_ack</quote> with
-	the exception in the case when <quote>proctal_open</quote> fails,
-	then there's no way to recover.
+	To recover from an error you need to call
+	<quote>proctal_error_recover</quote>.
 
 	<code type="c">
-proctal_error_ack(proctal);
+int result = proctal_error_recover(proctal);
 	</code>
 
-	You can also retrieve a text description by calling
-	<quote>proctal_error_msg</quote>.
+	It will return 1 on success and 0 on failure. On success,
+	<quote>proctal_error</quote> will begin returning 0 again. On failure,
+	the error must be so severe that it's best to destroy the handle.
+
+	Using a handle without recovering from an error may result in
+	undefined behavior.
+
+	You can also retrieve a description of the error in text by calling
+	<quote>proctal_error_message</quote>.
 
 	<code type="c">
-const char *error_message = proctal_error_msg(proctal);
+const char *error_message = proctal_error_message(proctal);
 	</code>
 
-	If there is no failure, the returned value is <quote>NULL</quote>.
+	If there is no error, the returned value is <quote>NULL</quote>.
 
 	<note>
 		The error message is only meant for diagnostic purposes, such

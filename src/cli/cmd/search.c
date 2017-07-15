@@ -127,7 +127,7 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
-				proctal_error_ack(p);
+				proctal_error_recover(p);
 				break;
 			}
 
@@ -188,7 +188,7 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
 		proctal_scan_region_stop(p);
-		proctal_error_ack(p);
+		proctal_error_recover(p);
 		return;
 	}
 
@@ -238,14 +238,14 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 				fprintf(stderr, "No permission to read from address ");
 				cli_val_print(addr, stderr);
 				fprintf(stderr, ".\n");
-				proctal_error_ack(p);
+				proctal_error_recover(p);
 				break;
 
 			default:
 				fprintf(stderr, "Failed to read from address ");
 				cli_val_print(addr, stderr);
 				fprintf(stderr, ".\n");
-				proctal_error_ack(p);
+				proctal_error_recover(p);
 				break;
 			}
 

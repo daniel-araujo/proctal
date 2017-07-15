@@ -46,12 +46,18 @@ void proctal_error_set(proctal_t p, int error)
 	p->error = error;
 }
 
-void proctal_error_ack(proctal_t p)
+int proctal_error_recover(proctal_t p)
 {
+	if (p == NULL) {
+		// No way to recover from that.
+		return 0;
+	}
+
 	p->error = 0;
+	return 1;
 }
 
-const char *proctal_error_msg(proctal_t p)
+const char *proctal_error_message(proctal_t p)
 {
 	return a[proctal_error(p)];
 }

@@ -132,7 +132,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 	switch (proctal_error(p)) {
 	case PROCTAL_ERROR_INTERRUPT:
-		proctal_error_ack(p);
+		proctal_error_recover(p);
 		break;
 
 	default:

@@ -57,7 +57,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
 
-				proctal_error_ack(p);
+				proctal_error_recover(p);
 
 				// Let's try the next chunk.
 				continue;
