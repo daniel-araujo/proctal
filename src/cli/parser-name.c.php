@@ -18,6 +18,7 @@ $parsers = [
 		"type" => "enum cli_val_integer_endianness",
 		"values" => [
 			"little" => "CLI_VAL_INTEGER_ENDIANNESS_LITTLE",
+			"big" => "CLI_VAL_INTEGER_ENDIANNESS_BIG",
 		],
 	],
 	[

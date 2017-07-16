@@ -16,6 +16,7 @@ define(`TYPE_OPTIONS', `
                         By default ENDIANNESS is little.
                         ENDIANNESS can be:
                         little
+                        big
   --integer-size=SIZE
                         If type is integer, this determines the number of bits
                         stored in memory. By default SIZE is 8.

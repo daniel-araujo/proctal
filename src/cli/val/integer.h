@@ -31,6 +31,7 @@ enum cli_val_integer_sign {
  */
 enum cli_val_integer_endianness {
 	CLI_VAL_INTEGER_ENDIANNESS_LITTLE,
+	CLI_VAL_INTEGER_ENDIANNESS_BIG,
 };
 
 /*

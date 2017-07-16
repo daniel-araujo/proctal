@@ -3,6 +3,9 @@
 #include "cli/val/integer.h"
 #include "magic/magic.h"
 
+void cli_val_integer_endianness_convert(struct cli_val_integer *v);
+void cli_val_integer_endianness_revert(struct cli_val_integer *v);
+
 int cli_val_integer_unsigned_add(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v);
@@ -100,14 +103,20 @@ int cli_val_integer_add(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v)
 {
-	return get_sign_impl_by_sign(v->attr.sign)->add(v, other_v);
+	cli_val_integer_endianness_convert(v);
+	int ret = get_sign_impl_by_sign(v->attr.sign)->add(v, other_v);
+	cli_val_integer_endianness_revert(v);
+	return ret;
 }
 
 int cli_val_integer_sub(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v)
 {
-	return get_sign_impl_by_sign(v->attr.sign)->sub(v, other_v);
+	cli_val_integer_endianness_convert(v);
+	int ret = get_sign_impl_by_sign(v->attr.sign)->sub(v, other_v);
+	cli_val_integer_endianness_revert(v);
+	return ret;
 }
 
 int cli_val_integer_cmp(
@@ -119,15 +128,24 @@ int cli_val_integer_cmp(
 
 int cli_val_integer_print(struct cli_val_integer *v, FILE *f)
 {
-	return get_sign_impl_by_sign(v->attr.sign)->print(v, f);
+	cli_val_integer_endianness_convert(v);
+	int ret = get_sign_impl_by_sign(v->attr.sign)->print(v, f);
+	cli_val_integer_endianness_revert(v);
+	return ret;
 }
 
 int cli_val_integer_scan(struct cli_val_integer *v, FILE *f)
 {
-	return get_sign_impl_by_sign(v->attr.sign)->scan(v, f);
+	cli_val_integer_endianness_convert(v);
+	int ret = get_sign_impl_by_sign(v->attr.sign)->scan(v, f);
+	cli_val_integer_endianness_revert(v);
+	return ret;
 }
 
 int cli_val_integer_parse(struct cli_val_integer *v, const char *s)
 {
-	return get_sign_impl_by_sign(v->attr.sign)->parse(v, s);
+	cli_val_integer_endianness_convert(v);
+	int ret = get_sign_impl_by_sign(v->attr.sign)->parse(v, s);
+	cli_val_integer_endianness_revert(v);
+	return ret;
 }

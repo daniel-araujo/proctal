@@ -62,6 +62,7 @@ libclival_a_SOURCES = \
 	src/cli/val/integer.c \
 	src/cli/val/integer-sign-unsigned.c \
 	src/cli/val/integer-sign-2scmpl.c \
+	src/cli/val/integer-endianness.c \
 	src/cli/val/ieee754.h \
 	src/cli/val/ieee754.c \
 	src/cli/val/address.h \
@@ -171,6 +172,12 @@ check_PROGRAMS += tests/cli/val/filter-compare-prev
 tests_cli_val_filter_compare_prev_SOURCES = src/cli/val/tests/filter-compare-prev.c
 tests_cli_val_filter_compare_prev_CFLAGS = $(proctal_cflags)
 tests_cli_val_filter_compare_prev_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+
+TESTS += tests/cli/val/integer-endianness
+check_PROGRAMS += tests/cli/val/integer-endianness
+tests_cli_val_integer_endianness_SOURCES = src/cli/val/tests/integer-endianness.c
+tests_cli_val_integer_endianness_CFLAGS = $(proctal_cflags)
+tests_cli_val_integer_endianness_LDADD = libclival.a libcliassembler.a libcliparser.a libotrap.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
 
 TESTS += src/cli/tests/invalid-type-arguments.py
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
