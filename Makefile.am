@@ -96,13 +96,13 @@ TESTS += tests/cli/invalid-patterns
 check_PROGRAMS += tests/cli/invalid-patterns
 tests_cli_invalid_patterns_SOURCES = src/cli/tests/invalid-patterns.c
 tests_cli_invalid_patterns_CFLAGS = $(proctal_cflags)
-tests_cli_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+tests_cli_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o libcliparser.a
 
 TESTS += tests/cli/valid-patterns
 check_PROGRAMS += tests/cli/valid-patterns
 tests_cli_valid_patterns_SOURCES = src/cli/tests/valid-patterns.c
 tests_cli_valid_patterns_CFLAGS = $(proctal_cflags)
-tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o src/cli/proctal-parser.o
+tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o libcliparser.a
 
 TESTS += tests/cli/val/parse-valid-ascii
 check_PROGRAMS += tests/cli/val/parse-valid-ascii
