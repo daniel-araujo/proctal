@@ -232,7 +232,7 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 		}
 
 		darr_resize(tids, darr_size(tids) + 1);
-		pid_t *e = darr_address(tids, darr_size(tids) - 1);
+		pid_t *e = darr_element(tids, darr_size(tids) - 1);
 		*e = atoi(dirent->d_name);
 	}
 

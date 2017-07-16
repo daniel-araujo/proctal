@@ -285,7 +285,7 @@ static int attach_threads(struct proctal_linux *pl)
 	}
 
 	darr_resize(&pl->ptrace.tasks, 1);
-	task = darr_address(&pl->ptrace.tasks, 0);
+	task = darr_element(&pl->ptrace.tasks, 0);
 	*task = (struct proctal_linux_ptrace_task) {
 		.tid = pl->pid,
 		.running = 1,
@@ -297,7 +297,7 @@ static int attach_threads(struct proctal_linux *pl)
 
 	darr_resize(&pl->ptrace.tasks, darr_size(&pl->ptrace.tasks) + darr_size(tids) - 1);
 
-	task = darr_address(&pl->ptrace.tasks, 1); 
+	task = darr_element(&pl->ptrace.tasks, 1); 
 
 	for (pid_t *tid = darr_begin(tids); tid != darr_end(tids); ++tid) {
 		if (pl->pid == *tid) {
@@ -314,7 +314,7 @@ static int attach_threads(struct proctal_linux *pl)
 	proctal_linux_task_ids_dispose(tids);
 
 	// Now attach to the rest.
-	for (task = darr_address(&pl->ptrace.tasks, 1); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (task = darr_element(&pl->ptrace.tasks, 1); task != darr_end(&pl->ptrace.tasks); ++task) {
 		if (ptrace(PTRACE_ATTACH, task->tid, 0L, 0L) == -1) {
 			check_errno_ptrace_run_state(pl);
 			detach_threads(pl);

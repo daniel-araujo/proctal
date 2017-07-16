@@ -103,7 +103,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			int match = 0;
 
 			for (size_t i = 0; i < match_count; ++i) {
-				void **prev = darr_address(&matches, i);
+				void **prev = darr_element(&matches, i);
 
 				if (addr == *prev) {
 					match = 1;
@@ -121,7 +121,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 					darr_resize(&matches, darr_size(&matches) * 2);
 				}
 
-				void **e = darr_address(&matches, match_count - 1);
+				void **e = darr_element(&matches, match_count - 1);
 				*e = addr;
 			}
 		}
