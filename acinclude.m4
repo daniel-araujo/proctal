@@ -207,3 +207,20 @@ AC_DEFUN([PROCTAL_RUN_CONFIGURE], [
 
 	popd
 ])
+
+dnl PROCTAL_INTEGER_ENDIANNESS
+dnl
+dnl If integers are stored in little endian,
+dnl PROCTAL_INTEGER_ENDIANNESS_LITTLE is defined, otherwise
+dnl PROCTAL_INTEGER_ENDIANNESS_BIG is defined.
+AC_DEFUN([PROCTAL_INTEGER_ENDIANNESS], [
+	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_LITTLE], [Whether integers are stored in little endian.])
+	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_BIG], [Whether integers are stored in big endian.])
+
+	AC_C_BIGENDIAN([AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_BIG])],
+		[AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_LITTLE])],
+		[
+			AC_MSG_WARN(["Unable to determine integer endianness. Will assume little endian.])
+			AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_LITTLE])
+		])
+])

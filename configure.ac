@@ -27,6 +27,8 @@ AC_TYPE_LONG_LONG_INT
 AC_TYPE_UNSIGNED_LONG_LONG_INT
 AC_TYPE_UINTPTR_T
 
+PROCTAL_INTEGER_ENDIANNESS
+
 PROCTAL_FIND_PROG([YUCK], [yuck])
 PROCTAL_FIND_PROG([PHP], [php])
 
@@ -70,6 +72,7 @@ proctal_cflags="$proctal_cflags -Wextra -Wpointer-arith $proctal_xopen_cflags"
 proctal_cflags="$proctal_cflags -Wno-unused-parameter -Wno-unused-function"
 proctal_cflags="$proctal_cflags $proctal_posix_cflags -Wno-maybe-uninitialized"
 proctal_cflags="$proctal_cflags $proctal_darr_cflags -Wno-unused-label"
+proctal_cflags="$proctal_cflags -include config.h"
 
 AC_SUBST([proctal_capstone_ldflags])
 AC_SUBST([proctal_keystone_ldflags])
