@@ -9,6 +9,8 @@ include_HEADERS =
 noinst_LIBRARIES =
 TESTS =
 
+clean-local: darr-clean
+
 
 # Cli tool.
 bin_PROGRAMS += proctal
@@ -396,7 +398,9 @@ tests_otrap_skip_nothing_LDADD = libotrap.a
 
 
 # Darr.
-CLEANFILES += darr/libdarr.a
+.PHONY: darr-clean
+darr-clean:
+	cd darr && make clean
 
 darr/libdarr.a:
-	cd darr && autoreconf -i && ./configure && make
+	cd darr && make

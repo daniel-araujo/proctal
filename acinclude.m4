@@ -151,7 +151,7 @@ AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
 			proctal_install_git_repository_commit=master
 		fi
 
-		if ! git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null; then
+		if ! git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null 2>&1; then
 			git $proctal_install_git_repository_args remote set-url origin $2
 			git $proctal_install_git_repository_args fetch --all
 
@@ -174,4 +174,36 @@ AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
 			AC_MSG_ERROR([Failed to clone $2.])
 		fi
 	fi
+])
+
+dnl PROCTAL_RUN_AUTOCONF(DIR)
+dnl
+dnl Runs autoconf on a directory.
+AC_DEFUN([PROCTAL_RUN_AUTOCONF], [
+	pushd $1
+
+	autoreconf -i
+
+	popd
+])
+
+dnl PROCTAL_RUN_CONFIGURE(SRCDIR, BUILDDIR, ARGS)
+dnl
+dnl Runs configure on a directory.
+AC_DEFUN([PROCTAL_RUN_CONFIGURE], [
+	proctal_run_configure_srcdir=$1
+	proctal_run_configure_builddir=$2
+	proctal_run_configure_currentdir="$PWD"
+
+	if test -z $proctal_run_configure_builddir; then
+		proctal_run_configure_builddir="$proctal_run_configure_srcdir"
+	fi
+
+	mkdir -p "$proctal_run_configure_builddir"
+
+	pushd "$proctal_run_configure_builddir"
+
+	"$proctal_run_configure_currentdir/$proctal_run_configure_srcdir"/configure $3
+
+	popd
 ])
