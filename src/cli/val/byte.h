@@ -52,7 +52,7 @@ inline void cli_val_byte_destroy(struct cli_val_byte *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_byte_raw(struct cli_val_byte *v)
+inline void *cli_val_byte_data(struct cli_val_byte *v)
 {
 	return &v->byte;
 }
@@ -70,7 +70,7 @@ inline int cli_val_byte_parse_bin(struct cli_val_byte *v, const char *s, size_t 
 		return 0;
 	}
 
-	memcpy(cli_val_byte_raw(v), s, size);
+	memcpy(cli_val_byte_data(v), s, size);
 
 	return size;
 }

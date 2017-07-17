@@ -162,7 +162,7 @@ inline void *cli_val_instruction_address(struct cli_val_instruction *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_instruction_raw(struct cli_val_instruction *v)
+inline void *cli_val_instruction_data(struct cli_val_instruction *v)
 {
 	return v->bytecode;
 }

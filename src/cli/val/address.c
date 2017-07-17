@@ -8,7 +8,7 @@ struct cli_val_address *cli_val_address_create(void);
 
 void cli_val_address_destroy(struct cli_val_address *v);
 
-void *cli_val_address_raw(struct cli_val_address *v);
+void *cli_val_address_data(struct cli_val_address *v);
 
 int cli_val_address_parse_bin(struct cli_val_address *v, const char *s, size_t length);
 

@@ -107,7 +107,7 @@ static int run_parse_bin(const char *name, struct test *test, cli_val v)
 	cli_val sv = cli_val_create_clone(v);
 	cli_val_parse(sv, test->value);
 
-	if (!cli_val_parse_bin(v, cli_val_raw(sv), cli_val_sizeof(sv))) {
+	if (!cli_val_parse_bin(v, cli_val_data(sv), cli_val_sizeof(sv))) {
 		fprintf(stderr, "%s parse_bin: Failed to parse '%s'\n", name, test->value);
 		cli_val_destroy(sv);
 		return 1;

@@ -138,8 +138,8 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 				size_t rightover = size - leftover;
 
 				// Read what's left from the previous chunk.
-				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, prev_size - leftover - buffer_size), leftover);
-				memcpy((char *) cli_val_raw(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
+				memcpy(cli_val_data(value), swbuf_address_offset(&buf, prev_size - leftover - buffer_size), leftover);
+				memcpy((char *) cli_val_data(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset - leftover;
@@ -158,7 +158,7 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 					leftover = curr_size - i;
 				}
 
-				memcpy(cli_val_raw(value), swbuf_address_offset(&buf, i), size);
+				memcpy(cli_val_data(value), swbuf_address_offset(&buf, i), size);
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset + i;
@@ -232,7 +232,7 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 
 		size_t size = cli_val_sizeof(previous_value);
 
-		if (proctal_read(p, DEREF(void *, cli_val_raw(addr)), cli_val_raw(value), size) != size) {
+		if (proctal_read(p, DEREF(void *, cli_val_data(addr)), cli_val_data(value), size) != size) {
 			switch (proctal_error(p)) {
 			case PROCTAL_ERROR_PERMISSION_DENIED:
 				fprintf(stderr, "No permission to read from address ");

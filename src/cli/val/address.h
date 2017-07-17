@@ -66,7 +66,7 @@ inline void cli_val_address_destroy(struct cli_val_address *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_address_raw(struct cli_val_address *v)
+inline void *cli_val_address_data(struct cli_val_address *v)
 {
 	return &v->address;
 }
@@ -84,7 +84,7 @@ inline int cli_val_address_parse_bin(struct cli_val_address *v, const char *s, s
 		return 0;
 	}
 
-	memcpy(cli_val_address_raw(v), s, size);
+	memcpy(cli_val_address_data(v), s, size);
 
 	return size;
 }

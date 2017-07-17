@@ -91,7 +91,7 @@ struct cli_val_integer *cli_val_integer_create(struct cli_val_integer_attr *a);
 
 void cli_val_integer_destroy(struct cli_val_integer *v);
 
-void *cli_val_integer_raw(struct cli_val_integer *v);
+void *cli_val_integer_data(struct cli_val_integer *v);
 
 size_t cli_val_integer_alignof(struct cli_val_integer *v);
 

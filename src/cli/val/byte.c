@@ -6,7 +6,7 @@ struct cli_val_byte *cli_val_byte_create_clone(struct cli_val_byte *);
 
 void cli_val_byte_destroy(struct cli_val_byte *v);
 
-void *cli_val_byte_raw(struct cli_val_byte *v);
+void *cli_val_byte_data(struct cli_val_byte *v);
 
 int cli_val_byte_parse_bin(struct cli_val_byte *v, const char *s, size_t length);
 

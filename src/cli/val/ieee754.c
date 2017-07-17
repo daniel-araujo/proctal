@@ -15,7 +15,7 @@ struct cli_val_ieee754 *cli_val_ieee754_create(struct cli_val_ieee754_attr *a);
 
 void cli_val_ieee754_destroy(struct cli_val_ieee754 *v);
 
-void *cli_val_ieee754_raw(struct cli_val_ieee754 *v);
+void *cli_val_ieee754_data(struct cli_val_ieee754 *v);
 
 size_t cli_val_ieee754_alignof(struct cli_val_ieee754 *v);
 

@@ -48,7 +48,7 @@ struct cli_val_text *cli_val_text_create(struct cli_val_text_attr *a);
 
 void cli_val_text_destroy(struct cli_val_text *v);
 
-void *cli_val_text_raw(struct cli_val_text *v);
+void *cli_val_text_data(struct cli_val_text *v);
 
 size_t cli_val_text_sizeof(struct cli_val_text *v);
 

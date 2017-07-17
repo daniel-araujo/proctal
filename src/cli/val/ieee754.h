@@ -126,7 +126,7 @@ inline void cli_val_ieee754_destroy(struct cli_val_ieee754 *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_ieee754_raw(struct cli_val_ieee754 *v)
+inline void *cli_val_ieee754_data(struct cli_val_ieee754 *v)
 {
 	return v->data;
 }
@@ -172,7 +172,7 @@ inline int cli_val_ieee754_parse_bin(struct cli_val_ieee754 *v, const char *s, s
 		return 0;
 	}
 
-	memcpy(cli_val_ieee754_raw(v), s, size);
+	memcpy(cli_val_ieee754_data(v), s, size);
 
 	return size;
 }

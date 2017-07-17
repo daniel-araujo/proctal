@@ -28,7 +28,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 			cli_val v = cli_val_list_get(arg->value_list, j);
 
 			size_t size = cli_val_sizeof(v);
-			char *input = cli_val_raw(v);
+			char *input = cli_val_data(v);
 
 			proctal_write(p, address, input, size);
 

@@ -51,7 +51,7 @@ void cli_val_instruction_address_set(struct cli_val_instruction *v, void *addres
 
 void *cli_val_instruction_address(struct cli_val_instruction *v);
 
-void *cli_val_instruction_raw(struct cli_val_instruction *v);
+void *cli_val_instruction_data(struct cli_val_instruction *v);
 
 size_t cli_val_instruction_sizeof(struct cli_val_instruction *v);
 

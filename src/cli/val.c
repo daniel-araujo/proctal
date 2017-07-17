@@ -17,7 +17,7 @@ struct cli_val_impl {
 	void *(*address)(void *);
 	size_t (*align)(void *);
 	size_t (*size)(void *);
-	void *(*raw)(void *);
+	void *(*data)(void *);
 	int (*add)(void *, void *);
 	int (*sub)(void *, void *);
 	int (*cmp)(void *, void *);
@@ -59,7 +59,7 @@ static struct cli_val_impl impls[] = {
 		.type = CLI_VAL_TYPE_BYTE,
 
 		.size = (void *) size_one,
-		.raw = (void *) cli_val_byte_raw,
+		.data = (void *) cli_val_byte_data,
 		.add = (void *) cli_val_byte_add,
 		.sub = (void *) cli_val_byte_sub,
 		.cmp = (void *) cli_val_byte_cmp,
@@ -76,7 +76,7 @@ static struct cli_val_impl impls[] = {
 
 		.align = (void *) cli_val_integer_alignof,
 		.size = (void *) cli_val_integer_sizeof,
-		.raw = (void *) cli_val_integer_raw,
+		.data = (void *) cli_val_integer_data,
 		.add = (void *) cli_val_integer_add,
 		.sub = (void *) cli_val_integer_sub,
 		.cmp = (void *) cli_val_integer_cmp,
@@ -93,7 +93,7 @@ static struct cli_val_impl impls[] = {
 
 		.align = (void *) cli_val_ieee754_alignof,
 		.size = (void *) cli_val_ieee754_sizeof,
-		.raw = (void *) cli_val_ieee754_raw,
+		.data = (void *) cli_val_ieee754_data,
 		.add = (void *) cli_val_ieee754_add,
 		.sub = (void *) cli_val_ieee754_sub,
 		.cmp = (void *) cli_val_ieee754_cmp,
@@ -109,7 +109,7 @@ static struct cli_val_impl impls[] = {
 		.type = CLI_VAL_TYPE_TEXT,
 
 		.size = (void *) cli_val_text_sizeof,
-		.raw = (void *) cli_val_text_raw,
+		.data = (void *) cli_val_text_data,
 		.cmp = (void *) cli_val_text_cmp,
 		.print = (void *) cli_val_text_print,
 		.scan = (void *) cli_val_text_scan,
@@ -124,7 +124,7 @@ static struct cli_val_impl impls[] = {
 
 		.align = (void *) cli_val_address_sizeof,
 		.size = (void *) cli_val_address_sizeof,
-		.raw = (void *) cli_val_address_raw,
+		.data = (void *) cli_val_address_data,
 		.cmp = (void *) cli_val_address_cmp,
 		.print = (void *) cli_val_address_print,
 		.scan = (void *) cli_val_address_scan,
@@ -141,7 +141,7 @@ static struct cli_val_impl impls[] = {
 		.address = (void *) cli_val_instruction_address,
 		.align = (void *) cli_val_instruction_sizeof,
 		.size = (void *) cli_val_instruction_sizeof,
-		.raw = (void *) cli_val_instruction_raw,
+		.data = (void *) cli_val_instruction_data,
 		.print = (void *) cli_val_instruction_print,
 		.parse = (void *) cli_val_instruction_parse,
 		.parse_bin = (void *) cli_val_instruction_parse_bin,
@@ -238,9 +238,9 @@ size_t cli_val_sizeof(cli_val v)
 	return v->impl->size(v->val);
 }
 
-void *cli_val_raw(cli_val v)
+void *cli_val_data(cli_val v)
 {
-	return v->impl->raw(v->val);
+	return v->impl->data(v->val);
 }
 
 int cli_val_add(cli_val v, cli_val other_v)

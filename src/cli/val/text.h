@@ -106,7 +106,7 @@ inline void cli_val_text_destroy(struct cli_val_text *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_text_raw(struct cli_val_text *v)
+inline void *cli_val_text_data(struct cli_val_text *v)
 {
 	return v->data;
 }

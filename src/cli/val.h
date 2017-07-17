@@ -84,7 +84,7 @@ size_t cli_val_sizeof(cli_val v);
  * The pointer can be dereferenced but you must be sure to know what you're
  * doing.
  */
-void *cli_val_raw(cli_val v);
+void *cli_val_data(cli_val v);
 
 /*
  * Adds the other value.
