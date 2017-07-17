@@ -19,6 +19,20 @@ enum cli_assembler_syntax {
 	CLI_ASSEMBLER_SYNTAX_ATT,
 };
 
+#if PROCTAL_CPU_ARCHITECTURE_X86
+	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86
+#elif PROCTAL_CPU_ARCHITECTURE_X86_64
+	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86_64
+#elif PROCTAL_CPU_ARCHITECTURE_ARM
+	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_ARM
+#elif PROCTAL_CPU_ARCHITECTURE_AARCH64
+	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_AARCH64
+#else
+	#error "Unknown CPU architecture."
+#endif
+
+#define CLI_ASSEMBLER_SYNTAX_DEFAULT CLI_ASSEMBLER_SYNTAX_INTEL
+
 /*
  * The assembler struct. This keeps track of a lot of information that is
  * needed for compiling and decompiling instructions.
@@ -75,8 +89,8 @@ struct cli_assembler_decompile_result {
  */
 inline void cli_assembler_init(struct cli_assembler *assembler)
 {
-	assembler->arch = CLI_ASSEMBLER_ARCH_X86_64;
-	assembler->syntax = CLI_ASSEMBLER_SYNTAX_INTEL;
+	assembler->arch = CLI_ASSEMBLER_ARCH_DEFAULT;
+	assembler->syntax = CLI_ASSEMBLER_SYNTAX_DEFAULT;
 	assembler->address = NULL;
 	assembler->error_message = NULL;
 }

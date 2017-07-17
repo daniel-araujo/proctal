@@ -24,11 +24,7 @@
 #define DEFAULT_VAL_INTEGER_SIGN CLI_VAL_INTEGER_SIGN_2SCMPL
 #define DEFAULT_VAL_IEEE754_PRECISION CLI_VAL_IEEE754_PRECISION_SINGLE;
 #define DEFAULT_VAL_TEXT_CHARSET CLI_VAL_TEXT_CHARSET_ASCII;
-#define DEFAULT_VAL_INSTRUCTION_ARCH CLI_VAL_INSTRUCTION_ARCH_X86_64;
-#define DEFAULT_VAL_INSTRUCTION_SYNTAX CLI_VAL_INSTRUCTION_SYNTAX_INTEL;
 #define DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
-#define DEFAULT_ASSEMBLER_ARCH CLI_ASSEMBLER_ARCH_X86_64;
-#define DEFAULT_ASSEMBLER_SYNTAX CLI_ASSEMBLER_SYNTAX_INTEL;
 
 /*
  * This structure contains all type options parsed.
@@ -233,7 +229,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->instruction_arch = DEFAULT_VAL_INSTRUCTION_ARCH; \
+			type->instruction_arch = CLI_VAL_INSTRUCTION_ARCH_DEFAULT; \
 		} \
 \
 		if (yuck_arg->instruction_syntax_arg) { \
@@ -242,7 +238,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->instruction_syntax = DEFAULT_VAL_INSTRUCTION_SYNTAX; \
+			type->instruction_syntax = CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT; \
 		} \
 		break; \
 \
@@ -795,7 +791,7 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 				return 0;
 			}
 		} else {
-			arg->assembly_arch = DEFAULT_ASSEMBLER_ARCH;
+			arg->assembly_arch = CLI_ASSEMBLER_ARCH_DEFAULT;
 		}
 
 		if (yuck_arg->execute.assembly_syntax_arg) {
@@ -804,7 +800,7 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 				return 0;
 			}
 		} else {
-			arg->assembly_syntax = DEFAULT_ASSEMBLER_SYNTAX;
+			arg->assembly_syntax = CLI_ASSEMBLER_SYNTAX_DEFAULT;
 		}
 	}
 

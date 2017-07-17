@@ -34,6 +34,20 @@ struct cli_val_instruction_attr {
 	enum cli_val_instruction_syntax syntax;
 };
 
+#if PROCTAL_CPU_ARCHITECTURE_X86
+	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86
+#elif PROCTAL_CPU_ARCHITECTURE_X86_64
+	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86_64
+#elif PROCTAL_CPU_ARCHITECTURE_ARM
+	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_ARM
+#elif PROCTAL_CPU_ARCHITECTURE_AARCH64
+	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_AARCH64
+#else
+	#error "Unknown CPU architecture."
+#endif
+
+#define CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT CLI_VAL_INSTRUCTION_SYNTAX_INTEL
+
 /*
  * How our instruction values are represented in memory.
  */
@@ -58,8 +72,8 @@ struct cli_val_instruction {
  */
 inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 {
-	a->arch = CLI_VAL_INSTRUCTION_ARCH_X86_64;
-	a->syntax = CLI_VAL_INSTRUCTION_SYNTAX_INTEL;
+	a->arch = CLI_VAL_INSTRUCTION_ARCH_DEFAULT;
+	a->syntax = CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT;
 }
 
 /*
