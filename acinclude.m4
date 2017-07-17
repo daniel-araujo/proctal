@@ -224,3 +224,22 @@ AC_DEFUN([PROCTAL_INTEGER_ENDIANNESS], [
 			AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_LITTLE])
 		])
 ])
+
+dnl PROCTAL_ARFLAGS_FIX
+dnl
+dnl Overrides the flags for the ar program because the default one causes a
+dnl warning message. This is supposedly fixed in recent versions of automake
+dnl and libtool but it will take some time before it's widely deployed.
+AC_DEFUN([PROCTAL_ARFLAGS_FIX], [
+	# This is the warning message that is disturbing the silence:
+	# ar: `u' modifier ignored since `D' is the default (see `U')
+
+	# So we're simply going to remove the `u' modifier from the flags list.
+
+	AR_FLAGS=$(echo $AR_FLAGS | sed "s/u//")
+	ARFLAGS=$AR_FLAGS
+
+	# One is for libtool the other is for automake.
+	AC_SUBST([AR_FLAGS])
+	AC_SUBST([ARFLAGS])
+])

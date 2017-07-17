@@ -1,3 +1,5 @@
+MAKEFLAGS = --no-print-directory
+
 bin_PROGRAMS =
 dist_man_MANS =
 EXTRA_DIST = README.md
@@ -206,19 +208,19 @@ src/cli/yuck/proctal-main.$(OBJEXT): src/cli/yuck/args.yucc
 
 # Expands M4 macros.
 src/cli/yuck/args.yuck: $(srcdir)/src/cli/yuck/args.yuck.m4
-	m4 $^ > $@
+	$(AM_V_GEN)m4 $^ > $@
 
 # PHP script that generates C code.
 src/cli/parser-name.c: $(srcdir)/src/cli/parser-name.c.php
-	$(PHP) $^ > $@
+	$(AM_V_GEN)$(PHP) $^ > $@
 
 # Generates argument parsing code.
 src/cli/yuck/args.yucc: src/cli/yuck/args.yuck
-	$(YUCK) gen --no-auto-flags --no-auto-actions $^ -o $@
+	$(AM_V_GEN)$(YUCK) gen --no-auto-flags --no-auto-actions $^ -o $@
 
 # Generates man page.
 src/cli/proctal.1: src/cli/yuck/args.yuck
-	$(YUCK) genman $^ -o $@
+	$(AM_V_GEN)$(YUCK) genman $^ -o $@
 
 
 # C library.
@@ -407,7 +409,7 @@ tests_otrap_skip_nothing_LDADD = libotrap.a
 # Darr.
 .PHONY: darr-clean
 darr-clean:
-	cd darr && make clean
+	$(MAKE) -C darr clean
 
 darr/libdarr.a:
-	cd darr && make
+	$(AM_V_GEN)$(MAKE) $(AM_V_lt) -C darr libdarr.a
