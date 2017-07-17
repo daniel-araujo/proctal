@@ -34,6 +34,18 @@ enum cli_val_integer_endianness {
 	CLI_VAL_INTEGER_ENDIANNESS_BIG,
 };
 
+#define CLI_VAL_INTEGER_SIZE_DEFAULT CLI_VAL_INTEGER_SIZE_8
+
+#define CLI_VAL_INTEGER_SIGN_DEFAULT CLI_VAL_INTEGER_SIGN_2SCMPL
+
+#if PROCTAL_INTEGER_ENDIANNESS_LITTLE
+	#define CLI_VAL_INTEGER_ENDIANNESS_DEFAULT CLI_VAL_INTEGER_ENDIANNESS_LITTLE
+#elif PROCTAL_INTEGER_ENDIANNESS_BIG
+	#define CLI_VAL_INTEGER_ENDIANNESS_DEFAULT CLI_VAL_INTEGER_ENDIANNESS_BIG
+#else
+	#error "Unknown integer endianness."
+#endif
+
 /*
  * Describes the behavior of an integer value.
  */
@@ -67,9 +79,9 @@ struct cli_val_integer {
  */
 inline void cli_val_integer_attr_init(struct cli_val_integer_attr *a)
 {
-	a->size = CLI_VAL_INTEGER_SIZE_8;
-	a->sign = CLI_VAL_INTEGER_SIGN_2SCMPL;
-	a->endianness = CLI_VAL_INTEGER_ENDIANNESS_LITTLE;
+	a->size = CLI_VAL_INTEGER_SIZE_DEFAULT;
+	a->sign = CLI_VAL_INTEGER_SIGN_DEFAULT;
+	a->endianness = CLI_VAL_INTEGER_ENDIANNESS_DEFAULT;
 }
 
 /*

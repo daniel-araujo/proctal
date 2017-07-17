@@ -19,9 +19,6 @@
 #include "magic/magic.h"
 
 #define DEFAULT_VAL_TYPE CLI_VAL_TYPE_BYTE
-#define DEFAULT_VAL_INTEGER_ENDIANNESS CLI_VAL_INTEGER_ENDIANNESS_LITTLE
-#define DEFAULT_VAL_INTEGER_SIZE CLI_VAL_INTEGER_SIZE_8
-#define DEFAULT_VAL_INTEGER_SIGN CLI_VAL_INTEGER_SIGN_2SCMPL
 #define DEFAULT_VAL_IEEE754_PRECISION CLI_VAL_IEEE754_PRECISION_SINGLE;
 #define DEFAULT_VAL_TEXT_CHARSET CLI_VAL_TEXT_CHARSET_ASCII;
 #define DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
@@ -178,7 +175,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->integer_endianness = DEFAULT_VAL_INTEGER_ENDIANNESS; \
+			type->integer_endianness = CLI_VAL_INTEGER_ENDIANNESS_DEFAULT; \
 		} \
 \
 		if (yuck_arg->integer_size_arg) { \
@@ -187,7 +184,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->integer_size = DEFAULT_VAL_INTEGER_SIZE; \
+			type->integer_size = CLI_VAL_INTEGER_SIZE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->integer_sign_arg) { \
@@ -196,7 +193,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->integer_sign = DEFAULT_VAL_INTEGER_SIGN; \
+			type->integer_sign = CLI_VAL_INTEGER_SIGN_DEFAULT; \
 		} \
 		break; \
 \

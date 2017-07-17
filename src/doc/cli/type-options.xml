@@ -37,11 +37,12 @@
 		An integer number can be represented in various ways. Proctal
 		supports 8, 16, 32 and 64 bit wide integers, either unsigned or
 		using the two's complement representation for negative numbers
-		and in little endian. It's printed with decimal numbers.
+		and either in little or big endian. It's printed with decimal
+		numbers.
 
 		The <quote>--integer-endianness</quote> option can be used
-		to set the endianness. At the time, only <quote>little</quote>
-		is supported.
+		to set the endianness. You can choose between
+		<quote>big</quote> and <quote>little</quote>.
 
 		The <quote>--integer-size</quote> option can be used to set
 		the number of bits. Only <quote>8</quote>, <quote>16</quote>,
@@ -54,7 +55,7 @@
 		altogether.
 
 		By default an integer is 8-bit, signed using two's complement
-		and in little endian notation.
+		and using the same endianness as the host.
 	</section>
 
 	<section>

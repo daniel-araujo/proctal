@@ -13,7 +13,7 @@ define(`TYPE_OPTIONS', `
                         instruction
   --integer-endianness=ENDIANNESS
                         If type is integer, this determines the order of bytes.
-                        By default ENDIANNESS is little.
+                        By default ENDIANNESS is the same as the host.
                         ENDIANNESS can be:
                         little
                         big
