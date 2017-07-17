@@ -3,7 +3,7 @@
 #include "cli/val/integer.h"
 #include "magic/magic.h"
 
-int cli_val_integer_2scmpl_add(
+int cli_val_integer_signed_add(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v)
 {
@@ -28,7 +28,7 @@ int cli_val_integer_2scmpl_add(
 	return 0;
 }
 
-int cli_val_integer_2scmpl_sub(
+int cli_val_integer_signed_sub(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v)
 {
@@ -53,7 +53,7 @@ int cli_val_integer_2scmpl_sub(
 	return 0;
 }
 
-int cli_val_integer_2scmpl_cmp(
+int cli_val_integer_signed_cmp(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v)
 {
@@ -74,7 +74,7 @@ int cli_val_integer_2scmpl_cmp(
 	return 0;
 }
 
-int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
+int cli_val_integer_signed_print(struct cli_val_integer *v, FILE *f)
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
@@ -93,7 +93,7 @@ int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f)
 	return 0;
 }
 
-int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
+int cli_val_integer_signed_scan(struct cli_val_integer *v, FILE *f)
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:
@@ -112,7 +112,7 @@ int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f)
 	return 0;
 }
 
-int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s)
+int cli_val_integer_signed_parse(struct cli_val_integer *v, const char *s)
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:

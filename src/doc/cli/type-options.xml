@@ -50,8 +50,8 @@
 		moment.
 
 		The <quote>--integer-sign</quote> option can be used to set
-		the sign representation. <quote>2scmpl</quote> uses two's
-		complement. <quote>unsigned</quote> disregards signing
+		the sign representation. <quote>twos-complement</quote> uses
+		two's complement. <quote>unsigned</quote> disregards signing
 		altogether.
 
 		By default an integer is 8-bit, signed using two's complement

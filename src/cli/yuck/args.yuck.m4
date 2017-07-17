@@ -28,10 +28,10 @@ define(`TYPE_OPTIONS', `
   --integer-sign=SIGN
                         If type is integer, this determines what signing
                         notation is used to distinguish negative from positive
-                        numbers. By default SIGN is 2scmpl.
+                        numbers. By default SIGN is twos-complement.
                         SIGN can be:
                         unsigned
-                        2scmpl
+                        twos-complement
   --text-charset=CHARSET
                         If type is text, this determines the character encoding.
                         By default CHARSET is ascii.

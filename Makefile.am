@@ -63,7 +63,7 @@ libclival_a_SOURCES = \
 	src/cli/val/integer.h \
 	src/cli/val/integer.c \
 	src/cli/val/integer-sign-unsigned.c \
-	src/cli/val/integer-sign-2scmpl.c \
+	src/cli/val/integer-sign-signed.c \
 	src/cli/val/integer-endianness.c \
 	src/cli/val/ieee754.h \
 	src/cli/val/ieee754.c \

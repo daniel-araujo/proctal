@@ -19,18 +19,18 @@ int cli_val_integer_unsigned_print(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_unsigned_scan(struct cli_val_integer *v, FILE *f);
 int cli_val_integer_unsigned_parse(struct cli_val_integer *v, const char *s);
 
-int cli_val_integer_2scmpl_add(
+int cli_val_integer_signed_add(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v);
-int cli_val_integer_2scmpl_sub(
+int cli_val_integer_signed_sub(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v);
-int cli_val_integer_2scmpl_cmp(
+int cli_val_integer_signed_cmp(
 	struct cli_val_integer *v,
 	struct cli_val_integer *other_v);
-int cli_val_integer_2scmpl_print(struct cli_val_integer *v, FILE *f);
-int cli_val_integer_2scmpl_scan(struct cli_val_integer *v, FILE *f);
-int cli_val_integer_2scmpl_parse(struct cli_val_integer *v, const char *s);
+int cli_val_integer_signed_print(struct cli_val_integer *v, FILE *f);
+int cli_val_integer_signed_scan(struct cli_val_integer *v, FILE *f);
+int cli_val_integer_signed_parse(struct cli_val_integer *v, const char *s);
 
 struct cli_val_integer_sign_impl {
 	int (*add)(struct cli_val_integer *, struct cli_val_integer *);
@@ -50,13 +50,15 @@ static struct cli_val_integer_sign_impl impls[] = {
 		.scan = (void *) cli_val_integer_unsigned_scan,
 		.parse = (void *) cli_val_integer_unsigned_parse,
 	},
-	[CLI_VAL_INTEGER_SIGN_2SCMPL] = {
-		.add = (void *) cli_val_integer_2scmpl_add,
-		.sub = (void *) cli_val_integer_2scmpl_sub,
-		.cmp = (void *) cli_val_integer_2scmpl_cmp,
-		.print = (void *) cli_val_integer_2scmpl_print,
-		.scan = (void *) cli_val_integer_2scmpl_scan,
-		.parse = (void *) cli_val_integer_2scmpl_parse,
+	[CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT] = {
+		// We are assuming that the C implementation of signed integers
+		// uses two's complement.
+		.add = (void *) cli_val_integer_signed_add,
+		.sub = (void *) cli_val_integer_signed_sub,
+		.cmp = (void *) cli_val_integer_signed_cmp,
+		.print = (void *) cli_val_integer_signed_print,
+		.scan = (void *) cli_val_integer_signed_scan,
+		.parse = (void *) cli_val_integer_signed_parse,
 	},
 };
 

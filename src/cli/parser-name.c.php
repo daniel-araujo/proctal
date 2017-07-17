@@ -36,7 +36,7 @@ $parsers = [
 		"type" => "enum cli_val_integer_sign",
 		"values" => [
 			"unsigned" => "CLI_VAL_INTEGER_SIGN_UNSIGNED",
-			"2scmpl" => "CLI_VAL_INTEGER_SIGN_2SCMPL",
+			"twos-complement" => "CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT",
 		],
 	],
 	[
