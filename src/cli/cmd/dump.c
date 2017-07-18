@@ -17,6 +17,16 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
+	if (arg->freeze) {
+		proctal_freeze(p);
+
+		if (proctal_error(p)) {
+			cli_print_proctal_error(p);
+			proctal_close(p);
+			return 1;
+		}
+	}
+
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will dump everything.
 		proctal_scan_region_read_set(p, 0);
@@ -70,6 +80,10 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 	free(output_block);
 
 	proctal_scan_region_stop(p);
+
+	if (arg->freeze) {
+		proctal_unfreeze(p);
+	}
 
 	proctal_close(p);
 

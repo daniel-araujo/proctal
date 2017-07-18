@@ -20,6 +20,9 @@ struct cli_cmd_read_arg {
 
 	// Whether to additionally print the bytecode of the instruction.
 	int show_instruction_byte_code;
+
+	// Whether to keep the program frozen while reading.
+	int freeze;
 };
 
 int cli_cmd_read(struct cli_cmd_read_arg *arg);

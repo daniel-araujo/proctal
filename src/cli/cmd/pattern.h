@@ -20,6 +20,9 @@ struct cli_cmd_pattern_arg {
 
 	// Whether to search program code.
 	int program_code;
+
+	// Whether to keep the program frozen while searching.
+	int freeze;
 };
 
 int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg);

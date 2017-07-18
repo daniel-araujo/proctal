@@ -20,6 +20,9 @@ struct cli_cmd_write_arg {
 	// A delay in milliseconds before writing to the address again. Without
 	// a delay you could theoretically turn your CPU into a heater.
 	int repeat_delay;
+
+	// Whether to keep the program frozen while writing.
+	int freeze;
 };
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg);

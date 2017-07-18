@@ -17,4 +17,7 @@ $ proctal dump --pid=12345 &gt; dump.bin
 	dump the code, <quote>--read</quote> for readable memory,
 	<quote>--write</quote> for writable memory and <quote>--execute</quote>
 	for executable memory. These can be combined.
+
+	You can pass the <quote>--freeze</quote> option to keep the program
+	frozen while dumping.
 </document>

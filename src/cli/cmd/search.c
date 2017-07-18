@@ -283,6 +283,16 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
+	if (arg->freeze) {
+		proctal_freeze(p);
+
+		if (proctal_error(p)) {
+			cli_print_proctal_error(p);
+			proctal_close(p);
+			return 1;
+		}
+	}
+
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
 		proctal_scan_address_read_set(p, 1);
@@ -306,6 +316,10 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 		search_input(arg, p);
 	} else {
 		search_program(arg, p);
+	}
+
+	if (arg->freeze) {
+		proctal_unfreeze(p);
 	}
 
 	proctal_close(p);

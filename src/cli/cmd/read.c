@@ -43,6 +43,16 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
+	if (arg->freeze) {
+		proctal_freeze(p);
+
+		if (proctal_error(p)) {
+			cli_print_proctal_error(p);
+			proctal_close(p);
+			return 1;
+		}
+	}
+
 	char output[16];
 
 	char *addr = (char *) arg->address;
@@ -55,6 +65,11 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		default:
 			cli_print_proctal_error(p);
+
+			if (arg->freeze) {
+				proctal_unfreeze(p);
+			}
+
 			proctal_close(p);
 			return 1;
 		}
@@ -68,6 +83,10 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 				fprintf(stderr, "Failed to parse value.\n");
 			} else {
 				fprintf(stderr, "Failed to parse further values.\n");
+			}
+
+			if (arg->freeze) {
+				proctal_unfreeze(p);
 			}
 
 			proctal_close(p);
@@ -108,6 +127,10 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 	}
 
 	print_ending(arg);
+
+	if (arg->freeze) {
+		proctal_unfreeze(p);
+	}
 
 	proctal_close(p);
 

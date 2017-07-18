@@ -270,6 +270,7 @@ static void destroy_cli_cmd_read_arg(struct cli_cmd_read_arg *arg)
 static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_read_arg *arg = malloc(sizeof(*arg));
+	arg->freeze = yuck_arg->read.freeze_flag == 1;
 	arg->value = cli_val_nil();
 
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
@@ -351,6 +352,7 @@ static void destroy_cli_cmd_write_arg(struct cli_cmd_write_arg *arg)
 static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_write_arg *arg = malloc(sizeof(*arg));
+	arg->freeze = yuck_arg->write.freeze_flag == 1;
 	arg->value_list = cli_val_list_create(yuck_arg->nargs);
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
@@ -482,6 +484,7 @@ static void destroy_cli_cmd_search_arg(struct cli_cmd_search_arg *arg)
 static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_search_arg *arg = malloc(sizeof(*arg));
+	arg->freeze = yuck_arg->search.freeze_flag == 1;
 	arg->value = cli_val_nil();
 	arg->eq = 0;
 	arg->ne = 0;
@@ -612,6 +615,7 @@ static void destroy_cli_cmd_pattern_arg(struct cli_cmd_pattern_arg *arg)
 static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_pattern_arg *arg = malloc(sizeof(*arg));
+	arg->freeze = yuck_arg->pattern.freeze_flag == 1;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_PATTERN) {
 		fputs("Wrong command.\n", stderr);
@@ -977,6 +981,7 @@ static void destroy_cli_cmd_dump_arg(struct cli_cmd_dump_arg *arg)
 static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_dump_arg *arg = malloc(sizeof(*arg));
+	arg->freeze = yuck_arg->dump.freeze_flag == 1;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_DUMP) {
 		fputs("Wrong command.\n", stderr);

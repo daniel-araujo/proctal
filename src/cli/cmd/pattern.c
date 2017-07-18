@@ -26,6 +26,16 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
+	if (arg->freeze) {
+		proctal_freeze(p);
+
+		if (proctal_error(p)) {
+			cli_print_proctal_error(p);
+			proctal_close(p);
+			return 1;
+		}
+	}
+
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
 		proctal_scan_region_read_set(p, 1);
@@ -165,12 +175,23 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		cli_print_proctal_error(p);
 		cli_pattern_destroy(cp);
 		proctal_scan_region_stop(p);
+
+		if (arg->freeze) {
+			proctal_unfreeze(p);
+		}
+
 		proctal_close(p);
 		return 1;
 	}
 
 	cli_pattern_destroy(cp);
+
 	proctal_scan_region_stop(p);
+
+	if (arg->freeze) {
+		proctal_unfreeze(p);
+	}
+
 	proctal_close(p);
 
 	return 0;

@@ -97,6 +97,7 @@ Examples:
 
   PID_ARGUMENT
   -a, --address=ADDR    Start address of values to read.
+  --freeze              Whether to keep the program frozen while reading.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
   TYPE_OPTIONS
@@ -133,6 +134,7 @@ Examples:
 
   PID_ARGUMENT
   -a, --address=ADDR    Start address where to begin writing values.
+  --freeze              Whether to keep the program frozen while writing.
   --array=SIZE          Makes the command write SIZE values in adjacent
                         addresses. If less than SIZE values are provided, then
                         when in need of more values it will cycle back through
@@ -183,6 +185,7 @@ Examples:
   PID_ARGUMENT
   -i, --input           Reads the output of a previous scan of the same type
                         from standard input.
+  --freeze              Whether to keep the program frozen while searching.
   TYPE_OPTIONS
   -r, --read            Readable memory.
   -w, --write           Writable memory.
@@ -232,6 +235,7 @@ Examples:
 
 
   PID_ARGUMENT
+  --freeze              Whether to keep the program frozen while searching.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
@@ -400,6 +404,7 @@ Examples:
 
 
   PID_ARGUMENT
+  --freeze              Whether to keep the program frozen while dumping.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.

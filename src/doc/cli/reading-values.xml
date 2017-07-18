@@ -18,6 +18,9 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=
 
 	This will output the integer value in ASCII.
 
+	You can pass the <quote>--freeze</quote> option to keep the program
+	frozen while reading.
+
 	<section>
 		<title>Reading arrays</title>
 

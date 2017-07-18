@@ -15,6 +15,9 @@ struct cli_cmd_dump_arg {
 
 	// Whether to dump program code.
 	int program_code;
+
+	// Whether to keep the program frozen while dumping.
+	int freeze;
 };
 
 int cli_cmd_dump(struct cli_cmd_dump_arg *arg);
