@@ -55,11 +55,11 @@
 		The <quote>--dec-up-to</quote> option matches values that
 		were decremented up to the given value.
 
-		The <quote>--changed</quote> option matches values that
+		The <quote>--changed</quote> option matches values that have
 		changed.
 
-		The <quote>--unchanged</quote> option matches values that
-		unchanged.
+		The <quote>--unchanged</quote> option matches values that have
+		not changed.
 
 		The <quote>--increased</quote> option matches values that
 		increased.
