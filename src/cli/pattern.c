@@ -113,14 +113,11 @@ static struct pattern_byte_value *create_pattern_byte_value()
 
 static struct pattern_any_byte *create_pattern_any_byte()
 {
-	static struct pattern *p = NULL;
+	static struct pattern p = {
+		.type = PATTERN_TYPE_ANY_BYTE,
+	};
 
-	if (p == NULL) {
-		p = malloc(sizeof(*p));
-		p->type = PATTERN_TYPE_ANY_BYTE;
-	}
-
-	return (struct pattern_any_byte *) p;
+	return (struct pattern_any_byte *) &p;
 }
 
 static int parse_pattern_opt_whitespace(struct cli_pattern *cp, struct pattern_list *l, const char **s)
