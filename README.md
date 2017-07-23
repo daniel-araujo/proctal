@@ -88,7 +88,7 @@ int main (int argc, char **argv)
 
 	proctal_pid_set(proctal, 15433);
 
-	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOC_PERM_READ);
+	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOCATE_PERMISSION_READ);
 
 	if (proctal_error(proctal)) {
 		proctal_close(proctal);
