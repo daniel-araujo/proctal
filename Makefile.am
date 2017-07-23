@@ -227,6 +227,8 @@ src/cli/proctal.1: src/cli/yuck/args.yuck
 lib_LTLIBRARIES += libproctal.la
 include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
+	darr/src/darr.h \
+	darr/src/darr.c \
 	src/api/impl/impl.h \
 	src/api/impl/linux.c \
 	src/api/proctal.h \
