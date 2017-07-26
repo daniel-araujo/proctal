@@ -16,12 +16,13 @@ static void print_match(void *addr)
 
 int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 {
+	int ret = 1;
+
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_close(p);
-		return 1;
+		goto exit1;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -31,8 +32,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-			proctal_close(p);
-			return 1;
+			goto exit1;
 		}
 	}
 
@@ -62,10 +62,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 	if (cli_pattern_error(cp)) {
 		cli_print_pattern_error(cp);
-		cli_pattern_destroy(cp);
-		proctal_scan_region_stop(p);
-		proctal_close(p);
-		return 1;
+		goto exit4;
 	}
 
 	const size_t buffer_size = 1024 * 1024;
@@ -93,7 +90,9 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
 
-				proctal_error_recover(p);
+				if (!proctal_error_recover(p)) {
+					goto exit5;
+				}
 
 				// Since we cannot read this chunk of memory
 				// we're going to discard any progress there
@@ -169,30 +168,24 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		} while (chunk_next(&chunk));
 	}
 
-	swbuf_deinit(&buf);
-
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		cli_pattern_destroy(cp);
-		proctal_scan_region_stop(p);
-
-		if (arg->freeze) {
-			proctal_unfreeze(p);
-		}
-
-		proctal_close(p);
-		return 1;
+		goto exit5;
 	}
 
+	ret = 0;
+exit5:
+	swbuf_deinit(&buf);
+exit4:
 	cli_pattern_destroy(cp);
-
+exit3:
 	proctal_scan_region_stop(p);
-
+exit2:
 	if (arg->freeze) {
 		proctal_unfreeze(p);
 	}
-
+exit1:
 	proctal_close(p);
-
-	return 0;
+exit0:
+	return ret;
 }

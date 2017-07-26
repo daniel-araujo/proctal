@@ -7,12 +7,13 @@
 
 int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 {
+	int ret = 1;
+
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_close(p);
-		return 1;
+		goto exit1;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -22,8 +23,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-			proctal_close(p);
-			return 1;
+			goto exit1;
 		}
 	}
 
@@ -48,8 +48,18 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	proctal_scan_region_start(p);
 
+	if (proctal_error(p)) {
+		cli_print_proctal_error(p);
+		goto exit2;
+	}
+
 	const size_t output_block_size = 1024 * 1024 * 2;
 	char *output_block = malloc(output_block_size);
+
+	if (output_block == NULL) {
+		fprintf(stderr, "Not enough memory.");
+		goto exit3;
+	}
 
 	void *start, *end;
 
@@ -67,7 +77,9 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
 
-				proctal_error_recover(p);
+				if (!proctal_error_recover(p)) {
+					goto exit4;
+				}
 
 				// Let's try the next chunk.
 				continue;
@@ -77,15 +89,17 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 		} while (chunk_next(&chunk));
 	}
 
+	ret = 0;
+exit4:
 	free(output_block);
-
+exit3:
 	proctal_scan_region_stop(p);
-
+exit2:
 	if (arg->freeze) {
 		proctal_unfreeze(p);
 	}
-
+exit1:
 	proctal_close(p);
-
-	return 0;
+exit0:
+	return ret;
 }

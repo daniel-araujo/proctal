@@ -91,8 +91,10 @@ static inline void *align_addr(void *addr, size_t align)
 	return (void *) ((char *) addr + offset);
 }
 
-static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
+static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 {
+	int ret = 0;
+
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
 	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
@@ -127,7 +129,11 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
-				proctal_error_recover(p);
+
+				if (!proctal_error_recover(p)) {
+					goto exit4;
+				}
+
 				break;
 			}
 
@@ -179,24 +185,28 @@ static inline void search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 		} while (chunk_next(&chunk));
 	}
 
-	swbuf_deinit(&buf);
-
-	cli_val_destroy(addr);
-
-	destroy_filter_compare_arg(filter_compare_arg);
-
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_scan_region_stop(p);
-		proctal_error_recover(p);
-		return;
+		goto exit4;
 	}
 
+	ret = 1;
+exit4:
+	swbuf_deinit(&buf);
+exit3:
+	cli_val_destroy(addr);
+exit2:
+	destroy_filter_compare_arg(filter_compare_arg);
+exit1:
 	proctal_scan_region_stop(p);
+exit0:
+	return ret;
 }
 
-static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
+static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 {
+	int ret = 0;
+
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 	struct cli_val_filter_compare_prev_arg *filter_compare_prev_arg = create_filter_compare_prev_arg(arg);
 
@@ -238,14 +248,22 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 				fprintf(stderr, "No permission to read from address ");
 				cli_val_print(addr, stderr);
 				fprintf(stderr, ".\n");
-				proctal_error_recover(p);
+
+				if (!proctal_error_recover(p)) {
+					goto exit2;
+				}
+
 				break;
 
 			default:
 				fprintf(stderr, "Failed to read from address ");
 				cli_val_print(addr, stderr);
 				fprintf(stderr, ".\n");
-				proctal_error_recover(p);
+
+				if (!proctal_error_recover(p)) {
+					goto exit2;
+				}
+
 				break;
 			}
 
@@ -264,21 +282,26 @@ static inline void search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 		print_search_match(addr, value);
 	}
 
+	ret = 1;
+exit2:
 	cli_val_destroy(addr);
 	cli_val_destroy(previous_value);
-
+exit1:
 	destroy_filter_compare_prev_arg(filter_compare_prev_arg);
 	destroy_filter_compare_arg(filter_compare_arg);
+exit0:
+	return ret;
 }
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg)
 {
+	int ret = 1;
+
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_close(p);
-		return 1;
+		goto exit1;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -288,8 +311,7 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-			proctal_close(p);
-			return 1;
+			goto exit1;
 		}
 	}
 
@@ -313,16 +335,22 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 	}
 
 	if (arg->input) {
-		search_input(arg, p);
+		if (!search_input(arg, p)) {
+			goto exit2;
+		}
 	} else {
-		search_program(arg, p);
+		if (!search_program(arg, p)) {
+			goto exit2;
+		}
 	}
 
+	ret = 0;
+exit2:
 	if (arg->freeze) {
 		proctal_unfreeze(p);
 	}
-
+exit1:
 	proctal_close(p);
-
-	return 0;
+exit0:
+	return ret;
 }

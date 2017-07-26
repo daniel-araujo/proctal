@@ -36,34 +36,30 @@ static void unregister_signal_handler()
 
 int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 {
+	int ret = 1;
+
 	if (!register_signal_handler()) {
 		fprintf(stderr, "Failed to set up signal handler.\n");
-		return 1;
+		goto exit0;
 	}
 
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		unregister_signal_handler();
-		proctal_close(p);
-		return 1;
+		goto exit2;
 	}
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		fprintf(stderr, "Did not specify what to watch for.\n");
-		unregister_signal_handler();
-		proctal_close(p);
-		return 1;
+		goto exit2;
 	}
 
 	if (!(arg->read && arg->write && !arg->execute)
 		&& !(arg->write && !arg->read && !arg->execute)
 		&& !(!arg->write && !arg->read && arg->execute)) {
 		fprintf(stderr, "The given combination of read, write and execute options is not supported.\n");
-		unregister_signal_handler();
-		proctal_close(p);
-		return 1;
+		goto exit2;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -76,26 +72,38 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	// TODO: Should use a data structure with better lookup performance.
 	struct darr matches;
 	darr_init(&matches, sizeof(void *));
-	darr_resize(&matches, 42);
+
+	if (!darr_resize(&matches, 42)) {
+		fprintf(stderr, "Out of memory.\n");
+		goto exit3;
+	}
+
 	size_t match_count = 0;
 
 	proctal_watch_start(p);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		unregister_signal_handler();
-		proctal_close(p);
-		return 1;
+		goto exit3;
 	}
 
 	while (!request_quit) {
 		void *addr;
 
 		if (!proctal_watch(p, &addr)) {
-			if (proctal_error(p)) {
-				break;
-			} else {
+			switch (proctal_error(p)) {
+			case 0:
 				continue;
+
+			case PROCTAL_ERROR_INTERRUPT:
+				if (!proctal_error_recover(p)) {
+					goto exit4;
+				}
+				continue;
+
+			default:
+				cli_print_proctal_error(p);
+				goto exit4;
 			}
 		}
 
@@ -130,27 +138,15 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		printf("\n");
 	}
 
-	switch (proctal_error(p)) {
-	case PROCTAL_ERROR_INTERRUPT:
-		proctal_error_recover(p);
-		break;
-
-	default:
-		cli_print_proctal_error(p);
-		darr_deinit(&matches);
-		unregister_signal_handler();
-		proctal_watch_stop(p);
-		proctal_close(p);
-		return 1;
-	}
-
+	ret = 0;
+exit4:
 	proctal_watch_stop(p);
-
+exit3:
 	darr_deinit(&matches);
-
-	unregister_signal_handler();
-
+exit2:
 	proctal_close(p);
-
-	return 0;
+exit1:
+	unregister_signal_handler();
+exit0:
+	return ret;
 }
