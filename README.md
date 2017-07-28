@@ -220,7 +220,7 @@ optimizations and inserts debugging symbols.
 
 	$ cd build
 
-	$ ../../configure 'CFLAGS=-g -O0'
+	$ ../configure 'CFLAGS=-g -O0'
 
 	$ make
 
