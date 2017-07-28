@@ -195,6 +195,7 @@ Read the INSTALL file for more details.
 Besides requiring the same dependencies found in the Installation section, you
 will also need:
 
+- git [[12]]
 - yuck [[5]]
 - php [[6]]
 - python [[11]]
@@ -205,22 +206,19 @@ Proctal uses the autotools to generate build systems for UNIX like operating
 systems. This section will not go into too much detail but will show you how
 you can create a development build to tinker with the source code.
 
-First we need certain files and directories for the tools to work. Those can be
-created by running the `autoreconf` command with the `-i` option in the root
-directory of the project:
+First you need to run the `init` script. This will fetch some dependencies that
+don't have to be installed in your system and also prepare the autotools.
 
-	$ autoreconf -i
+	$ ./init
 
-You can now create a build. At this point you can follow the instructions in
-the Installation section but as a developer you will most likely want to have
-everything working from the project directory. You might even be interested in
-working with different build settings, like having a release or a debug build.
-This is actually possible. Here's how you would create and compile a build that
-suppresses optimizations and adds debugging symbols.
+At this point you can follow the instructions given in the Installation
+section but you will most likely want to work strictly inside the project
+directory. Here's how you would create and compile a build that suppresses
+optimizations and inserts debugging symbols.
 
-	$ mkdir -p build/debug
+	$ mkdir -p build
 
-	$ cd build/debug
+	$ cd build
 
 	$ ../../configure 'CFLAGS=-g -O0'
 
@@ -263,3 +261,4 @@ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 [9]: https://gcc.gnu.org/
 [10]: https://www.gnu.org/software/libtool/libtool.html
 [11]: https://www.python.org/
+[12]: https://git-scm.com/

@@ -16,3 +16,6 @@
 /config.sub
 /ltmain.sh
 /test-driver
+
+# Dependencies.
+/darr

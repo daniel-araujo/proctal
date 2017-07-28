@@ -13,6 +13,8 @@ TESTS =
 
 clean-local: darr-clean
 
+dist-hook: darr-dist-hook
+
 
 # Cli tool.
 bin_PROGRAMS += proctal
@@ -409,9 +411,14 @@ tests_otrap_skip_nothing_LDADD = libotrap.a
 
 
 # Darr.
-.PHONY: darr-clean
+.PHONY: darr-dist-hook darr-clean darr/libdarr.a
+
 darr-clean:
 	$(MAKE) -C darr clean
 
 darr/libdarr.a:
 	$(AM_V_GEN)$(MAKE) $(AM_V_lt) -C darr libdarr.a
+
+darr-dist-hook:
+	cp -r $(srcdir)/darr $(distdir)
+	rm -rf $(distdir)/darr/.git

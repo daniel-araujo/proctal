@@ -6,6 +6,8 @@ AM_SILENT_RULES([yes])
 LT_PREREQ([2.4])
 LT_INIT([dlopen])
 
+PROCTAL_RUN_CONFIGURE([$srcdir/darr], [darr])
+
 AC_SUBST(PROCTAL_LIBRARY_VERSION, [0:0:0])
 
 AC_CONFIG_SRCDIR([src/api/include/proctal.h])
@@ -51,10 +53,6 @@ PROCTAL_CHECK_LIB([HAVE_LIBCAPSTONE], [capstone], [cs_version],, [required])
 PROCTAL_CHECK_HEADER([HAVE_KEYSTONE_H], [keystone/keystone.h], [required])
 PROCTAL_CHECK_LIB([HAVE_LIBKEYSTONE], [keystone], [ks_version],, [required])
 
-PROCTAL_INSTALL_GIT_REPOSITORY([darr], ["https://github.com/daniel-araujo/darr.git"], ["v1.4.0"])
-PROCTAL_RUN_AUTOCONF([darr])
-PROCTAL_RUN_CONFIGURE([darr])
-
 if test -n "$HAVE_USLEEP"; then
 	proctal_xopen_cflags="-D_XOPEN_SOURCE=500"
 fi
@@ -69,7 +67,7 @@ fi
 
 proctal_posix_cflags="-D_POSIX_C_SOURCE=200112L"
 
-proctal_darr_cflags=-Idarr/src
+proctal_darr_cflags=-I$srcdir/darr/src
 proctal_darr_ldflags=darr/libdarr.a
 
 proctal_cflags="-iquote${srcdir}/src -iquotesrc -std=c11 -Wfatal-errors -Wall"

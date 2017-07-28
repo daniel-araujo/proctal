@@ -137,56 +137,6 @@ AC_DEFUN([PROCTAL_ASSIGN_VAR], [
 	AC_SUBST([$1])
 ])
 
-dnl PROCTAL_INSTALL_GIT_REPOSITORY(DST, SRC, COMMIT)
-dnl
-dnl Fetches git repository SRC and places it in git repository DST and checks
-dnl out commit COMMIT.
-AC_DEFUN([PROCTAL_INSTALL_GIT_REPOSITORY], [
-	if [[ -e $1 ]]; then
-		proctal_install_git_repository_args='-c advice.detachedHead=false --git-dir=$1/.git --work-tree=$1'
-
-		if test -n $3; then
-			proctal_install_git_repository_commit=$3
-		else
-			proctal_install_git_repository_commit=master
-		fi
-
-		if ! git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null 2>&1; then
-			git $proctal_install_git_repository_args remote set-url origin $2
-			git $proctal_install_git_repository_args fetch --all
-
-			if test "$?" -ne 0; then
-				AC_MSG_ERROR([Failed to pull from $2.])
-			fi
-
-			git $proctal_install_git_repository_args checkout -f $proctal_install_git_repository_commit > /dev/null
-
-			if test "$?" -ne 0; then
-				AC_MSG_ERROR([Commit $proctal_install_git_repository_commit does not exist in repository $2.])
-			fi
-		fi
-
-		git $proctal_install_git_repository_args clean -fdx > /dev/null
-	else
-		git clone $2 $1
-
-		if test "$?" -ne 0; then
-			AC_MSG_ERROR([Failed to clone $2.])
-		fi
-	fi
-])
-
-dnl PROCTAL_RUN_AUTOCONF(DIR)
-dnl
-dnl Runs autoconf on a directory.
-AC_DEFUN([PROCTAL_RUN_AUTOCONF], [
-	pushd $1
-
-	autoreconf -i
-
-	popd
-])
-
 dnl PROCTAL_RUN_CONFIGURE(SRCDIR, BUILDDIR, ARGS)
 dnl
 dnl Runs configure on a directory.
@@ -195,17 +145,27 @@ AC_DEFUN([PROCTAL_RUN_CONFIGURE], [
 	proctal_run_configure_builddir=$2
 	proctal_run_configure_currentdir="$PWD"
 
-	if test -z $proctal_run_configure_builddir; then
-		proctal_run_configure_builddir="$proctal_run_configure_srcdir"
+	if test -z "${proctal_run_configure_builddir}"; then
+		proctal_run_configure_builddir="${proctal_run_configure_srcdir}"
 	fi
 
-	mkdir -p "$proctal_run_configure_builddir"
+	proctal_run_configure_script="${proctal_run_configure_currentdir}/${proctal_run_configure_srcdir}"/configure
 
-	pushd "$proctal_run_configure_builddir"
+	if ! test -f "${proctal_run_configure_script}"; then
+		AC_MSG_ERROR([Configure script not found in $1.])
+	fi
 
-	"$proctal_run_configure_currentdir/$proctal_run_configure_srcdir"/configure $3
+	mkdir -p "${proctal_run_configure_builddir}"
 
-	popd
+	pushd "${proctal_run_configure_builddir}" > /dev/null
+
+	"${proctal_run_configure_script}" $3
+
+	if test "$?" != "0"; then
+		AC_MSG_ERROR([Configure script failed in $1.])
+	fi
+
+	popd > /dev/null
 ])
 
 dnl PROCTAL_INTEGER_ENDIANNESS
