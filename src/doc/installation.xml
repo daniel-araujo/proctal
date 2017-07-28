@@ -28,6 +28,6 @@ $ make install
 
 	The configure script checks whether your system meets the minimum
 	necessary requirements and allows you to define how you want Proctal to
-	be compiled and installed. Run `./configure -h` if you want to learn
-	more about that.
+	be compiled and installed. Run <quote>./configure -h</quote> if you
+	want to learn more about that.
 </document>
