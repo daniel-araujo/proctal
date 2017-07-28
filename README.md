@@ -227,6 +227,12 @@ optimizations and inserts debugging symbols.
 If you modify a source file and run `make` again it should detect the change
 and compile again.
 
+You can also run the test suite. Beware that some test cases require higher
+privileges, which means that you will most likely have to run the following
+command as root in order for them to pass.
+
+	$ make check
+
 For more details on what else you can do with the autotools go read the manuals
 over at gnu.org [[1]]
 
