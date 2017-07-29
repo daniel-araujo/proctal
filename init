@@ -61,6 +61,12 @@ proctal_run_autoconf() {
 
 	autoreconf -i
 
+	if test "$?" -ne 0; then
+		popd > /dev/null
+		echo "Failed to run autoconf in ${proctal_run_autoconf_dir}" 2>&1
+		return 1
+	fi
+
 	popd > /dev/null
 }
 
