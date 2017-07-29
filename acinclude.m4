@@ -143,13 +143,14 @@ dnl Runs configure on a directory.
 AC_DEFUN([PROCTAL_RUN_CONFIGURE], [
 	proctal_run_configure_srcdir=$1
 	proctal_run_configure_builddir=$2
-	proctal_run_configure_currentdir="$PWD"
 
 	if test -z "${proctal_run_configure_builddir}"; then
 		proctal_run_configure_builddir="${proctal_run_configure_srcdir}"
 	fi
 
-	proctal_run_configure_script="${proctal_run_configure_currentdir}/${proctal_run_configure_srcdir}"/configure
+	PROCTAL_ABSOLUTE_PATH(proctal_run_configure_script, "${proctal_run_configure_srcdir}"/configure)
+
+	echo "${proctal_run_configure_script}";
 
 	if ! test -f "${proctal_run_configure_script}"; then
 		AC_MSG_ERROR([Configure script not found in $1.])
@@ -234,5 +235,20 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 
 	*)
 		AC_MSG_ERROR([Unable to determine CPU architecture.])
+	esac
+])
+
+dnl PROCTAL_ABSOLUTE_PATH(VAR, PATH)
+dnl
+dnl Assign VAR the value PATH if it is absolute or $PWD/PATH if it is relative.
+AC_DEFUN([PROCTAL_ABSOLUTE_PATH], [
+	case $2 in
+	/*)
+		$1=$2
+		;;
+
+	*)
+		$1="$PWD/"$2
+		;;
 	esac
 ])
