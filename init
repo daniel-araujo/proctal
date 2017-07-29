@@ -64,29 +64,6 @@ proctal_run_autoconf() {
 	popd > /dev/null
 }
 
-###############################################################################
-# Runs configure on a directory.
-#
-# $1 = Path where configure is located.
-# $2 = If given, runs configure on this path otherwise run configure on the
-# same path where it's located.
-# $3... Arguments passed to configure.
-###############################################################################
-proctal_run_configure() {
-	proctal_run_configure_srcdir="$1"
-	proctal_run_configure_builddir="${2:-${proctal_run_configure_srcdir}}"
-	proctal_run_configure_currentdir="$PWD"
-	shift 2
-
-	mkdir -p "${proctal_run_configure_builddir}"
-
-	pushd "${proctal_run_configure_builddir}" > /dev/null
-
-	"${proctal_run_configure_currentdir}/${proctal_run_configure_srcdir}"/configure "$@"
-
-	popd > /dev/null
-}
-
 # Install Darr repository if it doesn't exist.
 if ! test -e darr; then
 	echo "Installing Darr..."
