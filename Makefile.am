@@ -2,7 +2,7 @@ MAKEFLAGS = --no-print-directory
 
 bin_PROGRAMS =
 dist_man_MANS =
-EXTRA_DIST = README.md
+EXTRA_DIST = README.md LICENSE
 CLEANFILES =
 check_PROGRAMS =
 dist_check_SCRIPTS =

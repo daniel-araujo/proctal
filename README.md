@@ -184,10 +184,8 @@ on Linux:
 	$ make install
 
 The configure script checks whether your system meets the minimum necessary
-requirements and allows you to define how you want Proctal to be compiled and
-installed. For more information type `./configure -h`.
-
-Read the INSTALL file for more details.
+requirements and allows you to change how Proctal is compiled and installed.
+You can check what options you have available by running `./configure -h`.
 
 
 ## Development
