@@ -139,11 +139,11 @@ int proctal_impl_watch(proctal_t p, void **addr)
 	return proctal_linux_watch(pl, addr);
 }
 
-int proctal_impl_execute(proctal_t p, const char *byte_code, size_t byte_code_length)
+int proctal_impl_execute(proctal_t p, const char *bytecode, size_t bytecode_length)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_execute(pl, byte_code, byte_code_length);
+	return proctal_linux_execute(pl, bytecode, bytecode_length);
 }
 
 void *proctal_impl_allocate(proctal_t p, size_t size, int perm)

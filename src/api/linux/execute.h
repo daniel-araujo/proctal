@@ -3,7 +3,7 @@
 
 #include "api/linux/proctal.h"
 
-int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_t byte_code_length);
+int proctal_linux_execute(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length);
 
 int proctal_linux_execute_syscall(
 	struct proctal_linux *pl,

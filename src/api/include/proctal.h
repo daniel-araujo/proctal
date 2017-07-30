@@ -589,7 +589,7 @@ void proctal_watch_execute_set(proctal_t p, int x);
  *
  * On failure returns 0. Call proctal_error to find out what happened.
  */
-int proctal_execute(proctal_t p, const char *byte_code, size_t byte_code_length);
+int proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
 
 /*
  * Allocates memory.

@@ -104,7 +104,7 @@ Examples:
   --show-address        Additionally prints the address before the value.
                         As a side effect, all values will be separated by new
                         lines.
-  --show-instruction-byte-code
+  --show-instruction-bytecode
                         If type is instruction, additionally prints the
                         bytecode of the instruction in hexadecimal.
 

@@ -39,7 +39,7 @@ void proctal_impl_watch_stop(proctal_t p);
 
 int proctal_impl_watch(proctal_t p, void **addr);
 
-int proctal_impl_execute(proctal_t p, const char *byte_code, size_t byte_code_length);
+int proctal_impl_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
 
 void *proctal_impl_allocate(proctal_t p, size_t size, int perm);
 

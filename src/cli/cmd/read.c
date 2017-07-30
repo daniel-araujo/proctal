@@ -100,7 +100,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		cli_val_print(arg->value, stdout);
 
-		if (arg->show_instruction_byte_code
+		if (arg->show_instruction_bytecode
 			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
 			printf("\n");
 

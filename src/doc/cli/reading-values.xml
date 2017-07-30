@@ -58,7 +58,7 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=instruction --array=5 -
 	<section>
 		<title>Showing instruction bytecode</title>
 
-		The long named <quote>--show-instruction-byte-code</quote>
+		The long named <quote>--show-instruction-bytecode</quote>
 		option will additionally print the bytecode in hexadecimal
 		digits when reading an instruction.
 	</section>

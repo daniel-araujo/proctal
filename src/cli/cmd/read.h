@@ -19,7 +19,7 @@ struct cli_cmd_read_arg {
 	int show_address;
 
 	// Whether to additionally print the bytecode of the instruction.
-	int show_instruction_byte_code;
+	int show_instruction_bytecode;
 
 	// Whether to keep the program frozen while reading.
 	int freeze;

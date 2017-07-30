@@ -263,7 +263,7 @@ int proctal_linux_execute_syscall(
 	return 1;
 }
 
-int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_t byte_code_length)
+int proctal_linux_execute(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length)
 {
 	struct execute_save_state orig;
 
@@ -293,7 +293,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 
 	void *addr = proctal_linux_allocate(
 		pl,
-		prologue_size + byte_code_length + epilogue_size,
+		prologue_size + bytecode_length + epilogue_size,
 		PROCTAL_ALLOCATE_PERMISSION_WRITE | PROCTAL_ALLOCATE_PERMISSION_EXECUTE | PROCTAL_ALLOCATE_PERMISSION_READ);
 
 	if (addr == NULL) {
@@ -303,7 +303,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 
 	void *prologue_start_addr = addr;
 	void *code_start_addr = (char *) prologue_start_addr + prologue_size;
-	void *epilogue_start_addr = (char *) code_start_addr + byte_code_length;
+	void *epilogue_start_addr = (char *) code_start_addr + bytecode_length;
 
 	void *landing_zone = (char *) prologue_start_addr + (prologue_size / 2);
 
@@ -332,7 +332,7 @@ int proctal_linux_execute(struct proctal_linux *pl, const char *byte_code, size_
 	}
 
 	if (!proctal_linux_mem_write(pl, prologue_start_addr, prologue, prologue_size)
-		|| !proctal_linux_mem_write(pl, code_start_addr, byte_code, byte_code_length)
+		|| !proctal_linux_mem_write(pl, code_start_addr, bytecode, bytecode_length)
 		|| !proctal_linux_mem_write(pl, epilogue_start_addr, epilogue, epilogue_size)) {
 		execute_load_state(pl, pl->pid, &orig);
 		proctal_linux_deallocate(pl, addr);
