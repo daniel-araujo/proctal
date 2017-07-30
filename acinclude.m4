@@ -158,6 +158,10 @@ AC_DEFUN([PROCTAL_RUN_CONFIGURE], [
 
 	mkdir -p "${proctal_run_configure_builddir}"
 
+	if test "$?" != "0"; then
+		AC_MSG_ERROR([Failed to create build directory ${proctal_run_configure_builddir}.])
+	fi
+
 	pushd "${proctal_run_configure_builddir}" > /dev/null
 
 	"${proctal_run_configure_script}" $3
