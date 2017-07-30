@@ -2,10 +2,10 @@
 <document>
 	<title>Installation</title>
 
-	You can download the latest version of Proctal from
+	You can find the latest version
 	<link ref="proctal:download">here</link>.
 
-	Additionally you're going to need:
+	You will need the following programs installed on your system:
 
 	<list>
 		<item><link ref="gcc">GCC</link></item>
@@ -14,9 +14,7 @@
 		<item><link ref="keystone">keystone</link></item>
 	</list>
 
-	With all that set, you can now go through the 3 step installation
-	process that is employed by many C programs released in source code
-	form on Linux:
+	Proctal provides the familiar configure, compile and install process:
 
 	<code type="bash-prompt">
 $ ./configure
@@ -26,8 +24,6 @@ $ make
 $ make install
 	</code>
 
-	The configure script checks whether your system meets the minimum
-	necessary requirements and allows you to define how you want Proctal to
-	be compiled and installed. Run <quote>./configure -h</quote> if you
-	want to learn more about that.
+	Run <quote>./configure -h</quote> to read about the options you have
+	available that can change how Proctal will be compiled and installed.
 </document>

@@ -16,15 +16,14 @@
 		<title>Finding exact values</title>
 
 		With the <link ref="proctal:cli:search">search command</link>
-		we can search for values that we believe could represent game
-		state such as health points, money, score, time, velocity,
-		inventories and so on. The difficult part about finding these
-		is guessing how the programmers decided to store them in
-		memory.
+		you can search for values that represent game state such as
+		health points, money, score, time, velocity, inventories and so
+		on. The difficult part about finding these is guessing in what
+		form did the programmers decide to store them in memory.
 
 		If the game shows you the exact amount of health points, let's
-		say for example <quote>100%</quote>, then we can guess that
-		it's stored as an 8-bit integer. We can simply search for all
+		say for example <quote>100%</quote>, then you can guess that
+		it's stored as an 8-bit integer. You can simply search for all
 		8-bit integer values that equal to 100. The command would look
 		like this:
 
@@ -54,7 +53,7 @@ $ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100
 		happens you must find a way to filter out the noise.
 
 		First, let's save the output to a file. This will allow us to
-		analyze the data better. We'll name this file
+		analyze the data better. You'll name this file
 		<quote>search-1</quote>. The previous command would look like
 		this now:
 
@@ -70,17 +69,17 @@ $ wc -l &lt; search-1
 3463
 		</code>
 
-		In this example, we got 3463. You might even have more.
+		In this example there were 3463. You might even have more.
 
-		One method that we can use to figure out which of these
-		addresses stores the value we care about, is to play the game
-		so as to change its value and then looking at the addresses we
+		One method that you can use to figure out which of these
+		addresses stores the value you care about, is to play the game
+		so as to change its value and then looking at the addresses you
 		got and seeing which ones have changed.
 
 		The search command accepts the <quote>--input</quote> option
 		that allows you to match against the addresses from a previous
-		search result. Since we have conveniently stored the results to
-		a file, we just have to use its contents as input.
+		search result. Since you have conveniently stored the results
+		to a file, you just have to use its contents as input.
 
 		Assuming that the new value is 53, here's how the command would
 		look like, storing the new search results to a file named
@@ -90,16 +89,16 @@ $ wc -l &lt; search-1
 $ proctal search --input --pid=12345 --type=integer --integer-size=8 --eq=53 &lt; search-1 &gt; search-2
 		</code>
 
-		Let's count how many we have now:
+		And counting yields:
 
 		<code type="bash-prompt">
 $ wc -l &lt; search-2
 34
 		</code>
 
-		Now we're down to 34. That's much easier to handle. We can
-		repeat the previous step until we either end up with 1 value or
-		we're unable to shorten the results any further.
+		Down to 34. That's much easier to handle. You can repeat the
+		previous step until you either end up with 1 value or you're
+		unable to shorten the results any further.
 
 		You can also use the <quote>watch</quote> program to see how
 		the values change as you play the game:

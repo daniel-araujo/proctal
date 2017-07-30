@@ -587,6 +587,8 @@ void proctal_watch_execute_set(proctal_t p, int x);
  * explicitly return or let the processor continue executing after the last
  * instruction you gave.
  *
+ * The instructions cannot rely on where they will be placed in memory.
+ *
  * On failure returns 0. Call proctal_error to find out what happened.
  */
 int proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);

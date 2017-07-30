@@ -296,7 +296,8 @@ paused. Your code is free to modify any registers because they will be restored
 to their original values. Control will be given back to the program after the
 last instruction is executed.
 
-The instructions are expected to be passed through standard input.
+The instructions are expected to be passed through standard input and cannot
+rely on where they will be placed in memory.
 
 Examples:
   Executing instructions from an assembly file

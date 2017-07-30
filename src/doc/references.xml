@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <references>
 	<uri name="gnu" value="https://www.gnu.org/software/" />
+	<uri name="gpl" value="https://www.gnu.org/licenses/gpl.html" />
 	<uri name="capstone" value="http://www.capstone-engine.org/" />
 	<uri name="keystone" value="http://www.keystone-engine.org/" />
 	<uri name="yuck" value="http://www.fresse.org/yuck/" />

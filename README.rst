@@ -2,34 +2,26 @@
  Proctal 0.0.0
 ===============
 
+https://proctal.io
+
 Proctal gives you access to the address space of a program on Linux with a
-command line tool and a C API.
+command line tool and a C library. Features include:
 
-Features:
+- Reading and writing to memory
 
-- Reading and writing values in memory
-
-- Searching for values in memory
-
-- Repeatedly writing a value to memory fast so as to make it seem like it's never changing
+- Searching for values and byte patterns
 
 - Freezing program execution
 
-- Watching for instructions that read, write and execute memory
+- Watching for accesses to memory locations
 
-- Disassembling instructions from any memory location
+- Allocating and deallocating memory blocks
 
-- Assembling instructions to be written to any memory location
+- Assembling and disassembling instructions
 
-- Allocating and deallocating readable/writable/executable memory blocks
+- Running your own code in the context of the program
 
-- Run your own code in the program
-
-- Measure size of assembly instructions and values
-
-- Byte pattern search
-
-- Memory dump
+- Dumping contents in memory
 
 ..
 
@@ -44,13 +36,13 @@ Features:
 Example
 =======
 
-Forces a program — whose Process ID (PID) is 15433 in this example — to print
+This example forces a program — whose Process ID (PID) is 15433 — to print
 Hello, world!
 
 	**Note**
 
-	Accessing sensitive parts of other processes most likely requires you to have
-	higher privileges. Try running as root.
+	Accessing sensitive parts of other processes most likely requires you
+	to have higher privileges. Try running as root.
 
 **CLI**
 
@@ -58,10 +50,10 @@ Hello, world!
 
 	# Allocates memory to store Hello, world!
 	$ proctal allocate --pid=15433 -rw 14
-	7f78fda9c000
+	7F78FDA9C000
 
 	# Writes Hello, world! to memory.
-	$ proctal write --pid=15433 --address=7f78fda9c000 --type=text H e l l o , ' ' w o r l d '!' $'\n'
+	$ proctal write --pid=15433 --address=7F78FDA9C000 --type=text H e l l o , ' ' w o r l d '!' $'\n'
 
 	# Executes code that will print Hello, world! to standard output.
 	$ proctal execute --pid=15433
@@ -72,13 +64,14 @@ Hello, world!
 		syscall
 
 	# Deallocates memory that was used to store Hello, world!
-	$ proctal deallocate --pid=15433 7f78fda9c000
+	$ proctal deallocate --pid=15433 7F78FDA9C000
 
 **API**
 
 .. code :: C
 
 	#include <stdlib.h>
+	#include <stdint.h>
 	#include <stdio.h>
 
 	#include <proctal.h>
@@ -86,13 +79,24 @@ Hello, world!
 	int main (int argc, char **argv)
 	{
 		const char output[] = "Hello, world!\n";
-		char code[] = { 0x48, 0xbe, 0xDE, 0xAD, 0xBE, 0xFF, 0xDE, 0xAD, 0xBE, 0xFF, 0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc2, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x05 };
+		char code[] = {
+			// movabs rsi, <address>
+			0x48, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			// mov rax, 1
+			0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00,
+			// mov rdi, 1
+			0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00,
+			// mov rdx, 14
+			0x48, 0xc7, 0xc2, 0x0e, 0x00, 0x00, 0x00,
+			// syscall
+			0x0f, 0x05
+		};
 
 		proctal_t proctal = proctal_open();
 
 		if (proctal_error(proctal)) {
+			fprintf(stderr, "Failed to open Proctal.\n");
 			proctal_close(proctal);
-			fprintf(stderr, "Failed to create a Proctal handle.\n");
 			return EXIT_FAILURE;
 		}
 
@@ -101,43 +105,73 @@ Hello, world!
 		void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOCATE_PERMISSION_READ);
 
 		if (proctal_error(proctal)) {
-			proctal_close(proctal);
 			fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(proctal));
+			proctal_close(proctal);
 			return EXIT_FAILURE;
 		}
 
 		proctal_write(proctal, allocated_memory, output, sizeof output);
 
 		if (proctal_error(proctal)) {
+			fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 			proctal_deallocate(proctal, allocated_memory);
 			proctal_close(proctal);
-			fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 			return EXIT_FAILURE;
 		}
 
-		code[2] = ((unsigned long long) allocated_memory >> 0x8 * 0) & 0xFF;
-		code[3] = ((unsigned long long) allocated_memory >> 0x8 * 1) & 0xFF;
-		code[4] = ((unsigned long long) allocated_memory >> 0x8 * 2) & 0xFF;
-		code[5] = ((unsigned long long) allocated_memory >> 0x8 * 3) & 0xFF;
-		code[6] = ((unsigned long long) allocated_memory >> 0x8 * 4) & 0xFF;
-		code[7] = ((unsigned long long) allocated_memory >> 0x8 * 5) & 0xFF;
-		code[8] = ((unsigned long long) allocated_memory >> 0x8 * 6) & 0xFF;
-		code[9] = ((unsigned long long) allocated_memory >> 0x8 * 7) & 0xFF;
+		code[2] = (char) ((uintptr_t) allocated_memory >> 8 * 0 & 0xFF);
+		code[3] = (char) ((uintptr_t) allocated_memory >> 8 * 1 & 0xFF);
+		code[4] = (char) ((uintptr_t) allocated_memory >> 8 * 2 & 0xFF);
+		code[5] = (char) ((uintptr_t) allocated_memory >> 8 * 3 & 0xFF);
+		code[6] = (char) ((uintptr_t) allocated_memory >> 8 * 4 & 0xFF);
+		code[7] = (char) ((uintptr_t) allocated_memory >> 8 * 5 & 0xFF);
+		code[8] = (char) ((uintptr_t) allocated_memory >> 8 * 6 & 0xFF);
+		code[9] = (char) ((uintptr_t) allocated_memory >> 8 * 7 & 0xFF);
 
 		proctal_execute(proctal, code, sizeof code);
 
 		if (proctal_error(proctal)) {
+			fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 			proctal_deallocate(proctal, allocated_memory);
 			proctal_close(proctal);
-			fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 			return EXIT_FAILURE;
 		}
 
 		proctal_deallocate(proctal, allocated_memory);
 		proctal_close(proctal);
-
 		return EXIT_SUCCESS;
 	}
+
+
+Installation
+============
+
+	**Note**
+
+	If you have a clean state of the source repository you will need to
+	follow some instructions given in the Development_ section.
+
+You can find the latest version at `proctal.io <Download_>`_. 
+
+You will need the following programs installed on your system:
+
+- GCC_
+- Libtool_
+- Capstone_
+- Keystone_
+
+Proctal provides the familiar configure, compile and install process:
+
+.. code :: sh
+
+	$ ./configure
+
+	$ make
+
+	$ make install
+
+Run ``./configure -h`` to read about the options you have available that can
+change how Proctal will be compiled and installed.
 
 
 Usage
@@ -145,19 +179,19 @@ Usage
 
 **CLI**
 
-The command line interface consists of a group of commands that are passed to
-the ``proctal`` program, like so:
+The command line tool is a program called ``proctal`` that takes commands, like
+so:
 
 .. code :: sh
 
 	$ proctal COMMAND
 
-If you execute ``proctal`` without a command, or pass it the ``-h`` option, it will
-print help information which includes a list of all available commands.
+If you execute ``proctal`` without a command, or pass it the ``-h`` option, it
+will print help information which includes a list of all available commands.
 
-Commands can also take options. Every command recognizes the ``-h`` option, which
-will make it print help information related to it and then exit without doing
-anything else.
+Commands can also take options. Every command recognizes the ``-h`` option,
+which will make it print help information related to it and then exit without
+doing anything else.
 
 For a complete overview of the functionality provided by the tool, you can read
 the man page by running the following command:
@@ -168,47 +202,25 @@ the man page by running the following command:
 
 **API**
 
-Can be used by linking to ``libproctal`` and including ``proctal.h``
+The C library can be used by linking to ``libproctal.so`` and including
+``proctal.h``.
 
-Functions, types and macros are documented in the header file.
+The header file contains comments that provide a complete reference guide for
+all the exposed symbols.
 
 
-Installation
-============
+Documentation
+=============
 
-	**Note**
-
-	If you have a clean state of the source repository you will need to follow
-	some instructions given in the Development section.
-
-Dependencies:
-
-- GCC_
-- Libtool_
-- Capstone_
-- Keystone_
-
-Proctal provides a 3 step installation process employed by many C/C++ programs
-on Linux:
-
-.. code :: sh
-
-	$ ./configure
-
-	$ make
-
-	$ make install
-
-The configure script checks whether your system meets the minimum necessary
-requirements and allows you to change how Proctal is compiled and installed.
-You can check what options you have available by running ``./configure -h``.
+You will find a complete guide with examples and tutorials at `proctal.io
+<Documentation_>`_. 
 
 
 Development
 ===========
 
-Besides requiring the same dependencies found in the Installation section, you
-will also need:
+In addition to the dependencies listed in the Installation_ section, you will
+also need:
 
 - Git_
 - Yuck_
@@ -218,8 +230,8 @@ will also need:
 - Automake_
 
 Proctal uses the autotools to generate build systems for UNIX like operating
-systems. This section will not go into too much detail but will show you how
-you can create a development build to tinker with the source code.
+systems. This section will not go into too much detail about them but will show
+you how you can create a development build to tinker with the source code.
 
 First you need to run the ``init`` script. This will fetch some dependencies that
 don't have to be installed in your system and also prepare the autotools.
@@ -228,7 +240,7 @@ don't have to be installed in your system and also prepare the autotools.
 
 	$ ./init
 
-At this point you can follow the instructions given in the Installation
+At this point you can follow the instructions given in the Installation_
 section but you will most likely want to work strictly inside the project
 directory. Here's how you would create and compile a build that suppresses
 optimizations and inserts debugging symbols.
@@ -264,7 +276,7 @@ Contributing
 Found a bug or want to contribute code? Feel free to create an issue or send a
 pull request on GitHub_.
 
-You can also report bugs privately to bugs@proctal.io.
+You can also report bugs to bugs@proctal.io.
 
 
 License
@@ -279,10 +291,16 @@ This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
+A copy of the GNU General Public License is distributed in a file named
+LICENSE. If not, see `GNU licenses`_.
+
 
 .. References
 
+.. _Documentation: https://proctal.io/documentation
+.. _Download: https://proctal.io/download
 .. _`GNU software`: https://www.gnu.org/software/
+.. _`GNU licenses`: http://www.gnu.org/licenses/
 .. _GitHub: https://github.com/daniel-araujo/proctal
 .. _Capstone: http://www.capstone-engine.org/
 .. _Keystone: http://www.keystone-engine.org/

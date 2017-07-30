@@ -3,23 +3,17 @@
 	<title>Introduction</title>
 
 	Proctal gives you access to the address space of a program on Linux
-	with a command line tool and a C API.
-
-	It features:
+	with a command line tool and a C library. Features include:
 
 	<list>
-		<item>Reading and writing values in memory</item>
-		<item>Searching for values in memory</item>
-		<item>Repeatedly writing a value to memory fast so as to make it seem like it's never changing</item>
+		<item>Reading and writing to memory</item>
+		<item>Searching for values and byte patterns</item>
 		<item>Freezing program execution</item>
-		<item>Watching for instructions that read, write and execute memory</item>
-		<item>Disassembling instructions from any memory location</item>
-		<item>Assembling instructions to be written to any memory location</item>
-		<item>Allocating and deallocating readable/writable/executable memory blocks</item>
-		<item>Run your own code in the program</item>
-		<item>Measure size of assembly instructions and values</item>
-		<item>Byte pattern search</item>
-		<item>Memory dump</item>
+		<item>Watching for accesses to memory locations</item>
+		<item>Allocating and deallocating memory blocks</item>
+		<item>Assembling and disassembling instructions</item>
+		<item>Running your own code in the context of the program</item>
+		<item>Dumping contents in memory</item>
 	</list>
 
 	I work on this project in my spare time. You can follow my progress on

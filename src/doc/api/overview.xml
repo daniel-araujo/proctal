@@ -2,25 +2,26 @@
 <document>
 	<title>Overview</title>
 
-	The command line interface of Proctal is designed as a generic tool for
-	humans. Though suppose you have a script that runs the search command
-	several times, passing the output of a previous run to the next one;
-	Proctal has to convert the bits in memory to readable text characters
-	and then back to bits when they're piped to the next search command.
-	This can result in a lot of computing power being wasted in just
-	converting data back and forth. For a one off program this isn't much
-	of a concern but if you were creating your own specialized tool or
-	extending an existing program, using an API is more suitable.
+	Proctal provides an API through a C library.
 
-	Proctal provides an API through a C library. To give you an idea of
-	what you can accomplish with the API, the tool itself only accesses the
-	process through it.
+	While the command line interface is designed as a generic tool for
+	humans, the C library is meant to be as efficient as possible. If you
+	were to create a script that runs the search command several times,
+	passing the output of a previous run to the next one, the tool would
+	have to convert the bits in memory to readable text characters and then
+	back to bits when they're piped to the next search command which
+	results in a lot of computing power being wasted in just converting
+	data back and forth. For a one off program this performance bottleneck
+	can be ignored but if you were creating your own specialized tool or
+	extending an existing program, it would make more sense to use the
+	library.
 
-	The following sample shows you how you would use the C API to write a
-	tool that forces a program to print Hello, world!
+	The following sample shows you how you could write a tool that forces a
+	program to print Hello, world! using the library.
 
 	<code type="c">
 #include &lt;stdlib.h&gt;
+#include &lt;stdint.h&gt;
 #include &lt;stdio.h&gt;
 
 #include &lt;proctal.h&gt;
@@ -40,13 +41,24 @@ int main (int argc, char **argv)
 	}
 
 	const char output[] = "Hello, world!\n";
-	char code[] = { 0x48, 0xbe, 0xDE, 0xAD, 0xBE, 0xFF, 0xDE, 0xAD, 0xBE, 0xFF, 0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, 0x48, 0xc7, 0xc2, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x05 };
+	char code[] = {
+		// movabs rsi, &lt;address&gt;
+		0x48, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		// mov rax, 1
+		0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00,
+		// mov rdi, 1
+		0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00,
+		// mov rdx, 14
+		0x48, 0xc7, 0xc2, 0x0e, 0x00, 0x00, 0x00,
+		// syscall
+		0x0f, 0x05
+	};
 
 	proctal_t proctal = proctal_open();
 
 	if (proctal_error(proctal)) {
+		fprintf(stderr, "Failed to open Proctal.\n");
 		proctal_close(proctal);
-		fprintf(stderr, "Failed to create a Proctal handle.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -55,41 +67,40 @@ int main (int argc, char **argv)
 	void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOCATE_PERMISSION_READ);
 
 	if (proctal_error(proctal)) {
-		proctal_close(proctal);
 		fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(proctal));
+		proctal_close(proctal);
 		return EXIT_FAILURE;
 	}
 
 	proctal_write(proctal, allocated_memory, output, sizeof output);
 
 	if (proctal_error(proctal)) {
+		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 		proctal_deallocate(proctal, allocated_memory);
 		proctal_close(proctal);
-		fprintf(stderr, "Failed to write to memory in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
-	code[2] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 0) &amp; 0xFF;
-	code[3] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 1) &amp; 0xFF;
-	code[4] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 2) &amp; 0xFF;
-	code[5] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 3) &amp; 0xFF;
-	code[6] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 4) &amp; 0xFF;
-	code[7] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 5) &amp; 0xFF;
-	code[8] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 6) &amp; 0xFF;
-	code[9] = ((unsigned long long) allocated_memory &gt;&gt; 0x8 * 7) &amp; 0xFF;
+	code[2] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 0 &amp; 0xFF);
+	code[3] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 1 &amp; 0xFF);
+	code[4] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 2 &amp; 0xFF);
+	code[5] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 3 &amp; 0xFF);
+	code[6] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 4 &amp; 0xFF);
+	code[7] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 5 &amp; 0xFF);
+	code[8] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 6 &amp; 0xFF);
+	code[9] = (char) ((uintptr_t) allocated_memory &gt;&gt; 8 * 7 &amp; 0xFF);
 
 	proctal_execute(proctal, code, sizeof code);
 
 	if (proctal_error(proctal)) {
+		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 		proctal_deallocate(proctal, allocated_memory);
 		proctal_close(proctal);
-		fprintf(stderr, "Failed to execute code in process %d.\n", proctal_pid(proctal));
 		return EXIT_FAILURE;
 	}
 
 	proctal_deallocate(proctal, allocated_memory);
 	proctal_close(proctal);
-
 	return EXIT_SUCCESS;
 }
 	</code>

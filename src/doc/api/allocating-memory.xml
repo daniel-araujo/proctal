@@ -10,7 +10,8 @@
 	memory block and a bitset that determines if it will have read, write
 	or executable permissions.
 
-	Here's how you would allocate 8 bytes of readable and writable memory:
+	Here's how you would allocate 8 bytes in memory that are readable and
+	writable to the program:
 
 	<code type="c">
 void *address = proctal_allocate(proctal, 8, PROCTAL_ALLOCATE_PERMISSION_READ | PROCTAL_ALLOCATE_PERMISSION_WRITE);

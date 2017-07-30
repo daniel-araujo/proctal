@@ -1,10 +1,10 @@
 How the source code for Proctal is organized:
 
 - api
-	The C API library.
+	The C library.
 
 - cli
-	The command line interface tool.
+	The command line tool.
 
 - doc
 	The official documentation. These XML files are suitable for
