@@ -276,10 +276,14 @@ Contributing
 Found a bug or want to contribute code? Feel free to create an issue or send a
 pull request on GitHub_.
 
+By submitting code as an individual you agree to the Individual Contributor
+License Agreement. By submitting code as an entity you agree to the Entity
+Contributor License Agreement. Read the CONTRIBUTING file for more details.
+
 You can also report bugs to bugs@proctal.io.
 
 
-License
+Copying
 =======
 
 This program is free software: you can redistribute it and/or modify it under
@@ -292,7 +296,7 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 A copy of the GNU General Public License is distributed in a file named
-LICENSE. If not, see `GNU licenses`_.
+COPYING. If not, see `GNU licenses`_.
 
 
 .. References
