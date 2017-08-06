@@ -1,6 +1,8 @@
 #ifndef CLI_ASSEMBLER_H
 #define CLI_ASSEMBLER_H
 
+#include <stdlib.h>
+
 /*
  * Supported CPU architectures.
  */

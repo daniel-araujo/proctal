@@ -157,8 +157,11 @@ You will need the following programs installed on your system:
 
 - GCC_
 - Libtool_
-- Capstone_
-- Keystone_
+
+Optional:
+
+- Capstone_ - Disassembling instructions.
+- Keystone_ - Assembling instructions.
 
 Proctal provides the familiar configure, compile and install process:
 

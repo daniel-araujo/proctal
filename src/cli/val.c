@@ -2,8 +2,6 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <string.h>
-#include <capstone/capstone.h>
-#include <keystone/keystone.h>
 
 #include "cli/val.h"
 

@@ -21,6 +21,30 @@ AC_DEFUN([PROCTAL_FIND_PROG], [
 	PROCTAL_ASSIGN_VAR([$1], [$2])
 ])
 
+dnl PROCTAL_FIND_LIB(VAR, LIB, FUNC)
+dnl
+dnl Adds --with-LIB and --without-LIB options that allow the user to set
+dnl whether they want to compile with the library or not.
+dnl
+dnl VAR becomes a variable and an Automake conditional. It will also be defined
+dnl as a C preprocessor symbol if the library is found.
+dnl
+dnl if --with-LIB is passed configure will emit an error if the library is not
+dnl found.
+AC_DEFUN([PROCTAL_FIND_LIB], [
+	AH_TEMPLATE([$1], [Defines if $2 should be used.])
+
+	AC_ARG_WITH([$2], [AS_HELP_STRING([--with-$2], [Whether to compile with $2.])], [
+		if test "$withval" == "yes"; then
+			PROCTAL_CHECK_LIB([$1], [$2], [$3],, [required])
+		fi
+	], [PROCTAL_CHECK_LIB([$1], [$2], [$3])])
+
+	AM_CONDITIONAL([$1], [test -n "$$1"])
+
+	AM_COND_IF([$1], [AC_DEFINE([$1])])
+])
+
 dnl PROCTAL_PATH_PROG(VAR, PROG, [OPTIONS])
 dnl
 dnl Checks if PROG exists in the PATH variable. If PROG is found, an absolute

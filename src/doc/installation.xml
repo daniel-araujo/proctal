@@ -10,8 +10,13 @@
 	<list>
 		<item><link ref="gcc">GCC</link></item>
 		<item><link ref="libtool">libtool</link></item>
-		<item><link ref="capstone">capstone</link></item>
-		<item><link ref="keystone">keystone</link></item>
+	</list>
+
+	Optional:
+
+	<list>
+		<item><link ref="capstone">capstone</link> - Disassembling instructions.</item>
+		<item><link ref="keystone">keystone</link> - Assembling instructions.</item>
 	</list>
 
 	Proctal provides the familiar configure, compile and install process:

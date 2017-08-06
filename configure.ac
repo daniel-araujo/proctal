@@ -39,6 +39,9 @@ PROCTAL_CPU_ARCHITECTURE
 PROCTAL_FIND_PROG([YUCK], [yuck])
 PROCTAL_FIND_PROG([PHP], [php])
 
+PROCTAL_FIND_LIB([PROCTAL_CAPSTONE], [capstone], [cs_version])
+PROCTAL_FIND_LIB([PROCTAL_KEYSTONE], [keystone], [ks_version])
+
 PROCTAL_CHECK_HEADER([HAVE_SYS_PTRACE_H], [sys/ptrace.h], [required])
 
 PROCTAL_CHECK_FUNC([HAVE_PTRACE], [ptrace], [required])
@@ -47,21 +50,15 @@ PROCTAL_CHECK_HEADER([HAVE_UNISTD_H], [unistd.h], [required])
 
 PROCTAL_CHECK_FUNC([HAVE_USLEEP], [usleep], [required])
 
-PROCTAL_CHECK_HEADER([HAVE_CAPSTONE_H], [capstone/capstone.h], [required])
-PROCTAL_CHECK_LIB([HAVE_LIBCAPSTONE], [capstone], [cs_version],, [required])
-
-PROCTAL_CHECK_HEADER([HAVE_KEYSTONE_H], [keystone/keystone.h], [required])
-PROCTAL_CHECK_LIB([HAVE_LIBKEYSTONE], [keystone], [ks_version],, [required])
-
 if test -n "$HAVE_USLEEP"; then
 	proctal_xopen_cflags="-D_XOPEN_SOURCE=500"
 fi
 
-if test -n "$HAVE_LIBCAPSTONE"; then
+if test -n "$PROCTAL_CAPSTONE"; then
 	proctal_capstone_ldflags="-lcapstone"
 fi
 
-if test -n "$HAVE_LIBKEYSTONE"; then
+if test -n "$PROCTAL_KEYSTONE"; then
 	proctal_keystone_ldflags="-lkeystone"
 fi
 

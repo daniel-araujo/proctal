@@ -96,7 +96,27 @@ libcliparser_a_CFLAGS = $(proctal_cflags)
 noinst_LIBRARIES += libcliassembler.a
 libcliassembler_a_SOURCES = \
 	src/cli/assembler.h \
-	src/cli/assembler.c
+	src/cli/assembler/internal.h \
+	src/cli/assembler/implementation.h \
+	src/cli/assembler/internal.c \
+	src/cli/assembler/interface.c
+
+if PROCTAL_CAPSTONE
+libcliassembler_a_SOURCES += \
+	src/cli/assembler/implementation/capstone-keystone/with-capstone.c
+else
+libcliassembler_a_SOURCES += \
+	src/cli/assembler/implementation/capstone-keystone/without-capstone.c
+endif
+
+if PROCTAL_KEYSTONE
+libcliassembler_a_SOURCES += \
+	src/cli/assembler/implementation/capstone-keystone/with-keystone.c
+else
+libcliassembler_a_SOURCES += \
+	src/cli/assembler/implementation/capstone-keystone/without-keystone.c
+endif
+
 libcliassembler_a_CFLAGS = $(proctal_cflags)
 
 TESTS += tests/cli/invalid-patterns
