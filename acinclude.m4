@@ -62,10 +62,6 @@ AC_DEFUN([PROCTAL_PATH_PROG], [
 		if test -n "$3" && test "$3" = "required" && test -z "$$1"; then
 			AC_MSG_ERROR(["$2 not found in PATH. Cannot continue without it"])
 		fi
-
-		if test -z "$$1"; then
-			AC_MSG_WARN(["$2 not found in PATH. Some files may fail to compile without it"])
-		fi
 	fi
 ])
 
@@ -143,10 +139,6 @@ AC_DEFUN([PROCTAL_CHECK_LIB], [
 
 	if test -n "$5" && test "$5" = "required" && test -z "$$1"; then
 		AC_MSG_ERROR(["Failed to link to library $2. Cannot continue without it"])
-	fi
-
-	if test -z "$$1"; then
-		AC_MSG_WARN(["Failed to link to library $2. Some files may fail to compile without it"])
 	fi
 ])
 
