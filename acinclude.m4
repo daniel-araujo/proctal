@@ -234,9 +234,11 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Defines if the CPU architecture is arm.])
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Defines if the CPU architecture is aarch64.])
 
-	AC_CANONICAL_BUILD
+	AC_CANONICAL_HOST
 
-	case $build_cpu in
+	proctal_cpu_architecture_arch="$host_cpu"
+
+	case $proctal_cpu_architecture_arch in
 	i[3456]86)
 		AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86])
 		;;
@@ -254,7 +256,7 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 		;;
 
 	*)
-		AC_MSG_ERROR([Unable to determine CPU architecture.])
+		AC_MSG_ERROR([CPU architecture $proctal_cpu_architecture_arch not supported or not recognized.])
 	esac
 ])
 
