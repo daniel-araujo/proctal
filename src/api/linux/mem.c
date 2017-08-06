@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <darr.h>
 
 #include "api/linux/mem.h"
 #include "api/linux/proc.h"
@@ -73,19 +74,29 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
 
 int proctal_linux_mem_swap(struct proctal_linux *pl, void *addr, char *dst, char *src, size_t size)
 {
-	// TODO: should copy in chunks otherwise we'll eventually cause a
-	// stack overflow.
-	char t[size];
+	int ret = 0;
 
-	if (!proctal_linux_mem_read(pl, addr, t, size)) {
-		return 0;
+	struct darr tmp;
+	darr_init(&tmp, sizeof(char));
+
+	if (!darr_resize(&tmp, size)) {
+		proctal_error_set(&pl->p, PROCTAL_ERROR_OUT_OF_MEMORY);
+		goto exit1;
+	}
+
+	if (!proctal_linux_mem_read(pl, addr, darr_data(&tmp), size)) {
+		goto exit1;
 	}
 
 	if (!proctal_linux_mem_write(pl, addr, src, size)) {
-		return 0;
+		goto exit1;
 	}
 
-	memcpy(dst, t, size);
+	memcpy(dst, darr_data(&tmp), size);
 
-	return 1;
+	ret = 1;
+exit1:
+	darr_deinit(&tmp);
+exit0:
+	return ret;
 }
