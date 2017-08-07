@@ -7,81 +7,95 @@
 	<section>
 		<title>Value search</title>
 
-		This lets you search for values that meet the specified
-		filters. You can use a combination of filters to achieve better
-		results.
+		The <quote>search</quote> command lets you search for values
+		with a combination of filters.
 
-		The <quote>--read</quote> option matches values in readable
-		memory.
+		You can pass <link ref="proctal:cli:type-options">type
+		options</link> to specify what type of values you want to
+		search for.
 
-		The <quote>--write</quote> option matches values in writable
-		memory.
+		The following filters allow you to compare against another
+		value:
 
-		The <quote>--execute</quote> option matches values in
-		writable memory.
+		<list>
+			<item><quote>--eq</quote> matches values that equal to
+			the given value.</item>
 
-		The <quote>--eq</quote> option matches values that equal to
-		the given value.
+			<item><quote>--ne</quote> matches values that do not
+			equal to the given value.</item>
 
-		The <quote>--ne</quote> option matches values that do not
-		equal to the given value.
+			<item><quote>--gt</quote> matches values that are
+			greater than the given value.</item>
 
-		The <quote>--gt</quote> option matches values that are
-		greater than the given value.
+			<item><quote>--gte</quote> matches values that are
+			greater than or equal to the given value.</item>
 
-		The <quote>--gte</quote> option matches values that are
-		greater than or equal the given value.
+			<item><quote>--lt</quote> matches values that are
+			lesser than the given value.</item>
 
-		The <quote>--lt</quote> option matches values that are
-		lesser than the given value.
+			<item><quote>--lte</quote> matches values that are
+			lesser than or equal to the given value.</item>
+		</list>
 
-		The <quote>--lte</quote> option matches values that are
-		lesser than or equal the given value.
+		You can pass options that restrict where to search in memory:
 
-		If you pass the <quote>--input</quote> option, the command
-		will expect as input the output of a previous search result and
-		that will allow you to specify filters that compare the old
-		value with the new one.
+		<list>
+			<item><quote>--read</quote> search readable
+			memory</item>
 
-		The <quote>--inc</quote> option matches values that were
-		incremented by the given value.
+			<item><quote>--write</quote> search writable
+			memory.</item>
 
-		The <quote>--inc-up-to</quote> option matches values that
-		were incremented up to the given value.
+			<item><quote>--execute</quote> search executable
+			memory.</item>
+		</list>
 
-		The <quote>--dec</quote> option matches values that were
-		decremented by the given value.
+		If you pass the <quote>--input</quote> option, the command will
+		expect you to pass the output of a previous search result. That
+		will allow you to specify filters that compare the old values
+		with the current ones in memory.
 
-		The <quote>--dec-up-to</quote> option matches values that
-		were decremented up to the given value.
+		The following filters allow you to compare against the old value:
 
-		The <quote>--changed</quote> option matches values that have
-		changed.
+		<list>
+			<item><quote>--inc</quote> matches values that were
+			incremented by the given value.</item>
 
-		The <quote>--unchanged</quote> option matches values that have
-		not changed.
+			<item><quote>--inc-up-to</quote> matches values that
+			were incremented up to the given value.</item>
 
-		The <quote>--increased</quote> option matches values that
-		increased.
+			<item><quote>--dec</quote> matches values that were
+			decremented by the given value.</item>
 
-		The <quote>--decreased</quote> option matches values that
-		decreased.
+			<item><quote>--dec-up-to</quote> matches values that
+			were decremented up to the given value.</item>
 
-		The command accepts type options. You can find out all about
-		them <link ref="proctal:cli:type-options">here</link>.
+			<item><quote>--changed</quote> matches values that have
+			changed.</item>
+
+			<item><quote>--unchanged</quote> matches values that
+			have not changed.</item>
+
+			<item><quote>--increased</quote> matches values that
+			have increased.</item>
+
+			<item><quote>--decreased</quote> matches values that
+			have decreased.</item>
+		</list>
 
 		Here's how you would find all 32-bit integers greater than 0
-		and less than or equal to 100 in a program whose PID is 12345.
+		and less than or equal to 100 in readable and writable memory
+		regions of a program whose PID is 12345.
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=32 --gt=e0 --lte=100
+$ proctal search --pid=12345 --type=integer --integer-size=32 --read --write --gt=0 --lte=100
 		</code>
 
 		And here's how you would search for all the values that
 		increased after a previous search.
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=32 --gt=e0 --lte=100 &gt; search-1
+$ proctal search --pid=12345 --type=integer --integer-size=32 --read --write --gt=0 --lte=100 &gt; search-1
 $ proctal search --pid=12345 --type=integer --integer-size=32 --increased --input &lt; search-1
 		</code>
 
@@ -92,8 +106,8 @@ $ proctal search --pid=12345 --type=integer --integer-size=32 --increased --inpu
 	<section>
 		<title>Pattern matching</title>
 
-		For when you want to find a sequence of bytes that match a
-		given pattern.
+		The <quote>pattern</quote> command allows you to search for a
+		sequence of bytes that match a given pattern.
 
 		Here's how you would search for potential function calls in x86:
 
@@ -101,19 +115,25 @@ $ proctal search --pid=12345 --type=integer --integer-size=32 --increased --inpu
 $ proctal pattern --pid=12345 --program-code 'E8 ?? ?? ?? ??'
 		</code>
 
-		The <quote>--read</quote> option matches values in readable
-		memory.
+		You can pass options that restrict where to search in memory:
 
-		The <quote>--write</quote> option matches values in writable
-		memory.
+		<list>
+			<item><quote>--read</quote> search readable
+			memory</item>
 
-		The <quote>--execute</quote> option matches values in
-		writable memory.
+			<item><quote>--write</quote> search writable
+			memory.</item>
 
-		The <quote>--program-code</quote> option matches values in
-		the program's code.
+			<item><quote>--execute</quote> search executable
+			memory.</item>
 
-		You can pass the <quote>--freeze</quote> option to keep the
-		program frozen while searching.
+			<item><quote>--program-code</quote> search in the
+			program's code.</item>
+		</list>
+
+		These options can be used together.
+
+		The <quote>--freeze</quote> option keeps the program frozen
+		while the search is going.
 	</section>
 </document>
