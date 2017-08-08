@@ -33,59 +33,63 @@ static inline int make_prot(int permissions)
 	return prot;
 }
 
-static inline void *read_header(struct proctal_linux *pl, struct mem_header *header, void *addr)
+static inline void *read_header(struct proctal_linux *pl, struct mem_header *header, void *address)
 {
-	void *alloc_addr = (char *) addr - sizeof(header);
+	void *memory_location = (char *) address - sizeof(header);
 
-	if (!proctal_linux_mem_read(pl, alloc_addr, (char *) header, sizeof(header))) {
+	if (!proctal_linux_mem_read(pl, memory_location, (char *) header, sizeof(header))) {
 		return NULL;
 	}
 
-	return alloc_addr;
+	return memory_location;
 }
 
-static inline void *write_header(struct proctal_linux *pl, struct mem_header *header, void *alloc_addr)
+static inline void *write_header(struct proctal_linux *pl, struct mem_header *header, void *memory_location)
 {
-	if (!proctal_linux_mem_write(pl, alloc_addr, (char *) header, sizeof(header))) {
+	if (!proctal_linux_mem_write(pl, memory_location, (char *) header, sizeof(header))) {
 		return NULL;
 	}
 
-	return (char *) alloc_addr + sizeof(header);
+	return (char *) memory_location + sizeof(header);
 }
 
 void *proctal_linux_allocate(struct proctal_linux *pl, size_t size, int permissions)
 {
-	int prot = make_prot(permissions);
-	int flags = 0x22; // MAP_PRIVATE | MAP_ANONYMOUS
-
 	struct mem_header header;
 	header.size = size + sizeof(header);
 
-	void *alloc_addr = NULL;
+	void *ret = proctal_linux_execute_syscall_mmap(
+		pl,
+		NULL,
+		header.size,
+		make_prot(permissions),
+		0x22, // MAP_PRIVATE | MAP_ANONYMOUS
+		-1,
+		0);
 
-	// mmap x86-64 system call.
-	if (!proctal_linux_execute_syscall(pl, 9, (unsigned long long *) &alloc_addr, 0, header.size, prot, flags, -1, 0)) {
+	if (proctal_error(&pl->p)) {
 		return NULL;
 	}
 
-	void *addr = write_header(pl, &header, alloc_addr);
+	// TODO: Detect error codes from system call return values.
 
-	return addr;
+	return write_header(pl, &header, ret);
 }
 
-void proctal_linux_deallocate(struct proctal_linux *pl, void *addr)
+void proctal_linux_deallocate(struct proctal_linux *pl, void *address)
 {
 	struct mem_header header;
-	void *alloc_addr = read_header(pl, &header, addr);
 
-	unsigned long long ret;
+	void *memory_location = read_header(pl, &header, address);
 
-	// munmap x86-64 system call.
-	if (!proctal_linux_execute_syscall(pl, 11, &ret, (unsigned long long) alloc_addr, header.size, 0, 0, 0, 0)) {
+	int ret = proctal_linux_execute_syscall_munmap(pl, memory_location, header.size);
+
+	if (proctal_error(&pl->p)) {
 		return;
 	}
 
 	if (ret != 0) {
+		// TODO: Detect error codes from system call return values.
 		proctal_error_set(&pl->p, PROCTAL_ERROR_UNKNOWN);
 	}
 }

@@ -227,37 +227,52 @@ AC_DEFUN([PROCTAL_ARFLAGS_FIX], [
 
 dnl PROCTAL_CPU_ARCHITECTURE
 dnl
-dnl Defines PROCTAL_CPU_ARCHITECTURE.
+dnl Defines the following macros and Automake conditionals:
+dnl - PROCTAL_CPU_ARCHITECTURE_X86
+dnl - PROCTAL_CPU_ARCHITECTURE_X86_64
+dnl - PROCTAL_CPU_ARCHITECTURE_ARM
+dnl - PROCTAL_CPU_ARCHITECTURE_AARCH64
 AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86], [Defines if the CPU architecture is x86.])
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_64], [Defines if the CPU architecture is x86-64.])
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Defines if the CPU architecture is arm.])
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Defines if the CPU architecture is aarch64.])
-
 	AC_CANONICAL_HOST
 
-	proctal_cpu_architecture_arch="$host_cpu"
+	proctal_cpu_architecture_autoconf_arch="$host_cpu"
 
-	case $proctal_cpu_architecture_arch in
+	case $proctal_cpu_architecture_autoconf_arch in
 	i[3456]86)
-		AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86])
+		proctal_cpu_architecture_arch=x86
 		;;
 
 	x86_64)
-		AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_64])
+		proctal_cpu_architecture_arch=x86_64
 		;;
 
-	arm)
-		AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM])
+	armv7l)
+		proctal_cpu_architecture_arch=arm
 		;;
 
 	aarch64)
-		AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_AARCH64])
+		proctal_cpu_architecture_arch=aarch64
 		;;
 
 	*)
-		AC_MSG_ERROR([CPU architecture $proctal_cpu_architecture_arch not supported or not recognized.])
+		AC_MSG_ERROR([CPU architecture $proctal_cpu_architecture_autoconf_arch not supported or not recognized.])
 	esac
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86], [Defines if the CPU architecture is x86.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86], [test "$proctal_cpu_architecture_arch" = "x86"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_64], [Defines if the CPU architecture is x86-64.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86_64], [test "$proctal_cpu_architecture_arch" = "x86_64"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86_64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_64])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Defines if the CPU architecture is arm.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_ARM], [test "$proctal_cpu_architecture_arch" = "arm"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_ARM], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Defines if the CPU architecture is aarch64.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_AARCH64], [test "$proctal_cpu_architecture_arch" = "aarch64"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_AARCH64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_AARCH64])])
 ])
 
 dnl PROCTAL_ABSOLUTE_PATH(VAR, PATH)

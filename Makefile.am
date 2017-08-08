@@ -273,20 +273,53 @@ libproctal_la_SOURCES = \
 	src/api/linux/region.h \
 	src/api/linux/allocate.c \
 	src/api/linux/allocate.h \
-	src/api/linux/execute.c \
 	src/api/linux/execute.h \
+	src/api/linux/execute/implementation.h \
+	src/api/linux/execute/interface.c \
 	src/api/linux/mem.c \
 	src/api/linux/mem.h \
 	src/api/linux/proc.c \
 	src/api/linux/proc.h \
-	src/api/linux/ptrace.c \
 	src/api/linux/ptrace.h \
+	src/api/linux/ptrace/error-checking.c \
+	src/api/linux/ptrace/implementation.h \
+	src/api/linux/ptrace/interface.c \
+	src/api/linux/ptrace/internal.h \
 	src/api/linux/proctal.c \
 	src/api/linux/proctal.h \
-	src/api/linux/watch.c \
-	src/api/linux/watch.h \
-	src/api/x86/dr.c \
-	src/api/x86/dr.h
+	src/api/linux/watch/interface.c \
+	src/api/linux/watch/implementation.h \
+	src/api/linux/watch.h
+
+if PROCTAL_CPU_ARCHITECTURE_X86_64
+libproctal_la_SOURCES += \
+	src/api/x86_64/dr.c \
+	src/api/x86_64/dr.h
+
+libproctal_la_SOURCES += \
+	src/api/linux/ptrace/x86_64/instruction-pointer.c \
+	src/api/linux/ptrace/x86_64/register.c \
+	src/api/linux/ptrace/user-register.c
+
+libproctal_la_SOURCES += \
+	src/api/linux/execute/x86_64/no-op-code.c \
+	src/api/linux/execute/x86_64/syscall.c \
+	src/api/linux/execute/x86_64/trap-code.c \
+	src/api/linux/execute/hijack-main.c
+
+libproctal_la_SOURCES += \
+	src/api/linux/watch/x86_64/breakpoint.c
+else
+libproctal_la_SOURCES += \
+	src/api/linux/ptrace/unimplemented.c
+
+libproctal_la_SOURCES += \
+	src/api/linux/execute/unimplemented.c
+
+libproctal_la_SOURCES += \
+	src/api/linux/watch/unimplemented.c
+endif
+
 libproctal_la_CFLAGS = $(proctal_cflags)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
 

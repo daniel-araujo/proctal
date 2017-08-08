@@ -1,5 +1,5 @@
-#ifndef API_LINUX_EXECUTE_H
-#define API_LINUX_EXECUTE_H
+#ifndef API_LINUX_EXECUTE_IMPLEMENTATION_H
+#define API_LINUX_EXECUTE_IMPLEMENTATION_H
 
 #include "api/linux/proctal.h"
 
@@ -12,7 +12,7 @@
  *
  * Returns 1 on success and 0 on failure.
  */
-int proctal_linux_execute(
+int proctal_linux_execute_implementation(
 	struct proctal_linux *pl,
 	const char *bytecode,
 	size_t bytecode_length);
@@ -31,7 +31,7 @@ int proctal_linux_execute(
  *
  * If Proctal fails to dispatch the system call, an error code will be set.
  */
-void *proctal_linux_execute_syscall_mmap(
+void *proctal_linux_execute_implementation_syscall_mmap(
 	struct proctal_linux *pl,
 	void *addr,
 	size_t length,
@@ -39,9 +39,9 @@ void *proctal_linux_execute_syscall_mmap(
 	int flags,
 	int fd,
 	off_t offset);
-int proctal_linux_execute_syscall_munmap(
+int proctal_linux_execute_implementation_syscall_munmap(
 	struct proctal_linux *pl,
 	void *addr,
 	size_t length);
 
-#endif /* API_LINUX_EXECUTE_H */
+#endif /* API_LINUX_EXECUTE_IMPLEMENTATION_H */
