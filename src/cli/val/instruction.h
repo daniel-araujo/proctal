@@ -43,7 +43,9 @@ struct cli_val_instruction_attr {
 #elif PROCTAL_CPU_ARCHITECTURE_AARCH64
 	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_AARCH64
 #else
-	#error "Unknown CPU architecture."
+	// Unknown CPU architecture. Define macro with some random architecture
+	// to keep code simple.
+	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86_64
 #endif
 
 #define CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT CLI_VAL_INSTRUCTION_SYNTAX_INTEL

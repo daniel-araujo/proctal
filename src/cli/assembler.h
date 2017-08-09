@@ -30,7 +30,9 @@ enum cli_assembler_syntax {
 #elif PROCTAL_CPU_ARCHITECTURE_AARCH64
 	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_AARCH64
 #else
-	#error "Unknown CPU architecture."
+	// Unknown CPU architecture. Define macro with some random architecture
+	// to keep code simple.
+	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86_64
 #endif
 
 #define CLI_ASSEMBLER_SYNTAX_DEFAULT CLI_ASSEMBLER_SYNTAX_INTEL

@@ -255,7 +255,9 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 		;;
 
 	*)
-		AC_MSG_ERROR([CPU architecture $proctal_cpu_architecture_autoconf_arch not supported or not recognized.])
+		proctal_cpu_architecture_arch=unknown
+		AC_MSG_WARN([CPU architecture $proctal_cpu_architecture_autoconf_arch not supported or not recognized.])
+		;;
 	esac
 
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86], [Defines if the CPU architecture is x86.])
@@ -273,6 +275,10 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Defines if the CPU architecture is aarch64.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_AARCH64], [test "$proctal_cpu_architecture_arch" = "aarch64"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_AARCH64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_AARCH64])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [Defines if the CPU architecture is unknown.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [test "$proctal_cpu_architecture_arch" = "unknown"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN])])
 ])
 
 dnl PROCTAL_ABSOLUTE_PATH(VAR, PATH)
