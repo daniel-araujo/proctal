@@ -91,5 +91,5 @@ void cli_print_address(void *address)
 
 void cli_print_byte(unsigned char byte)
 {
-	printf("%02hhx", byte);
+	printf("%02hhX", byte);
 }

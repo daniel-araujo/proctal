@@ -5,7 +5,7 @@
 
 static inline void print_separator(struct cli_cmd_read_arg *arg)
 {
-	if (arg->show_address) {
+	if (arg->show_address || arg->show_bytes) {
 		printf("\n");
 		return;
 	}
@@ -100,13 +100,8 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		cli_val_print(arg->value, stdout);
 
-		if (arg->show_instruction_bytecode
-			&& cli_val_type(arg->value) == CLI_VAL_TYPE_INSTRUCTION) {
-			printf("\n");
-
-			if (arg->show_address) {
-				printf("\t");
-			}
+		if (arg->show_bytes) {
+			printf("\n\t");
 
 			for (int j = 0; j < size; j++) {
 				cli_print_byte(output[j]);

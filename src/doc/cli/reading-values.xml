@@ -14,6 +14,7 @@
 
 	<code type="bash-prompt">
 $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32
+128
 	</code>
 
 	This will output the integer value in ASCII.
@@ -35,6 +36,11 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=
 
 		<code type="bash-prompt">
 $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 --array=5
+128
+214
+-2
+100000
+-1996472313
 		</code>
 	</section>
 
@@ -51,15 +57,54 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=
 		Here's how that would look like:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=7FFE79DEA90C --type=instruction --array=5 --show-address
+$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address
+400570  sub     rsp, 0x18
+400574  mov     dword ptr [rsp + 0xc], 0
+40057C  call    0x400530
+400581  mov     edi, 0x400764
+400586  mov     esi, eax
 		</code>
 	</section>
 
 	<section>
-		<title>Showing instruction bytecode</title>
+		<title>Showing the bytes in memory</title>
 
-		The long named <quote>--show-instruction-bytecode</quote>
-		option will additionally print the bytecode in hexadecimal
-		digits when reading an instruction.
+		The <quote>--show-bytes</quote> option will additionally print
+		a sequence of numbers in hexadecimal that represent the bytes
+		of the value in memory, from the smallest address to the
+		largest.
+
+		The following example builds upon the example with
+		<quote>--show-address</quote> to additionally show the bytecode
+		of the instructions.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address --show-bytes
+400570  sub     rsp, 0x18
+        48 83 EC 18
+400574  mov     dword ptr [rsp + 0xc], 0
+        C7 44 24 0C 00 00 00 00
+40057C  call    0x400530
+        E8 AF FF FF FF
+400581  mov     edi, 0x400764
+        BF 64 07 40 00
+400586  mov     esi, eax
+        89 C6
+		</code>
+
+		This example allows you to see how integers look like in
+		memory:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=98F213B6 --type=integer --integer-size=32 --array=4 --show-bytes
+12
+        0C 00 00 00
+-81
+        AF FF FF FF
+-96
+        A0 FF FF FF
+2147483647
+        FF FF FF 7F
+		</code>
 	</section>
 </document>

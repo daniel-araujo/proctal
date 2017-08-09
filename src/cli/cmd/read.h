@@ -18,8 +18,9 @@ struct cli_cmd_read_arg {
 	// printing a lot of adjacent values of variable length.
 	int show_address;
 
-	// Whether to additionally print the bytecode of the instruction.
-	int show_instruction_bytecode;
+	// Additionally prints a sequence of numbers in hexadecimal that
+	// represent the bytes of the value in memory.
+	int show_bytes;
 
 	// Whether to keep the program frozen while reading.
 	int freeze;

@@ -102,9 +102,10 @@ Examples:
   --show-address        Additionally prints the address before the value.
                         As a side effect, all values will be separated by new
                         lines.
-  --show-instruction-bytecode
-                        If type is instruction, additionally prints the
-                        bytecode of the instruction in hexadecimal.
+  --show-bytes
+                        Additionally prints a sequence of numbers in
+                        hexadecimal that represent the bytes of the value in
+                        memory, from the smallest address to the largest.
 
 
 

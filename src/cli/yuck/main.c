@@ -338,7 +338,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 	}
 
 	arg->show_address = yuck_arg->read.show_address_flag == 1;
-	arg->show_instruction_bytecode = yuck_arg->read.show_instruction_bytecode_flag == 1;
+	arg->show_bytes = yuck_arg->read.show_bytes_flag == 1;
 
 	return arg;
 }
