@@ -3,19 +3,19 @@
 static void setup_assembler(struct cli_val_instruction *v, struct cli_assembler *assembler)
 {
 	switch (v->attr.arch) {
-	case CLI_VAL_INSTRUCTION_ARCH_X86:
+	case CLI_VAL_INSTRUCTION_ARCHITECTURE_X86:
 		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_X86);
 		break;
 
-	case CLI_VAL_INSTRUCTION_ARCH_X86_64:
+	case CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64:
 		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_X86_64);
 		break;
 
-	case CLI_VAL_INSTRUCTION_ARCH_ARM:
+	case CLI_VAL_INSTRUCTION_ARCHITECTURE_ARM:
 		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_ARM);
 		break;
 
-	case CLI_VAL_INSTRUCTION_ARCH_AARCH64:
+	case CLI_VAL_INSTRUCTION_ARCHITECTURE_AARCH64:
 		cli_assembler_arch_set(assembler, CLI_ASSEMBLER_ARCH_AARCH64);
 		break;
 	}
@@ -35,7 +35,7 @@ void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
 
 void cli_val_instruction_attr_arch_set(
 	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_arch arch);
+	enum cli_val_instruction_architecture arch);
 
 void cli_val_instruction_attr_syntax_set(
 	struct cli_val_instruction_attr *a,

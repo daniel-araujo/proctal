@@ -75,7 +75,7 @@ libclival_a_SOURCES = \
 	src/cli/val/byte.c \
 	src/cli/val/text.h \
 	src/cli/val/text.c \
-	src/cli/val/text-charset-ascii.c \
+	src/cli/val/text-encoding-ascii.c \
 	src/cli/val/instruction.h \
 	src/cli/val/instruction.c \
 	src/cli/val/filter.h \

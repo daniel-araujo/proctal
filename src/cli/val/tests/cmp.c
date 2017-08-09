@@ -396,7 +396,7 @@ static void test_text_ascii()
 {
 	struct cli_val_text_attr a;
 	cli_val_text_attr_init(&a);
-	cli_val_text_attr_charset_set(&a, CLI_VAL_TEXT_CHARSET_ASCII);
+	cli_val_text_attr_encoding_set(&a, CLI_VAL_TEXT_ENCODING_ASCII);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_TEXT, cli_val_text_create(&a));
 	cli_val_text_attr_deinit(&a);
 

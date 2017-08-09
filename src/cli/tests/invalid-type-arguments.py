@@ -34,11 +34,11 @@ common_tests = [
         "expected_output": "Invalid ieee754 precision.",
     },
     {
-        "command_args": ["--type=text", "--text-charset=utf8"],
-        "expected_output": "Invalid text character set.",
+        "command_args": ["--type=text", "--text-encoding=utf8"],
+        "expected_output": "Invalid text encoding.",
     },
     {
-        "command_args": ["--type=instruction", "--instruction-arch=linux"],
+        "command_args": ["--type=instruction", "--instruction-architecture=linux"],
         "expected_output": "Invalid architecture.",
     },
 ]

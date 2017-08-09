@@ -32,10 +32,10 @@ define(`TYPE_OPTIONS', `
                         SIGN can be:
                         unsigned
                         twos-complement
-  --text-charset=CHARSET
-                        If type is text, this determines the character encoding.
-                        By default CHARSET is ascii.
-                        CHARSET can be:
+  --text-encoding=ENCODING
+                        If type is text, this determines the encoding.
+                        By default ENCODING is ascii.
+                        ENCODING can be:
                         ascii
   --ieee754-precision=PRECISION
                         If type is ieee754, this determines the precision of
@@ -45,19 +45,17 @@ define(`TYPE_OPTIONS', `
                         single
                         double
                         extended
-  --instruction-arch=ARCH
-                        If type is instruction, this determines the
-                        architecture.
-                        By default ARCH is the same architecture that the tool
-                        was compiled in.
-                        ARCH can be:
+  --instruction-architecture=ARCHITECTURE
+                        If type is instruction, this sets the architecture.
+                        By default ARCHITECTURE is set to be the native
+                        architecture of the system if supported.
+                        ARCHITECTURE can be:
                         x86
                         x86-64
                         arm
                         aarch64
   --instruction-syntax=SYNTAX
-                        If type is architecture, this determines the syntax
-                        used for assembly.
+                        If type is instruction, this sets the syntax.
                         By default SYNTAX is intel.
                         SYNTAX can be:
                         att
@@ -96,7 +94,7 @@ Examples:
 
 
   PID_ARGUMENT
-  -a, --address=ADDR    Start address of values to read.
+  -a, --address=ADDRESS Start address of values to read.
   --freeze              Whether to keep the program frozen while reading.
   --array=SIZE          Makes the command read SIZE values in adjacent memory
                         addresses. By default SIZE is equal to 1.
@@ -133,7 +131,7 @@ Examples:
 
 
   PID_ARGUMENT
-  -a, --address=ADDR    Start address where to begin writing values.
+  -a, --address=ADDRESS Start address where to begin writing values.
   --freeze              Whether to keep the program frozen while writing.
   --array=SIZE          Makes the command write SIZE values in adjacent
                         addresses. If less than SIZE values are provided, then
@@ -279,7 +277,7 @@ Examples:
 
 
   PID_ARGUMENT
-  -a, --address=ADDR    Address to watch.
+  -a, --address=ADDRESS Address to watch.
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.
@@ -381,7 +379,7 @@ Examples:
         proctal measure --address=1c09346 --type=instruction "call 0x5"
 
 
-  -a, --address=ADDR    Address where the first value would reside in memory.
+  -a, --address=ADDRESS Address where the first value would reside in memory.
   --array=SIZE          Emulates the same behavior described in the write
                         command.
   TYPE_OPTIONS

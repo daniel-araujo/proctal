@@ -49,20 +49,20 @@ $parsers = [
 		],
 	],
 	[
-		"name" => "val_text_charset",
-		"type" => "enum cli_val_text_charset",
+		"name" => "val_text_encoding",
+		"type" => "enum cli_val_text_encoding",
 		"values" => [
-			"ascii" => "CLI_VAL_TEXT_CHARSET_ASCII",
+			"ascii" => "CLI_VAL_TEXT_ENCODING_ASCII",
 		],
 	],
 	[
-		"name" => "val_instruction_arch",
-		"type" => "enum cli_val_instruction_arch",
+		"name" => "val_instruction_architecture",
+		"type" => "enum cli_val_instruction_architecture",
 		"values" => [
-			"x86" => "CLI_VAL_INSTRUCTION_ARCH_X86",
-			"x86-64" => "CLI_VAL_INSTRUCTION_ARCH_X86_64",
-			"arm" => "CLI_VAL_INSTRUCTION_ARCH_ARM",
-			"aarch64" => "CLI_VAL_INSTRUCTION_ARCH_AARCH64",
+			"x86" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_X86",
+			"x86-64" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64",
+			"arm" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_ARM",
+			"aarch64" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_AARCH64",
 		],
 	],
 	[

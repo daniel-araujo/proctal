@@ -482,7 +482,7 @@ static void test_text_ascii()
 {
 	struct cli_val_text_attr a;
 	cli_val_text_attr_init(&a);
-	cli_val_text_attr_charset_set(&a, CLI_VAL_TEXT_CHARSET_ASCII);
+	cli_val_text_attr_encoding_set(&a, CLI_VAL_TEXT_ENCODING_ASCII);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_TEXT, cli_val_text_create(&a));
 	cli_val_text_attr_deinit(&a);
 
@@ -531,7 +531,7 @@ static void test_instruction_x86_64()
 {
 	struct cli_val_instruction_attr a;
 	cli_val_instruction_attr_init(&a);
-	cli_val_instruction_attr_arch_set(&a, CLI_VAL_INSTRUCTION_ARCH_X86_64);
+	cli_val_instruction_attr_arch_set(&a, CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INSTRUCTION, cli_val_instruction_create(&a));
 	cli_val_instruction_attr_deinit(&a);
 

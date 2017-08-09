@@ -20,7 +20,7 @@
 
 #define DEFAULT_VAL_TYPE CLI_VAL_TYPE_BYTE
 #define DEFAULT_VAL_IEEE754_PRECISION CLI_VAL_IEEE754_PRECISION_SINGLE;
-#define DEFAULT_VAL_TEXT_CHARSET CLI_VAL_TEXT_CHARSET_ASCII;
+#define DEFAULT_VAL_TEXT_ENCODING CLI_VAL_TEXT_ENCODING_ASCII;
 #define DEFAULT_CMD_EXECUTE_FORMAT CLI_CMD_EXECUTE_FORMAT_ASSEMBLY;
 
 /*
@@ -32,8 +32,8 @@ struct type_options {
 	enum cli_val_integer_sign integer_sign;
 	enum cli_val_integer_size integer_size;
 	enum cli_val_ieee754_precision ieee754_precision;
-	enum cli_val_text_charset text_charset;
-	enum cli_val_instruction_arch instruction_arch;
+	enum cli_val_text_encoding text_encoding;
+	enum cli_val_instruction_architecture instruction_architecture;
 	enum cli_val_instruction_syntax instruction_syntax;
 };
 
@@ -85,7 +85,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_TEXT: {
 		struct cli_val_text_attr a;
 		cli_val_text_attr_init(&a);
-		cli_val_text_attr_charset_set(&a, ta->text_charset);
+		cli_val_text_attr_encoding_set(&a, ta->text_encoding);
 
 		struct cli_val_text *v = cli_val_text_create(&a);
 
@@ -111,7 +111,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_INSTRUCTION: {
 		struct cli_val_instruction_attr a;
 		cli_val_instruction_attr_init(&a);
-		cli_val_instruction_attr_arch_set(&a, ta->instruction_arch);
+		cli_val_instruction_attr_arch_set(&a, ta->instruction_architecture);
 		cli_val_instruction_attr_syntax_set(&a, ta->instruction_syntax);
 
 		struct cli_val_instruction *v = cli_val_instruction_create(&a);
@@ -209,24 +209,24 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 		break; \
 \
 	case CLI_VAL_TYPE_TEXT: \
-		if (yuck_arg->text_charset_arg) { \
-			if (!cli_parse_val_text_charset(yuck_arg->text_charset_arg, &type->text_charset)) { \
-				fputs("Invalid text character set.\n", stderr); \
+		if (yuck_arg->text_encoding_arg) { \
+			if (!cli_parse_val_text_encoding(yuck_arg->text_encoding_arg, &type->text_encoding)) { \
+				fputs("Invalid text encoding.\n", stderr); \
 				return 0; \
 			} \
 		} else { \
-			type->text_charset = DEFAULT_VAL_TEXT_CHARSET; \
+			type->text_encoding = DEFAULT_VAL_TEXT_ENCODING; \
 		} \
 		break; \
 \
 	case CLI_VAL_TYPE_INSTRUCTION: \
-		if (yuck_arg->instruction_arch_arg) { \
-			if (!cli_parse_val_instruction_arch(yuck_arg->instruction_arch_arg, &type->instruction_arch)) { \
+		if (yuck_arg->instruction_architecture_arg) { \
+			if (!cli_parse_val_instruction_architecture(yuck_arg->instruction_architecture_arg, &type->instruction_architecture)) { \
 				fputs("Invalid architecture.\n", stderr); \
 				return 0; \
 			} \
 		} else { \
-			type->instruction_arch = CLI_VAL_INSTRUCTION_ARCH_DEFAULT; \
+			type->instruction_architecture = CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->instruction_syntax_arg) { \

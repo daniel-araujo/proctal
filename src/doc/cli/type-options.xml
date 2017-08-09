@@ -77,7 +77,7 @@
 		Text is a single character from a character set. It's printed
 		in UTF-8.
 
-		The <quote>--text-charset</quote> option defines the
+		The <quote>--text-encoding</quote> option defines the
 		charater set to use. At the moment the only value that is
 		supported is <quote>ascii</quote>.
 

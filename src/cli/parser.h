@@ -66,8 +66,8 @@ int cli_parse_val_integer_endianness(const char *s, enum cli_val_integer_endiann
 int cli_parse_val_integer_size(const char *s, enum cli_val_integer_size* val);
 int cli_parse_val_integer_sign(const char *s, enum cli_val_integer_sign *val);
 int cli_parse_val_ieee754_precision(const char *s, enum cli_val_ieee754_precision *val);
-int cli_parse_val_text_charset(const char *s, enum cli_val_text_charset *val);
-int cli_parse_val_instruction_arch(const char *s, enum cli_val_instruction_arch *val);
+int cli_parse_val_text_encoding(const char *s, enum cli_val_text_encoding *val);
+int cli_parse_val_instruction_architecture(const char *s, enum cli_val_instruction_architecture *val);
 int cli_parse_val_instruction_syntax(const char *s, enum cli_val_instruction_syntax *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 int cli_parse_assembler_arch(const char *s, enum cli_assembler_arch *val);

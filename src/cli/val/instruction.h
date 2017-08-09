@@ -11,11 +11,11 @@
 /*
  * Supported architectures.
  */
-enum cli_val_instruction_arch {
-	CLI_VAL_INSTRUCTION_ARCH_X86,
-	CLI_VAL_INSTRUCTION_ARCH_X86_64,
-	CLI_VAL_INSTRUCTION_ARCH_ARM,
-	CLI_VAL_INSTRUCTION_ARCH_AARCH64,
+enum cli_val_instruction_architecture {
+	CLI_VAL_INSTRUCTION_ARCHITECTURE_X86,
+	CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64,
+	CLI_VAL_INSTRUCTION_ARCHITECTURE_ARM,
+	CLI_VAL_INSTRUCTION_ARCHITECTURE_AARCH64,
 };
 
 /*
@@ -30,22 +30,22 @@ enum cli_val_instruction_syntax {
  * Describes the behavior of an instruction value.
  */
 struct cli_val_instruction_attr {
-	enum cli_val_instruction_arch arch;
+	enum cli_val_instruction_architecture arch;
 	enum cli_val_instruction_syntax syntax;
 };
 
 #if PROCTAL_CPU_ARCHITECTURE_X86
-	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86
+	#define CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT CLI_VAL_INSTRUCTION_ARCHITECTURE_X86
 #elif PROCTAL_CPU_ARCHITECTURE_X86_64
-	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86_64
+	#define CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64
 #elif PROCTAL_CPU_ARCHITECTURE_ARM
-	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_ARM
+	#define CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT CLI_VAL_INSTRUCTION_ARCHITECTURE_ARM
 #elif PROCTAL_CPU_ARCHITECTURE_AARCH64
-	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_AARCH64
+	#define CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT CLI_VAL_INSTRUCTION_ARCHITECTURE_AARCH64
 #else
 	// Unknown CPU architecture. Define macro with some random architecture
 	// to keep code simple.
-	#define CLI_VAL_INSTRUCTION_ARCH_DEFAULT CLI_VAL_INSTRUCTION_ARCH_X86_64
+	#define CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64
 #endif
 
 #define CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT CLI_VAL_INSTRUCTION_SYNTAX_INTEL
@@ -74,7 +74,7 @@ struct cli_val_instruction {
  */
 inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 {
-	a->arch = CLI_VAL_INSTRUCTION_ARCH_DEFAULT;
+	a->arch = CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT;
 	a->syntax = CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT;
 }
 
@@ -83,7 +83,7 @@ inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
  */
 inline void cli_val_instruction_attr_arch_set(
 	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_arch arch)
+	enum cli_val_instruction_architecture arch)
 {
 	a->arch = arch;
 }

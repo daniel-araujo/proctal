@@ -12,15 +12,15 @@
 /*
  * Supported character sets.
  */
-enum cli_val_text_charset {
-	CLI_VAL_TEXT_CHARSET_ASCII,
+enum cli_val_text_encoding {
+	CLI_VAL_TEXT_ENCODING_ASCII,
 };
 
 /*
  * Describes the behavior of the text character.
  */
 struct cli_val_text_attr {
-	enum cli_val_text_charset charset;
+	enum cli_val_text_encoding encoding;
 };
 
 /*
@@ -36,17 +36,17 @@ struct cli_val_text {
  */
 inline void cli_val_text_attr_init(struct cli_val_text_attr *a)
 {
-	a->charset = CLI_VAL_TEXT_CHARSET_ASCII;
+	a->encoding = CLI_VAL_TEXT_ENCODING_ASCII;
 }
 
 /*
  * Sets chararacter set.
  */
-inline void cli_val_text_attr_charset_set(
+inline void cli_val_text_attr_encoding_set(
 	struct cli_val_text_attr *a,
-	enum cli_val_text_charset charset)
+	enum cli_val_text_encoding encoding)
 {
-	a->charset = charset;
+	a->encoding = encoding;
 }
 
 /*
@@ -67,8 +67,8 @@ inline struct cli_val_text *cli_val_text_create(struct cli_val_text_attr *a)
 {
 	size_t size;
 
-	switch (a->charset) {
-	case CLI_VAL_TEXT_CHARSET_ASCII:
+	switch (a->encoding) {
+	case CLI_VAL_TEXT_ENCODING_ASCII:
 		// An ASCII character can be represented in only 7 bits. A
 		// single byte will be enough.
 		size = 1;
