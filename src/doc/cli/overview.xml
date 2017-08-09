@@ -32,9 +32,9 @@ proctal write --pid="$pid" --address="$address" --type=text H e l l o , ' ' w o 
 
 # Executes code that will print Hello, world! to standard output.
 proctal execute --pid="$pid" &lt;&lt;EOD
+	mov	rsi, 0x$address
 	mov	rax, 1
 	mov	rdi, 1
-	mov	rsi, 0x$address
 	mov	rdx, 14
 	syscall
 EOD

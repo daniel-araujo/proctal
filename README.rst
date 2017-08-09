@@ -57,10 +57,10 @@ Hello, world!
 
 	# Executes code that will print Hello, world! to standard output.
 	$ proctal execute --pid=15433
-		mov	rax, 1
-		mov	rdi, 1
-		mov	rsi, 0x7f78fda9c000
+		mov	rsi, 0x7F78FDA9C000
 		mov	rdx, 14
+		mov	rdi, 1
+		mov	rax, 1
 		syscall
 
 	# Deallocates memory that was used to store Hello, world!
@@ -80,14 +80,14 @@ Hello, world!
 	{
 		const char output[] = "Hello, world!\n";
 		char code[] = {
-			// movabs rsi, <address>
+			// mov rsi, <address>
 			0x48, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			// mov rax, 1
 			0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00,
-			// mov rdi, 1
-			0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00,
 			// mov rdx, 14
 			0x48, 0xc7, 0xc2, 0x0e, 0x00, 0x00, 0x00,
+			// mov rdi, 1
+			0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00,
 			// syscall
 			0x0f, 0x05
 		};
