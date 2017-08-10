@@ -10,7 +10,7 @@ void cli_assembler_init(struct cli_assembler *assembler);
 
 void cli_assembler_deinit(struct cli_assembler *assembler);
 
-void cli_assembler_arch_set(struct cli_assembler *assembler, enum cli_assembler_arch arch);
+void cli_assembler_architecture_set(struct cli_assembler *assembler, enum cli_assembler_architecture architecture);
 
 void cli_assembler_syntax_set(struct cli_assembler *assembler, enum cli_assembler_syntax syntax);
 

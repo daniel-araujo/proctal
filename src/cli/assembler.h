@@ -6,11 +6,11 @@
 /*
  * Supported CPU architectures.
  */
-enum cli_assembler_arch {
-	CLI_ASSEMBLER_ARCH_X86,
-	CLI_ASSEMBLER_ARCH_X86_64,
-	CLI_ASSEMBLER_ARCH_ARM,
-	CLI_ASSEMBLER_ARCH_AARCH64,
+enum cli_assembler_architecture {
+	CLI_ASSEMBLER_ARCHITECTURE_X86,
+	CLI_ASSEMBLER_ARCHITECTURE_X86_64,
+	CLI_ASSEMBLER_ARCHITECTURE_ARM,
+	CLI_ASSEMBLER_ARCHITECTURE_AARCH64,
 };
 
 /*
@@ -22,17 +22,17 @@ enum cli_assembler_syntax {
 };
 
 #if PROCTAL_CPU_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
 #elif PROCTAL_CPU_ARCHITECTURE_X86_64
-	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86_64
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86_64
 #elif PROCTAL_CPU_ARCHITECTURE_ARM
-	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_ARM
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_ARM
 #elif PROCTAL_CPU_ARCHITECTURE_AARCH64
-	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_AARCH64
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_AARCH64
 #else
 	// Unknown CPU architecture. Define macro with some random architecture
 	// to keep code simple.
-	#define CLI_ASSEMBLER_ARCH_DEFAULT CLI_ASSEMBLER_ARCH_X86_64
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86_64
 #endif
 
 #define CLI_ASSEMBLER_SYNTAX_DEFAULT CLI_ASSEMBLER_SYNTAX_INTEL
@@ -43,7 +43,7 @@ enum cli_assembler_syntax {
  */
 struct cli_assembler {
 	// CPU architecture.
-	enum cli_assembler_arch arch;
+	enum cli_assembler_architecture arch;
 
 	// Assembly syntax.
 	enum cli_assembler_syntax syntax;
@@ -93,7 +93,7 @@ struct cli_assembler_decompile_result {
  */
 inline void cli_assembler_init(struct cli_assembler *assembler)
 {
-	assembler->arch = CLI_ASSEMBLER_ARCH_DEFAULT;
+	assembler->arch = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
 	assembler->syntax = CLI_ASSEMBLER_SYNTAX_DEFAULT;
 	assembler->address = NULL;
 	assembler->error_message = NULL;
@@ -109,7 +109,7 @@ inline void cli_assembler_deinit(struct cli_assembler *assembler)
 /*
  * Sets the CPU architecture.
  */
-inline void cli_assembler_arch_set(struct cli_assembler *assembler, enum cli_assembler_arch arch)
+inline void cli_assembler_architecture_set(struct cli_assembler *assembler, enum cli_assembler_architecture arch)
 {
 	assembler->arch = arch;
 }

@@ -311,12 +311,11 @@ Examples:
                         FORMAT can be:
                         assembly
                         bytecode
-  --assembly-arch=ARCH
-                        If type is instruction, this determines the
-                        architecture.
-                        By default ARCH is the same architecture that the tool
-                        was compiled in.
-                        ARCH can be:
+  --assembly-architecture=ARCHITECTURE
+                        If type is instruction, this sets the architecture.
+                        By default ARCHITECTURE is set to be the native
+                        architecture of the system if supported.
+                        ARCHITECTURE can be:
                         x86
                         x86-64
                         arm

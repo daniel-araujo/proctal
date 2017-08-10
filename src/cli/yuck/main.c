@@ -111,7 +111,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_INSTRUCTION: {
 		struct cli_val_instruction_attr a;
 		cli_val_instruction_attr_init(&a);
-		cli_val_instruction_attr_arch_set(&a, ta->instruction_architecture);
+		cli_val_instruction_attr_architecture_set(&a, ta->instruction_architecture);
 		cli_val_instruction_attr_syntax_set(&a, ta->instruction_syntax);
 
 		struct cli_val_instruction *v = cli_val_instruction_create(&a);
@@ -786,13 +786,13 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 	}
 
 	if (arg->format == CLI_CMD_EXECUTE_FORMAT_ASSEMBLY) {
-		if (yuck_arg->execute.assembly_arch_arg) {
-			if (!cli_parse_assembler_arch(yuck_arg->execute.assembly_arch_arg, &arg->assembly_arch)) {
+		if (yuck_arg->execute.assembly_architecture_arg) {
+			if (!cli_parse_assembler_architecture(yuck_arg->execute.assembly_architecture_arg, &arg->assembly_architecture)) {
 				fputs("Invalid architecture.\n", stderr);
 				return 0;
 			}
 		} else {
-			arg->assembly_arch = CLI_ASSEMBLER_ARCH_DEFAULT;
+			arg->assembly_architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
 		}
 
 		if (yuck_arg->execute.assembly_syntax_arg) {

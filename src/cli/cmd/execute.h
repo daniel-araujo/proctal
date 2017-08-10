@@ -15,7 +15,7 @@ struct cli_cmd_execute_arg {
 	enum cli_cmd_execute_format format;
 
 	// Assembly architecture.
-	enum cli_assembler_arch assembly_arch;
+	enum cli_assembler_architecture assembly_architecture;
 
 	// Assembly syntax.
 	enum cli_assembler_syntax assembly_syntax;

@@ -82,13 +82,13 @@ $parsers = [
 		],
 	],
 	[
-		"name" => "assembler_arch",
-		"type" => "enum cli_assembler_arch",
+		"name" => "assembler_architecture",
+		"type" => "enum cli_assembler_architecture",
 		"values" => [
-			"x86" => "CLI_ASSEMBLER_ARCH_X86",
-			"x86-64" => "CLI_ASSEMBLER_ARCH_X86_64",
-			"arm" => "CLI_ASSEMBLER_ARCH_ARM",
-			"aarch64" => "CLI_ASSEMBLER_ARCH_AARCH64",
+			"x86" => "CLI_ASSEMBLER_ARCHITECTURE_X86",
+			"x86-64" => "CLI_ASSEMBLER_ARCHITECTURE_X86_64",
+			"arm" => "CLI_ASSEMBLER_ARCHITECTURE_ARM",
+			"aarch64" => "CLI_ASSEMBLER_ARCHITECTURE_AARCH64",
 		],
 	],
 	[

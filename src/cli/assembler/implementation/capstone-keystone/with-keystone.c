@@ -15,22 +15,22 @@ struct ks_parameters {
 static int init_ks_parameters(struct cli_assembler *assembler, struct ks_parameters *params)
 {
 	switch (assembler->arch) {
-	case CLI_ASSEMBLER_ARCH_X86:
+	case CLI_ASSEMBLER_ARCHITECTURE_X86:
 		params->arch = KS_ARCH_X86;
 		params->mode = KS_MODE_32;
 		return 1;
 
-	case CLI_ASSEMBLER_ARCH_X86_64:
+	case CLI_ASSEMBLER_ARCHITECTURE_X86_64:
 		params->arch = KS_ARCH_X86;
 		params->mode = KS_MODE_64;
 		return 1;
 
-	case CLI_ASSEMBLER_ARCH_ARM:
+	case CLI_ASSEMBLER_ARCHITECTURE_ARM:
 		params->arch = KS_ARCH_ARM;
 		params->mode = KS_MODE_ARM;
 		return 1;
 
-	case CLI_ASSEMBLER_ARCH_AARCH64:
+	case CLI_ASSEMBLER_ARCHITECTURE_AARCH64:
 		params->arch = KS_ARCH_ARM64;
 		params->mode = 0;
 		return 1;

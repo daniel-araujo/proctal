@@ -410,7 +410,7 @@ static void test_instruction_x86_64()
 {
 	struct cli_val_instruction_attr a;
 	cli_val_instruction_attr_init(&a);
-	cli_val_instruction_attr_arch_set(&a, CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64);
+	cli_val_instruction_attr_architecture_set(&a, CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INSTRUCTION, cli_val_instruction_create(&a));
 	cli_val_instruction_attr_deinit(&a);
 

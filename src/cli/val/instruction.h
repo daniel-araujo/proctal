@@ -30,7 +30,7 @@ enum cli_val_instruction_syntax {
  * Describes the behavior of an instruction value.
  */
 struct cli_val_instruction_attr {
-	enum cli_val_instruction_architecture arch;
+	enum cli_val_instruction_architecture architecture;
 	enum cli_val_instruction_syntax syntax;
 };
 
@@ -74,18 +74,18 @@ struct cli_val_instruction {
  */
 inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 {
-	a->arch = CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT;
+	a->architecture = CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT;
 	a->syntax = CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT;
 }
 
 /*
  * Sets architecture.
  */
-inline void cli_val_instruction_attr_arch_set(
+inline void cli_val_instruction_attr_architecture_set(
 	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_architecture arch)
+	enum cli_val_instruction_architecture architecture)
 {
-	a->arch = arch;
+	a->architecture = architecture;
 }
 
 /*
