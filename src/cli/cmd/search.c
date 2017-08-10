@@ -149,7 +149,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset - leftover;
-					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
+					cli_val_parse_binary(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
 				}
@@ -168,7 +168,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset + i;
-					cli_val_parse_bin(addr, (char *) &a, sizeof(a));
+					cli_val_parse_binary(addr, (char *) &a, sizeof(a));
 
 					print_search_match(addr, value);
 				}

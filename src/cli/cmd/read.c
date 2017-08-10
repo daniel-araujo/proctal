@@ -76,7 +76,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		cli_val_address_set(arg->value, addr);
 
-		int size = cli_val_parse_bin(arg->value, output, ARRAY_SIZE(output));
+		int size = cli_val_parse_binary(arg->value, output, ARRAY_SIZE(output));
 
 		if (size == 0) {
 			if (i == 0) {

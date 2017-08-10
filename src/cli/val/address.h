@@ -76,7 +76,7 @@ inline void *cli_val_address_data(struct cli_val_address *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_address_parse_bin(struct cli_val_address *v, const char *s, size_t length)
+inline int cli_val_address_parse_binary(struct cli_val_address *v, const char *s, size_t length)
 {
 	size_t size = cli_val_address_sizeof();
 
@@ -130,7 +130,7 @@ inline int cli_val_address_scan(struct cli_val_address *v, FILE *f)
  *
  * Returns 1 on success, 0 on failure.
  */
-inline int cli_val_address_parse(struct cli_val_address *v, const char *s)
+inline int cli_val_address_parse_text(struct cli_val_address *v, const char *s)
 {
 	return sscanf(s, "%" PRIXPTR, &v->address) == 1 ? 1 : 0;
 }

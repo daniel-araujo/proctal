@@ -409,7 +409,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 
 		cli_val_address_set(v, vaddress);
 
-		if (!cli_val_parse(v, yuck_arg->args[i])) {
+		if (!cli_val_parse_text(v, yuck_arg->args[i])) {
 			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
 			cli_val_destroy(v);
 			destroy_cli_cmd_write_arg(arg);
@@ -568,7 +568,7 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 	if (yuck_arg->search.NAME##_arg != NULL) { \
 		arg->NAME = 1; \
 		arg->NAME##_value = create_cli_val_from_type_options(&type_args); \
-		if (!cli_val_parse(arg->NAME##_value, yuck_arg->search.NAME##_arg)) { \
+		if (!cli_val_parse_text(arg->NAME##_value, yuck_arg->search.NAME##_arg)) { \
 			fputs("Invalid value for --"#NAME".\n", stderr); \
 			destroy_cli_cmd_search_arg(arg); \
 			return NULL; \
@@ -946,7 +946,7 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 			return NULL;
 		}
 
-		if (!cli_val_parse(v, yuck_arg->args[i])) {
+		if (!cli_val_parse_text(v, yuck_arg->args[i])) {
 			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
 			cli_val_destroy(v);
 			destroy_cli_cmd_measure_arg(arg);

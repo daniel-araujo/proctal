@@ -225,7 +225,7 @@ inline size_t cli_val_integer_sizeof(struct cli_val_integer *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_integer_parse_bin(struct cli_val_integer *v, const char *s, size_t length)
+inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const char *s, size_t length)
 {
 	size_t size = cli_val_integer_sizeof(v);
 
@@ -251,7 +251,7 @@ inline struct cli_val_integer *cli_val_integer_create_clone(struct cli_val_integ
 		return NULL;
 	}
 
-	cli_val_integer_parse_bin(v, (void *) other_v->data, cli_val_integer_sizeof(v));
+	cli_val_integer_parse_binary(v, (void *) other_v->data, cli_val_integer_sizeof(v));
 
 	return v;
 }
@@ -300,6 +300,6 @@ int cli_val_integer_scan(struct cli_val_integer *v, FILE *f);
  *
  * Returns 1 on success, 0 on failure.
  */
-int cli_val_integer_parse(struct cli_val_integer *v, const char *s);
+int cli_val_integer_parse_text(struct cli_val_integer *v, const char *s);
 
 #endif /* CLI_VAL_INTEGER_H */

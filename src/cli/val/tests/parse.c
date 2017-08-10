@@ -72,9 +72,9 @@ struct test {
 		.result = "a", \
 	} \
 
-static int run_parse(const char *name, struct test *test, cli_val v)
+static int run_parse_text(const char *name, struct test *test, cli_val v)
 {
-	if (!cli_val_parse(v, test->value)) {
+	if (!cli_val_parse_text(v, test->value)) {
 		fprintf(stderr, "%s parse: Failed to parse '%s'\n", name, test->value);
 		return 1;
 	}
@@ -102,13 +102,13 @@ static int run_parse(const char *name, struct test *test, cli_val v)
 	return 0;
 }
 
-static int run_parse_bin(const char *name, struct test *test, cli_val v)
+static int run_parse_binary(const char *name, struct test *test, cli_val v)
 {
 	cli_val sv = cli_val_create_clone(v);
-	cli_val_parse(sv, test->value);
+	cli_val_parse_text(sv, test->value);
 
-	if (!cli_val_parse_bin(v, cli_val_data(sv), cli_val_sizeof(sv))) {
-		fprintf(stderr, "%s parse_bin: Failed to parse '%s'\n", name, test->value);
+	if (!cli_val_parse_binary(v, cli_val_data(sv), cli_val_sizeof(sv))) {
+		fprintf(stderr, "%s parse_binary: Failed to parse '%s'\n", name, test->value);
 		cli_val_destroy(sv);
 		return 1;
 	}
@@ -127,7 +127,7 @@ static int run_parse_bin(const char *name, struct test *test, cli_val v)
 
 	if (output_size != expect_size
 		|| memcmp(test->result, output, output_size) != 0) {
-		fprintf(stderr, "%s parse_bin: Expected '%s' to result in '%s'\n", name, test->value, test->result);
+		fprintf(stderr, "%s parse_binary: Expected '%s' to result in '%s'\n", name, test->value, test->result);
 		fprintf(stderr, "Got '%.*s' instead.\n", (int) output_size, output);
 		otrap_deinit(&otrap);
 		return 1;
@@ -185,11 +185,11 @@ static int run(const char *name, struct test *tests, size_t size, cli_val v)
 	for (size_t i = 0; i < size; ++i) {
 		struct test *test = &tests[i];
 
-		if (run_parse(name, test, v)) {
+		if (run_parse_text(name, test, v)) {
 			return 1;
 		}
 
-		if (run_parse_bin(name, test, v)) {
+		if (run_parse_binary(name, test, v)) {
 			return 1;
 		}
 

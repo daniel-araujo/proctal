@@ -8,13 +8,13 @@ void cli_val_byte_destroy(struct cli_val_byte *v);
 
 void *cli_val_byte_data(struct cli_val_byte *v);
 
-int cli_val_byte_parse_bin(struct cli_val_byte *v, const char *s, size_t length);
+int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size_t length);
 
 int cli_val_byte_print(struct cli_val_byte *v, FILE *f);
 
 int cli_val_byte_scan(struct cli_val_byte *v, FILE *f);
 
-int cli_val_byte_parse(struct cli_val_byte *v, const char *s);
+int cli_val_byte_parse_text(struct cli_val_byte *v, const char *s);
 
 int cli_val_byte_add(
 	struct cli_val_byte *v,

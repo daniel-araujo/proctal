@@ -70,10 +70,10 @@ static int run(const char *name, struct test *tests, size_t size, cli_val v)
 		struct test *test = &tests[i];
 
 		cli_val v1 = cli_val_create_clone(v);
-		cli_val_parse(v1, test->value1);
+		cli_val_parse_text(v1, test->value1);
 
 		cli_val v2 = cli_val_create_clone(v);
-		cli_val_parse(v2, test->value2);
+		cli_val_parse_text(v2, test->value2);
 
 		cli_val_sub(v1, v2);
 

@@ -18,8 +18,8 @@ int main(void)
 	cli_val_text_attr_deinit(&a);
 
 	for (size_t i = 0; i < 128; ++i) {
-		if (cli_val_text_parse_bin(v, &characters[i], 1) != 1) {
-			fprintf(stderr, "cli_val_text_parse_bin failed on character #%lu\n", i + 1);
+		if (cli_val_text_parse_binary(v, &characters[i], 1) != 1) {
+			fprintf(stderr, "cli_val_text_parse_binary failed on character #%lu\n", i + 1);
 			cli_val_text_destroy(v);
 			return 1;
 		}

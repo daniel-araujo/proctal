@@ -6,9 +6,10 @@
 #include "cli/val.h"
 
 /*
- * This is the data structure that implementations must fill to be wrapped.
+ * This is the data structure that types must fill to have their values
+ * wrapped.
  */
-struct cli_val_impl {
+struct cli_val_implementation {
 	enum cli_val_type type;
 
 	void (*address_set)(void *, void *);
@@ -21,8 +22,8 @@ struct cli_val_impl {
 	int (*cmp)(void *, void *);
 	int (*print)(void *, FILE *);
 	int (*scan)(void *, FILE *);
-	int (*parse)(void *, const char *);
-	int (*parse_bin)(void *, const char *, size_t length);
+	int (*parse_text)(void *, const char *);
+	int (*parse_binary)(void *, const char *, size_t length);
 
 	void *(*create_clone)(void *);
 	void (*destroy)(void *);
@@ -32,7 +33,7 @@ struct cli_val_impl {
  * The data structure that wraps a value together with its implementation.
  */
 struct cli_val {
-	struct cli_val_impl *impl;
+	struct cli_val_implementation *implementation;
 	void *val;
 };
 
@@ -52,7 +53,7 @@ static size_t size_one(void *val)
 /*
  * All default implementations must be defined in this array.
  */
-static struct cli_val_impl impls[] = {
+static struct cli_val_implementation implementations[] = {
 	[CLI_VAL_TYPE_BYTE] = {
 		.type = CLI_VAL_TYPE_BYTE,
 
@@ -63,8 +64,8 @@ static struct cli_val_impl impls[] = {
 		.cmp = (void *) cli_val_byte_cmp,
 		.print = (void *) cli_val_byte_print,
 		.scan = (void *) cli_val_byte_scan,
-		.parse = (void *) cli_val_byte_parse,
-		.parse_bin = (void *) cli_val_byte_parse_bin,
+		.parse_text = (void *) cli_val_byte_parse_text,
+		.parse_binary = (void *) cli_val_byte_parse_binary,
 
 		.create_clone = (void *) cli_val_byte_create_clone,
 		.destroy = (void *) cli_val_byte_destroy,
@@ -80,8 +81,8 @@ static struct cli_val_impl impls[] = {
 		.cmp = (void *) cli_val_integer_cmp,
 		.print = (void *) cli_val_integer_print,
 		.scan = (void *) cli_val_integer_scan,
-		.parse = (void *) cli_val_integer_parse,
-		.parse_bin = (void *) cli_val_integer_parse_bin,
+		.parse_text = (void *) cli_val_integer_parse_text,
+		.parse_binary = (void *) cli_val_integer_parse_binary,
 
 		.create_clone = (void *) cli_val_integer_create_clone,
 		.destroy = (void *) cli_val_integer_destroy,
@@ -97,8 +98,8 @@ static struct cli_val_impl impls[] = {
 		.cmp = (void *) cli_val_ieee754_cmp,
 		.print = (void *) cli_val_ieee754_print,
 		.scan = (void *) cli_val_ieee754_scan,
-		.parse = (void *) cli_val_ieee754_parse,
-		.parse_bin = (void *) cli_val_ieee754_parse_bin,
+		.parse_text = (void *) cli_val_ieee754_parse_text,
+		.parse_binary = (void *) cli_val_ieee754_parse_binary,
 
 		.create_clone = (void *) cli_val_ieee754_create_clone,
 		.destroy = (void *) cli_val_ieee754_destroy,
@@ -111,8 +112,8 @@ static struct cli_val_impl impls[] = {
 		.cmp = (void *) cli_val_text_cmp,
 		.print = (void *) cli_val_text_print,
 		.scan = (void *) cli_val_text_scan,
-		.parse = (void *) cli_val_text_parse,
-		.parse_bin = (void *) cli_val_text_parse_bin,
+		.parse_text = (void *) cli_val_text_parse_text,
+		.parse_binary = (void *) cli_val_text_parse_binary,
 
 		.create_clone = (void *) cli_val_text_create_clone,
 		.destroy = (void *) cli_val_text_destroy,
@@ -126,8 +127,8 @@ static struct cli_val_impl impls[] = {
 		.cmp = (void *) cli_val_address_cmp,
 		.print = (void *) cli_val_address_print,
 		.scan = (void *) cli_val_address_scan,
-		.parse = (void *) cli_val_address_parse,
-		.parse_bin = (void *) cli_val_address_parse_bin,
+		.parse_text = (void *) cli_val_address_parse_text,
+		.parse_binary = (void *) cli_val_address_parse_binary,
 
 		.create_clone = (void *) cli_val_address_create_clone,
 		.destroy = (void *) cli_val_address_destroy,
@@ -141,8 +142,8 @@ static struct cli_val_impl impls[] = {
 		.size = (void *) cli_val_instruction_sizeof,
 		.data = (void *) cli_val_instruction_data,
 		.print = (void *) cli_val_instruction_print,
-		.parse = (void *) cli_val_instruction_parse,
-		.parse_bin = (void *) cli_val_instruction_parse_bin,
+		.parse_text = (void *) cli_val_instruction_parse_text,
+		.parse_binary = (void *) cli_val_instruction_parse_binary,
 
 		.create_clone = (void *) cli_val_instruction_create_clone,
 		.destroy = (void *) cli_val_instruction_destroy,
@@ -152,16 +153,16 @@ static struct cli_val_impl impls[] = {
 /*
  * Retrieves a default implementation by its type.
  */
-static struct cli_val_impl *get_impl_by_type(enum cli_val_type type)
+static struct cli_val_implementation *get_implementation(enum cli_val_type type)
 {
-	return &impls[type];
+	return &implementations[type];
 }
 
 cli_val cli_val_wrap(enum cli_val_type type, void *val)
 {
-	struct cli_val_impl *impl = get_impl_by_type(type);
+	struct cli_val_implementation *implementation = get_implementation(type);
 
-	if (impl == NULL) {
+	if (implementation == NULL) {
 		return NULL;
 	}
 
@@ -171,7 +172,7 @@ cli_val cli_val_wrap(enum cli_val_type type, void *val)
 		return NULL;
 	}
 
-	v->impl = impl;
+	v->implementation = implementation;
 	v->val = val;
 
 	return v;
@@ -188,132 +189,132 @@ void *cli_val_unwrap(cli_val v)
 
 cli_val cli_val_create_clone(cli_val other_v)
 {
-	void *val = other_v->impl->create_clone(other_v->val);
+	void *val = other_v->implementation->create_clone(other_v->val);
 
-	return cli_val_wrap(other_v->impl->type, val);
+	return cli_val_wrap(other_v->implementation->type, val);
 }
 
 void cli_val_destroy(cli_val v)
 {
-	v->impl->destroy(v->val);
+	v->implementation->destroy(v->val);
 	free(v);
 }
 
 void cli_val_address_set(cli_val v, void *addr)
 {
-	if (v->impl->address_set == NULL) {
+	if (v->implementation->address_set == NULL) {
 		return;
 	}
 
-	return v->impl->address_set(v->val, addr);
+	return v->implementation->address_set(v->val, addr);
 }
 
 void *cli_val_address(cli_val v)
 {
-	if (v->impl->address == NULL) {
+	if (v->implementation->address == NULL) {
 		return NULL;
 	}
 
-	return v->impl->address(v->val);
+	return v->implementation->address(v->val);
 }
 
 enum cli_val_type cli_val_type(cli_val v)
 {
-	return v->impl->type;
+	return v->implementation->type;
 }
 
 size_t cli_val_alignof(cli_val v)
 {
-	if (v->impl->align == NULL) {
+	if (v->implementation->align == NULL) {
 		return 1;
 	}
 
-	return v->impl->align(v->val);
+	return v->implementation->align(v->val);
 }
 
 size_t cli_val_sizeof(cli_val v)
 {
-	return v->impl->size(v->val);
+	return v->implementation->size(v->val);
 }
 
 void *cli_val_data(cli_val v)
 {
-	return v->impl->data(v->val);
+	return v->implementation->data(v->val);
 }
 
 int cli_val_add(cli_val v, cli_val other_v)
 {
-	if (v->impl->type != other_v->impl->type) {
+	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
 	}
 
-	if (v->impl->add == NULL) {
+	if (v->implementation->add == NULL) {
 		return 0;
 	}
 
-	return v->impl->add(v->val, other_v->val);
+	return v->implementation->add(v->val, other_v->val);
 }
 
 int cli_val_sub(cli_val v, cli_val other_v)
 {
-	if (v->impl->type != other_v->impl->type) {
+	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
 	}
 
-	if (v->impl->sub == NULL) {
+	if (v->implementation->sub == NULL) {
 		return 0;
 	}
 
-	return v->impl->sub(v->val, other_v->val);
+	return v->implementation->sub(v->val, other_v->val);
 }
 
 int cli_val_cmp(cli_val v, cli_val other_v)
 {
-	if (v->impl->type != other_v->impl->type) {
+	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
 	}
 
-	if (v->impl->cmp == NULL) {
+	if (v->implementation->cmp == NULL) {
 		return 0;
 	}
 
-	return v->impl->cmp(v->val, other_v->val);
+	return v->implementation->cmp(v->val, other_v->val);
 }
 
 int cli_val_print(cli_val v, FILE *f)
 {
-	if (v->impl->print == NULL) {
+	if (v->implementation->print == NULL) {
 		return 0;
 	}
 
-	return v->impl->print(v->val, f);
+	return v->implementation->print(v->val, f);
 }
 
 int cli_val_scan(cli_val v, FILE *f)
 {
-	if (v->impl->scan == NULL) {
+	if (v->implementation->scan == NULL) {
 		return 0;
 	}
 
-	return v->impl->scan(v->val, f);
+	return v->implementation->scan(v->val, f);
 }
 
-int cli_val_parse(cli_val v, const char *s)
+int cli_val_parse_text(cli_val v, const char *s)
 {
-	if (v->impl->parse == NULL) {
+	if (v->implementation->parse_text == NULL) {
 		return 0;
 	}
 
-	return v->impl->parse(v->val, s);
+	return v->implementation->parse_text(v->val, s);
 }
 
-int cli_val_parse_bin(cli_val v, const char *s, size_t length)
+int cli_val_parse_binary(cli_val v, const char *s, size_t length)
 {
-	if (v->impl->parse_bin == NULL) {
+	if (v->implementation->parse_binary == NULL) {
 		return 0;
 	}
 
-	return v->impl->parse_bin(v->val, s, length);
+	return v->implementation->parse_binary(v->val, s, length);
 }
 
 cli_val cli_val_nil(void)

@@ -24,7 +24,7 @@ int cli_val_text_ascii_scan(struct cli_val_text *v, FILE *f)
 	return fscanf(f, "%c", v->data) == 1 ? 1 : 0;
 }
 
-int cli_val_text_ascii_parse(struct cli_val_text *v, const char *s)
+int cli_val_text_ascii_parse_text(struct cli_val_text *v, const char *s)
 {
 	if (*s == '\0') {
 		// End of the string.
@@ -41,7 +41,7 @@ int cli_val_text_ascii_parse(struct cli_val_text *v, const char *s)
 	return 1;
 }
 
-int cli_val_text_ascii_parse_bin(struct cli_val_text *v, const char *s, size_t length)
+int cli_val_text_ascii_parse_binary(struct cli_val_text *v, const char *s, size_t length)
 {
 	if (length == 0) {
 		return 0;

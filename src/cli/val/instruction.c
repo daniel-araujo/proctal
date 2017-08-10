@@ -85,7 +85,7 @@ exit0:
 	return ret;
 }
 
-int cli_val_instruction_parse_bin(struct cli_val_instruction *v, const char *s, size_t length)
+int cli_val_instruction_parse_binary(struct cli_val_instruction *v, const char *s, size_t length)
 {
 	int ret = 0;
 
@@ -130,7 +130,7 @@ exit0:
 	return ret;
 }
 
-int cli_val_instruction_parse(struct cli_val_instruction *v, const char *s)
+int cli_val_instruction_parse_text(struct cli_val_instruction *v, const char *s)
 {
 	int ret = 0;
 

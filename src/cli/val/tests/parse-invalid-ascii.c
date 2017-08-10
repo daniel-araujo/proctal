@@ -18,7 +18,7 @@ int main(void)
 	cli_val_text_attr_deinit(&a);
 
 	for (size_t i = 0; i < 129; ++i) {
-		if (cli_val_text_parse(v, &strings[i * 2]) != 0) {
+		if (cli_val_text_parse_text(v, &strings[i * 2]) != 0) {
 			fprintf(stderr, "cli_val_text_parse accepted string #%lu\n", i + 1);
 			cli_val_text_destroy(v);
 			return 1;

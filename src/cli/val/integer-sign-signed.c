@@ -112,7 +112,7 @@ int cli_val_integer_signed_scan(struct cli_val_integer *v, FILE *f)
 	return 0;
 }
 
-int cli_val_integer_signed_parse(struct cli_val_integer *v, const char *s)
+int cli_val_integer_signed_parse_text(struct cli_val_integer *v, const char *s)
 {
 	switch (v->attr.size) {
 	case CLI_VAL_INTEGER_SIZE_8:

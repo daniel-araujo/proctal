@@ -21,7 +21,7 @@ size_t cli_val_ieee754_alignof(struct cli_val_ieee754 *v);
 
 size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v);
 
-int cli_val_ieee754_parse_bin(struct cli_val_ieee754 *v, const char *s, size_t length);
+int cli_val_ieee754_parse_binary(struct cli_val_ieee754 *v, const char *s, size_t length);
 
 struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee754 *other_v);
 
@@ -136,7 +136,7 @@ int cli_val_ieee754_scan(struct cli_val_ieee754 *v, FILE *f)
 	return 0;
 }
 
-int cli_val_ieee754_parse(struct cli_val_ieee754 *v, const char *s)
+int cli_val_ieee754_parse_text(struct cli_val_ieee754 *v, const char *s)
 {
 #define SCANF(FORMAT, TYPE) \
 	(sscanf(s, FORMAT, (TYPE *) v->data) == 1 ? 1 : 0)

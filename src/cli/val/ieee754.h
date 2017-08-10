@@ -164,7 +164,7 @@ inline size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_ieee754_parse_bin(struct cli_val_ieee754 *v, const char *s, size_t length)
+inline int cli_val_ieee754_parse_binary(struct cli_val_ieee754 *v, const char *s, size_t length)
 {
 	size_t size = cli_val_ieee754_sizeof(v);
 
@@ -190,7 +190,7 @@ inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee7
 		return NULL;
 	}
 
-	cli_val_ieee754_parse_bin(v, (void *) other_v->data, cli_val_ieee754_sizeof(v));
+	cli_val_ieee754_parse_binary(v, (void *) other_v->data, cli_val_ieee754_sizeof(v));
 
 	return v;
 }
@@ -239,6 +239,6 @@ int cli_val_ieee754_scan(struct cli_val_ieee754 *v, FILE *f);
  *
  * Returns 1 on success, 0 on failure.
  */
-int cli_val_ieee754_parse(struct cli_val_ieee754 *v, const char *s);
+int cli_val_ieee754_parse_text(struct cli_val_ieee754 *v, const char *s);
 
 #endif /* CLI_VAL_IEEE754_H */

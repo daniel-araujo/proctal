@@ -50,7 +50,7 @@ int main(void)
 	byte[0] = 0x01;
 	byte[1] = 0x00;
 
-	if (!cli_val_integer_parse_bin(v, (const char *) &integer, sizeof(integer)) != 0) {
+	if (!cli_val_integer_parse_binary(v, (const char *) &integer, sizeof(integer)) != 0) {
 		fprintf(stderr, "Failed to parse integer.\n");
 		goto exit2;
 	}
@@ -66,7 +66,7 @@ int main(void)
 	byte[0] = 0x00;
 	byte[1] = 0x01;
 
-	if (!cli_val_integer_parse_bin(v, (const char *) &integer, sizeof(integer)) != 0) {
+	if (!cli_val_integer_parse_binary(v, (const char *) &integer, sizeof(integer)) != 0) {
 		fprintf(stderr, "Failed to parse integer.\n");
 		goto exit2;
 	}

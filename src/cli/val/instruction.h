@@ -189,14 +189,14 @@ int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f);
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-int cli_val_instruction_parse_bin(struct cli_val_instruction *v, const char *s, size_t length);
+int cli_val_instruction_parse_binary(struct cli_val_instruction *v, const char *s, size_t length);
 
 /*
  * Attempts to parse the instruction value as text from a C-style string.
  *
  * Returns 1 on success, 0 on failure.
  */
-int cli_val_instruction_parse(struct cli_val_instruction *v, const char *s);
+int cli_val_instruction_parse_text(struct cli_val_instruction *v, const char *s);
 
 /*
  * Creates a new instruction value based off an existing one.
@@ -212,7 +212,7 @@ inline struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_v
 	}
 
 	if (other_v->bytecode) {
-		cli_val_instruction_parse_bin(v, other_v->bytecode, other_v->bytecode_size);
+		cli_val_instruction_parse_binary(v, other_v->bytecode, other_v->bytecode_size);
 	}
 
 	return v;

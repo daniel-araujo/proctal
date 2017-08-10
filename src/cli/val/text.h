@@ -145,14 +145,14 @@ int cli_val_text_scan(struct cli_val_text *v, FILE *f);
  *
  * Returns 1 on success, 0 on failure.
  */
-int cli_val_text_parse(struct cli_val_text *v, const char *s);
+int cli_val_text_parse_text(struct cli_val_text *v, const char *s);
 
 /*
  * Attempts to interpret a text value from a stream of bytes.
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-int cli_val_text_parse_bin(struct cli_val_text *v, const char *s, size_t length);
+int cli_val_text_parse_binary(struct cli_val_text *v, const char *s, size_t length);
 
 /*
  * Creates a new text value based off an existing one.
@@ -167,7 +167,7 @@ inline struct cli_val_text *cli_val_text_create_clone(struct cli_val_text *other
 		return NULL;
 	}
 
-	cli_val_text_parse_bin(v, other_v->data, cli_val_text_sizeof(v));
+	cli_val_text_parse_binary(v, other_v->data, cli_val_text_sizeof(v));
 
 	return v;
 }

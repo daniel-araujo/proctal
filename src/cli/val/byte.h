@@ -62,7 +62,7 @@ inline void *cli_val_byte_data(struct cli_val_byte *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_byte_parse_bin(struct cli_val_byte *v, const char *s, size_t length)
+inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size_t length)
 {
 	size_t size = 1;
 
@@ -138,7 +138,7 @@ inline int cli_val_byte_scan(struct cli_val_byte *v, FILE *f)
  *
  * Returns 1 on success, 0 on failure.
  */
-inline int cli_val_byte_parse(struct cli_val_byte *v, const char *s)
+inline int cli_val_byte_parse_text(struct cli_val_byte *v, const char *s)
 {
 	return sscanf(s, "%hhx", &v->byte) == 1 ? 1 : 0;
 }

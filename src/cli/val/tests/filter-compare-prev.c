@@ -29,7 +29,7 @@ static struct cli_val_filter_compare_prev_arg *create_filter_arg(struct test *te
 #define CREATE(NAME) \
 	if (test->NAME != NULL) { \
 		arg->NAME = cli_val_create_clone(v); \
-		cli_val_parse(arg->NAME, test->NAME); \
+		cli_val_parse_text(arg->NAME, test->NAME); \
 	} else { \
 		arg->NAME = nil; \
 	}
@@ -217,8 +217,8 @@ int main(void)
 	for (size_t i = 0; i < ARRAY_SIZE(tests); ++i) {
 		struct test *test = &tests[i];
 
-		cli_val_parse(vcurr, test->curr);
-		cli_val_parse(vprev, test->prev);
+		cli_val_parse_text(vcurr, test->curr);
+		cli_val_parse_text(vprev, test->prev);
 
 		struct cli_val_filter_compare_prev_arg *filter_arg = create_filter_arg(test, vcurr);
 

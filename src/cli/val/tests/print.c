@@ -63,7 +63,7 @@ static int run(const char *name, struct test *tests, size_t size, cli_val v)
 	for (size_t i = 0; i < size; ++i) {
 		struct test *test = &tests[i];
 
-		cli_val_parse(v, test->value);
+		cli_val_parse_text(v, test->value);
 
 		struct otrap otrap;
 		otrap_init(&otrap);
