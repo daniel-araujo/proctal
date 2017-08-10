@@ -66,18 +66,18 @@ size_t proctal_implementation_write(struct proctal *p, void *addr, const char *i
 	return proctal_linux_mem_write(pl, addr, in, size);
 }
 
-int proctal_implementation_freeze(struct proctal *p)
+void proctal_implementation_freeze(struct proctal *p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_ptrace_attach(pl);
+	proctal_linux_ptrace_attach(pl);
 }
 
-int proctal_implementation_unfreeze(struct proctal *p)
+void proctal_implementation_unfreeze(struct proctal *p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_ptrace_detach(pl);
+	proctal_linux_ptrace_detach(pl);
 }
 
 void proctal_implementation_scan_address_start(struct proctal *p)
@@ -122,11 +122,11 @@ int proctal_implementation_scan_region(struct proctal *p, void **start, void **e
 	return proctal_linux_scan_region(pl, start, end);
 }
 
-int proctal_implementation_watch_start(struct proctal *p)
+void proctal_implementation_watch_start(struct proctal *p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_watch_start(pl);
+	proctal_linux_watch_start(pl);
 }
 
 void proctal_implementation_watch_stop(struct proctal *p)
@@ -143,11 +143,11 @@ int proctal_implementation_watch(struct proctal *p, void **addr)
 	return proctal_linux_watch(pl, addr);
 }
 
-int proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length)
+void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_execute(pl, bytecode, bytecode_length);
+	proctal_linux_execute(pl, bytecode, bytecode_length);
 }
 
 void *proctal_implementation_allocate(struct proctal *p, size_t size, int perm)

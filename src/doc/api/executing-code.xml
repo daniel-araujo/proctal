@@ -16,10 +16,9 @@
 	Here's how you would make a program execute 3 NO OPS on x86-64:
 
 	<code type="c">
-int result = proctal_execute(proctal, "\x90\x90\x90", 3);
+proctal_execute(proctal, "\x90\x90\x90", 3);
 	</code>
 
-	The function returns <quote>1</quote> on succcess and <quote>0</quote>
-	on failure. In case of failure, call <quote>proctal_error</quote> to
-	find out what went wrong.
+	To check if something went wrong, call <quote>proctal_error</quote> to
+	get an error code.
 </document>

@@ -73,6 +73,9 @@ proctal_scan_address_read_set(proctal, 1);
 proctal_scan_address_start(proctal);
 		</code>
 
+		You should call proctal_error to verify if this function
+		succeeded.
+
 		And now each call to <quote>proctal_scan_address</quote> will return
 		you the current address and move on to the next one.
 
@@ -157,6 +160,9 @@ proctal_scan_region_read_set(proctal, 1);
 		<code type="c">
 proctal_scan_region_start(proctal);
 		</code>
+
+		You should call proctal_error to verify if this function
+		succeeded.
 
 		And now each call to proctal_scan_region will return you the
 		starting and ending address of the current region and move on

@@ -225,6 +225,8 @@ size_t proctal_write_address_array(proctal_t p, void *addr, const void **in, siz
  * Starts scanning for addresses.
  *
  * When you're done scanning, you must call proctal_scan_address_stop.
+ *
+ * You should call proctal_error to verify if this function succeeded.
  */
 void proctal_scan_address_start(proctal_t p);
 
@@ -233,6 +235,8 @@ void proctal_scan_address_start(proctal_t p);
  *
  * You must have previously called proctal_scan_address_start, otherwise
  * behavior is undefined.
+ *
+ * On failure, proctal_error will return an error code.
  */
 void proctal_scan_address_stop(proctal_t p);
 
@@ -354,6 +358,8 @@ void proctal_scan_address_execute_set(proctal_t p, int execute);
  * Starts scanning for memory regions.
  *
  * When you're done scanning, you must call proctal_scan_region_stop.
+ *
+ * You should call proctal_error to verify if this function succeeded.
  */
 void proctal_scan_region_start(proctal_t p);
 
@@ -362,6 +368,8 @@ void proctal_scan_region_start(proctal_t p);
  *
  * You must have previously called proctal_scan_region_start, otherwise
  * behavior is undefined.
+ *
+ * On failure, proctal_error will return an error code.
  */
 void proctal_scan_region_stop(proctal_t p);
 
@@ -455,20 +463,21 @@ void proctal_scan_region_execute_set(proctal_t p, int execute);
 /*
  * Freezes program execution.
  *
- * You should unfreeze before exiting your program otherwise something may
- * crash.
- *
  * Closing the handle automatically unfreezes.
+ *
+ * Call proctal_error to verify if this function failed.
  */
-int proctal_freeze(proctal_t p);
+void proctal_freeze(proctal_t p);
 
 /*
  * Unfreezes execution.
  *
  * You may only unfreeze as many times as you have frozen otherwise behavior is
  * left undefined.
+ *
+ * On failure, proctal_error will return an error code.
  */
-int proctal_unfreeze(proctal_t p);
+void proctal_unfreeze(proctal_t p);
 
 /*
  * Starts watching for memory accesses.
@@ -483,18 +492,19 @@ int proctal_unfreeze(proctal_t p);
  * When the memory address is accessed the thread of execution will be paused
  * until either proctal_watch or proctal_watch_stop are called.
  *
- * On success it will return 1 and on failure it will return 0. Call
- * proctal_error to find out what went wrong.
- *
  * To stop watching, you must call proctal_watch_stop.
+ *
+ * You should call proctal_error to verify if this function succeeded.
  */
-int proctal_watch_start(proctal_t p);
+void proctal_watch_start(proctal_t p);
 
 /*
  * Stops watching the memory address.
  *
  * You must have previously called proctal_watch_start successfully otherwise
  * behavior is left undefined.
+ *
+ * On failure, proctal_error will return an error code.
  */
 void proctal_watch_stop(proctal_t p);
 
@@ -502,7 +512,9 @@ void proctal_watch_stop(proctal_t p);
  * After proctal_watch_start is called, you will want to call this function to
  * check if the memory address was accessed.
  *
- * On success it will return
+ * If a memory access was detected, it will return 1 and write out the address.
+ * If no memory access was detected, it will return 0. On failure it will also
+ * return 0 so you should call proctal_error to find out if 0 meant failure.
  *
  * You must have previously called proctal_watch_start successfully otherwise
  * behavior is left undefined.
@@ -581,7 +593,7 @@ void proctal_watch_execute_set(proctal_t p, int x);
  * The code will be executed in the context of the main thread.
  *
  * You need to pass a pointer to your bytecode and its length. It will be
- * embedded at some place in memory and executed in a new  stack frame. Your
+ * embedded at some place in memory and executed in a new stack frame. Your
  * code is free to modify any registers because they will be restored to their
  * original values on return. You can either use a return instruction to
  * explicitly return or let the processor continue executing after the last
@@ -589,9 +601,9 @@ void proctal_watch_execute_set(proctal_t p, int x);
  *
  * The instructions cannot rely on where they will be placed in memory.
  *
- * On failure returns 0. Call proctal_error to find out what happened.
+ * On failure, proctal_error will return an error code.
  */
-int proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
+void proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
 
 /*
  * Allocates memory.
@@ -610,10 +622,12 @@ void *proctal_allocate(proctal_t p, size_t size, int perm);
  * Deallocates memory allocated by proctal_allocate.
  *
  * This command is special in that it can deallocate memory allocated by a
- * different handle.
+ * different handle, even from a different task.
  *
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
+ *
+ * On failure, proctal_error will return an error code.
  */
 void proctal_deallocate(proctal_t p, void *addr);
 

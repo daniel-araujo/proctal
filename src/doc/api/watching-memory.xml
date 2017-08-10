@@ -29,27 +29,31 @@ proctal_watch_execute_set(proctal, 0);
 	</code>
 
 	To start watching, you need to call <quote>proctal_watch_start</quote>.
-	It will return 1 on success and 0 on failure. In case of failure, call
-	<quote>proctal_error</quote> to find out what went wrong.
 
 	<code type="c">
-int result = proctal_watch_start(proctal);
+proctal_watch_start(proctal);
 	</code>
 
+	You should call proctal_error to verify if this function succeeded.
+
 	To check if an instruction was found accessing the memory address, you
-	need to call <quote>proctal_watch</quote>. On success it will write the
-	address out.
+	need to call <quote>proctal_watch</quote>.
 
 	<code type="c">
 void *address;
 int result = proctal_watch(proctal, &amp;address);
+
+if (proctal_error(proctal)) {
+	// Error handling.
+}
 	</code>
 
-	It will return 1 on success and 0 on failure or if no instruction was
-	detected yet.
+	If a memory access was detected, it will return 1 and write out the
+	address.
 
-	When 0 is returned, you should check whether it failed because of an
-	error by calling <quote>proctal_error</quote>.
+	If no memory access was detected, it will return 0. On failure it will
+	also return 0 so you should call <quote>proctal_error</quote> to find
+	out if the returned value 0 means failure.
 
 	<note>
 		The address of the instruction that is returned may

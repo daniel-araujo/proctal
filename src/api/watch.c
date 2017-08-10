@@ -41,9 +41,9 @@ void proctal_watch_execute_set(proctal_t p, int x)
 	p->watch.execute = x != 0;
 }
 
-int proctal_watch_start(proctal_t p)
+void proctal_watch_start(proctal_t p)
 {
-	return proctal_implementation_watch_start(p);
+	proctal_implementation_watch_start(p);
 }
 
 int proctal_watch(proctal_t p, void **addr)
