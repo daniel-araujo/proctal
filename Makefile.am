@@ -251,8 +251,8 @@ include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
 	darr/src/darr.h \
 	darr/src/darr.c \
-	src/api/impl/impl.h \
-	src/api/impl/linux.c \
+	src/api/implementation.h \
+	src/api/linux/implementation.c \
 	src/api/proctal.h \
 	src/api/error.c \
 	src/api/watch.c \

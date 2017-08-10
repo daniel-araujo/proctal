@@ -3,15 +3,16 @@
 #include <string.h>
 
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 void proctal_scan_region_start(proctal_t p)
 {
-	proctal_impl_scan_region_start(p);
+	proctal_implementation_scan_region_start(p);
 }
 
 void proctal_scan_region_stop(proctal_t p)
 {
-	proctal_impl_scan_region_stop(p);
+	proctal_implementation_scan_region_stop(p);
 }
 
 long proctal_scan_region_mask(proctal_t p)
@@ -56,5 +57,5 @@ void proctal_scan_region_execute_set(proctal_t p, int execute)
 
 int proctal_scan_region(proctal_t p, void **start, void **end)
 {
-	return proctal_impl_scan_region(p, start, end);
+	return proctal_implementation_scan_region(p, start, end);
 }

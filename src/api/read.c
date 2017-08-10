@@ -1,4 +1,5 @@
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
 	proctal_read(P, ADDR, (char *) VAL, sizeof(*VAL))
@@ -21,7 +22,7 @@
 
 size_t proctal_read(proctal_t p, void *addr, char *out, size_t size)
 {
-	return proctal_impl_read(p, addr, out, size);
+	return proctal_implementation_read(p, addr, out, size);
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

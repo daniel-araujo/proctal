@@ -3,15 +3,16 @@
 #include <string.h>
 
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 void proctal_scan_address_start(proctal_t p)
 {
-	proctal_impl_scan_address_start(p);
+	proctal_implementation_scan_address_start(p);
 }
 
 void proctal_scan_address_stop(proctal_t p)
 {
-	proctal_impl_scan_address_stop(p);
+	proctal_implementation_scan_address_stop(p);
 }
 
 size_t proctal_scan_address_size(proctal_t p)
@@ -76,5 +77,5 @@ void proctal_scan_address_execute_set(proctal_t p, int execute)
 
 int proctal_scan_address(proctal_t p, void **addr)
 {
-	return proctal_impl_scan_address(p, addr);
+	return proctal_implementation_scan_address(p, addr);
 }

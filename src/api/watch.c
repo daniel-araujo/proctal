@@ -1,4 +1,5 @@
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 void *proctal_watch_address(proctal_t p)
 {
@@ -42,15 +43,15 @@ void proctal_watch_execute_set(proctal_t p, int x)
 
 int proctal_watch_start(proctal_t p)
 {
-	return proctal_impl_watch_start(p);
+	return proctal_implementation_watch_start(p);
 }
 
 int proctal_watch(proctal_t p, void **addr)
 {
-	return proctal_impl_watch(p, addr);
+	return proctal_implementation_watch(p, addr);
 }
 
 void proctal_watch_stop(proctal_t p)
 {
-	proctal_impl_watch_stop(p);
+	proctal_implementation_watch_stop(p);
 }

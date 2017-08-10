@@ -1,4 +1,5 @@
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 #define FORWARD_NATIVE(P, ADDR, VAL) \
 	proctal_write(P, ADDR, (const char *) &VAL, sizeof(VAL))
@@ -21,7 +22,7 @@
 
 size_t proctal_write(proctal_t p, void *addr, const char *in, size_t size)
 {
-	return proctal_impl_write(p, addr, in, size);
+	return proctal_implementation_write(p, addr, in, size);
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

@@ -1,4 +1,5 @@
 #include "api/proctal.h"
+#include "api/implementation.h"
 
 void proctal_init(struct proctal *p)
 {
@@ -28,10 +29,10 @@ void proctal_deinit(struct proctal *p)
 
 proctal_t proctal_open(void)
 {
-	return proctal_impl_open();
+	return proctal_implementation_open();
 }
 
 void proctal_close(proctal_t p)
 {
-	return proctal_impl_close(p);
+	return proctal_implementation_close(p);
 }

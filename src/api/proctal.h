@@ -1,8 +1,11 @@
 #ifndef API_PROCTAL_H
 #define API_PROCTAL_H
 
+/*
+ * This is the header file that contains the declarations of the symbols that
+ * are exposed to users.
+ */
 #include "api/include/proctal.h"
-#include "api/impl/impl.h"
 
 /*
  * Global state of the library that can be changed by the library user.
