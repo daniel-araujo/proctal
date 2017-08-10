@@ -121,7 +121,7 @@ static struct cli_val_implementation implementations[] = {
 	[CLI_VAL_TYPE_ADDRESS] = {
 		.type = CLI_VAL_TYPE_ADDRESS,
 
-		.align = (void *) cli_val_address_sizeof,
+		.align = (void *) cli_val_address_alignof,
 		.size = (void *) cli_val_address_sizeof,
 		.data = (void *) cli_val_address_data,
 		.cmp = (void *) cli_val_address_cmp,
@@ -138,7 +138,6 @@ static struct cli_val_implementation implementations[] = {
 
 		.address_set = (void *) cli_val_instruction_address_set,
 		.address = (void *) cli_val_instruction_address,
-		.align = (void *) cli_val_instruction_sizeof,
 		.size = (void *) cli_val_instruction_sizeof,
 		.data = (void *) cli_val_instruction_data,
 		.print = (void *) cli_val_instruction_print,
