@@ -165,28 +165,44 @@ static int create_cli_val_list_from_type_options(struct type_options *ta, void *
 
 	char *vaddress = address;
 	for (size_t i = 0; i < length; ++i) {
-		cli_val v = create_cli_val_from_type_options(ta);
+		char *arg = args[i];
+		size_t argi = 0;
+		size_t argl = strlen(arg);
 
-		if (v == cli_val_nil()) {
-			fputs("Invalid type options or out of memory.\n", stderr);
-			goto exit1;
-		}
+		while (argi < argl) {
+			cli_val v = create_cli_val_from_type_options(ta);
 
-		cli_val_address_set(v, vaddress);
+			if (v == cli_val_nil()) {
+				fputs("Invalid type options or out of memory.\n", stderr);
+				goto exit1;
+			}
 
-		if (!cli_val_parse_text(v, args[i])) {
-			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
-			cli_val_destroy(v);
-			goto exit1;
-		}
+			cli_val_address_set(v, vaddress);
 
-		vaddress += cli_val_sizeof(v);
+			if (!cli_val_parse_text(v, &arg[argi])) {
+				fprintf(stderr, "Value #%zu is invalid.\n", next + 1);
+				cli_val_destroy(v);
+				goto exit1;
+			}
 
-		cli_val *e = darr_element(values, next++);
-		*e = v;
+			vaddress += cli_val_sizeof(v);
 
-		if (next >= darr_size(values)) {
-			darr_grow(values, darr_size(values));
+			cli_val *e = darr_element(values, next++);
+			*e = v;
+
+			if (next >= darr_size(values)) {
+				darr_grow(values, darr_size(values));
+			}
+
+			switch (ta->type) {
+			case CLI_VAL_TYPE_TEXT:
+				argi += cli_val_sizeof(v);
+				break;
+
+			default:
+				argi = argl;
+				break;
+			}
 		}
 	}
 

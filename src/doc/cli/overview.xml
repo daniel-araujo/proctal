@@ -28,7 +28,7 @@ fi
 address="$(proctal alloc --pid="$pid" -rw 14)"
 
 # Writes Hello, world! to memory.
-proctal write --pid="$pid" --address="$address" --type=text H e l l o , ' ' w o r l d '!' $'\n'
+proctal write --pid="$pid" --address="$address" --type=text 'Hello, world!' $'\n'
 
 # Executes code that will print Hello, world! to standard output.
 proctal execute --pid="$pid" &lt;&lt;EOD

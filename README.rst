@@ -53,7 +53,7 @@ Hello, world!
 	7F78FDA9C000
 
 	# Writes Hello, world! to memory.
-	$ proctal write --pid=15433 --address=7F78FDA9C000 --type=text H e l l o , ' ' w o r l d '!' $'\n'
+	$ proctal write --pid=15433 --address=7F78FDA9C000 --type=text 'Hello, world!' $'\n'
 
 	# Executes code that will print Hello, world! to standard output.
 	$ proctal execute --pid=15433
