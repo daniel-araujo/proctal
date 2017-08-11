@@ -81,9 +81,7 @@ libclival_a_SOURCES = \
 	src/cli/val/filter.h \
 	src/cli/val/filter.c \
 	src/cli/val.h \
-	src/cli/val.c \
-	src/cli/val-list.h \
-	src/cli/val-list.c
+	src/cli/val.c
 libclival_a_CFLAGS = $(proctal_cflags)
 
 noinst_LIBRARIES += libcliparser.a

@@ -2,7 +2,6 @@
 #define CLI_CMD_SEARCH_H
 
 #include "cli/val.h"
-#include "cli/val-list.h"
 
 struct cli_cmd_search_arg {
 	int pid;

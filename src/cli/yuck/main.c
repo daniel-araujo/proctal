@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <darr.h>
 
 #include "cli/yuck/main.h"
 #include "cli/cmd/allocate.h"
@@ -143,6 +144,67 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 }
 
 /*
+ * Parse values
+ *
+ * This is so we can reuse the same code across different yuck argument
+ * structures which share the same options.
+ *
+ * The function is also responsible for outputting an error message in case of
+ * failure.
+ *
+ * The function returns 1 on success, 0 on failure.
+ */
+static int create_cli_val_list_from_type_options(struct type_options *ta, void *address, char **args, size_t length, struct darr *values)
+{
+	int ret = 0;
+
+	// Initial size will be the number of arguments.
+	darr_resize(values, length);
+
+	size_t next = 0;
+
+	char *vaddress = address;
+	for (size_t i = 0; i < length; ++i) {
+		cli_val v = create_cli_val_from_type_options(ta);
+
+		if (v == cli_val_nil()) {
+			fputs("Invalid type options or out of memory.\n", stderr);
+			goto exit1;
+		}
+
+		cli_val_address_set(v, vaddress);
+
+		if (!cli_val_parse_text(v, args[i])) {
+			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
+			cli_val_destroy(v);
+			goto exit1;
+		}
+
+		vaddress += cli_val_sizeof(v);
+
+		cli_val *e = darr_element(values, next++);
+		*e = v;
+
+		if (next >= darr_size(values)) {
+			darr_grow(values, darr_size(values));
+		}
+	}
+
+	ret = 1;
+exit1:
+	darr_resize(values, next);
+exit0:
+	return ret;
+}
+
+static void destroy_cli_val_list(struct darr *list)
+{
+	for (cli_val *e = darr_begin(list); e != darr_end(list); ++e) {
+		cli_val_destroy(*e);
+	}
+}
+
+/*
  * This macro will generate a static inline function that is used to fill up a
  * struct type_options based on the arguments given to a yuck argument
  * structure.
@@ -155,7 +217,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
  *
  * The function returns 1 on success, 0 on failure.
  */
-#define CLI_PARSE_TYPE_ARGUMENTS(NAME, YUCK_TYPE) \
+#define CLI_PARSE_TYPE_OPTIONS(NAME, YUCK_TYPE) \
 static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *yuck_arg) \
 { \
 	if (yuck_arg->type_arg) { \
@@ -251,12 +313,12 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 	return 1; \
 }
 
-CLI_PARSE_TYPE_ARGUMENTS(read, struct yuck_cmd_read_s)
-CLI_PARSE_TYPE_ARGUMENTS(write, struct yuck_cmd_write_s)
-CLI_PARSE_TYPE_ARGUMENTS(search, struct yuck_cmd_search_s)
-CLI_PARSE_TYPE_ARGUMENTS(measure, struct yuck_cmd_measure_s)
+CLI_PARSE_TYPE_OPTIONS(read, struct yuck_cmd_read_s)
+CLI_PARSE_TYPE_OPTIONS(write, struct yuck_cmd_write_s)
+CLI_PARSE_TYPE_OPTIONS(search, struct yuck_cmd_search_s)
+CLI_PARSE_TYPE_OPTIONS(measure, struct yuck_cmd_measure_s)
 
-#undef CLI_TYPE_ARGUMENTS
+#undef CLI_TYPE_OPTIONS
 
 static void destroy_cli_cmd_read_arg(struct cli_cmd_read_arg *arg)
 {
@@ -345,7 +407,8 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 
 static void destroy_cli_cmd_write_arg(struct cli_cmd_write_arg *arg)
 {
-	cli_val_list_destroy(arg->value_list);
+	destroy_cli_val_list(&arg->values);
+	darr_deinit(&arg->values);
 	free(arg);
 }
 
@@ -353,7 +416,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_write_arg *arg = malloc(sizeof(*arg));
 	arg->freeze = yuck_arg->write.freeze_flag == 1;
-	arg->value_list = cli_val_list_create(yuck_arg->nargs);
+	darr_init(&arg->values, sizeof(cli_val));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_WRITE) {
 		fputs("Wrong command.\n", stderr);
@@ -397,27 +460,9 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	char *vaddress = arg->address;
-	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		cli_val v = create_cli_val_from_type_options(&type_args);
-
-		if (v == cli_val_nil()) {
-			fputs("Invalid type options.\n", stderr);
-			destroy_cli_cmd_write_arg(arg);
-			return NULL;
-		}
-
-		cli_val_address_set(v, vaddress);
-
-		if (!cli_val_parse_text(v, yuck_arg->args[i])) {
-			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
-			cli_val_destroy(v);
-			destroy_cli_cmd_write_arg(arg);
-			return NULL;
-		}
-
-		cli_val_list_set(arg->value_list, i, v);
-		vaddress += cli_val_sizeof(v);
+	if (!create_cli_val_list_from_type_options(&type_args, arg->address, yuck_arg->args, yuck_arg->nargs, &arg->values)) {
+		destroy_cli_cmd_write_arg(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->write.array_arg != NULL) {
@@ -431,7 +476,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 
 		arg->array = v;
 	} else {
-		arg->array = cli_val_list_size(arg->value_list);
+		arg->array = darr_size(&arg->values);
 	}
 
 	if (yuck_arg->write.repeat_flag) {
@@ -898,14 +943,15 @@ static struct cli_cmd_deallocate_arg *create_cli_cmd_deallocate_arg(yuck_t *yuck
 
 static void destroy_cli_cmd_measure_arg(struct cli_cmd_measure_arg *arg)
 {
-	cli_val_list_destroy(arg->value_list);
+	destroy_cli_val_list(&arg->values);
+	darr_deinit(&arg->values);
 	free(arg);
 }
 
 static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_measure_arg *arg = malloc(sizeof(*arg));
-	arg->value_list = cli_val_list_create(yuck_arg->nargs);
+	darr_init(&arg->values, sizeof(cli_val));
 
 	if (yuck_arg->cmd != PROCTAL_CMD_MEASURE) {
 		fputs("Wrong command.\n", stderr);
@@ -937,23 +983,9 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	for (size_t i = 0; i < yuck_arg->nargs; ++i) {
-		cli_val v = create_cli_val_from_type_options(&type_args);
-
-		if (v == cli_val_nil()) {
-			fputs("Invalid type options.\n", stderr);
-			destroy_cli_cmd_measure_arg(arg);
-			return NULL;
-		}
-
-		if (!cli_val_parse_text(v, yuck_arg->args[i])) {
-			fprintf(stderr, "Value #%zu is invalid.\n", i + 1);
-			cli_val_destroy(v);
-			destroy_cli_cmd_measure_arg(arg);
-			return NULL;
-		}
-
-		cli_val_list_set(arg->value_list, i, v);
+	if (!create_cli_val_list_from_type_options(&type_args, arg->address, yuck_arg->args, yuck_arg->nargs, &arg->values)) {
+		destroy_cli_cmd_measure_arg(arg);
+		return NULL;
 	}
 
 	if (yuck_arg->measure.array_arg != NULL) {
@@ -967,7 +999,7 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 
 		arg->array = v;
 	} else {
-		arg->array = cli_val_list_size(arg->value_list);
+		arg->array = darr_size(&arg->values);
 	}
 
 	return arg;

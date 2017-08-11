@@ -1,7 +1,9 @@
 #ifndef CLI_CMD_WRITE_H
 #define CLI_CMD_WRITE_H
 
-#include "cli/val-list.h"
+#include <darr.h>
+
+#include "cli/val.h"
 
 struct cli_cmd_write_arg {
 	int pid;
@@ -11,8 +13,8 @@ struct cli_cmd_write_arg {
 	// Number of values expected to write.
 	size_t array;
 
-	// List of values to write.
-	cli_val_list value_list;
+	// Values to write.
+	struct darr values;
 
 	// Whether to write the same value repeatedly until the program is told
 	// to shut down.

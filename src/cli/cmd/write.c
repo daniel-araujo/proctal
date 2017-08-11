@@ -27,7 +27,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 	}
 
 	do {
-		size_t list_size = cli_val_list_size(arg->value_list);
+		size_t list_size = darr_size(&arg->values);
 		char *address = (char *) arg->address;
 
 		for (size_t i = 0, j = 0; i < arg->array; ++i, ++j) {
@@ -35,10 +35,10 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 				j = 0;
 			}
 
-			cli_val v = cli_val_list_get(arg->value_list, j);
+			cli_val *v = darr_element(&arg->values, j);
 
-			size_t size = cli_val_sizeof(v);
-			char *input = cli_val_data(v);
+			size_t size = cli_val_sizeof(*v);
+			char *input = cli_val_data(*v);
 
 			proctal_write(p, address, input, size);
 
