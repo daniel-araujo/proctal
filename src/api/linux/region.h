@@ -2,6 +2,7 @@
 #define API_LINUX_REGION_H
 
 #include "api/linux/proctal.h"
+#include "api/linux/proc.h"
 
 void proctal_linux_scan_region_start(struct proctal_linux *pl);
 

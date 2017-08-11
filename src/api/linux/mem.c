@@ -103,31 +103,30 @@ exit0:
 
 void *proctal_linux_mem_find_payload_location(struct proctal_linux *pl, size_t size)
 {
-	struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
-	FILE *maps = fopen(darr_data(path), "r");
-	proctal_linux_proc_path_dispose(path);
-
-	if (maps == NULL) {
-		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
-		return NULL;
-	}
-
-	struct proctal_linux_mem_region region;
-
 	void *location = NULL;
 
-	while (proctal_linux_read_mem_region(&region, maps) == 0) {
-		if (region.execute) {
-			size_t region_size = (size_t) ((char *) region.end_addr - (char *) region.start_addr);
+	struct proctal_linux_proc_maps maps;
 
-			if (region_size >= size) {
-				location = region.start_addr;
-				break;
-			}
+	if (!proctal_linux_proc_maps_open(&maps, pl->pid)) {
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		goto exit0;
+	}
+
+	struct proctal_linux_proc_maps_region *region;
+
+	while ((region = proctal_linux_proc_maps_read(&maps))) {
+		if (!region->execute) {
+			continue;
+		}
+
+		size_t region_size = (size_t) ((char *) region->end - (char *) region->start);
+
+		if (region_size >= size) {
+			location = region->start;
+			break;
 		}
 	}
 
-	fclose(maps);
-
+exit0:
 	return location;
 }

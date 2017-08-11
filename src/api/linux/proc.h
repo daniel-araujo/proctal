@@ -5,23 +5,91 @@
 #include <sys/types.h>
 #include <darr.h>
 
-struct proctal_linux_mem_region {
-	void *start_addr;
-	void *end_addr;
+/*
+ * An entry in the maps file.
+ */
+struct proctal_linux_proc_maps_region {
+	// Start address.
+	void *start;
 
+	// End address.
+	void *end;
+
+	// Whether it's readable.
 	int read;
+
+	// Whether it's writable.
 	int write;
+
+	// Whether it's executable.
 	int execute;
 
-	// This is not perfect.
-	char path[255];
+	// Name of the region. Ends with a NUL character. Will be empty if the
+	// region has no name.
+	struct darr name;
 };
+
+/*
+ * An open maps file.
+ */
+struct proctal_linux_proc_maps {
+	// A FILE pointer to the maps file.
+	FILE *file;
+
+	// Read
+	struct proctal_linux_proc_maps_region current;
+};
+
+struct proctal_linux_proc_maps_region_check {
+	// PID of the program that the region belongs to.
+	pid_t pid;
+
+	// Region mask.
+	long mask;
+
+	// Whether it's readable.
+	int read;
+
+	// Whether it's writable.
+	int write;
+
+	// Whether it's executable.
+	int execute;
+};
+
+/*
+ * Opens the maps file of a program.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid);
+
+/*
+ * Closes a maps file.
+ */
+void proctal_linux_proc_maps_close(struct proctal_linux_proc_maps *maps);
+
+/*
+ * Reads an entry from the maps file.
+ *
+ * Returns a pointer to a proctal_linux_proc_maps_region struct if it
+ * successfully read an entry or NULL if not.
+ *
+ * The pointer is valid until the next call to this function or when the maps
+ * file is called.
+ */
+struct proctal_linux_proc_maps_region *proctal_linux_proc_maps_read(struct proctal_linux_proc_maps *maps);
+
+/*
+ * Checks whether a region passes.
+ */
+int proctal_linux_proc_maps_region_check(
+	struct proctal_linux_proc_maps_region *region,
+	struct proctal_linux_proc_maps_region_check *check);
 
 struct darr *proctal_linux_proc_path(pid_t pid, const char *file);
 
 void proctal_linux_proc_path_dispose(struct darr *path);
-
-int proctal_linux_read_mem_region(struct proctal_linux_mem_region *region, FILE *maps);
 
 struct darr *proctal_linux_program_path(pid_t pid);
 

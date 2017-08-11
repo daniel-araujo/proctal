@@ -276,6 +276,7 @@ libproctal_la_SOURCES = \
 	src/api/linux/execute/interface.c \
 	src/api/linux/mem.c \
 	src/api/linux/mem.h \
+	src/api/linux/proc-maps.c \
 	src/api/linux/proc.c \
 	src/api/linux/proc.h \
 	src/api/linux/ptrace.h \

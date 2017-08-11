@@ -1,5 +1,7 @@
 #include "api/linux/proctal.h"
 #include "api/linux/ptrace.h"
+#include "api/linux/address.h"
+#include "api/linux/region.h"
 
 void proctal_linux_init(struct proctal_linux *pl)
 {
@@ -11,11 +13,8 @@ void proctal_linux_init(struct proctal_linux *pl)
 	darr_init(&pl->ptrace.tasks, sizeof(struct proctal_linux_ptrace_task));
 
 	pl->address.started = 0;
-	pl->address.curr = NULL;
-	pl->address.maps = NULL;
 
-	pl->region.finished = 0;
-	pl->region.maps = NULL;
+	pl->region.started = 0;
 }
 
 void proctal_linux_deinit(struct proctal_linux *pl)
@@ -33,15 +32,9 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 
 	darr_deinit(&pl->ptrace.tasks);
 
-	if (pl->address.maps) {
-		fclose(pl->address.maps);
-		pl->address.maps = NULL;
-	}
+	proctal_linux_scan_address_stop(pl);
 
-	if (pl->region.maps) {
-		fclose(pl->region.maps);
-		pl->region.maps = NULL;
-	}
+	proctal_linux_scan_region_stop(pl);
 }
 
 void proctal_linux_pid_set(struct proctal_linux *pl, pid_t pid)

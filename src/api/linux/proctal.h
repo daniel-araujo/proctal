@@ -43,24 +43,27 @@ struct proctal_linux {
 	struct proctal_linux_address {
 		int started;
 
-		// Current address.
-		void *curr;
+		// Next address ready to be retrieved.
+		void *current_address;
+
+		// Current region.
+		struct proctal_linux_proc_maps_region *current_region;
 
 		// Memory mappings of the address space.
-		FILE *maps;
+		struct proctal_linux_proc_maps maps;
 
-		// Current region being read.
-		struct proctal_linux_mem_region region;
+		// Structure used to check if a region meets the requirements.
+		struct proctal_linux_proc_maps_region_check region_check;
 	} address;
 
 	struct proctal_linux_region {
-		int finished;
+		int started;
 
 		// Memory mappings of the address space.
-		FILE *maps;
+		struct proctal_linux_proc_maps maps;
 
-		// Current region.
-		struct proctal_linux_mem_region curr;
+		// Structure used to check if a region meets the requirements.
+		struct proctal_linux_proc_maps_region_check check;
 	} region;
 };
 

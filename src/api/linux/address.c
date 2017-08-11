@@ -9,182 +9,104 @@
  * This should be placed somewhere that can be accessible to the
  * rest of the code base when needed.
  */
-static inline void *align_addr(void *addr, size_t align)
+static inline void *align_address(void *address, size_t align)
 {
-	ptrdiff_t offset = ((unsigned long) addr % align);
+	ptrdiff_t offset = ((unsigned long) address % align);
 
 	if (offset != 0) {
 		offset = align - offset;
 	}
 
-	return (void *) ((char *) addr + offset);
+	return (char *) address + offset;
 }
 
-static inline int interesting_region(struct proctal_linux *pl)
+static inline int is_over_the_region_end(struct proctal_linux *pl)
 {
-	if (pl->p.address.region_mask & PROCTAL_REGION_STACK) {
-		if (strncmp(pl->address.region.path, "[stack", 6) == 0) {
-			return 1;
-		}
-	}
+	void *address_end = (char *) pl->address.current_address + pl->p.address.size;
 
-	if (pl->p.address.region_mask & PROCTAL_REGION_HEAP) {
-		if (strcmp(pl->address.region.path, "[heap]") == 0) {
-			return 1;
-		}
-	}
-
-	if (pl->p.address.region_mask & PROCTAL_REGION_PROGRAM_CODE) {
-		struct darr *program_path = proctal_linux_program_path(pl->pid);
-		int same_path = strcmp(pl->address.region.path, darr_data(program_path)) == 0;
-		proctal_linux_program_path_dispose(program_path);
-
-		if (same_path && pl->address.region.execute) {
-			return 1;
-		}
-	}
-
-	if (pl->p.address.region_mask != 0) {
-		return 0;
-	}
-
-	if (pl->p.address.read) {
-		if (!pl->address.region.read) {
-			return 0;
-		}
-
-		if (strcmp(pl->address.region.path, "[vvar]") == 0) {
-			// Can't seem to read from this region regardless of it
-			// being readable.
-			return 0;
-		}
-	}
-
-	if (pl->p.address.write && !pl->address.region.write) {
-		return 0;
-	}
-
-	if (pl->p.address.execute && !pl->address.region.execute) {
-		return 0;
-	}
-
-	if (pl->p.address.region_mask == 0) {
-		return 1;
-	}
-
-	return 0;
+	return address_end > pl->address.current_region->end;
 }
 
-static inline int has_reached_region_end(struct proctal_linux *pl)
+static inline void next_region(struct proctal_linux *pl)
 {
-	return ((void *) ((char *) pl->address.curr + pl->p.address.size)) > pl->address.region.end_addr;
-}
+	do {
+		pl->address.current_region = proctal_linux_proc_maps_read(&pl->address.maps);
 
-static inline int next_region(struct proctal_linux *pl)
-{
-	for (;;) {
-		if (proctal_linux_read_mem_region(&pl->address.region, pl->address.maps) != 0) {
-			return 0;
+		if (pl->address.current_region == NULL) {
+			// No more found.
+			return;
 		}
+	} while (!proctal_linux_proc_maps_region_check(pl->address.current_region, &pl->address.region_check));
 
-		if (!interesting_region(pl)) {
-			continue;
-		}
+	pl->address.current_address = align_address(
+		pl->address.current_region->start,
+		pl->p.address.align);
 
-		pl->address.curr = align_addr(pl->address.region.start_addr, pl->p.address.align);
-
-		// After applying the correct alignment to the address, it is
-		// possible to have reached the end of the memory region. Even
-		// if this is very unlikely to happen, this situation must be
-		// checked nonetheless.
-		if (!has_reached_region_end(pl)) {
-			break;
-		}
+	// After applying the correct alignment to the address, it is possible
+	// to have reached the end of the memory region. Even if this is very
+	// unlikely to happen, this situation must be checked nonetheless.
+	if (is_over_the_region_end(pl)) {
+		// Try again.
+		next_region(pl);
 	}
-
-	return 1;
 }
 
-static inline int has_started(struct proctal_linux *pl)
+static inline void next_region_address(struct proctal_linux *pl)
 {
-	return pl->address.started;
-}
+	pl->address.current_address = (char *) pl->address.current_address + pl->p.address.align;
 
-static inline int has_finished(struct proctal_linux *pl)
-{
-	return pl->address.started && pl->address.curr == NULL;
-}
-
-static int first(struct proctal_linux *pl)
-{
-	struct darr *path = proctal_linux_proc_path(pl->pid, "maps");
-	pl->address.maps = fopen(darr_data(path), "r");
-	proctal_linux_proc_path_dispose(path);
-
-	if (pl->address.maps == NULL) {
-		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
-		return 0;
+	if (is_over_the_region_end(pl)) {
+		// No more found.
+		pl->address.current_address = NULL;
 	}
-
-	if (!next_region(pl)) {
-		fclose(pl->address.maps);
-		pl->address.maps = NULL;
-		return 0;
-	}
-
-	return 1;
 }
 
 static int next(struct proctal_linux *pl)
 {
-	pl->address.curr = (void *) ((char *) pl->address.curr + pl->p.address.align);
+	if (pl->address.current_region == NULL) {
+		next_region(pl);
+	} else {
+		next_region_address(pl);
 
-	if (has_reached_region_end(pl) && !next_region(pl)) {
-		fclose(pl->address.maps);
-		pl->address.maps = NULL;
-		pl->address.curr = NULL;
-		return 0;
+		if (pl->address.current_address == NULL) {
+			next_region(pl);
+		}
 	}
 
-	return 1;
+	return pl->address.current_address == NULL;
 }
 
 void proctal_linux_scan_address_start(struct proctal_linux *pl)
 {
-	if (pl->address.maps) {
-		fclose(pl->address.maps);
-		pl->address.maps = NULL;
+	if (!proctal_linux_proc_maps_open(&pl->address.maps, pl->pid)) {
+		proctal_error_set(&pl->p, PROCTAL_ERROR_PERMISSION_DENIED);
+		return;
 	}
 
-	pl->address.curr = NULL;
-	pl->address.started = 0;
+	pl->address.region_check.pid = pl->pid;
+	pl->address.region_check.mask = pl->p.address.region_mask;
+	pl->address.region_check.read = pl->p.address.read;
+	pl->address.region_check.write = pl->p.address.write;
+	pl->address.region_check.execute = pl->p.address.execute;
+
+	pl->address.started = 1;
+	pl->address.current_region = NULL;
+	pl->address.current_address = NULL;
 }
 
 void proctal_linux_scan_address_stop(struct proctal_linux *pl)
 {
-	if (pl->address.maps) {
-		fclose(pl->address.maps);
-		pl->address.maps = NULL;
+	if (pl->address.started) {
+		proctal_linux_proc_maps_close(&pl->address.maps);
 	}
+
+	pl->address.started = 0;
 }
 
 int proctal_linux_scan_address(struct proctal_linux *pl, void **addr)
 {
-	if (!has_started(pl)) {
-		pl->address.started = 1;
-
-		if (!first(pl)) {
-			return 0;
-		}
-
-		*addr = pl->address.curr;
-		return 1;
-	} else if (has_finished(pl)) {
-		return 0;
-	}
-
 	if (next(pl)) {
-		*addr = pl->address.curr;
+		*addr = pl->address.current_address;
 		return 1;
 	} else {
 		return 0;
