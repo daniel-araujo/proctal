@@ -120,8 +120,7 @@ int proctal_linux_execute_implementation(
 		PROCTAL_ALLOCATE_PERMISSION_WRITE | PROCTAL_ALLOCATE_PERMISSION_EXECUTE | PROCTAL_ALLOCATE_PERMISSION_READ);
 
 	if (payload_location == NULL) {
-		proctal_linux_ptrace_detach(pl);
-		return 0;
+		goto exit1;
 	}
 
 	void *no_op_code_location = payload_location;
