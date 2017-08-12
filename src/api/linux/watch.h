@@ -4,7 +4,7 @@
 #include "api/linux/proctal.h"
 #include "api/linux/ptrace.h"
 
-int proctal_linux_watch_start(struct proctal_linux *pl);
+void proctal_linux_watch_start(struct proctal_linux *pl);
 
 void proctal_linux_watch_stop(struct proctal_linux *pl);
 

@@ -25,27 +25,25 @@ static inline void try_disable_breakpoints(
 	}
 }
 
-int proctal_linux_watch_start(struct proctal_linux *pl)
+void proctal_linux_watch_start(struct proctal_linux *pl)
 {
 	if (!proctal_linux_ptrace_attach(pl)) {
-		return 0;
+		return;
 	}
 
 	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
 		if (!proctal_linux_watch_implementation_breakpoint_enable(pl, task->tid)) {
 			try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), task);
 			proctal_linux_ptrace_detach(pl);
-			return 0;
+			return;
 		}
 	}
 
 	if (!proctal_linux_ptrace_cont(pl, 0)) {
 		try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), darr_end(&pl->ptrace.tasks));
 		proctal_linux_ptrace_detach(pl);
-		return 0;
+		return;
 	}
-
-	return 1;
 }
 
 void proctal_linux_watch_stop(struct proctal_linux *pl)
