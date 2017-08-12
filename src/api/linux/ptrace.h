@@ -34,6 +34,8 @@
 /*
  * Performs ptrace's attach function on all tasks of the program.
  *
+ * You may attach to the same program multiple times.
+ *
  * Returns 1 on success and 0 on failure.
  */
 int proctal_linux_ptrace_attach(struct proctal_linux *pl);
@@ -41,9 +43,17 @@ int proctal_linux_ptrace_attach(struct proctal_linux *pl);
 /*
  * Performs ptrace's detach function on all tasks of the program.
  *
+ * You can only detach as many times as you have attached.
+ *
  * Returns 1 on success and 0 on failure.
  */
 int proctal_linux_ptrace_detach(struct proctal_linux *pl);
+
+/*
+ * Same as proctal_linux_ptrace_detach but ignores the number of times that a
+ * program was attached.
+ */
+void proctal_linux_ptrace_detach_force(struct proctal_linux *pl);
 
 /*
  * Performs ptrace's stop function on the given task.

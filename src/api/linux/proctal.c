@@ -25,11 +25,7 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 		fclose(pl->mem);
 	}
 
-	if (pl->ptrace.count) {
-		pl->ptrace.count = 1;
-		proctal_linux_ptrace_detach(pl);
-	}
-
+	proctal_linux_ptrace_detach_force(pl);
 	darr_deinit(&pl->ptrace.tasks);
 
 	proctal_linux_scan_address_stop(pl);
@@ -44,10 +40,7 @@ void proctal_linux_pid_set(struct proctal_linux *pl, pid_t pid)
 		pl->mem = NULL;
 	}
 
-	if (pl->ptrace.count) {
-		pl->ptrace.count = 1;
-		proctal_linux_ptrace_detach(pl);
-	}
+	proctal_linux_ptrace_detach_force(pl);
 
 	pl->pid = pid;
 }

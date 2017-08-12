@@ -233,6 +233,14 @@ int proctal_linux_ptrace_detach(struct proctal_linux *pl)
 	return 1;
 }
 
+void proctal_linux_ptrace_detach_force(struct proctal_linux *pl)
+{
+	if (pl->ptrace.count) {
+		pl->ptrace.count = 1;
+		proctal_linux_ptrace_detach(pl);
+	}
+}
+
 int proctal_linux_ptrace_stop(struct proctal_linux *pl, pid_t tid)
 {
 	struct acur *tasks = choose_tasks(pl, tid);
