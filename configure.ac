@@ -7,6 +7,7 @@ LT_PREREQ([2.4])
 LT_INIT([dlopen])
 
 PROCTAL_RUN_CONFIGURE([$srcdir/darr], [darr])
+PROCTAL_RUN_CONFIGURE([$srcdir/acur], [acur])
 
 AC_SUBST(PROCTAL_LIBRARY_VERSION, [0:0:0])
 
@@ -67,12 +68,15 @@ proctal_posix_cflags="-D_POSIX_C_SOURCE=200112L"
 proctal_darr_cflags=-I$srcdir/darr/src
 proctal_darr_ldflags=darr/libdarr.a
 
+proctal_acur_cflags=-I$srcdir/acur/src
+proctal_acur_ldflags=acur/libacur.a
+
 proctal_cflags="-iquote${srcdir}/src -iquotesrc -std=c11 -Wfatal-errors -Wall"
 proctal_cflags="$proctal_cflags -Wextra -Wpointer-arith $proctal_xopen_cflags"
 proctal_cflags="$proctal_cflags -Wno-unused-parameter -Wno-unused-function"
 proctal_cflags="$proctal_cflags $proctal_posix_cflags -Wno-maybe-uninitialized"
 proctal_cflags="$proctal_cflags $proctal_darr_cflags -Wno-unused-label"
-proctal_cflags="$proctal_cflags -include config.h"
+proctal_cflags="$proctal_cflags $proctal_acur_cflags -include config.h"
 
 AC_SUBST([proctal_capstone_ldflags])
 AC_SUBST([proctal_keystone_ldflags])

@@ -57,7 +57,12 @@ proctal_install_git_repository() {
 proctal_run_autoconf() {
 	proctal_run_autoconf_dir="$1"
 
-	pushd "${proctal_run_autoconf_dir}" > /dev/null
+	pushd "${proctal_run_autoconf_dir}" > /dev/null 2>&1
+
+	if test "$?" -ne 0; then
+		echo "Could not enter directory: ${proctal_run_autoconf_dir}" 2>&1
+		return 1
+	fi
 
 	autoreconf -i
 
@@ -75,6 +80,13 @@ if ! test -e darr; then
 	echo "Installing Darr..."
 	proctal_install_git_repository darr "https://github.com/daniel-araujo/darr.git" "v1.4.0" || exit 1
 	proctal_run_autoconf darr || exit 1
+fi
+
+# Install Acur repository if it doesn't exist.
+if ! test -e acur; then
+	echo "Installing Acur..."
+	proctal_install_git_repository acur "https://github.com/daniel-araujo/acur.git" "v1.0.1" || exit 1
+	proctal_run_autoconf acur || exit 1
 fi
 
 # Initialize the autotools.

@@ -11,9 +11,9 @@ include_HEADERS =
 noinst_LIBRARIES =
 TESTS =
 
-clean-local: darr-clean
+clean-local: darr-clean acur-clean
 
-dist-hook: darr-dist-hook
+dist-hook: darr-dist-hook acur-dist-hook
 
 
 # Cli tool.
@@ -249,6 +249,8 @@ include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
 	darr/src/darr.h \
 	darr/src/darr.c \
+	acur/src/acur.h \
+	acur/src/acur.c \
 	src/api/implementation.h \
 	src/api/linux/implementation.c \
 	src/api/proctal.h \
@@ -474,3 +476,17 @@ darr/libdarr.a:
 darr-dist-hook:
 	cp -r $(srcdir)/darr $(distdir)
 	rm -rf $(distdir)/darr/.git
+
+
+# Acur.
+.PHONY: acur-dist-hook acur-clean acur/libacur.a
+
+acur-clean:
+	$(MAKE) -C acur clean
+
+acur/libacur.a:
+	$(AM_V_GEN)$(MAKE) $(AM_V_lt) -C acur libacur.a
+
+acur-dist-hook:
+	cp -r $(srcdir)/acur $(distdir)
+	rm -rf $(distdir)/acur/.git
