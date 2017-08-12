@@ -463,7 +463,11 @@ void proctal_scan_region_execute_set(proctal_t p, int execute);
 /*
  * Freezes program execution.
  *
- * Closing the handle automatically unfreezes.
+ * Freezing twice results in undefined behavior.
+ *
+ * You can unfreeze again by calling proctal_unfreeze.
+ *
+ * Closing the handle without unfreezing first results in undefined behavior.
  *
  * Call proctal_error to verify if this function failed.
  */
@@ -472,8 +476,8 @@ void proctal_freeze(proctal_t p);
 /*
  * Unfreezes execution.
  *
- * You may only unfreeze as many times as you have frozen otherwise behavior is
- * left undefined.
+ * You can only call this function if you had previously called proctal_freeze,
+ * otherwise behavior is undefined.
  *
  * On failure, proctal_error will return an error code.
  */
