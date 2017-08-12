@@ -10,6 +10,21 @@
 #include "api/linux/watch.h"
 #include "api/linux/watch/implementation.h"
 
+/*
+ * Attempts to disable breakpoints on as many tasks as possible.
+ */
+static inline void try_disable_breakpoints(
+	struct proctal_linux *pl,
+	struct proctal_linux_ptrace_task *begin,
+	struct proctal_linux_ptrace_task *end)
+{
+	struct proctal_linux_ptrace_task *task;
+
+	for (task = begin; task != end; ++task) {
+		proctal_linux_watch_implementation_breakpoint_disable(pl, task->tid);
+	}
+}
+
 int proctal_linux_watch_start(struct proctal_linux *pl)
 {
 	if (!proctal_linux_ptrace_attach(pl)) {
@@ -18,15 +33,14 @@ int proctal_linux_watch_start(struct proctal_linux *pl)
 
 	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
 		if (!proctal_linux_watch_implementation_breakpoint_enable(pl, task->tid)) {
-			// TODO: Disable breakpoints that were successfully
-			// enabled.
+			try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), task);
 			proctal_linux_ptrace_detach(pl);
 			return 0;
 		}
 	}
 
 	if (!proctal_linux_ptrace_cont(pl, 0)) {
-		// TODO: Disable breakpoints if possible.
+		try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), darr_end(&pl->ptrace.tasks));
 		proctal_linux_ptrace_detach(pl);
 		return 0;
 	}
