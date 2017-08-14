@@ -246,7 +246,7 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 		proctal_cpu_architecture_arch=x86_64
 		;;
 
-	armv7l)
+	arm*)
 		proctal_cpu_architecture_arch=arm
 		;;
 
