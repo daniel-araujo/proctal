@@ -306,6 +306,8 @@ libproctal_la_SOURCES += \
 	src/api/linux/execute/x86_64/no-op-code.c \
 	src/api/linux/execute/x86_64/syscall.c \
 	src/api/linux/execute/x86_64/trap-code.c \
+	src/api/linux/execute/x86_64/savestate.c \
+	src/api/linux/execute/x86_64/stackframe.c \
 	src/api/linux/execute/hijack-main.c
 
 libproctal_la_SOURCES += \
