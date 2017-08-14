@@ -1,6 +1,6 @@
 #include "api/proctal.h"
 
-void *proctal_malloc(proctal_t p, size_t size)
+void *proctal_malloc(struct proctal *p, size_t size)
 {
 	void *a = proctal_global_malloc(size);
 
@@ -11,7 +11,7 @@ void *proctal_malloc(proctal_t p, size_t size)
 	return a;
 }
 
-void proctal_free(proctal_t p, void *addr)
+void proctal_free(struct proctal *p, void *addr)
 {
 	return proctal_global_free(addr);
 }

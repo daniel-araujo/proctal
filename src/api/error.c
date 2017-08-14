@@ -32,7 +32,7 @@ static const char *a[] = {
 	[PROCTAL_ERROR_PROGRAM_INTERRUPT] = "Program got interrupt.",
 };
 
-int proctal_error(proctal_t p)
+int proctal_error(struct proctal *p)
 {
 	if (p == NULL) {
 		return PROCTAL_ERROR_OUT_OF_MEMORY;
@@ -41,12 +41,12 @@ int proctal_error(proctal_t p)
 	return p->error;
 }
 
-void proctal_error_set(proctal_t p, int error)
+void proctal_error_set(struct proctal *p, int error)
 {
 	p->error = error;
 }
 
-int proctal_error_recover(proctal_t p)
+int proctal_error_recover(struct proctal *p)
 {
 	if (p == NULL) {
 		// No way to recover from that.
@@ -57,7 +57,7 @@ int proctal_error_recover(proctal_t p)
 	return 1;
 }
 
-const char *proctal_error_message(proctal_t p)
+const char *proctal_error_message(struct proctal *p)
 {
 	return a[proctal_error(p)];
 }

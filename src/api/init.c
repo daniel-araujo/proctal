@@ -27,12 +27,12 @@ void proctal_deinit(struct proctal *p)
 {
 }
 
-proctal_t proctal_open(void)
+struct proctal *proctal_open(void)
 {
 	return proctal_implementation_open();
 }
 
-void proctal_close(proctal_t p)
+void proctal_close(struct proctal *p)
 {
 	return proctal_implementation_close(p);
 }
