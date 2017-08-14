@@ -142,7 +142,7 @@ static int attach_threads(struct proctal_linux *pl)
 	struct proctal_linux_ptrace_task *task;
 
 	// It just so happens that the process id is also the id of the main
-	// thread. So we're going to attach to it first and afterwards lookup
+	// thread. So we're going to attach to it first and afterwards look up
 	// the ids of the other threads.
 
 	if (ptrace(PTRACE_ATTACH, pl->pid, 0L, 0L) == -1) {
@@ -157,7 +157,7 @@ static int attach_threads(struct proctal_linux *pl)
 		.running = 1,
 	};
 
-	// Now lookup the ids of the other threads.
+	// Now look up the ids of the other threads.
 
 	struct darr *tids = proctal_linux_task_ids(pl->pid);
 

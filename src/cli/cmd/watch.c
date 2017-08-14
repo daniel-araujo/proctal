@@ -69,7 +69,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_write_set(p, arg->write);
 	proctal_watch_execute_set(p, arg->execute);
 
-	// TODO: Should use a data structure with better lookup performance.
+	// TODO: Should use a data structure with better look up performance.
 	struct darr matches;
 	darr_init(&matches, sizeof(void *));
 
