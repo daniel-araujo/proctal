@@ -4,6 +4,7 @@
 #include <dirent.h>
 
 #include "magic/magic.h"
+#include "api/linux/proctal.h"
 #include "api/linux/proc.h"
 
 struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
@@ -12,7 +13,7 @@ struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 
 	static char proc_dir[] = "/proc";
 
-	struct darr *path = malloc(sizeof(struct darr));
+	struct darr *path = proctal_global_malloc(sizeof(struct darr));
 
 	if (path == NULL) {
 		return NULL;
@@ -33,7 +34,7 @@ struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 
 	if (!(n > 0 && n < (int) (darr_size(path) - 1))) {
 		darr_deinit(path);
-		free(path);
+		proctal_global_free(path);
 		return NULL;
 	}
 
@@ -45,12 +46,12 @@ struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 void proctal_linux_proc_path_dispose(struct darr *path)
 {
 	darr_deinit(path);
-	free(path);
+	proctal_global_free(path);
 }
 
 struct darr *proctal_linux_program_path(pid_t pid)
 {
-	struct darr *path = malloc(sizeof(struct darr));
+	struct darr *path = proctal_global_malloc(sizeof(struct darr));
 
 	if (path == NULL) {
 		return NULL;
@@ -72,12 +73,12 @@ struct darr *proctal_linux_program_path(pid_t pid)
 void proctal_linux_program_path_dispose(struct darr *path)
 {
 	darr_deinit(path);
-	free(path);
+	proctal_global_free(path);
 }
 
 struct darr *proctal_linux_task_ids(pid_t pid)
 {
-	struct darr *tids = malloc(sizeof(struct darr));
+	struct darr *tids = proctal_global_malloc(sizeof(struct darr));
 
 	if (tids == NULL) {
 		return NULL;
@@ -121,5 +122,5 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 void proctal_linux_task_ids_dispose(struct darr *tids)
 {
 	darr_deinit(tids);
-	free(tids);
+	proctal_global_free(tids);
 }
