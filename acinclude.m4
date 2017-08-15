@@ -32,7 +32,7 @@ dnl
 dnl if --with-LIB is passed configure will emit an error if the library is not
 dnl found.
 AC_DEFUN([PROCTAL_FIND_LIB], [
-	AH_TEMPLATE([$1], [Defines if $2 should be used.])
+	AH_TEMPLATE([$1], [Define to 1 if $2 is used.])
 
 	AC_ARG_WITH([$2], [AS_HELP_STRING([--with-$2], [Whether to compile with $2.])], [
 		if test "$withval" == "yes"; then
@@ -195,8 +195,8 @@ dnl If integers are stored in little endian,
 dnl PROCTAL_INTEGER_ENDIANNESS_LITTLE is defined, otherwise
 dnl PROCTAL_INTEGER_ENDIANNESS_BIG is defined.
 AC_DEFUN([PROCTAL_INTEGER_ENDIANNESS], [
-	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_LITTLE], [Whether integers are stored in little endian.])
-	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_BIG], [Whether integers are stored in big endian.])
+	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_LITTLE], [Define to 1 if integers are stored in little endian.])
+	AH_TEMPLATE([PROCTAL_INTEGER_ENDIANNESS_BIG], [Define to 1 if integers are stored in big endian.])
 
 	AC_C_BIGENDIAN([AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_BIG])],
 		[AC_DEFINE([PROCTAL_INTEGER_ENDIANNESS_LITTLE])],
@@ -260,23 +260,23 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 		;;
 	esac
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86], [Defines if the CPU architecture is x86.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86], [Define to 1 if the CPU architecture is x86.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86], [test "$proctal_cpu_architecture_arch" = "x86"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_64], [Defines if the CPU architecture is x86-64.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_64], [Define to 1 if the CPU architecture is x86-64.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86_64], [test "$proctal_cpu_architecture_arch" = "x86_64"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86_64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_64])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Defines if the CPU architecture is arm.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Define to 1 if the CPU architecture is arm.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_ARM], [test "$proctal_cpu_architecture_arch" = "arm"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_ARM], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Defines if the CPU architecture is aarch64.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Define to 1 if the CPU architecture is aarch64.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_AARCH64], [test "$proctal_cpu_architecture_arch" = "aarch64"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_AARCH64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_AARCH64])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [Defines if the CPU architecture is unknown.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [Define to 1 if the CPU architecture is unknown.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [test "$proctal_cpu_architecture_arch" = "unknown"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN])])
 ])
@@ -305,9 +305,9 @@ dnl - PROCTAL_VERSION_MAJOR
 dnl - PROCTAL_VERSION_MINOR
 dnl - PROCTAL_VERSION_PATCH
 AC_DEFUN([PROCTAL_VERSION], [
-	AH_TEMPLATE([PROCTAL_VERSION_MAJOR], [Defines major part of version.])
-	AH_TEMPLATE([PROCTAL_VERSION_MINOR], [Defines minor part of version.])
-	AH_TEMPLATE([PROCTAL_VERSION_PATCH], [Defines patch part of version.])
+	AH_TEMPLATE([PROCTAL_VERSION_MAJOR], [Major part of version.])
+	AH_TEMPLATE([PROCTAL_VERSION_MINOR], [Minor part of version.])
+	AH_TEMPLATE([PROCTAL_VERSION_PATCH], [Patch part of version.])
 
 	proctal_version_major=`echo $PACKAGE_VERSION | sed -E 's/^([[0-9]]+).*/\1/'`
 	proctal_version_minor=`echo $PACKAGE_VERSION | sed -E 's/^[[0-9]]+\.([[0-9]]+).*/\1/'`
