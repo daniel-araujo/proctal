@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([proctal], [0.0.0], [bugs@proctal.io])
+AC_INIT([proctal], [0.0.0], [bugs@proctal.io], [proctal], [https://proctal.io])
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AM_SILENT_RULES([yes])
