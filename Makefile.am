@@ -254,6 +254,7 @@ libproctal_la_SOURCES = \
 	src/api/implementation.h \
 	src/api/linux/implementation.c \
 	src/api/proctal.h \
+	src/api/version.c \
 	src/api/error.c \
 	src/api/watch.c \
 	src/api/freeze.c \
@@ -324,7 +325,7 @@ libproctal_la_SOURCES += \
 endif
 
 libproctal_la_CFLAGS = $(proctal_cflags)
-libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBRARY_VERSION)
+libproctal_la_LDFLAGS = -version-info $(PROCTAL_VERSION_LIBTOOL)
 
 
 # Swbuf module.

@@ -6,10 +6,11 @@ AM_SILENT_RULES([yes])
 LT_PREREQ([2.4])
 LT_INIT([dlopen])
 
+PROCTAL_VERSION
+PROCTAL_API_REVISION(0)
+
 PROCTAL_RUN_CONFIGURE([$srcdir/darr], [darr])
 PROCTAL_RUN_CONFIGURE([$srcdir/acur], [acur])
-
-AC_SUBST(PROCTAL_LIBRARY_VERSION, [0:0:0])
 
 AC_CONFIG_SRCDIR([src/api/include/proctal.h])
 AC_CONFIG_HEADERS([config.h:config.h.in])

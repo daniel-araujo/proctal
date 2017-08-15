@@ -295,3 +295,36 @@ AC_DEFUN([PROCTAL_ABSOLUTE_PATH], [
 		;;
 	esac
 ])
+
+dnl PROCTAL_VERSION
+dnl
+dnl This macro expects to find the variable PACKAGE_VERSION.
+dnl
+dnl Defines the following substitutions and defines:
+dnl - PROCTAL_VERSION_MAJOR
+dnl - PROCTAL_VERSION_MINOR
+dnl - PROCTAL_VERSION_PATCH
+AC_DEFUN([PROCTAL_VERSION], [
+	AH_TEMPLATE([PROCTAL_VERSION_MAJOR], [Defines major part of version.])
+	AH_TEMPLATE([PROCTAL_VERSION_MINOR], [Defines minor part of version.])
+	AH_TEMPLATE([PROCTAL_VERSION_PATCH], [Defines patch part of version.])
+
+	proctal_version_major=`echo $PACKAGE_VERSION | sed -E 's/^([[0-9]]+).*/\1/'`
+	proctal_version_minor=`echo $PACKAGE_VERSION | sed -E 's/^[[0-9]]+\.([[0-9]]+).*/\1/'`
+	proctal_version_patch=`echo $PACKAGE_VERSION | sed -E 's/^[[0-9]]+\.[[0-9]]+\.([[0-9]]+).*/\1/'`
+
+	AC_DEFINE_UNQUOTED([PROCTAL_VERSION_MAJOR], [$proctal_version_major])
+	AC_DEFINE_UNQUOTED([PROCTAL_VERSION_MINOR], [$proctal_version_minor])
+	AC_DEFINE_UNQUOTED([PROCTAL_VERSION_PATCH], [$proctal_version_patch])
+
+	AC_SUBST([PROCTAL_VERSION_MAJOR], [$proctal_version_major])
+	AC_SUBST([PROCTAL_VERSION_MINOR], [$proctal_version_minor])
+	AC_SUBST([PROCTAL_VERSION_PATCH], [$proctal_version_patch])
+])
+
+dnl PROCTAL_API_REVISION(1) 
+dnl
+dnl This macro creates the PROCTAL_VERSION_LIBTOOL substitution variable.
+AC_DEFUN([PROCTAL_API_REVISION], [
+	AC_SUBST([PROCTAL_VERSION_LIBTOOL], [0:$1])
+])
