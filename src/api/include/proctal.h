@@ -645,7 +645,7 @@ void proctal_deallocate(proctal_t p, void *addr);
  * to avoid having a deallocator being called with an address returned by the
  * incorrect allocator pair.
  */
-void proctal_global_malloc_set(void *(*malloc)(size_t));
+void proctal_malloc_set(void *(*malloc)(size_t));
 
 /*
  * Sets the memory deallocator that will be used for internal data structures.
@@ -657,7 +657,7 @@ void proctal_global_malloc_set(void *(*malloc)(size_t));
  * to avoid having a deallocator being called with an address returned by the
  * incorrect allocator pair.
  */
-void proctal_global_free_set(void (*free)(void *));
+void proctal_free_set(void (*free)(void *));
 
 /*
  * Returns the major part of the version number.
