@@ -17,7 +17,8 @@ int cli_cmd_measure(struct cli_cmd_measure_arg *arg)
 		total_size += cli_val_sizeof(*v);
 	}
 
-	printf("%lu\n", total_size);
+	cli_print_size(total_size);
+	cli_print_nl();
 
 	return 0;
 }

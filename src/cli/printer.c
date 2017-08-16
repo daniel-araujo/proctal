@@ -93,3 +93,13 @@ void cli_print_byte(unsigned char byte)
 {
 	printf("%02hhX", byte);
 }
+
+void cli_print_size(size_t size)
+{
+	printf("%zu", size);
+}
+
+void cli_print_nl(void)
+{
+	puts("");
+}

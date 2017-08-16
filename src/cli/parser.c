@@ -140,3 +140,11 @@ int cli_parse_is_hex_digit(int s)
 {
 	return isxdigit(s) != 0;
 }
+
+/*
+ * Parses a decimal number that represents a size.
+ */
+int cli_parse_size(const char *s, size_t *val)
+{
+	return sscanf(s, "%zu", val) == 1 ? 1 : 0;
+}

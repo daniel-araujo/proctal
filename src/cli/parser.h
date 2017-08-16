@@ -59,7 +59,15 @@ size_t cli_parse_skip_until_chars(const char *s, const char *chars);
  */
 size_t cli_parse_skip_until_chars2(const char *s, size_t length, const char *chars);
 
+/*
+ * Checks if the given character is a valid hexadecimal digit.
+ */
 int cli_parse_is_hex_digit(int s);
+
+/*
+ * Parses a decimal number that represents a size.
+ */
+int cli_parse_size(const char *s, size_t *val);
 
 int cli_parse_val_type(const char *s, enum cli_val_type* val);
 int cli_parse_val_integer_endianness(const char *s, enum cli_val_integer_endianness* val);

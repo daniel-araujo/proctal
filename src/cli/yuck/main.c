@@ -890,7 +890,7 @@ static struct cli_cmd_allocate_arg *create_cli_cmd_allocate_arg(yuck_t *yuck_arg
 		return NULL;
 	}
 
-	if (!cli_parse_unsigned_long(yuck_arg->args[0], &arg->size)) {
+	if (!cli_parse_size(yuck_arg->args[0], &arg->size)) {
 		fputs("Invalid size.\n", stderr);
 		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
