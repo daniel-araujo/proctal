@@ -4,8 +4,11 @@
 
 https://proctal.io
 
-Proctal gives you access to the address space of a program on Linux with a
-command line tool and a C library. Features include:
+Proctal is an application software that offers a command line interface (CLI)
+and an abstract programming interface (API) to access the inner workings of
+programs on Linux.
+
+**Features:**
 
 - Reading and writing to memory
 

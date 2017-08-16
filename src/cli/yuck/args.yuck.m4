@@ -62,7 +62,7 @@ define(`TYPE_OPTIONS', `
                         intel
 ')dnl
 Usage: proctal
-Gives you access to the address space of a program.
+Accesses the inner workings of programs.
 
 
   -h, --help            Display help information and exit. If a command is

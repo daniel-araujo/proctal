@@ -2,12 +2,9 @@
 <document>
 	<title>Overview</title>
 
-	Proctal has a command line interface that gives you access to the
-	address space of a program straight from your terminal.
-
 	You're going to learn how to read, write and search for values,
 	allocate memory, execute code, freeze execution, dump memory and watch
-	for memory accesses.
+	for memory accesses straight from your terminal.
 
 	The following sample is a bash script that can make a program print
 	Hello, world!
