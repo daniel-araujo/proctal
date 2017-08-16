@@ -9,13 +9,13 @@
 #include <string.h>
 
 /*
- * Supported integer sizes.
+ * Supported number of bits.
  */
-enum cli_val_integer_size {
-	CLI_VAL_INTEGER_SIZE_8 = 1,
-	CLI_VAL_INTEGER_SIZE_16 = 2,
-	CLI_VAL_INTEGER_SIZE_32 = 4,
-	CLI_VAL_INTEGER_SIZE_64 = 8,
+enum cli_val_integer_bits {
+	CLI_VAL_INTEGER_BITS_8 = 1,
+	CLI_VAL_INTEGER_BITS_16 = 2,
+	CLI_VAL_INTEGER_BITS_32 = 4,
+	CLI_VAL_INTEGER_BITS_64 = 8,
 };
 
 /*
@@ -34,7 +34,7 @@ enum cli_val_integer_endianness {
 	CLI_VAL_INTEGER_ENDIANNESS_BIG,
 };
 
-#define CLI_VAL_INTEGER_SIZE_DEFAULT CLI_VAL_INTEGER_SIZE_8
+#define CLI_VAL_INTEGER_BITS_DEFAULT CLI_VAL_INTEGER_BITS_8
 
 #define CLI_VAL_INTEGER_SIGN_DEFAULT CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT
 
@@ -50,7 +50,7 @@ enum cli_val_integer_endianness {
  * Describes the behavior of an integer value.
  */
 struct cli_val_integer_attr {
-	enum cli_val_integer_size size;
+	enum cli_val_integer_bits bits;
 	enum cli_val_integer_sign sign;
 	enum cli_val_integer_endianness endianness;
 };
@@ -79,7 +79,7 @@ struct cli_val_integer {
  */
 inline void cli_val_integer_attr_init(struct cli_val_integer_attr *a)
 {
-	a->size = CLI_VAL_INTEGER_SIZE_DEFAULT;
+	a->bits = CLI_VAL_INTEGER_BITS_DEFAULT;
 	a->sign = CLI_VAL_INTEGER_SIGN_DEFAULT;
 	a->endianness = CLI_VAL_INTEGER_ENDIANNESS_DEFAULT;
 }
@@ -95,13 +95,13 @@ inline void cli_val_integer_attr_endianness_set(
 }
 
 /*
- * Sets size
+ * Sets number of bits.
  */
-inline void cli_val_integer_attr_size_set(
+inline void cli_val_integer_attr_bits_set(
 	struct cli_val_integer_attr *a,
-	enum cli_val_integer_size size)
+	enum cli_val_integer_bits bits)
 {
-	a->size = size;
+	a->bits = bits;
 }
 
 /*
@@ -119,17 +119,17 @@ inline void cli_val_integer_attr_sign_set(
  */
 inline size_t cli_val_integer_attr_alignof(struct cli_val_integer_attr *a)
 {
-	switch (a->size) {
-	case CLI_VAL_INTEGER_SIZE_8:
+	switch (a->bits) {
+	case CLI_VAL_INTEGER_BITS_8:
 		return alignof(int8_t);
 
-	case CLI_VAL_INTEGER_SIZE_16:
+	case CLI_VAL_INTEGER_BITS_16:
 		return alignof(int16_t);
 
-	case CLI_VAL_INTEGER_SIZE_32:
+	case CLI_VAL_INTEGER_BITS_32:
 		return alignof(int32_t);
 
-	case CLI_VAL_INTEGER_SIZE_64:
+	case CLI_VAL_INTEGER_BITS_64:
 		return alignof(int64_t);
 	}
 
@@ -155,7 +155,7 @@ inline struct cli_val_integer *cli_val_integer_create(struct cli_val_integer_att
 {
 	// Taking advantage of the fact that the values for the constants are
 	// encoded in their corresponding length in bytes.
-	size_t size = a->size;
+	size_t size = a->bits;
 
 	struct cli_val_integer *v = malloc(sizeof(*v) + size);
 
@@ -202,17 +202,17 @@ inline size_t cli_val_integer_alignof(struct cli_val_integer *v)
  */
 inline size_t cli_val_integer_sizeof(struct cli_val_integer *v)
 {
-	switch (v->attr.size) {
-	case CLI_VAL_INTEGER_SIZE_8:
+	switch (v->attr.bits) {
+	case CLI_VAL_INTEGER_BITS_8:
 		return sizeof(int8_t);
 
-	case CLI_VAL_INTEGER_SIZE_16:
+	case CLI_VAL_INTEGER_BITS_16:
 		return sizeof(int16_t);
 
-	case CLI_VAL_INTEGER_SIZE_32:
+	case CLI_VAL_INTEGER_BITS_32:
 		return sizeof(int32_t);
 
-	case CLI_VAL_INTEGER_SIZE_64:
+	case CLI_VAL_INTEGER_BITS_64:
 		return sizeof(int64_t);
 	}
 

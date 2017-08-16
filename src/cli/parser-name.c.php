@@ -22,13 +22,13 @@ $parsers = [
 		],
 	],
 	[
-		"name" => "val_integer_size",
-		"type" => "enum cli_val_integer_size",
+		"name" => "val_integer_bits",
+		"type" => "enum cli_val_integer_bits",
 		"values" => [
-			"8" => "CLI_VAL_INTEGER_SIZE_8",
-			"16" => "CLI_VAL_INTEGER_SIZE_16",
-			"32" => "CLI_VAL_INTEGER_SIZE_32",
-			"64" => "CLI_VAL_INTEGER_SIZE_64",
+			"8" => "CLI_VAL_INTEGER_BITS_8",
+			"16" => "CLI_VAL_INTEGER_BITS_16",
+			"32" => "CLI_VAL_INTEGER_BITS_32",
+			"64" => "CLI_VAL_INTEGER_BITS_64",
 		],
 	],
 	[

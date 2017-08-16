@@ -31,7 +31,7 @@ struct type_options {
 	enum cli_val_type type;
 	enum cli_val_integer_endianness integer_endianness;
 	enum cli_val_integer_sign integer_sign;
-	enum cli_val_integer_size integer_size;
+	enum cli_val_integer_bits integer_bits;
 	enum cli_val_ieee754_precision ieee754_precision;
 	enum cli_val_text_encoding text_encoding;
 	enum cli_val_instruction_architecture instruction_architecture;
@@ -52,7 +52,7 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_INTEGER: {
 		struct cli_val_integer_attr a;
 		cli_val_integer_attr_init(&a);
-		cli_val_integer_attr_size_set(&a, ta->integer_size);
+		cli_val_integer_attr_bits_set(&a, ta->integer_bits);
 		cli_val_integer_attr_sign_set(&a, ta->integer_sign);
 		cli_val_integer_attr_endianness_set(&a, ta->integer_endianness);
 
@@ -256,13 +256,13 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 			type->integer_endianness = CLI_VAL_INTEGER_ENDIANNESS_DEFAULT; \
 		} \
 \
-		if (yuck_arg->integer_size_arg) { \
-			if (!cli_parse_val_integer_size(yuck_arg->integer_size_arg, &type->integer_size)) { \
+		if (yuck_arg->integer_bits_arg) { \
+			if (!cli_parse_val_integer_bits(yuck_arg->integer_bits_arg, &type->integer_bits)) { \
 				fputs("Invalid integer size.\n", stderr); \
 				return 0; \
 			} \
 		} else { \
-			type->integer_size = CLI_VAL_INTEGER_SIZE_DEFAULT; \
+			type->integer_bits = CLI_VAL_INTEGER_BITS_DEFAULT; \
 		} \
 \
 		if (yuck_arg->integer_sign_arg) { \

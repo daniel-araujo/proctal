@@ -19,9 +19,9 @@
 	Here are some examples:
 
 	<code type="bash-prompt">
-$ proctal measure --address=1c09346 --type=integer --integer-size=32 0
+$ proctal measure --address=1c09346 --type=integer --integer-bits=32 0
 4
-$ proctal measure --address=1c09346 --type=integer --integer-size=64 0
+$ proctal measure --address=1c09346 --type=integer --integer-bits=64 0
 8
 $ proctal measure --address=1c09346 --type=instruction "call 0x5"
 5

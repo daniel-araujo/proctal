@@ -13,7 +13,7 @@
 	address <quote>7FFE79DEA90C</quote> of a program whose PID is 12345.
 
 	<code type="bash-prompt">
-$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32
+$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-bits=32
 128
 	</code>
 
@@ -35,7 +35,7 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=
 		Here's how you would read an array of 5 32-bit integers.
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-size=32 --array=5
+$ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-bits=32 --array=5
 128
 214
 -2
@@ -96,7 +96,7 @@ $ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-
 		memory:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=98F213B6 --type=integer --integer-size=32 --array=4 --show-bytes
+$ proctal read --pid=12345 --address=98F213B6 --type=integer --integer-bits=32 --array=4 --show-bytes
 12
         0C 00 00 00
 -81

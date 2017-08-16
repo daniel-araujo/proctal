@@ -209,7 +209,7 @@ int main(void)
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
 	cli_val vcurr = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 	cli_val vprev = cli_val_create_clone(vcurr);

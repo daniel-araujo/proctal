@@ -75,9 +75,9 @@ void cli_val_integer_attr_endianness_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_endianness endianness);
 
-void cli_val_integer_attr_size_set(
+void cli_val_integer_attr_bits_set(
 	struct cli_val_integer_attr *a,
-	enum cli_val_integer_size size);
+	enum cli_val_integer_bits size);
 
 void cli_val_integer_attr_sign_set(
 	struct cli_val_integer_attr *a,

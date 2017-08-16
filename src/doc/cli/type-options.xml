@@ -25,10 +25,12 @@
 	<section>
 		<title>Byte</title>
 
-		This is the most basic type of them all. A byte is a sequence
-		of 8-bits. It is printed in hexadecimal notation.
+		This is the most basic type of them all. It represents a unit
+		of memory. Its size is always 1. When printed, the sequence of
+		bits that form it are represented as an unsigned integer in
+		hexadecimal notation.
 
-		This type does not have type specific options.
+		This type does not have specific options.
 	</section>
 
 	<section>
@@ -44,7 +46,7 @@
 		to set the endianness. You can choose between
 		<quote>big</quote> and <quote>little</quote>.
 
-		The <quote>--integer-size</quote> option can be used to set
+		The <quote>--integer-bits</quote> option can be used to set
 		the number of bits. Only <quote>8</quote>, <quote>16</quote>,
 		<quote>32</quote> and <quote>64</quote> are supported at the
 		moment.
@@ -55,7 +57,7 @@
 		altogether.
 
 		By default an integer is 8-bit, signed using two's complement
-		and using the same endianness as the host.
+		and using the same endianness that the system uses.
 	</section>
 
 	<section>

@@ -148,7 +148,7 @@ static void test_integer_8_twos_complement()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -171,7 +171,7 @@ static void test_integer_8_unsigned()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_8);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -193,7 +193,7 @@ static void test_integer_16_twos_complement()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_16);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_16);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -216,7 +216,7 @@ static void test_integer_16_unsigned()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_16);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_16);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -238,7 +238,7 @@ static void test_integer_32_twos_complement()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_32);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_32);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -261,7 +261,7 @@ static void test_integer_32_unsigned()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_32);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_32);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -283,7 +283,7 @@ static void test_integer_64_twos_complement()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_64);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
@@ -306,7 +306,7 @@ static void test_integer_64_unsigned()
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_64);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_64);
 	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 

@@ -28,7 +28,7 @@
 		like this:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100
 7FCDB1D56638 100
 7FCDB1D567A8 100
 7FCDB1D571B0 100
@@ -58,7 +58,7 @@ $ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100
 		this now:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=8 --eq=100 &gt; search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100 &gt; search-1
 		</code>
 
 		Using the <quote>wc</quote> program you can count exactly how
@@ -86,7 +86,7 @@ $ wc -l &lt; search-1
 		<quote>search-2</quote>.
 
 		<code type="bash-prompt">
-$ proctal search --input --pid=12345 --type=integer --integer-size=8 --eq=53 &lt; search-1 &gt; search-2
+$ proctal search --input --pid=12345 --type=integer --integer-bits=8 --eq=53 &lt; search-1 &gt; search-2
 		</code>
 
 		And counting yields:
@@ -104,7 +104,7 @@ $ wc -l &lt; search-2
 		the values change as you play the game:
 
 		<code type="bash-prompt">
-$ watch proctal search --input --pid=12345 --type=integer --integer-size=8 &lt; search-2
+$ watch proctal search --input --pid=12345 --type=integer --integer-bits=8 &lt; search-2
 7FCDB1D577F8 53
 7FCDB1D57F38 53
 7FCDB1D58738 53
@@ -140,7 +140,7 @@ $ watch proctal search --input --pid=12345 --type=integer --integer-size=8 &lt; 
 		can search for all possible 8-bit integers:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=8 > search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=8 > search-1
 		</code>
 
 		And then depending on whether you gain and or lose health, you
@@ -148,13 +148,13 @@ $ proctal search --pid=12345 --type=integer --integer-size=8 > search-1
 		Here's how you would search for increased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=8 --increased &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased &gt; search-2
 		</code>
 
 		And here's how you would search for decreased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-size=8 --decreased &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased &gt; search-2
 		</code>
 	</section>
 
@@ -167,7 +167,7 @@ $ proctal search --pid=12345 --type=integer --integer-size=8 --decreased &gt; se
 		single command:
 
 		<code type="bash-prompt">
-$ proctal write --pid=12345 --type=integer --integer-size=8 --address=726BA1DA 100
+$ proctal write --pid=12345 --type=integer --integer-bits=8 --address=726BA1DA 100
 		</code>
 
 		The user interface of the game may not update immediately but
@@ -175,7 +175,7 @@ $ proctal write --pid=12345 --type=integer --integer-size=8 --address=726BA1DA 1
 		<link ref="proctal:cli:read">read command</link>:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --type=integer --integer-size=8 --address=726BA1DA
+$ proctal read --pid=12345 --type=integer --integer-bits=8 --address=726BA1DA
 100
 		</code>
 	</section>
@@ -193,7 +193,7 @@ $ proctal read --pid=12345 --type=integer --integer-size=8 --address=726BA1DA
 		command would look like:
 
 		<code type="bash-prompt">
-$ proctal write --pid=12345 --type=integer --integer-size=32 --address=726BA1DA --repeat 1000
+$ proctal write --pid=12345 --type=integer --integer-bits=32 --address=726BA1DA --repeat 1000
 		</code>
 
 		What the command will actually do is repeatedly write the same

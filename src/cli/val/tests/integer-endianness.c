@@ -41,7 +41,7 @@ int main(void)
 
 	struct cli_val_integer_attr a;
 	cli_val_integer_attr_init(&a);
-	cli_val_integer_attr_size_set(&a, CLI_VAL_INTEGER_SIZE_16);
+	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_16);
 
 	struct cli_val_integer *v;
 

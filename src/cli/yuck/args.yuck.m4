@@ -13,11 +13,11 @@ define(`TYPE_OPTIONS', `
                         instruction
   --integer-endianness=ENDIANNESS
                         If type is integer, this determines the order of bytes.
-                        By default ENDIANNESS is the same as the host.
+                        By default ENDIANNESS is the same that the system uses.
                         ENDIANNESS can be:
                         little
                         big
-  --integer-size=SIZE
+  --integer-bits=SIZE
                         If type is integer, this determines the number of bits
                         stored in memory. By default SIZE is 8.
                         SIZE can be:

@@ -22,7 +22,7 @@ common_tests = [
         "expected_output": "Invalid integer endianness.",
     },
     {
-        "command_args": ["--type=integer", "--integer-size=1"],
+        "command_args": ["--type=integer", "--integer-bits=1"],
         "expected_output": "Invalid integer size.",
     },
     {
