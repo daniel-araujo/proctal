@@ -239,12 +239,12 @@ Proctal uses the autotools to generate build systems for UNIX like operating
 systems. This section will not go into too much detail about them but will show
 you how you can create a development build to tinker with the source code.
 
-First you need to run the ``init`` script. This will fetch some dependencies that
-don't have to be installed in your system and also prepare the autotools.
+First you need to run the ``bootstrap`` script. This will fetch some additional
+libraries for you and also set up the autotools.
 
 .. code :: sh
 
-	$ ./init
+	$ ./bootstrap
 
 At this point you can follow the instructions given in the Installation_
 section but you will most likely want to work strictly inside the project
