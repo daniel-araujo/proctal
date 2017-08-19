@@ -18,9 +18,9 @@ proctal_install_git_repository() {
 	proctal_install_git_repository_source="$2"
 	proctal_install_git_repository_commit="${3:-master}"
 
-	if test -e ${proctal_install_git_repository_destination}; then
-		proctal_install_git_repository_args="-c advice.detachedHead=false --git-dir=${proctal_install_git_repository_destination}/.git --work-tree=${proctal_install_git_repository_destination}"
+	proctal_install_git_repository_args="-c advice.detachedHead=false --git-dir=${proctal_install_git_repository_destination}/.git --work-tree=${proctal_install_git_repository_destination}"
 
+	if test -e ${proctal_install_git_repository_destination}; then
 		if ! git ${proctal_install_git_repository_args} checkout -f "${proctal_install_git_repository_commit}" > /dev/null 2>&1; then
 			git ${proctal_install_git_repository_args} remote set-url origin ${proctal_install_git_repository_source}
 			git ${proctal_install_git_repository_args} fetch --all
@@ -40,10 +40,17 @@ proctal_install_git_repository() {
 
 		git ${proctal_install_git_repository_args} clean -fdx > /dev/null
 	else
-		git clone "${proctal_install_git_repository_source}" "${proctal_install_git_repository_destination}"
+		git clone --no-checkout "${proctal_install_git_repository_source}" "${proctal_install_git_repository_destination}"
 
 		if test "$?" -ne 0; then
-			echo "Failed to clone ${proctal_install_git_repository_source}" 2>&1
+			echo "Failed to clone ${proctal_install_git_repository_source}." 2>&1
+			return 1
+		fi
+
+		git ${proctal_install_git_repository_args} checkout -f "${proctal_install_git_repository_commit}" > /dev/null
+
+		if test "$?" -ne 0; then
+			echo "Failed to checkout ${proctal_install_git_repository_commit}." 2>&1
 			return 1
 		fi
 	fi
