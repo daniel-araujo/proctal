@@ -7,14 +7,14 @@
 
 	You may optionally pass the <quote>--read</quote>,
 	<quote>--write</quote> and <quote>--execute</quote> options to set
-	the permissions of the block. It is possible to allocate memory without
-	any permissions.
+	the access permissions of the memory block. If none of these options
+	are used, the block gets full access.
 
-	Here's how you would allocate 8 bytes that are readable and writable
-	for the program whose PID is 12345:
+	Here's how you would allocate 8 bytes in the program whose PID is
+	12345:
 
 	<code type="bash-prompt">
-$ proctal allocate --pid=12345 --read --write 8 
+$ proctal allocate --pid=12345 8 
 	</code>
 
 	It will print the starting address of the block of memory.

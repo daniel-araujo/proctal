@@ -16,9 +16,15 @@ int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	proctal_allocate_read_set(p, arg->read);
-	proctal_allocate_write_set(p, arg->write);
-	proctal_allocate_execute_set(p, arg->execute);
+	if (!arg->read && !arg->write && !arg->execute) {
+		proctal_allocate_read_set(p, 1);
+		proctal_allocate_write_set(p, 1);
+		proctal_allocate_execute_set(p, 1);
+	} else {
+		proctal_allocate_read_set(p, arg->read);
+		proctal_allocate_write_set(p, arg->write);
+		proctal_allocate_execute_set(p, arg->execute);
+	}
 
 	void *addr = proctal_allocate(p, arg->size);
 
