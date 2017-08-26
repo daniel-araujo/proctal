@@ -45,7 +45,7 @@ void proctal_linux_scan_region_stop(struct proctal_linux *pl)
 	pl->region.started = 0;
 }
 
-int proctal_linux_scan_region(struct proctal_linux *pl, void **start, void **end)
+int proctal_linux_scan_region_next(struct proctal_linux *pl, void **start, void **end)
 {
 	struct proctal_linux_proc_maps_region *region = next(pl);
 

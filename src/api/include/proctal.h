@@ -219,7 +219,7 @@ size_t proctal_write_address_array(proctal_t p, void *addr, const void **in, siz
  *
  * When you're done scanning, you must call proctal_scan_address_stop.
  *
- * You should call proctal_error to verify if this function succeeded.
+ * You should call proctal_error to verify if this function failed.
  */
 void proctal_scan_address_start(proctal_t p);
 
@@ -235,14 +235,14 @@ void proctal_scan_address_stop(proctal_t p);
 
 /*
  * After proctal_scan_address_start is called, calling this function allows you
- * to retrieve a new address.
+ * to retrieve an address.
  *
- * It will return 1 on success, 0 on failure or when it has ran out of
+ * It will return 1 on success, 0 on failure or when there are no more
  * addresses.
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_scan_address(proctal_t p, void **addr);
+int proctal_scan_address_next(proctal_t p, void **addr);
 
 /*
  * Returns the alignment requirement of the addresses.
@@ -368,14 +368,14 @@ void proctal_scan_region_stop(proctal_t p);
 
 /*
  * After proctal_scan_region_start is called, calling this function allows you
- * to retrieve the addresses of the start and the end of a new memory region.
+ * to retrieve the addresses of the start and the end of a memory region.
  *
  * It will return 1 on success, 0 on failure or when there are no more memory
  * regions.
  *
  * You should call proctal_error to verify if 0 meant failure.
  */
-int proctal_scan_region(proctal_t p, void **start, void **end);
+int proctal_scan_region_next(proctal_t p, void **start, void **end);
 
 /*
  * Returns which memory regions to scan over.
@@ -516,7 +516,7 @@ void proctal_watch_stop(proctal_t p);
  * You must have previously called proctal_watch_start successfully otherwise
  * behavior is left undefined.
  */
-int proctal_watch(proctal_t p, void **addr);
+int proctal_watch_next(proctal_t p, void **addr);
 
 /*
  * Returns the address that will be watched for accesses.

@@ -46,12 +46,12 @@ void proctal_watch_start(struct proctal *p)
 	proctal_implementation_watch_start(p);
 }
 
-int proctal_watch(struct proctal *p, void **addr)
-{
-	return proctal_implementation_watch(p, addr);
-}
-
 void proctal_watch_stop(struct proctal *p)
 {
 	proctal_implementation_watch_stop(p);
+}
+
+int proctal_watch_next(struct proctal *p, void **addr)
+{
+	return proctal_implementation_watch_next(p, addr);
 }

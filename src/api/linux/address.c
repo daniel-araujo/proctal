@@ -103,7 +103,7 @@ void proctal_linux_scan_address_stop(struct proctal_linux *pl)
 	pl->address.started = 0;
 }
 
-int proctal_linux_scan_address(struct proctal_linux *pl, void **addr)
+int proctal_linux_scan_address_next(struct proctal_linux *pl, void **addr)
 {
 	if (next(pl)) {
 		*addr = pl->address.current_address;

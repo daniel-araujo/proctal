@@ -55,7 +55,7 @@ void proctal_scan_region_execute_set(struct proctal *p, int execute)
 	p->region.execute = execute != 0;
 }
 
-int proctal_scan_region(struct proctal *p, void **start, void **end)
+int proctal_scan_region_next(struct proctal *p, void **start, void **end)
 {
-	return proctal_implementation_scan_region(p, start, end);
+	return proctal_implementation_scan_region_next(p, start, end);
 }

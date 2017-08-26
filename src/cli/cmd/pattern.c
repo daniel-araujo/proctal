@@ -74,7 +74,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 	struct chunk chunk;
 
-	while (proctal_scan_region(p, &start, &end)) {
+	while (proctal_scan_region_next(p, &start, &end)) {
 		// Starting address of the matching pattern.
 		char *pattern_start = start;
 		cli_pattern_new(cp);

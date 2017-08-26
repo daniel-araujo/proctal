@@ -34,17 +34,24 @@ proctal_watch_execute_set(proctal, 0);
 proctal_watch_start(proctal);
 	</code>
 
-	You should call proctal_error to verify if this function succeeded.
+	You should call proctal_error to verify if this function failed.
 
-	To check if an instruction was found accessing the memory address, you
-	need to call <quote>proctal_watch</quote>.
+	To check if the memory address was accessed in the mean time, you need
+	to call <quote>proctal_watch_next</quote>.
 
 	<code type="c">
-void *address;
-int result = proctal_watch(proctal, &amp;address);
+for (;;) {
+	void *address;
+	int result = proctal_watch_next(proctal, &amp;address);
 
-if (proctal_error(proctal)) {
-	// Error handling.
+	if (proctal_error(proctal)) {
+		// Error handling.
+		break;
+	}
+
+	if (result) {
+		// Use address.
+	}
 }
 	</code>
 

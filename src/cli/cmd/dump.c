@@ -65,7 +65,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	struct chunk chunk;
 
-	while (proctal_scan_region(p, &start, &end)) {
+	while (proctal_scan_region_next(p, &start, &end)) {
 		chunk_init(&chunk, start, end, output_block_size);
 
 		do {

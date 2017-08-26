@@ -90,7 +90,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	while (!request_quit) {
 		void *addr;
 
-		if (!proctal_watch(p, &addr)) {
+		if (!proctal_watch_next(p, &addr)) {
 			switch (proctal_error(p)) {
 			case 0:
 				continue;

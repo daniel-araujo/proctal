@@ -76,17 +76,18 @@ proctal_scan_address_start(proctal);
 		You should call proctal_error to verify if this function
 		succeeded.
 
-		And now each call to <quote>proctal_scan_address</quote> will return
-		you the current address and move on to the next one.
+		And now each call to <quote>proctal_scan_address_next</quote>
+		will return you the current address and move on to the next
+		one.
 
 		<code type="c">
 void *address;
-while (proctal_scan_address(proctal, &amp;address)) {}
+while (proctal_scan_address_next(proctal, &amp;address)) {}
 		</code>
 
-		As you can see, <quote>proctal_scan_address</quote> expects you to
-		pass the address of a place to store the address. The return
-		value is used to indicate success or failure.
+		As you can see, <quote>proctal_scan_address_next</quote>
+		expects you to pass a pointer where it can store the address.
+		The return value is used to indicate success or failure.
 
 		When the return value is 1, it means that the function has
 		provided you with an address. When it returns 0 it can mean two
@@ -99,7 +100,7 @@ while (proctal_scan_address(proctal, &amp;address)) {}
 
 		<code type="c">
 void *address;
-while (proctal_scan_address(proctal, &amp;address)) {
+while (proctal_scan_address_next(proctal, &amp;address)) {
 	// Use address.
 }
 
@@ -164,18 +165,18 @@ proctal_scan_region_start(proctal);
 		You should call proctal_error to verify if this function
 		succeeded.
 
-		And now each call to proctal_scan_region will return you the
-		starting and ending address of the current region and move on
-		to the next one.
+		And now each call to <quote>proctal_scan_region_next</quote>
+		will return you the starting and ending address of the current
+		region and move on to the next one.
 
 		<code type="c">
 void *start;
 void *end;
-while (proctal_scan_region(proctal, &amp;start, &amp;end)) {}
+while (proctal_scan_region_next(proctal, &amp;start, &amp;end)) {}
 		</code>
 
-		As you can see, <quote>proctal_scan_regions</quote> expects you to
-		pass the addresses of places to store the start and end
+		As you can see, <quote>proctal_scan_region_next</quote> expects
+		you to pass pointers where it can store the start and end
 		addresses. The return value is used to indicate success or
 		failure.
 
@@ -191,7 +192,7 @@ while (proctal_scan_region(proctal, &amp;start, &amp;end)) {}
 		<code type="c">
 void *start;
 void *end;
-while (proctal_scan_region(proctal, &amp;start, &amp;end)) {
+while (proctal_scan_region_next(proctal, &amp;start, &amp;end)) {
 	// Use address.
 }
 

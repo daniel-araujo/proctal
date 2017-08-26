@@ -116,7 +116,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	struct chunk chunk;
 
-	while (proctal_scan_region(p, &start, &end)) {
+	while (proctal_scan_region_next(p, &start, &end)) {
 		size_t leftover = 0;
 
 		chunk_init(&chunk, start, end, buffer_size);

@@ -25,19 +25,19 @@ void proctal_implementation_scan_address_start(struct proctal *p);
 
 void proctal_implementation_scan_address_stop(struct proctal *p);
 
-int proctal_implementation_scan_address(struct proctal *p, void **addr);
+int proctal_implementation_scan_address_next(struct proctal *p, void **addr);
 
 void proctal_implementation_scan_region_start(struct proctal *p);
 
 void proctal_implementation_scan_region_stop(struct proctal *p);
 
-int proctal_implementation_scan_region(struct proctal *p, void **start, void **end);
+int proctal_implementation_scan_region_next(struct proctal *p, void **start, void **end);
 
 void proctal_implementation_watch_start(struct proctal *p);
 
 void proctal_implementation_watch_stop(struct proctal *p);
 
-int proctal_implementation_watch(struct proctal *p, void **addr);
+int proctal_implementation_watch_next(struct proctal *p, void **addr);
 
 void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length);
 
