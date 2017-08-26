@@ -42,13 +42,6 @@
 #define PROCTAL_REGION_PROGRAM_CODE 4
 
 /*
- * Macro definitions of memory allocation permissions.
- */
-#define PROCTAL_ALLOCATE_PERMISSION_EXECUTE 1
-#define PROCTAL_ALLOCATE_PERMISSION_WRITE 2
-#define PROCTAL_ALLOCATE_PERMISSION_READ 4
-
-/*
  * Provides a type name for a handle. The actual definition is an
  * implementation detail that you shouldn't worry about.
  */
@@ -614,13 +607,62 @@ void proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
  *
  * The size parameter specifies the number of bytes you're interested in
  * allocating. It may allocate more space but you should never rely on that.
- * The perm parameter specifies read, write and execute permissions. You can
- * OR the macros whose name start with PROCTAL_ALLOCATE_PERMISSION_.
+ *
+ * Access permissions can be set by calling proctal_allocate_read_set,
+ * proctal_allocate_write_set and proctal_allocate_execute_set.
  *
  * On success it returns the start address. On failure it will return NULL. You
  * can call proctal_error to find out what happened.
  */
-void *proctal_allocate(proctal_t p, size_t size, int perm);
+void *proctal_allocate(proctal_t p, size_t size);
+
+/*
+ * Checks whether read permission is set.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * The default value is 1.
+ */
+int proctal_allocate_read(proctal_t p);
+
+/*
+ * Sets whether read permission is set.
+ *
+ * 1 means yes, 0 means no.
+ */
+void proctal_allocate_read_set(proctal_t p, int r);
+
+/*
+ * Checks whether write permission is set.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * The default value is 1.
+ */
+int proctal_allocate_write(proctal_t p);
+
+/*
+ * Sets whether write permission is set.
+ *
+ * 1 means yes, 0 means no.
+ */
+void proctal_allocate_write_set(proctal_t p, int w);
+
+/*
+ * Checks whether execute permission is set.
+ *
+ * 1 means yes, 0 means no.
+ *
+ * The default value is 1.
+ */
+int proctal_allocate_execute(proctal_t p);
+
+/*
+ * Sets whether execute permission is set.
+ *
+ * 1 means yes, 0 means no.
+ */
+void proctal_allocate_execute_set(proctal_t p, int x);
 
 /*
  * Deallocates memory allocated by proctal_allocate.

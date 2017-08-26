@@ -150,11 +150,11 @@ void proctal_implementation_execute(struct proctal *p, const char *bytecode, siz
 	proctal_linux_execute(pl, bytecode, bytecode_length);
 }
 
-void *proctal_implementation_allocate(struct proctal *p, size_t size, int perm)
+void *proctal_implementation_allocate(struct proctal *p, size_t size)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_allocate(pl, size, perm);
+	return proctal_linux_allocate(pl, size);
 }
 
 void proctal_implementation_deallocate(struct proctal *p, void *addr)

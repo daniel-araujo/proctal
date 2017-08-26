@@ -105,7 +105,7 @@ Hello, world!
 
 		proctal_pid_set(proctal, 15433);
 
-		void *allocated_memory = proctal_allocate(proctal, sizeof output, PROCTAL_ALLOCATE_PERMISSION_READ);
+		void *allocated_memory = proctal_allocate(proctal, sizeof output);
 
 		if (proctal_error(proctal)) {
 			fprintf(stderr, "Failed to allocate memory in process %d.\n", proctal_pid(proctal));

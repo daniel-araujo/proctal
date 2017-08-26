@@ -21,6 +21,10 @@ void proctal_init(struct proctal *p)
 	p->watch.read = 1;
 	p->watch.write = 1;
 	p->watch.execute = 0;
+
+	p->allocate.read = 1;
+	p->allocate.write = 1;
+	p->allocate.execute = 1;
 }
 
 void proctal_deinit(struct proctal *p)

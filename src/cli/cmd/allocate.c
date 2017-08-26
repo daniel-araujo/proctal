@@ -4,25 +4,6 @@
 #include "cli/printer.h"
 #include "api/include/proctal.h"
 
-static int make_permission(struct cli_cmd_allocate_arg *arg)
-{
-	int perm = 0;
-
-	if (arg->read) {
-		perm |= PROCTAL_ALLOCATE_PERMISSION_READ;
-	}
-
-	if (arg->write) {
-		perm |= PROCTAL_ALLOCATE_PERMISSION_WRITE;
-	}
-
-	if (arg->execute) {
-		perm |= PROCTAL_ALLOCATE_PERMISSION_EXECUTE;
-	}
-
-	return perm;
-}
-
 int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg)
 {
 	proctal_t p = proctal_open();
@@ -35,9 +16,11 @@ int cli_cmd_allocate(struct cli_cmd_allocate_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	int perm = make_permission(arg);
+	proctal_allocate_read_set(p, arg->read);
+	proctal_allocate_write_set(p, arg->write);
+	proctal_allocate_execute_set(p, arg->execute);
 
-	void *addr = proctal_allocate(p, arg->size, perm);
+	void *addr = proctal_allocate(p, arg->size);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

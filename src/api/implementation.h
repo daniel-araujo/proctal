@@ -41,7 +41,7 @@ int proctal_implementation_watch(struct proctal *p, void **addr);
 
 void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length);
 
-void *proctal_implementation_allocate(struct proctal *p, size_t size, int perm);
+void *proctal_implementation_allocate(struct proctal *p, size_t size);
 
 void proctal_implementation_deallocate(struct proctal *p, void *addr);
 

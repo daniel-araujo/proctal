@@ -88,6 +88,20 @@ struct proctal {
 		// Whether to watch for instruction execution.
 		int execute;
 	} watch;
+
+	/*
+	 * Specific options for memory allocation.
+	 */
+	struct {
+		// Read permission.
+		int read;
+
+		// Write permission.
+		int write;
+
+		// Execute permission.
+		int execute;
+	} allocate;
 };
 
 /*

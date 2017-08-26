@@ -48,6 +48,33 @@ int proctal_linux_execute_implementation_create_stack_frame(struct proctal_linux
  */
 int proctal_linux_execute_implementation_destroy_stack_frame(struct proctal_linux *pl, pid_t tid);
 
+/*
+ * Allocates memory that is guaranteed to be executable.
+ *
+ * Returns the start address of the allocated block on success, NULL on
+ * failure.
+ */
+static void *allocate(struct proctal_linux *pl, size_t size)
+{
+	int original_execute = proctal_allocate_execute(&pl->p);
+
+	proctal_allocate_execute_set(&pl->p, 1);
+
+	void *location = proctal_linux_allocate(pl, size);
+
+	proctal_allocate_execute_set(&pl->p, original_execute);
+
+	return location;
+}
+
+/*
+ * Deallocates memory allocated by the allocate function.
+ */
+static void deallocate(struct proctal_linux *pl, void *location)
+{
+	proctal_linux_deallocate(pl, location);
+}
+
 int proctal_linux_execute_implementation(
 	struct proctal_linux *pl,
 	const char *bytecode,
@@ -69,10 +96,7 @@ int proctal_linux_execute_implementation(
 		goto exit2;
 	}
 
-	void *payload_location = proctal_linux_allocate(
-		pl,
-		proctal_linux_execute_implementation_no_op_code_size + bytecode_length + proctal_linux_execute_implementation_trap_code_size,
-		PROCTAL_ALLOCATE_PERMISSION_WRITE | PROCTAL_ALLOCATE_PERMISSION_EXECUTE | PROCTAL_ALLOCATE_PERMISSION_READ);
+	void *payload_location = allocate(pl, proctal_linux_execute_implementation_no_op_code_size + bytecode_length + proctal_linux_execute_implementation_trap_code_size);
 
 	if (payload_location == NULL) {
 		goto exit3;
@@ -100,7 +124,7 @@ int proctal_linux_execute_implementation(
 
 	ret = 1;
 exit4:
-	proctal_linux_deallocate(pl, payload_location);
+	deallocate(pl, payload_location);
 exit3:
 	if (!proctal_linux_execute_implementation_destroy_stack_frame(pl, pl->pid)) {
 		ret = 0;

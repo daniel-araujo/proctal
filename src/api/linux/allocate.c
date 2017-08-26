@@ -10,19 +10,19 @@ struct mem_header {
 	size_t size;
 };
 
-static inline int make_prot(int permissions)
+static inline int make_prot(struct proctal_linux *pl)
 {
 	int prot = 0;
 
-	if (permissions & PROCTAL_ALLOCATE_PERMISSION_READ) {
+	if (pl->p.allocate.read) {
 		prot |= PROT_READ;
 	}
 
-	if (permissions & PROCTAL_ALLOCATE_PERMISSION_WRITE) {
+	if (pl->p.allocate.write) {
 		prot |= PROT_WRITE;
 	}
 
-	if (permissions & PROCTAL_ALLOCATE_PERMISSION_EXECUTE) {
+	if (pl->p.allocate.execute) {
 		prot |= PROT_EXEC;
 	}
 
@@ -53,7 +53,7 @@ static inline void *write_header(struct proctal_linux *pl, struct mem_header *he
 	return (char *) memory_location + sizeof(header);
 }
 
-void *proctal_linux_allocate(struct proctal_linux *pl, size_t size, int permissions)
+void *proctal_linux_allocate(struct proctal_linux *pl, size_t size)
 {
 	struct mem_header header;
 	header.size = size + sizeof(header);
@@ -62,7 +62,7 @@ void *proctal_linux_allocate(struct proctal_linux *pl, size_t size, int permissi
 		pl,
 		NULL,
 		header.size,
-		make_prot(permissions),
+		make_prot(pl),
 		0x22, // MAP_PRIVATE | MAP_ANONYMOUS
 		-1,
 		0);
