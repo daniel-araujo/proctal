@@ -160,6 +160,7 @@ You will need the following programs installed on your system:
 
 - GCC_
 - Libtool_
+- sed_
 
 Optional:
 
@@ -320,5 +321,6 @@ COPYING. If not, see `GNU licenses`_.
 .. _Automake: https://www.gnu.org/software/automake/
 .. _GCC: https://gcc.gnu.org/
 .. _Libtool: https://www.gnu.org/software/libtool/libtool.html
+.. _sed: https://www.gnu.org/software/sed/
 .. _Python: https://www.python.org/
 .. _Git: https://git-scm.com/

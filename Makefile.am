@@ -55,10 +55,11 @@ proctal_SOURCES = \
 	src/cli/yuck/main.h \
 	src/cli/yuck/main.c \
 	src/cli/main.c
-proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a libcliparser.a libcliassembler.a $(proctal_darr_ldflags) $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
-proctal_CFLAGS = $(proctal_cflags)
+proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a libcliparser.a libcliassembler.a $(PROCTAL_LDFLAGS)
+proctal_CFLAGS = $(PROCTAL_CFLAGS)
 EXTRA_proctal_DEPENDENCIES = \
-	darr/libdarr.a
+	darr/libdarr.a \
+	acur/libacur.a
 
 noinst_LIBRARIES += libclival.a
 libclival_a_SOURCES = \
@@ -82,14 +83,14 @@ libclival_a_SOURCES = \
 	src/cli/val/filter.c \
 	src/cli/val.h \
 	src/cli/val.c
-libclival_a_CFLAGS = $(proctal_cflags)
+libclival_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 noinst_LIBRARIES += libcliparser.a
 libcliparser_a_SOURCES = \
 	src/cli/parser.h \
 	src/cli/parser.c \
 	src/cli/parser-name.c
-libcliparser_a_CFLAGS = $(proctal_cflags)
+libcliparser_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 noinst_LIBRARIES += libcliassembler.a
 libcliassembler_a_SOURCES = \
@@ -115,91 +116,91 @@ libcliassembler_a_SOURCES += \
 	src/cli/assembler/implementation/capstone-keystone/without-keystone.c
 endif
 
-libcliassembler_a_CFLAGS = $(proctal_cflags)
+libcliassembler_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/cli/invalid-patterns
 check_PROGRAMS += tests/cli/invalid-patterns
 tests_cli_invalid_patterns_SOURCES = src/cli/tests/invalid-patterns.c
-tests_cli_invalid_patterns_CFLAGS = $(proctal_cflags)
+tests_cli_invalid_patterns_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_invalid_patterns_LDFLAGS = src/cli/proctal-pattern.o libcliparser.a
 
 TESTS += tests/cli/valid-patterns
 check_PROGRAMS += tests/cli/valid-patterns
 tests_cli_valid_patterns_SOURCES = src/cli/tests/valid-patterns.c
-tests_cli_valid_patterns_CFLAGS = $(proctal_cflags)
+tests_cli_valid_patterns_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_valid_patterns_LDFLAGS = src/cli/proctal-pattern.o libcliparser.a
 
 TESTS += tests/cli/val/parse-valid-ascii
 check_PROGRAMS += tests/cli/val/parse-valid-ascii
 tests_cli_val_parse_valid_ascii_SOURCES = src/cli/val/tests/parse-valid-ascii.c
-tests_cli_val_parse_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_valid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_parse_valid_ascii_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_parse_valid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/parse-bin-valid-ascii
 check_PROGRAMS += tests/cli/val/parse-bin-valid-ascii
 tests_cli_val_parse_bin_valid_ascii_SOURCES = src/cli/val/tests/parse-bin-valid-ascii.c
-tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_valid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_parse_bin_valid_ascii_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_parse_bin_valid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/parse-invalid-ascii
 check_PROGRAMS += tests/cli/val/parse-invalid-ascii
 tests_cli_val_parse_invalid_ascii_SOURCES = src/cli/val/tests/parse-invalid-ascii.c
-tests_cli_val_parse_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_invalid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_parse_invalid_ascii_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_parse_invalid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/parse-bin-invalid-ascii
 check_PROGRAMS += tests/cli/val/parse-bin-invalid-ascii
 tests_cli_val_parse_bin_invalid_ascii_SOURCES = src/cli/val/tests/parse-bin-invalid-ascii.c
-tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_bin_invalid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_parse_bin_invalid_ascii_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_parse_bin_invalid_ascii_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/add
 check_PROGRAMS += tests/cli/val/add
 tests_cli_val_add_SOURCES = src/cli/val/tests/add.c
-tests_cli_val_add_CFLAGS = $(proctal_cflags)
-tests_cli_val_add_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_add_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_add_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/sub
 check_PROGRAMS += tests/cli/val/sub
 tests_cli_val_sub_SOURCES = src/cli/val/tests/sub.c
-tests_cli_val_sub_CFLAGS = $(proctal_cflags)
-tests_cli_val_sub_LDADD =  libotrap.a libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_sub_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_sub_LDADD =  libotrap.a libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/cmp
 check_PROGRAMS += tests/cli/val/cmp
 tests_cli_val_cmp_SOURCES = src/cli/val/tests/cmp.c
-tests_cli_val_cmp_CFLAGS = $(proctal_cflags)
-tests_cli_val_cmp_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_cmp_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_cmp_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/print
 check_PROGRAMS += tests/cli/val/print
 tests_cli_val_print_SOURCES = src/cli/val/tests/print.c
-tests_cli_val_print_CFLAGS = $(proctal_cflags)
-tests_cli_val_print_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_print_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_print_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/parse
 check_PROGRAMS += tests/cli/val/parse
 tests_cli_val_parse_SOURCES = src/cli/val/tests/parse.c
-tests_cli_val_parse_CFLAGS = $(proctal_cflags)
-tests_cli_val_parse_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_parse_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_parse_LDADD = libotrap.a libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/filter-compare
 check_PROGRAMS += tests/cli/val/filter-compare
 tests_cli_val_filter_compare_SOURCES = src/cli/val/tests/filter-compare.c
-tests_cli_val_filter_compare_CFLAGS = $(proctal_cflags)
-tests_cli_val_filter_compare_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_filter_compare_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_filter_compare_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/filter-compare-prev
 check_PROGRAMS += tests/cli/val/filter-compare-prev
 tests_cli_val_filter_compare_prev_SOURCES = src/cli/val/tests/filter-compare-prev.c
-tests_cli_val_filter_compare_prev_CFLAGS = $(proctal_cflags)
-tests_cli_val_filter_compare_prev_LDADD = libclival.a libcliassembler.a libcliparser.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_filter_compare_prev_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_filter_compare_prev_LDADD = libclival.a libcliassembler.a libcliparser.a $(PROCTAL_LDFLAGS)
 
 TESTS += tests/cli/val/integer-endianness
 check_PROGRAMS += tests/cli/val/integer-endianness
 tests_cli_val_integer_endianness_SOURCES = src/cli/val/tests/integer-endianness.c
-tests_cli_val_integer_endianness_CFLAGS = $(proctal_cflags)
-tests_cli_val_integer_endianness_LDADD = libclival.a libcliassembler.a libcliparser.a libotrap.a $(proctal_capstone_ldflags) $(proctal_keystone_ldflags)
+tests_cli_val_integer_endianness_CFLAGS = $(PROCTAL_CFLAGS)
+tests_cli_val_integer_endianness_LDADD = libclival.a libcliassembler.a libcliparser.a libotrap.a $(PROCTAL_LDFLAGS)
 
 TESTS += src/cli/tests/invalid-type-arguments.py
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
@@ -212,12 +213,12 @@ dist_check_SCRIPTS += src/cli/tests/watch-multiple-threads.py
 
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
-tests_cli_program_spit_back_mt_CFLAGS = $(proctal_cflags)
+tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_program_spit_back_mt_LDADD = -lpthread
 
 check_PROGRAMS += tests/cli/program/read-mem-mt
 tests_cli_program_read_mem_mt_SOURCES = src/cli/tests/program/read-mem-mt.c
-tests_cli_program_read_mem_mt_CFLAGS = $(proctal_cflags)
+tests_cli_program_read_mem_mt_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_program_read_mem_mt_LDADD = -lpthread
 
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
@@ -324,8 +325,8 @@ libproctal_la_SOURCES += \
 	src/api/linux/watch/unimplemented.c
 endif
 
-libproctal_la_CFLAGS = $(proctal_cflags)
-libproctal_la_LDFLAGS = -version-info $(PROCTAL_VERSION_LIBTOOL)
+libproctal_la_CFLAGS = $(PROCTAL_CFLAGS)
+libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBTOOL_VERSION)
 
 
 # Swbuf module.
@@ -333,36 +334,36 @@ noinst_LIBRARIES += libswbuf.a
 libswbuf_a_SOURCES = \
 	src/swbuf/swbuf.h \
 	src/swbuf/swbuf.c
-libswbuf_a_CFLAGS = $(proctal_cflags)
+libswbuf_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/swbuf/init-fail-alloc
 check_PROGRAMS += tests/swbuf/init-fail-alloc
 tests_swbuf_init_fail_alloc_SOURCES = src/swbuf/tests/init-fail-alloc.c
-tests_swbuf_init_fail_alloc_CFLAGS = $(proctal_cflags)
+tests_swbuf_init_fail_alloc_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_init_fail_alloc_LDADD = libswbuf.a
 
 TESTS += tests/swbuf/init-succeed-alloc
 check_PROGRAMS += tests/swbuf/init-succeed-alloc
 tests_swbuf_init_succeed_alloc_SOURCES = src/swbuf/tests/init-succeed-alloc.c
-tests_swbuf_init_succeed_alloc_CFLAGS = $(proctal_cflags)
+tests_swbuf_init_succeed_alloc_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_init_succeed_alloc_LDADD = libswbuf.a
 
 TESTS += tests/swbuf/swap
 check_PROGRAMS += tests/swbuf/swap
 tests_swbuf_swap_SOURCES = src/swbuf/tests/swap.c
-tests_swbuf_swap_CFLAGS = $(proctal_cflags)
+tests_swbuf_swap_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_swap_LDADD = libswbuf.a
 
 TESTS += tests/swbuf/address-offset
 check_PROGRAMS += tests/swbuf/address-offset
 tests_swbuf_address_offset_SOURCES = src/swbuf/tests/address-offset.c
-tests_swbuf_address_offset_CFLAGS = $(proctal_cflags)
+tests_swbuf_address_offset_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_address_offset_LDADD = libswbuf.a
 
 TESTS += tests/swbuf/size
 check_PROGRAMS += tests/swbuf/size
 tests_swbuf_size_SOURCES = src/swbuf/tests/size.c
-tests_swbuf_size_CFLAGS = $(proctal_cflags)
+tests_swbuf_size_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_size_LDADD = libswbuf.a
 
 
@@ -371,24 +372,24 @@ noinst_LIBRARIES += libchunk.a
 libchunk_a_SOURCES = \
 	src/chunk/chunk.h \
 	src/chunk/chunk.c
-libchunk_a_CFLAGS = $(proctal_cflags)
+libchunk_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/chunk/leftover
 check_PROGRAMS += tests/chunk/leftover
 tests_chunk_leftover_SOURCES = src/chunk/tests/leftover.c
-tests_chunk_leftover_CFLAGS = $(proctal_cflags)
+tests_chunk_leftover_CFLAGS = $(PROCTAL_CFLAGS)
 tests_chunk_leftover_LDADD = libchunk.a
 
 TESTS += tests/chunk/evenly
 check_PROGRAMS += tests/chunk/evenly
 tests_chunk_evenly_SOURCES = src/chunk/tests/evenly.c
-tests_chunk_evenly_CFLAGS = $(proctal_cflags)
+tests_chunk_evenly_CFLAGS = $(PROCTAL_CFLAGS)
 tests_chunk_evenly_LDADD = libchunk.a
 
 TESTS += tests/chunk/finished
 check_PROGRAMS += tests/chunk/finished
 tests_chunk_finished_SOURCES = src/chunk/tests/finished.c
-tests_chunk_finished_CFLAGS = $(proctal_cflags)
+tests_chunk_finished_CFLAGS = $(PROCTAL_CFLAGS)
 tests_chunk_finished_LDADD = libchunk.a
 
 
@@ -398,17 +399,17 @@ EXTRA_DIST += src/magic/magic.h
 TESTS += tests/magic/array-size
 check_PROGRAMS += tests/magic/array-size
 tests_magic_array_size_SOURCES = src/magic/tests/array-size.c
-tests_magic_array_size_CFLAGS = $(proctal_cflags)
+tests_magic_array_size_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/magic/compare
 check_PROGRAMS += tests/magic/compare
 tests_magic_compare_SOURCES = src/magic/tests/compare.c
-tests_magic_compare_CFLAGS = $(proctal_cflags)
+tests_magic_compare_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/magic/deref
 check_PROGRAMS += tests/magic/deref
 tests_magic_deref_SOURCES = src/magic/tests/deref.c
-tests_magic_deref_CFLAGS = $(proctal_cflags)
+tests_magic_deref_CFLAGS = $(PROCTAL_CFLAGS)
 
 
 # Otrap module.
@@ -416,54 +417,54 @@ noinst_LIBRARIES += libotrap.a
 libotrap_a_SOURCES = \
 	src/otrap/otrap.h \
 	src/otrap/otrap.c
-libotrap_a_CFLAGS = $(proctal_cflags)
+libotrap_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 TESTS += tests/otrap/read
 check_PROGRAMS += tests/otrap/read
 tests_otrap_read_SOURCES = src/otrap/tests/read.c
-tests_otrap_read_CFLAGS = $(proctal_cflags)
+tests_otrap_read_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_read_LDADD = libotrap.a
 
 TESTS += tests/otrap/read-twice
 check_PROGRAMS += tests/otrap/read-twice
 tests_otrap_read_twice_SOURCES = src/otrap/tests/read-twice.c
-tests_otrap_read_twice_CFLAGS = $(proctal_cflags)
+tests_otrap_read_twice_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_read_twice_LDADD = libotrap.a
 
 TESTS += tests/otrap/read-too-much
 check_PROGRAMS += tests/otrap/read-too-much
 tests_otrap_read_too_much_SOURCES = src/otrap/tests/read-too-much.c
-tests_otrap_read_too_much_CFLAGS = $(proctal_cflags)
+tests_otrap_read_too_much_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_read_too_much_LDADD = libotrap.a
 
 TESTS += tests/otrap/read-nothing
 check_PROGRAMS += tests/otrap/read-nothing
 tests_otrap_read_nothing_SOURCES = src/otrap/tests/read-nothing.c
-tests_otrap_read_nothing_CFLAGS = $(proctal_cflags)
+tests_otrap_read_nothing_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_read_nothing_LDADD = libotrap.a
 
 TESTS += tests/otrap/skip
 check_PROGRAMS += tests/otrap/skip
 tests_otrap_skip_SOURCES = src/otrap/tests/skip.c
-tests_otrap_skip_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_LDADD = libotrap.a
 
 TESTS += tests/otrap/skip-twice
 check_PROGRAMS += tests/otrap/skip-twice
 tests_otrap_skip_twice_SOURCES = src/otrap/tests/skip-twice.c
-tests_otrap_skip_twice_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_twice_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_twice_LDADD = libotrap.a
 
 TESTS += tests/otrap/skip-too-much
 check_PROGRAMS += tests/otrap/skip-too-much
 tests_otrap_skip_too_much_SOURCES = src/otrap/tests/skip-too-much.c
-tests_otrap_skip_too_much_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_too_much_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_too_much_LDADD = libotrap.a
 
 TESTS += tests/otrap/skip-nothing
 check_PROGRAMS += tests/otrap/skip-nothing
 tests_otrap_skip_nothing_SOURCES = src/otrap/tests/skip-nothing.c
-tests_otrap_skip_nothing_CFLAGS = $(proctal_cflags)
+tests_otrap_skip_nothing_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_nothing_LDADD = libotrap.a
 
 

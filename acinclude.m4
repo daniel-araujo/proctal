@@ -309,9 +309,9 @@ AC_DEFUN([PROCTAL_VERSION], [
 	AH_TEMPLATE([PROCTAL_VERSION_MINOR], [Minor part of version.])
 	AH_TEMPLATE([PROCTAL_VERSION_PATCH], [Patch part of version.])
 
-	proctal_version_major=`echo $PACKAGE_VERSION | sed -E 's/^([[0-9]]+).*/\1/'`
-	proctal_version_minor=`echo $PACKAGE_VERSION | sed -E 's/^[[0-9]]+\.([[0-9]]+).*/\1/'`
-	proctal_version_patch=`echo $PACKAGE_VERSION | sed -E 's/^[[0-9]]+\.[[0-9]]+\.([[0-9]]+).*/\1/'`
+	proctal_version_major=`echo $PACKAGE_VERSION | $SED -E 's/^([[0-9]]+).*/\1/'`
+	proctal_version_minor=`echo $PACKAGE_VERSION | $SED -E 's/^[[0-9]]+\.([[0-9]]+).*/\1/'`
+	proctal_version_patch=`echo $PACKAGE_VERSION | $SED -E 's/^[[0-9]]+\.[[0-9]]+\.([[0-9]]+).*/\1/'`
 
 	AC_DEFINE_UNQUOTED([PROCTAL_VERSION_MAJOR], [$proctal_version_major])
 	AC_DEFINE_UNQUOTED([PROCTAL_VERSION_MINOR], [$proctal_version_minor])
@@ -322,9 +322,69 @@ AC_DEFUN([PROCTAL_VERSION], [
 	AC_SUBST([PROCTAL_VERSION_PATCH], [$proctal_version_patch])
 ])
 
-dnl PROCTAL_API_REVISION(1) 
+dnl PROCTAL_SO_VERSION(CURRENT, REVISION, AGE)
 dnl
-dnl This macro creates the PROCTAL_VERSION_LIBTOOL substitution variable.
-AC_DEFUN([PROCTAL_API_REVISION], [
-	AC_SUBST([PROCTAL_VERSION_LIBTOOL], [0:$1])
+dnl This macro creates the PROCTAL_LIBTOOL_VERSION substitution variable. That
+dnl macro defines the version numbers of the .so library file.
+dnl
+dnl Rules on how to set those numbers:
+dnl - CURRENT must always be incremented by 1 on every release that includes
+dnl changes to the interface.
+dnl - REVISION must be set to 0 if CURRENT is changed, otherwise it must be
+dnl incremented by 1 on every release.
+dnl - AGE must only be changed when CURRENT is changed and has to be
+dnl incremented by 1 if the interface changes are backwards compatible,
+dnl otherwise it must be set to 0.
+dnl
+AC_DEFUN([PROCTAL_SO_VERSION], [
+	AC_SUBST([PROCTAL_LIBTOOL_VERSION], [$1:$2:$3])
+])
+
+dnl PROCTAL_COMPILATION_FLAGS
+dnl
+dnl Sets compilation flags based on existing variables.
+AC_DEFUN([PROCTAL_COMPILATION_FLAGS], [
+	AC_SUBST([PROCTAL_CFLAGS])
+	AC_SUBST([PROCTAL_LDFLAGS])
+
+	if test -n "$PROCTAL_CAPSTONE"; then
+		AS_VAR_APPEND([PROCTAL_LDFLAGS], [" -lcapstone"])
+	fi
+
+	if test -n "$PROCTAL_KEYSTONE"; then
+		AS_VAR_APPEND([PROCTAL_LDFLAGS], [" -lkeystone"])
+	fi
+
+	# Darr library.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -I${srcdir}/darr/src"])
+	AS_VAR_APPEND([PROCTAL_LDFLAGS], [" darr/libdarr.a"])
+
+	# Acur library.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -I${srcdir}/acur/src"])
+	AS_VAR_APPEND([PROCTAL_LDFLAGS], [" acur/libacur.a"])
+
+	# Set C11 language standard.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -std=c11"])
+
+	# Make ssize_t available in C11 mode.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -D_XOPEN_SOURCE=500"])
+
+	# Make usleep available.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -D_POSIX_C_SOURCE=200112L"])
+
+	# The include directive with the quotes syntax will additionally be
+	# relative to the src directory.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -iquote${srcdir}/src -iquotesrc"])
+
+	# Make the compiler less forgiving.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wfatal-errors -Wall"])
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wextra -Wpointer-arith"])
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Werror=incompatible-pointer-types"])
+
+	# Ignore less desirable warning messages.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wno-unused-parameter -Wno-unused-function"])
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wno-unused-label"])
+
+	# Include config.h automatically.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -include config.h"])
 ])
