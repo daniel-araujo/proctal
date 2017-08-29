@@ -87,16 +87,16 @@ int proctal_linux_proc_maps_region_check(
 	struct proctal_linux_proc_maps_region *region,
 	struct proctal_linux_proc_maps_region_check *check);
 
-struct darr *proctal_linux_proc_path(pid_t pid, const char *file);
+const struct darr *proctal_linux_proc_path(pid_t pid, const char *file);
 
-void proctal_linux_proc_path_dispose(struct darr *path);
+void proctal_linux_proc_path_dispose(const struct darr *path);
 
-struct darr *proctal_linux_program_path(pid_t pid);
+const struct darr *proctal_linux_program_path(pid_t pid);
 
-void proctal_linux_program_path_dispose(struct darr *path);
+void proctal_linux_program_path_dispose(const struct darr *path);
 
-struct darr *proctal_linux_task_ids(pid_t pid);
+const struct darr *proctal_linux_task_ids(pid_t pid);
 
-void proctal_linux_task_ids_dispose(struct darr *tids);
+void proctal_linux_task_ids_dispose(const struct darr *tids);
 
 #endif /* API_LINUX_PROC_H */

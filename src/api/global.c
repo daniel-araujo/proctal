@@ -26,4 +26,4 @@ void proctal_free_set(void (*f)(void *))
 }
 
 void *proctal_global_malloc(size_t size);
-void proctal_global_free(void *addr);
+void proctal_global_free(const void *addr);

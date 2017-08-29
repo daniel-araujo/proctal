@@ -129,8 +129,8 @@ int proctal_linux_proc_maps_region_check(
 	}
 
 	if (check->mask & PROCTAL_REGION_PROGRAM_CODE) {
-		struct darr *program_path = proctal_linux_program_path(check->pid);
-		int same_path = strcmp(darr_data(&region->name), darr_data(program_path)) == 0;
+		const struct darr *program_path = proctal_linux_program_path(check->pid);
+		int same_path = strcmp(darr_data(&region->name), darr_data_const(program_path)) == 0;
 		proctal_linux_program_path_dispose(program_path);
 
 		if (same_path && region->execute) {
@@ -172,8 +172,8 @@ int proctal_linux_proc_maps_region_check(
 
 int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid)
 {
-	struct darr *path = proctal_linux_proc_path(pid, "maps");
-	FILE *file = fopen(darr_data(path), "r");
+	const struct darr *path = proctal_linux_proc_path(pid, "maps");
+	FILE *file = fopen(darr_data_const(path), "r");
 	proctal_linux_proc_path_dispose(path);
 
 	if (file == NULL) {

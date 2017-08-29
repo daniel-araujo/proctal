@@ -7,7 +7,7 @@
 #include "api/linux/proctal.h"
 #include "api/linux/proc.h"
 
-struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
+const struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 {
 #define PID_MAX_DIGITS 5
 
@@ -43,13 +43,13 @@ struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 #undef PID_MAX_DIGITS
 }
 
-void proctal_linux_proc_path_dispose(struct darr *path)
+void proctal_linux_proc_path_dispose(const struct darr *path)
 {
-	darr_deinit(path);
+	darr_deinit((struct darr *) path);
 	proctal_global_free(path);
 }
 
-struct darr *proctal_linux_program_path(pid_t pid)
+const struct darr *proctal_linux_program_path(pid_t pid)
 {
 	struct darr *path = proctal_global_malloc(sizeof(struct darr));
 
@@ -61,8 +61,8 @@ struct darr *proctal_linux_program_path(pid_t pid)
 	darr_resize(path, 255);
 	char *path_data = darr_data(path);
 
-	struct darr *link = proctal_linux_proc_path(pid, "exe");
-	size_t e = readlink(darr_data(link), path_data, darr_size(path) - 1);
+	const struct darr *link = proctal_linux_proc_path(pid, "exe");
+	size_t e = readlink(darr_data_const(link), path_data, darr_size(path) - 1);
 	proctal_linux_proc_path_dispose(link);
 
 	path_data[e] = '\0';
@@ -70,13 +70,13 @@ struct darr *proctal_linux_program_path(pid_t pid)
 	return path;
 }
 
-void proctal_linux_program_path_dispose(struct darr *path)
+void proctal_linux_program_path_dispose(const struct darr *path)
 {
-	darr_deinit(path);
+	darr_deinit((struct darr *) path);
 	proctal_global_free(path);
 }
 
-struct darr *proctal_linux_task_ids(pid_t pid)
+const struct darr *proctal_linux_task_ids(pid_t pid)
 {
 	struct darr *tids = proctal_global_malloc(sizeof(struct darr));
 
@@ -86,8 +86,8 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 
 	darr_init(tids, sizeof(pid_t));
 
-	struct darr *path = proctal_linux_proc_path(pid, "task");
-	DIR *dir = opendir(darr_data(path));
+	const struct darr *path = proctal_linux_proc_path(pid, "task");
+	DIR *dir = opendir(darr_data_const(path));
 	proctal_linux_proc_path_dispose(path);
 
 	if (dir == NULL) {
@@ -119,8 +119,8 @@ struct darr *proctal_linux_task_ids(pid_t pid)
 	return tids;
 }
 
-void proctal_linux_task_ids_dispose(struct darr *tids)
+void proctal_linux_task_ids_dispose(const struct darr *tids)
 {
-	darr_deinit(tids);
+	darr_deinit((struct darr *) tids);
 	proctal_global_free(tids);
 }

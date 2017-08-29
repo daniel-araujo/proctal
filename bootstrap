@@ -85,7 +85,7 @@ proctal_run_autoconf() {
 # Install Darr repository if it doesn't exist.
 if ! test -e darr; then
 	echo "Installing Darr..."
-	proctal_install_git_repository darr "https://github.com/daniel-araujo/darr.git" "v1.4.0" || exit 1
+	proctal_install_git_repository darr "https://github.com/daniel-araujo/darr.git" "v1.7.0" || exit 1
 	proctal_run_autoconf darr || exit 1
 fi
 

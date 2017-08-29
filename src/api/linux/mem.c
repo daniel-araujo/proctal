@@ -9,8 +9,8 @@
 static inline FILE *mem(struct proctal_linux *pl)
 {
 	if (pl->mem == NULL) {
-		struct darr *path = proctal_linux_proc_path(pl->pid, "mem");
-		pl->mem = fopen(darr_data(path), "r+");
+		const struct darr *path = proctal_linux_proc_path(pl->pid, "mem");
+		pl->mem = fopen(darr_data_const(path), "r+");
 		proctal_linux_proc_path_dispose(path);
 
 		if (pl->mem == NULL) {
