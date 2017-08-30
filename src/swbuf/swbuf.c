@@ -3,19 +3,19 @@
 static void *(*alloc)(size_t) = malloc;
 static void (*dealloc)(void *) = free;
 
-void swbuf_init(struct swbuf *b, size_t size);
+extern inline void swbuf_init(struct swbuf *b, size_t size);
 
-void *swbuf_lead(struct swbuf *b);
+extern inline void *swbuf_lead(struct swbuf *b);
 
-void swbuf_deinit(struct swbuf *b);
+extern inline void swbuf_deinit(struct swbuf *b);
 
-int swbuf_error(struct swbuf *b);
+extern inline int swbuf_error(struct swbuf *b);
 
-size_t swbuf_size(struct swbuf *b);
+extern inline size_t swbuf_size(struct swbuf *b);
 
-void swbuf_swap(struct swbuf *b);
+extern inline void swbuf_swap(struct swbuf *b);
 
-void *swbuf_address_offset(struct swbuf *b, ssize_t offset);
+extern inline void *swbuf_address_offset(struct swbuf *b, ssize_t offset);
 
 void swbuf_malloc_set(void *(*f)(size_t))
 {

@@ -31,31 +31,36 @@ static void setup_assembler(struct cli_val_instruction *v, struct cli_assembler 
 	}
 }
 
-void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
+extern inline void cli_val_instruction_attr_init(
+	struct cli_val_instruction_attr *a);
 
-void cli_val_instruction_attr_architecture_set(
+extern inline void cli_val_instruction_attr_architecture_set(
 	struct cli_val_instruction_attr *a,
 	enum cli_val_instruction_architecture architecture);
 
-void cli_val_instruction_attr_syntax_set(
+extern inline void cli_val_instruction_attr_syntax_set(
 	struct cli_val_instruction_attr *a,
 	enum cli_val_instruction_syntax syntax);
 
-void cli_val_instruction_attr_deinit(struct cli_val_instruction_attr *a);
+extern inline void cli_val_instruction_attr_deinit(
+	struct cli_val_instruction_attr *a);
 
-struct cli_val_instruction *cli_val_instruction_create(struct cli_val_instruction_attr *a);
+extern inline struct cli_val_instruction *cli_val_instruction_create(
+	struct cli_val_instruction_attr *a);
 
-void cli_val_instruction_destroy(struct cli_val_instruction *v);
+extern inline void cli_val_instruction_destroy(struct cli_val_instruction *v);
 
-void cli_val_instruction_address_set(struct cli_val_instruction *v, void *address);
+extern inline void cli_val_instruction_address_set(
+	struct cli_val_instruction *v,
+	void *address);
 
-void *cli_val_instruction_address(struct cli_val_instruction *v);
+extern inline void *cli_val_instruction_address(struct cli_val_instruction *v);
 
-void *cli_val_instruction_data(struct cli_val_instruction *v);
+extern inline void *cli_val_instruction_data(struct cli_val_instruction *v);
 
-size_t cli_val_instruction_sizeof(struct cli_val_instruction *v);
+extern inline size_t cli_val_instruction_sizeof(struct cli_val_instruction *v);
 
-struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_val_instruction *other_v);
+extern inline struct cli_val_instruction *cli_val_instruction_create_clone(struct cli_val_instruction *other_v);
 
 int cli_val_instruction_print(struct cli_val_instruction *v, FILE *f)
 {

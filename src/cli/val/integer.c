@@ -69,37 +69,43 @@ static struct cli_val_integer_sign_implementation *get_sign_implementation(enum 
 	return &sign_implementations[sign];
 }
 
-void cli_val_integer_attr_init(struct cli_val_integer_attr *a);
+extern inline void cli_val_integer_attr_init(struct cli_val_integer_attr *a);
 
-void cli_val_integer_attr_endianness_set(
+extern inline void cli_val_integer_attr_endianness_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_endianness endianness);
 
-void cli_val_integer_attr_bits_set(
+extern inline void cli_val_integer_attr_bits_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_bits size);
 
-void cli_val_integer_attr_sign_set(
+extern inline void cli_val_integer_attr_sign_set(
 	struct cli_val_integer_attr *a,
 	enum cli_val_integer_sign sign);
 
-size_t cli_val_integer_attr_alignof(struct cli_val_integer_attr *a);
+extern inline size_t cli_val_integer_attr_alignof(
+	struct cli_val_integer_attr *a);
 
-void cli_val_integer_attr_deinit(struct cli_val_integer_attr *a);
+extern inline void cli_val_integer_attr_deinit(struct cli_val_integer_attr *a);
 
-struct cli_val_integer *cli_val_integer_create(struct cli_val_integer_attr *a);
+extern inline struct cli_val_integer *cli_val_integer_create(
+	struct cli_val_integer_attr *a);
 
-void cli_val_integer_destroy(struct cli_val_integer *v);
+extern inline void cli_val_integer_destroy(struct cli_val_integer *v);
 
-void *cli_val_integer_data(struct cli_val_integer *v);
+extern inline void *cli_val_integer_data(struct cli_val_integer *v);
 
-size_t cli_val_integer_alignof(struct cli_val_integer *v);
+extern inline size_t cli_val_integer_alignof(struct cli_val_integer *v);
 
-size_t cli_val_integer_sizeof(struct cli_val_integer *v);
+extern inline size_t cli_val_integer_sizeof(struct cli_val_integer *v);
 
-int cli_val_integer_parse_binary(struct cli_val_integer *v, const char *s, size_t length);
+extern inline int cli_val_integer_parse_binary(
+	struct cli_val_integer *v,
+	const char *s,
+	size_t length);
 
-struct cli_val_integer *cli_val_integer_create_clone(struct cli_val_integer *other_v);
+extern inline struct cli_val_integer *cli_val_integer_create_clone(
+	struct cli_val_integer *other_v);
 
 int cli_val_integer_add(
 	struct cli_val_integer *v,

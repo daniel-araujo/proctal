@@ -1,29 +1,35 @@
 #include "cli/val/ieee754.h"
 #include "magic/magic.h"
 
-void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a);
+extern inline void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a);
 
-void cli_val_ieee754_attr_precision_set(
+extern inline void cli_val_ieee754_attr_precision_set(
 	struct cli_val_ieee754_attr *a,
 	enum cli_val_ieee754_precision precision);
 
-size_t cli_val_ieee754_attr_alignof(struct cli_val_ieee754_attr *a);
+extern inline size_t cli_val_ieee754_attr_alignof(
+	struct cli_val_ieee754_attr *a);
 
-void cli_val_ieee754_attr_deinit(struct cli_val_ieee754_attr *a);
+extern inline void cli_val_ieee754_attr_deinit(struct cli_val_ieee754_attr *a);
 
-struct cli_val_ieee754 *cli_val_ieee754_create(struct cli_val_ieee754_attr *a);
+extern inline struct cli_val_ieee754 *cli_val_ieee754_create(
+	struct cli_val_ieee754_attr *a);
 
-void cli_val_ieee754_destroy(struct cli_val_ieee754 *v);
+extern inline void cli_val_ieee754_destroy(struct cli_val_ieee754 *v);
 
-void *cli_val_ieee754_data(struct cli_val_ieee754 *v);
+extern inline void *cli_val_ieee754_data(struct cli_val_ieee754 *v);
 
-size_t cli_val_ieee754_alignof(struct cli_val_ieee754 *v);
+extern inline size_t cli_val_ieee754_alignof(struct cli_val_ieee754 *v);
 
-size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v);
+extern inline size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v);
 
-int cli_val_ieee754_parse_binary(struct cli_val_ieee754 *v, const char *s, size_t length);
+extern inline int cli_val_ieee754_parse_binary(
+	struct cli_val_ieee754 *v,
+	const char *s,
+	size_t length);
 
-struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee754 *other_v);
+extern inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(
+	struct cli_val_ieee754 *other_v);
 
 int cli_val_ieee754_add(
 	struct cli_val_ieee754 *v,
