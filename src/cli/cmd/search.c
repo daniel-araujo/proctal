@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 #include "cli/cmd/search.h"
 #include "cli/printer.h"
@@ -82,7 +83,7 @@ static inline void print_search_match(cli_val addr, cli_val value)
 
 static inline void *align_addr(void *addr, size_t align)
 {
-	ptrdiff_t offset = ((unsigned long) addr % align);
+	ptrdiff_t offset = ((uintptr_t) addr % align);
 
 	if (offset != 0) {
 		offset = align - offset;

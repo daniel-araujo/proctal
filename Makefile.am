@@ -55,7 +55,7 @@ proctal_SOURCES = \
 	src/cli/yuck/main.h \
 	src/cli/yuck/main.c \
 	src/cli/main.c
-proctal_LDADD = libproctal.la libswbuf.a libchunk.a libclival.a libcliparser.a libcliassembler.a $(PROCTAL_LDFLAGS)
+proctal_LDADD = libproctal.la libswbuf.a libchunk.a libpq.a libclival.a libcliparser.a libcliassembler.a $(PROCTAL_LDFLAGS)
 proctal_CFLAGS = $(PROCTAL_CFLAGS)
 EXTRA_proctal_DEPENDENCIES = \
 	darr/libdarr.a \
@@ -253,7 +253,6 @@ libproctal_la_SOURCES = \
 	acur/src/acur.h \
 	acur/src/acur.c \
 	src/api/implementation.h \
-	src/api/linux/implementation.c \
 	src/api/proctal.h \
 	src/api/version.c \
 	src/api/error.c \
@@ -268,7 +267,11 @@ libproctal_la_SOURCES = \
 	src/api/malloc.c \
 	src/api/global.c \
 	src/api/proc.c \
-	src/api/init.c \
+	src/api/init.c
+
+if PROCTAL_PLATFORM_LINUX
+libproctal_la_SOURCES += \
+	src/api/linux/implementation.c \
 	src/api/linux/address.c \
 	src/api/linux/address.h \
 	src/api/linux/region.c \
@@ -296,10 +299,6 @@ libproctal_la_SOURCES = \
 
 if PROCTAL_CPU_ARCHITECTURE_X86_64
 libproctal_la_SOURCES += \
-	src/api/x86_64/dr.c \
-	src/api/x86_64/dr.h
-
-libproctal_la_SOURCES += \
 	src/api/linux/ptrace/x86_64/instruction-pointer.c \
 	src/api/linux/ptrace/x86_64/register.c \
 	src/api/linux/ptrace/user-register.c
@@ -323,6 +322,26 @@ libproctal_la_SOURCES += \
 
 libproctal_la_SOURCES += \
 	src/api/linux/watch/unimplemented.c
+endif
+
+else
+if PROCTAL_PLATFORM_WINDOWS
+
+libproctal_la_SOURCES += \
+	src/api/unimplemented.c
+
+else
+
+libproctal_la_SOURCES += \
+	src/api/unimplemented.c
+
+endif
+endif
+
+if PROCTAL_CPU_ARCHITECTURE_X86_64
+libproctal_la_SOURCES += \
+	src/api/x86_64/dr.c \
+	src/api/x86_64/dr.h
 endif
 
 libproctal_la_CFLAGS = $(PROCTAL_CFLAGS)
@@ -466,6 +485,27 @@ check_PROGRAMS += tests/otrap/skip-nothing
 tests_otrap_skip_nothing_SOURCES = src/otrap/tests/skip-nothing.c
 tests_otrap_skip_nothing_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_nothing_LDADD = libotrap.a
+
+
+# Pq module.
+noinst_LIBRARIES += libpq.a
+libpq_a_SOURCES = \
+	src/pq/pq.h \
+	src/pq/implementation.h \
+	src/pq/quit-state.h \
+	src/pq/quit-state.c \
+	src/pq/interface.c
+libpq_a_CFLAGS = $(PROCTAL_CFLAGS)
+
+if PROCTAL_PLATFORM_LINUX
+
+libpq_a_SOURCES += src/pq/posix/implementation.c
+
+else
+
+libpq_a_SOURCES += src/pq/unimplemented.c
+
+endif
 
 
 # Darr.

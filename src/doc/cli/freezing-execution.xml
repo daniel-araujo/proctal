@@ -14,8 +14,4 @@ $ proctal freeze --pid=12345
 	The program will remain paused as long as the command is running. You
 	can stop the command by sending it the <quote>SIGINT</quote> signal
 	(<quote>^C</quote> on most terminals).
-
-	You may optionally pass the <quote>--input</quote> option that will
-	additionally make the command quit when the standard input stream is
-	closed.
 </document>

@@ -1,45 +1,19 @@
 #include <stdio.h>
 #include <assert.h>
-#include <signal.h>
 #include <darr.h>
 
 #include "cli/cmd/watch.h"
 #include "cli/printer.h"
 #include "api/include/proctal.h"
 #include "magic/magic.h"
-
-static int request_quit = 0;
-
-static void quit(int signum)
-{
-	request_quit = 1;
-}
-
-static int register_signal_handler()
-{
-	struct sigaction sa = {
-		.sa_handler = quit,
-		.sa_flags = 0,
-	};
-
-	sigemptyset(&sa.sa_mask);
-
-	return sigaction(SIGINT, &sa, NULL) != -1
-		&& sigaction(SIGTERM, &sa, NULL) != -1;
-}
-
-static void unregister_signal_handler()
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGTERM, SIG_DFL);
-}
+#include "pq/pq.h"
 
 int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 {
 	int ret = 1;
 
-	if (!register_signal_handler()) {
-		fprintf(stderr, "Failed to set up signal handler.\n");
+	if (!pq_start()) {
+		fprintf(stderr, "Failed to start tracking quit signals.\n");
 		goto exit0;
 	}
 
@@ -87,7 +61,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		goto exit3;
 	}
 
-	while (!request_quit) {
+	while (!pq_check()) {
 		void *addr;
 
 		if (!proctal_watch_next(p, &addr)) {
@@ -146,7 +120,7 @@ exit3:
 exit2:
 	proctal_close(p);
 exit1:
-	unregister_signal_handler();
+	pq_stop();
 exit0:
 	return ret;
 }

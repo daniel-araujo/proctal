@@ -232,6 +232,7 @@ dnl - PROCTAL_CPU_ARCHITECTURE_X86
 dnl - PROCTAL_CPU_ARCHITECTURE_X86_64
 dnl - PROCTAL_CPU_ARCHITECTURE_ARM
 dnl - PROCTAL_CPU_ARCHITECTURE_AARCH64
+dnl - PROCTAL_CPU_ARCHITECTURE_UNKNOWN
 AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AC_CANONICAL_HOST
 
@@ -279,6 +280,45 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [Define to 1 if the CPU architecture is unknown.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [test "$proctal_cpu_architecture_arch" = "unknown"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN])])
+])
+
+dnl PROCTAL_PLATFORM
+dnl
+dnl Defines the following macros and Automake conditionals:
+dnl - PROCTAL_PLATFORM_LINUX
+dnl - PROCTAL_PLATFORM_WINDOWS
+dnl - PROCTAL_PLATFORM_UNKNOWN
+AC_DEFUN([PROCTAL_PLATFORM], [
+	AC_CANONICAL_HOST
+
+	proctal_platform_autoconf_os="$host_os"
+
+	case $proctal_platform_autoconf_os in
+	linux*)
+		proctal_platform=linux
+		;;
+
+	mingw*)
+		proctal_platform=windows
+		;;
+
+	*)
+		proctal_platform=unknown
+		AC_MSG_WARN([OS $proctal_platform_autoconf_os not supported or not recognized.])
+		;;
+	esac
+
+	AH_TEMPLATE([PROCTAL_PLATFORM_LINUX], [Define to 1 if the platform is Linux.])
+	AM_CONDITIONAL([PROCTAL_PLATFORM_LINUX], [test "$proctal_platform" = "linux"])
+	AM_COND_IF([PROCTAL_PLATFORM_LINUX], [AC_DEFINE([PROCTAL_PLATFORM_LINUX])])
+
+	AH_TEMPLATE([PROCTAL_PLATFORM_WINDOWS], [Define to 1 if the platform is Windows.])
+	AM_CONDITIONAL([PROCTAL_PLATFORM_WINDOWS], [test "$proctal_platform" = "windows"])
+	AM_COND_IF([PROCTAL_PLATFORM_WINDOWS], [AC_DEFINE([PROCTAL_PLATFORM_WINDOWS])])
+
+	AH_TEMPLATE([PROCTAL_PLATFORM_UNKNOWN], [Define to 1 if the platform is unknown.])
+	AM_CONDITIONAL([PROCTAL_PLATFORM_UNKNOWN], [test "$proctal_platform" = "unknown"])
+	AM_COND_IF([PROCTAL_PLATFORM_UNKNOWN], [AC_DEFINE([PROCTAL_PLATFORM_UNKNOWN])])
 ])
 
 dnl PROCTAL_ABSOLUTE_PATH(VAR, PATH)
@@ -387,4 +427,9 @@ AC_DEFUN([PROCTAL_COMPILATION_FLAGS], [
 
 	# Include config.h automatically.
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -include config.h"])
+
+	# Windows specific options.
+	AM_COND_IF([PROCTAL_PLATFORM_WINDOWS], [
+		AS_VAR_APPEND([PROCTAL_LDFLAGS], [" -static"])
+	])
 ])

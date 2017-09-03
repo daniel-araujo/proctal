@@ -114,36 +114,6 @@ inline int cli_val_byte_cmp(
 }
 
 /*
- * Attempts to write the byte value as text to a file.
- *
- * Returns how many characters were written.
- */
-inline int cli_val_byte_print(struct cli_val_byte *v, FILE *f)
-{
-	return fprintf(f, "%02X", v->byte);
-}
-
-/*
- * Attempts to read the byte value as text from a file.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_byte_scan(struct cli_val_byte *v, FILE *f)
-{
-	return fscanf(f, "%hhx", &v->byte) == 1 ? 1 : 0;
-}
-
-/*
- * Attempts to parse the byte value as text from a C-style string.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_byte_parse_text(struct cli_val_byte *v, const char *s)
-{
-	return sscanf(s, "%hhx", &v->byte) == 1 ? 1 : 0;
-}
-
-/*
  * Creates a new byte value based off an existing one.
  *
  * Returns null on failure.
@@ -160,5 +130,26 @@ inline struct cli_val_byte *cli_val_byte_create_clone(struct cli_val_byte *other
 
 	return v;
 }
+
+/*
+ * Attempts to write the byte value as text to a file.
+ *
+ * Returns how many characters were written.
+ */
+int cli_val_byte_print(struct cli_val_byte *v, FILE *f);
+
+/*
+ * Attempts to read the byte value as text from a file.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_byte_scan(struct cli_val_byte *v, FILE *f);
+
+/*
+ * Attempts to parse the byte value as text from a C-style string.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_byte_parse_text(struct cli_val_byte *v, const char *s);
 
 #endif /* CLI_VAL_BYTE_H */

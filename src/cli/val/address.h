@@ -106,36 +106,6 @@ inline int cli_val_address_cmp(
 }
 
 /*
- * Attempts to write the address value as text to a file.
- *
- * Returns how many characters were written.
- */
-inline int cli_val_address_print(struct cli_val_address *v, FILE *f)
-{
-	return fprintf(f, "%" PRIXPTR, v->address);
-}
-
-/*
- * Attempts to read the address value as text from a file.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_address_scan(struct cli_val_address *v, FILE *f)
-{
-	return fscanf(f, "%" PRIXPTR, &v->address) == 1 ? 1 : 0;
-}
-
-/*
- * Attempts to parse the address value as text from a C-style string.
- *
- * Returns 1 on success, 0 on failure.
- */
-inline int cli_val_address_parse_text(struct cli_val_address *v, const char *s)
-{
-	return sscanf(s, "%" PRIXPTR, &v->address) == 1 ? 1 : 0;
-}
-
-/*
  * Creates a new address value based off an existing one.
  *
  * Returns null on failure.
@@ -152,5 +122,26 @@ inline struct cli_val_address *cli_val_address_create_clone(struct cli_val_addre
 
 	return v;
 }
+
+/*
+ * Attempts to write the address value as text to a file.
+ *
+ * Returns how many characters were written.
+ */
+int cli_val_address_print(struct cli_val_address *v, FILE *f);
+
+/*
+ * Attempts to read the address value as text from a file.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_address_scan(struct cli_val_address *v, FILE *f);
+
+/*
+ * Attempts to parse the address value as text from a C-style string.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int cli_val_address_parse_text(struct cli_val_address *v, const char *s);
 
 #endif /* CLI_VAL_ADDRESS_H */

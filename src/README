@@ -25,3 +25,7 @@ How the source code for Proctal is organized:
 - chunk
 	A way to partition a large buffer into smaller chunks and iterating
 	over them.
+
+- pq
+	Checks whether the program receives any kind of message or signal to
+	quit while also preventing it from exiting.

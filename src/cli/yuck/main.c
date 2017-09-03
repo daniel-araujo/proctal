@@ -745,8 +745,6 @@ static struct cli_cmd_freeze_arg *create_cli_cmd_freeze_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	arg->input = yuck_arg->freeze.input_flag == 1;
-
 	return arg;
 }
 

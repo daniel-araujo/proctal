@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 #include "api/linux/address.h"
 
@@ -11,7 +12,7 @@
  */
 static inline void *align_address(void *address, size_t align)
 {
-	ptrdiff_t offset = ((unsigned long) address % align);
+	ptrdiff_t offset = ((uintptr_t) address % align);
 
 	if (offset != 0) {
 		offset = align - offset;

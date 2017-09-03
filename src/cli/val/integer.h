@@ -135,6 +135,7 @@ inline size_t cli_val_integer_attr_alignof(struct cli_val_integer_attr *a)
 
 	// Not expecting to ever reach here.
 	assert(0);
+	return 1;
 }
 
 /*
@@ -218,6 +219,7 @@ inline size_t cli_val_integer_sizeof(struct cli_val_integer *v)
 
 	// Not expecting to ever reach here.
 	assert(0);
+	return 0;
 }
 
 /*

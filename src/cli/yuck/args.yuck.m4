@@ -245,8 +245,7 @@ Examples:
 Usage: proctal freeze
 Freezes program execution.
 
-The program will be frozen as long as the command is executing. The command can
-be stopped by sending it the SIGINT signal.
+The program will be frozen as long as the command is running.
 
 Examples:
   Pause program execution
@@ -254,9 +253,6 @@ Examples:
 
 
   PID_ARGUMENT
-  -i, --input           Additionally to quitting when receiving SIGINT, will
-                        read from standard input and quit when no more input is
-                        available, whichever happens first.
 
 
 

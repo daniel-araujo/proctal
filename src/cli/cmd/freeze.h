@@ -3,9 +3,6 @@
 
 struct cli_cmd_freeze_arg {
 	int pid;
-
-	// Whether to quit when no more input is available.
-	int input;
 };
 
 int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg);

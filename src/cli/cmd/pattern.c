@@ -81,6 +81,8 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 		chunk_init(&chunk, start, end, buffer_size);
 
+		prev_size = 0;
+
 		do {
 			char *offset = chunk_offset(&chunk);
 			curr_size = chunk_size(&chunk);
