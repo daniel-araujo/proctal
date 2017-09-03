@@ -330,6 +330,8 @@ if PROCTAL_PLATFORM_WINDOWS
 libproctal_la_SOURCES += \
 	src/api/windows/proctal.h \
 	src/api/windows/proctal.c \
+	src/api/windows/memory.h \
+	src/api/windows/memory.c \
 	src/api/windows/implementation.c
 
 else

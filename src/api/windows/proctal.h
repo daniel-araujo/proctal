@@ -14,6 +14,9 @@ struct proctal_windows {
 
 	// Process ID. This identifies the program we're going to muck with.
 	DWORD process_id;
+
+	// A handle to the program.
+	HANDLE process_handle;
 };
 
 /*
