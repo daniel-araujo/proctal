@@ -502,9 +502,15 @@ if PROCTAL_PLATFORM_LINUX
 libpq_a_SOURCES += src/pq/posix/implementation.c
 
 else
+if PROCTAL_PLATFORM_WINDOWS
+
+libpq_a_SOURCES += src/pq/windows-posix/implementation.c
+
+else
 
 libpq_a_SOURCES += src/pq/unimplemented.c
 
+endif
 endif
 
 
