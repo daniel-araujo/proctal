@@ -38,6 +38,11 @@ const struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 		return NULL;
 	}
 
+	if (n < (int) darr_size(path)) {
+		// Discards extra space.
+		darr_resize(path, n);
+	}
+
 	return path;
 
 #undef PID_MAX_DIGITS

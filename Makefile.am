@@ -297,6 +297,12 @@ libproctal_la_SOURCES += \
 	src/api/linux/watch/implementation.h \
 	src/api/linux/watch.h
 
+TESTS += tests/api/linux/proc-path-size
+check_PROGRAMS += tests/api/linux/proc-path-size
+tests_api_linux_proc_path_size_SOURCES = src/api/linux/tests/proc-path-size.c
+tests_api_linux_proc_path_size_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_linux_proc_path_size_LDADD = libproctal.la
+
 if PROCTAL_CPU_ARCHITECTURE_X86_64
 libproctal_la_SOURCES += \
 	src/api/linux/ptrace/x86_64/instruction-pointer.c \
