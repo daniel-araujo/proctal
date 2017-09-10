@@ -38,7 +38,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 			cli_val *v = darr_element(&arg->values, j);
 
 			size_t size = cli_val_sizeof(*v);
-			char *input = cli_val_data(*v);
+			void *input = cli_val_data(*v);
 
 			proctal_write(p, address, input, size);
 

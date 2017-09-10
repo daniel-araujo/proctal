@@ -54,7 +54,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 	}
 
 	const size_t output_block_size = 1024 * 1024 * 2;
-	char *output_block = malloc(output_block_size);
+	unsigned char *output_block = malloc(output_block_size);
 
 	if (output_block == NULL) {
 		fprintf(stderr, "Not enough memory.");

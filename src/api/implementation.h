@@ -1,6 +1,8 @@
 #ifndef API_IMPLEMENTATION_H
 #define API_IMPLEMENTATION_H
 
+#include <stdlib.h>
+
 /*
  * These are the functions that an implementation must define.
  */
@@ -13,9 +15,9 @@ void proctal_implementation_pid_set(struct proctal *p, int pid);
 
 int proctal_implementation_pid(struct proctal *p);
 
-size_t proctal_implementation_read(struct proctal *p, void *address, char *out, size_t size);
+size_t proctal_implementation_read(struct proctal *p, void *address, void *out, size_t size);
 
-size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size);
+size_t proctal_implementation_write(struct proctal *p, void *address, const void *in, size_t size);
 
 void proctal_implementation_freeze(struct proctal *p);
 
@@ -39,7 +41,7 @@ void proctal_implementation_watch_stop(struct proctal *p);
 
 int proctal_implementation_watch_next(struct proctal *p, void **address);
 
-void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length);
+void proctal_implementation_execute(struct proctal *p, const void *bytecode, size_t bytecode_length);
 
 void *proctal_implementation_allocate(struct proctal *p, size_t size);
 

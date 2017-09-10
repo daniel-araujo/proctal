@@ -12,7 +12,7 @@
  *
  * Returns 1 on success and 0 on failure.
  */
-int proctal_linux_execute_implementation(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length);
+int proctal_linux_execute_implementation(struct proctal_linux *pl, const void *bytecode, size_t bytecode_length);
 
 /*
  * The following functions execute system calls in the context of the program.

@@ -2,7 +2,7 @@
 
 #include "api/windows/proctal.h"
 
-size_t proctal_windows_memory_read(struct proctal_windows *pw, void *address, char *out, size_t size)
+size_t proctal_windows_memory_read(struct proctal_windows *pw, void *address, void *out, size_t size)
 {
 	SIZE_T read = 0;
 
@@ -15,7 +15,7 @@ size_t proctal_windows_memory_read(struct proctal_windows *pw, void *address, ch
 	return read;
 }
 
-size_t proctal_windows_memory_write(struct proctal_windows *pw, void *address, const char *in, size_t size)
+size_t proctal_windows_memory_write(struct proctal_windows *pw, void *address, const void *in, size_t size)
 {
 	SIZE_T written = 0;
 

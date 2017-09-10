@@ -24,7 +24,7 @@ static inline FILE *mem(struct proctal_linux *pl)
 	return pl->mem;
 }
 
-size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, char *out, size_t size)
+size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, void *out, size_t size)
 {
 	FILE *f = mem(pl);
 
@@ -48,7 +48,7 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, char *out
 	return size;
 }
 
-size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const char *in, size_t size)
+size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const void *in, size_t size)
 {
 	FILE *f = mem(pl);
 
@@ -72,7 +72,7 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const ch
 	return size;
 }
 
-int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, char *dst, char *src, size_t size)
+int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, void *dst, const void *src, size_t size)
 {
 	int ret = 0;
 

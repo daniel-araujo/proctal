@@ -38,14 +38,13 @@ int proctal_implementation_pid(struct proctal *p)
 	return 0;
 }
 
-size_t proctal_implementation_read(struct proctal *p, void *address, char *out,
-	size_t size)
+size_t proctal_implementation_read(struct proctal *p, void *address, void *out, size_t size)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
 }
 
-size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size)
+size_t proctal_implementation_write(struct proctal *p, void *address, const void *in, size_t size)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
@@ -109,7 +108,7 @@ int proctal_implementation_watch_next(struct proctal *p, void **address)
 	return 0;
 }
 
-void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length)
+void proctal_implementation_execute(struct proctal *p, const void *bytecode, size_t bytecode_length)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }

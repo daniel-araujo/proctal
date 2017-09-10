@@ -137,7 +137,7 @@ int proctal_pid(proctal_t p);
  * corresponds to the type's size and the return value is the the number of
  * values read instead of the actual length.
  */
-size_t proctal_read(proctal_t p, void *address, char *out, size_t size);
+size_t proctal_read(proctal_t p, void *address, void *out, size_t size);
 
 size_t proctal_read_char(proctal_t p, void *address, char *out);
 
@@ -212,7 +212,7 @@ size_t proctal_read_address_array(proctal_t p, void *address, void **out, size_t
  * corresponds to the type's size and the return value is the the number of
  * values written instead of the actual length.
  */
-size_t proctal_write(proctal_t p, void *address, const char *in, size_t size);
+size_t proctal_write(proctal_t p, void *address, const void *in, size_t size);
 
 size_t proctal_write_char(proctal_t p, void *address, char in);
 
@@ -660,7 +660,7 @@ void proctal_watch_execute_set(proctal_t p, int execute);
  *
  * On failure, proctal_error will return an error code.
  */
-void proctal_execute(proctal_t p, const char *bytecode, size_t bytecode_length);
+void proctal_execute(proctal_t p, const void *bytecode, size_t bytecode_length);
 
 /*
  * Allocates memory.

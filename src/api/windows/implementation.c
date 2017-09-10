@@ -4,6 +4,7 @@
 
 #include "api/windows/proctal.h"
 #include "api/windows/memory.h"
+#include "api/implementation.h"
 
 struct proctal *proctal_implementation_open(void)
 {
@@ -43,14 +44,14 @@ int proctal_implementation_pid(struct proctal *p)
 	return proctal_windows_pid(pw);
 }
 
-size_t proctal_implementation_read(struct proctal *p, void *address, char *out, size_t size)
+size_t proctal_implementation_read(struct proctal *p, void *address, void *out, size_t size)
 {
 	struct proctal_windows *pw = (struct proctal_windows *) p;
 
 	return proctal_windows_memory_read(pw, address, out, size);
 }
 
-size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size)
+size_t proctal_implementation_write(struct proctal *p, void *address, const void *in, size_t size)
 {
 	struct proctal_windows *pw = (struct proctal_windows *) p;
 
@@ -119,7 +120,7 @@ int proctal_implementation_watch_next(struct proctal *p, void **address)
 	return 0;
 }
 
-void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length)
+void proctal_implementation_execute(struct proctal *p, const void *bytecode, size_t bytecode_length)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }

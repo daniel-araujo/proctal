@@ -6,7 +6,7 @@
 #include "api/linux/execute.h"
 #include "api/linux/execute/implementation.h"
 
-int proctal_linux_execute(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length)
+int proctal_linux_execute(struct proctal_linux *pl, const void *bytecode, size_t bytecode_length)
 {
 	return proctal_linux_execute_implementation(pl, bytecode, bytecode_length);
 }

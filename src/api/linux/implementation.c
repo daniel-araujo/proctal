@@ -52,14 +52,14 @@ int proctal_implementation_pid(struct proctal *p)
 	return (int) proctal_linux_pid(pl);
 }
 
-size_t proctal_implementation_read(struct proctal *p, void *address, char *out, size_t size)
+size_t proctal_implementation_read(struct proctal *p, void *address, void *out, size_t size)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
 	return proctal_linux_mem_read(pl, address, out, size);
 }
 
-size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size)
+size_t proctal_implementation_write(struct proctal *p, void *address, const void *in, size_t size)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
