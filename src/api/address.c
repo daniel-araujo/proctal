@@ -75,7 +75,7 @@ void proctal_scan_address_execute_set(struct proctal *p, int execute)
 	p->address.execute = execute != 0;
 }
 
-int proctal_scan_address_next(struct proctal *p, void **addr)
+int proctal_scan_address_next(struct proctal *p, void **address)
 {
-	return proctal_implementation_scan_address_next(p, addr);
+	return proctal_implementation_scan_address_next(p, address);
 }

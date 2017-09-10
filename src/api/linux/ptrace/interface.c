@@ -198,11 +198,7 @@ static int attach_threads(struct proctal_linux *pl)
 	}
 
 	// Now we can create the cursor.
-	acur_init1(
-		&pl->ptrace.tasks_cursor,
-		sizeof(struct proctal_linux_ptrace_task),
-		darr_data(&pl->ptrace.tasks),
-		darr_size(&pl->ptrace.tasks));
+	acur_init1(&pl->ptrace.tasks_cursor, sizeof(struct proctal_linux_ptrace_task), darr_data(&pl->ptrace.tasks), darr_size(&pl->ptrace.tasks));
 
 	return 1;
 }
@@ -339,7 +335,7 @@ pid_t proctal_linux_ptrace_wait_trap(struct proctal_linux *pl, pid_t tid)
 			int wresult = waitpid(task->tid, &wstatus, WUNTRACED);
 
 			if (wresult == -1) {
-				if (proctal_linux_ptrace_check_waitpid_errno(pl)) {
+				if (proctal_linux_ptrace_check_waitpid_errno( pl)) {
 					return 0;
 				}
 			}

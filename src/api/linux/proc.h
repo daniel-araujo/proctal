@@ -83,9 +83,7 @@ struct proctal_linux_proc_maps_region *proctal_linux_proc_maps_read(struct proct
 /*
  * Checks whether a region passes.
  */
-int proctal_linux_proc_maps_region_check(
-	struct proctal_linux_proc_maps_region *region,
-	struct proctal_linux_proc_maps_region_check *check);
+int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *region, struct proctal_linux_proc_maps_region_check *check);
 
 const struct darr *proctal_linux_proc_path(pid_t pid, const char *file);
 

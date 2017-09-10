@@ -110,20 +110,16 @@ static inline void read_until_nl(FILE *maps, struct darr *buffer)
 	bufferbuf[i] = '\0';
 }
 
-int proctal_linux_proc_maps_region_check(
-	struct proctal_linux_proc_maps_region *region,
-	struct proctal_linux_proc_maps_region_check *check)
+int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *region, struct proctal_linux_proc_maps_region_check *check)
 {
 	if (check->mask & PROCTAL_REGION_STACK) {
-		if (darr_size(&region->name) == 0
-			|| strncmp(darr_data(&region->name), "[stack", 6) == 0) {
+		if (darr_size(&region->name) == 0 || strncmp(darr_data(&region->name), "[stack", 6) == 0) {
 			return 0;
 		}
 	}
 
 	if (check->mask & PROCTAL_REGION_HEAP) {
-		if (darr_size(&region->name) == 0
-			|| strcmp(darr_data(&region->name), "[heap]") == 0) {
+		if (darr_size(&region->name) == 0 || strcmp(darr_data(&region->name), "[heap]") == 0) {
 			return 0;
 		}
 	}
@@ -147,8 +143,7 @@ int proctal_linux_proc_maps_region_check(
 			return 0;
 		}
 
-		if (darr_size(&region->name)
-			&& strcmp(darr_data(&region->name), "[vvar]") == 0) {
+		if (darr_size(&region->name) && strcmp(darr_data(&region->name), "[vvar]") == 0) {
 			// Can't seem to read from this region regardless of it
 			// being readable.
 			return 0;

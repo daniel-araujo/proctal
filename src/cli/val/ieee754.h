@@ -52,9 +52,7 @@ inline void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a)
 /*
  * Sets precision.
  */
-inline void cli_val_ieee754_attr_precision_set(
-	struct cli_val_ieee754_attr *a,
-	enum cli_val_ieee754_precision precision)
+inline void cli_val_ieee754_attr_precision_set(struct cli_val_ieee754_attr *a, enum cli_val_ieee754_precision precision)
 {
 	a->precision = precision;
 }
@@ -200,16 +198,12 @@ inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee7
 /*
  * Adds the other value.
  */
-int cli_val_ieee754_add(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v);
+int cli_val_ieee754_add(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v);
 
 /*
  * Subtracts the other value.
  */
-int cli_val_ieee754_sub(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v);
+int cli_val_ieee754_sub(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v);
 
 /*
  * Compares two floating point values.
@@ -218,9 +212,7 @@ int cli_val_ieee754_sub(
  * Returns 1 if the first value is greater than the second one.
  * Returns -1 if the first value is less than the second one.
  */
-int cli_val_ieee754_cmp(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v);
+int cli_val_ieee754_cmp(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v);
 
 /*
  * Attempts to write the floating point value as text to a file.

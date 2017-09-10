@@ -12,10 +12,7 @@
  *
  * Returns 1 on success and 0 on failure.
  */
-int proctal_linux_execute(
-	struct proctal_linux *pl,
-	const char *bytecode,
-	size_t bytecode_length);
+int proctal_linux_execute(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length);
 
 /*
  * The following functions execute system calls in the context of the program.
@@ -31,17 +28,9 @@ int proctal_linux_execute(
  *
  * If Proctal fails to dispatch the system call, an error code will be set.
  */
-void *proctal_linux_execute_syscall_mmap(
-	struct proctal_linux *pl,
-	void *addr,
-	size_t length,
-	int prot,
-	int flags,
-	int fd,
-	off_t offset);
-int proctal_linux_execute_syscall_munmap(
-	struct proctal_linux *pl,
-	void *addr,
-	size_t length);
+
+void *proctal_linux_execute_syscall_mmap(struct proctal_linux *pl, void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+
+int proctal_linux_execute_syscall_munmap(struct proctal_linux *pl, void *addr, size_t length);
 
 #endif /* API_LINUX_EXECUTE_H */

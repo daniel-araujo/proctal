@@ -13,15 +13,10 @@ static const char *proctal_error_messages[] = {
 	[PROCTAL_ERROR_UNKNOWN] = "An unknown failure occurred.",
 	[PROCTAL_ERROR_UNIMPLEMENTED] = "Feature not implemented.",
 	[PROCTAL_ERROR_UNSUPPORTED] = "Feature not supported.",
-	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ] =
-		"Watching only for reads is not supported yet."
-		" You can watch for both reads and writes, though.",
-	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE] =
-		"Watching for reads and instruction executions at once is not supported.",
-	[PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE] =
-		"Watching for writes and instruction executions at once is not supported.",
-	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE] =
-		"Watching for reads, writes and instruction executions at once is not supported.",
+	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ] = "Watching only for reads is not supported yet. You can watch for both reads and writes, though.",
+	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_EXECUTE] = "Watching for reads and instruction executions at once is not supported.",
+	[PROCTAL_ERROR_UNSUPPORTED_WATCH_WRITE_EXECUTE] = "Watching for writes and instruction executions at once is not supported.",
+	[PROCTAL_ERROR_UNSUPPORTED_WATCH_READ_WRITE_EXECUTE] = "Watching for reads, writes and instruction executions at once is not supported.",
 	[PROCTAL_ERROR_PROGRAM_NOT_FOUND] = "Program not found.",
 	[PROCTAL_ERROR_PROGRAM_NOT_SET] = "Program was not set.",
 	[PROCTAL_ERROR_INJECTION_LOCATION_NOT_FOUND] = "Could not find a suitable address in memory to inject code in.",

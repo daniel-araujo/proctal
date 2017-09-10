@@ -11,7 +11,7 @@ void *proctal_malloc(struct proctal *p, size_t size)
 	return a;
 }
 
-void proctal_free(struct proctal *p, const void *addr)
+void proctal_free(struct proctal *p, const void *address)
 {
-	return proctal_global_free(addr);
+	return proctal_global_free(address);
 }

@@ -77,7 +77,7 @@ struct proctal {
 	 */
 	struct {
 		// Address to watch.
-		void *addr;
+		void *address;
 
 		// Whether to watch for reads.
 		int read;
@@ -137,7 +137,7 @@ void *proctal_malloc(struct proctal *p, size_t size);
  *
  * Meant for internal data structures of a handle.
  */
-void proctal_free(struct proctal *p, const void *addr);
+void proctal_free(struct proctal *p, const void *address);
 
 /*
  * Allocates memory.
@@ -150,9 +150,9 @@ inline void *proctal_global_malloc(size_t size)
 /*
  * Deallocates memory allocated with proctal_global_malloc.
  */
-inline void proctal_global_free(const void *addr)
+inline void proctal_global_free(const void *address)
 {
-	proctal_global.free((void *) addr);
+	proctal_global.free((void *) address);
 }
 
 #endif /* API_PROCTAL_H */

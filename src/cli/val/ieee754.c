@@ -3,17 +3,13 @@
 
 extern inline void cli_val_ieee754_attr_init(struct cli_val_ieee754_attr *a);
 
-extern inline void cli_val_ieee754_attr_precision_set(
-	struct cli_val_ieee754_attr *a,
-	enum cli_val_ieee754_precision precision);
+extern inline void cli_val_ieee754_attr_precision_set(struct cli_val_ieee754_attr *a, enum cli_val_ieee754_precision precision);
 
-extern inline size_t cli_val_ieee754_attr_alignof(
-	struct cli_val_ieee754_attr *a);
+extern inline size_t cli_val_ieee754_attr_alignof(struct cli_val_ieee754_attr *a);
 
 extern inline void cli_val_ieee754_attr_deinit(struct cli_val_ieee754_attr *a);
 
-extern inline struct cli_val_ieee754 *cli_val_ieee754_create(
-	struct cli_val_ieee754_attr *a);
+extern inline struct cli_val_ieee754 *cli_val_ieee754_create(struct cli_val_ieee754_attr *a);
 
 extern inline void cli_val_ieee754_destroy(struct cli_val_ieee754 *v);
 
@@ -23,17 +19,11 @@ extern inline size_t cli_val_ieee754_alignof(struct cli_val_ieee754 *v);
 
 extern inline size_t cli_val_ieee754_sizeof(struct cli_val_ieee754 *v);
 
-extern inline int cli_val_ieee754_parse_binary(
-	struct cli_val_ieee754 *v,
-	const char *s,
-	size_t length);
+extern inline int cli_val_ieee754_parse_binary(struct cli_val_ieee754 *v, const char *s, size_t length);
 
-extern inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(
-	struct cli_val_ieee754 *other_v);
+extern inline struct cli_val_ieee754 *cli_val_ieee754_create_clone(struct cli_val_ieee754 *other_v);
 
-int cli_val_ieee754_add(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v)
+int cli_val_ieee754_add(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_ADD(TYPE) \
 	(DEREF(TYPE, v->data) = DEREF(TYPE, v->data) + DEREF(TYPE, other_v->data)), 1
@@ -54,9 +44,7 @@ int cli_val_ieee754_add(
 	return 0;
 }
 
-int cli_val_ieee754_sub(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v)
+int cli_val_ieee754_sub(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_SUB(TYPE) \
 	(DEREF(TYPE, v->data) = DEREF(TYPE, v->data) - DEREF(TYPE, other_v->data)), 1
@@ -77,9 +65,7 @@ int cli_val_ieee754_sub(
 	return 0;
 }
 
-int cli_val_ieee754_cmp(
-	struct cli_val_ieee754 *v,
-	struct cli_val_ieee754 *other_v)
+int cli_val_ieee754_cmp(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_CMP(TYPE) \
 	COMPARE(DEREF(TYPE, v->data), DEREF(TYPE, other_v->data))

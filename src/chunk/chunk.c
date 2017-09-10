@@ -1,10 +1,6 @@
 #include "chunk/chunk.h"
 
-extern inline void chunk_init(
-	struct chunk *c,
-	void *start,
-	void *end,
-	size_t size);
+extern inline void chunk_init(struct chunk *c, void *start, void *end, size_t size);
 
 extern inline void chunk_deinit(struct chunk *c);
 

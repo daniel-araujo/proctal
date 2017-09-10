@@ -81,9 +81,7 @@ inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a)
 /*
  * Sets architecture.
  */
-inline void cli_val_instruction_attr_architecture_set(
-	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_architecture architecture)
+inline void cli_val_instruction_attr_architecture_set(struct cli_val_instruction_attr *a, enum cli_val_instruction_architecture architecture)
 {
 	a->architecture = architecture;
 }
@@ -91,9 +89,7 @@ inline void cli_val_instruction_attr_architecture_set(
 /*
  * Sets syntax.
  */
-inline void cli_val_instruction_attr_syntax_set(
-	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_syntax syntax)
+inline void cli_val_instruction_attr_syntax_set(struct cli_val_instruction_attr *a, enum cli_val_instruction_syntax syntax)
 {
 	a->syntax = syntax;
 }

@@ -39,9 +39,7 @@ static inline void next_region(struct proctal_linux *pl)
 		}
 	} while (!proctal_linux_proc_maps_region_check(pl->address.current_region, &pl->address.region_check));
 
-	pl->address.current_address = align_address(
-		pl->address.current_region->start,
-		pl->p.address.align);
+	pl->address.current_address = align_address(pl->address.current_region->start, pl->p.address.align);
 
 	// After applying the correct alignment to the address, it is possible
 	// to have reached the end of the memory region. Even if this is very
@@ -104,10 +102,10 @@ void proctal_linux_scan_address_stop(struct proctal_linux *pl)
 	pl->address.started = 0;
 }
 
-int proctal_linux_scan_address_next(struct proctal_linux *pl, void **addr)
+int proctal_linux_scan_address_next(struct proctal_linux *pl, void **address)
 {
 	if (next(pl)) {
-		*addr = pl->address.current_address;
+		*address = pl->address.current_address;
 		return 1;
 	} else {
 		return 0;

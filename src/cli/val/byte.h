@@ -78,9 +78,7 @@ inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size
 /*
  * Adds the other value.
  */
-inline int cli_val_byte_add(
-	struct cli_val_byte *v,
-	struct cli_val_byte *other_v)
+inline int cli_val_byte_add(struct cli_val_byte *v, struct cli_val_byte *other_v)
 {
 	v->byte = v->byte + other_v->byte;
 
@@ -90,9 +88,7 @@ inline int cli_val_byte_add(
 /*
  * Subtracts the other value.
  */
-inline int cli_val_byte_sub(
-	struct cli_val_byte *v,
-	struct cli_val_byte *other_v)
+inline int cli_val_byte_sub(struct cli_val_byte *v, struct cli_val_byte *other_v)
 {
 	v->byte = v->byte - other_v->byte;
 
@@ -106,9 +102,7 @@ inline int cli_val_byte_sub(
  * Returns 1 if the first value is greater than the second one.
  * Returns -1 if the first value is less than the second one.
  */
-inline int cli_val_byte_cmp(
-	struct cli_val_byte *v,
-	struct cli_val_byte *other_v)
+inline int cli_val_byte_cmp(struct cli_val_byte *v, struct cli_val_byte *other_v)
 {
 	return COMPARE(v->byte, other_v->byte);
 }

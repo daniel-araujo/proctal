@@ -7,8 +7,7 @@
 int proctal_linux_ptrace_implementation_register_user_offset(int regid)
 {
 #define OFFSET_INTO_REGS(REG) \
-	offsetof(struct user, regs) \
-		+ offsetof(struct user_regs_struct, REG)
+	offsetof(struct user, regs) + offsetof(struct user_regs_struct, REG)
 
 	switch (regid) {
 	case PROCTAL_LINUX_PTRACE_REGISTER_X86_64_DR0:

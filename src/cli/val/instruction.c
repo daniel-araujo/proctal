@@ -31,28 +31,19 @@ static void setup_assembler(struct cli_val_instruction *v, struct cli_assembler 
 	}
 }
 
-extern inline void cli_val_instruction_attr_init(
-	struct cli_val_instruction_attr *a);
+extern inline void cli_val_instruction_attr_init(struct cli_val_instruction_attr *a);
 
-extern inline void cli_val_instruction_attr_architecture_set(
-	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_architecture architecture);
+extern inline void cli_val_instruction_attr_architecture_set(struct cli_val_instruction_attr *a, enum cli_val_instruction_architecture architecture);
 
-extern inline void cli_val_instruction_attr_syntax_set(
-	struct cli_val_instruction_attr *a,
-	enum cli_val_instruction_syntax syntax);
+extern inline void cli_val_instruction_attr_syntax_set(struct cli_val_instruction_attr *a, enum cli_val_instruction_syntax syntax);
 
-extern inline void cli_val_instruction_attr_deinit(
-	struct cli_val_instruction_attr *a);
+extern inline void cli_val_instruction_attr_deinit(struct cli_val_instruction_attr *a);
 
-extern inline struct cli_val_instruction *cli_val_instruction_create(
-	struct cli_val_instruction_attr *a);
+extern inline struct cli_val_instruction *cli_val_instruction_create(struct cli_val_instruction_attr *a);
 
 extern inline void cli_val_instruction_destroy(struct cli_val_instruction *v);
 
-extern inline void cli_val_instruction_address_set(
-	struct cli_val_instruction *v,
-	void *address);
+extern inline void cli_val_instruction_address_set(struct cli_val_instruction *v, void *address);
 
 extern inline void *cli_val_instruction_address(struct cli_val_instruction *v);
 

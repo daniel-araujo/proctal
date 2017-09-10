@@ -11,7 +11,7 @@
  * Returns the number of bytes read. If that number does not match the
  * requested size, then it means that there was an error.
  */
-size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, size_t size);
+size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, char *out, size_t size);
 
 /*
  * Write to memory.
@@ -19,7 +19,7 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, s
  * Returns the number of bytes written. If that number does not match the
  * given size, then it means that there was an error.
  */
-size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char *in, size_t size);
+size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const char *in, size_t size);
 
 /*
  * Swaps the contents in memory at the given address with the contents pointed
@@ -29,7 +29,7 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
  *
  * Returns 1 on success and 0 on failure.
  */
-int proctal_linux_mem_swap(struct proctal_linux *pl, void *addr, char *dst, char *src, size_t size);
+int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, char *dst, char *src, size_t size);
 
 /*
  * Finds a suitable place in memory marked as executable where you can write

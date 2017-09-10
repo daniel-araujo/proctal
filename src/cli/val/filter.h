@@ -23,9 +23,7 @@ struct cli_val_filter_compare_prev_arg {
 	cli_val dec_up_to;
 };
 
-inline int cli_val_filter_compare(
-	struct cli_val_filter_compare_arg *arg,
-	cli_val value)
+inline int cli_val_filter_compare(struct cli_val_filter_compare_arg *arg, cli_val value)
 {
 	cli_val nil = cli_val_nil();
 
@@ -56,10 +54,7 @@ inline int cli_val_filter_compare(
 	return 1;
 }
 
-inline int cli_val_filter_compare_prev(
-	struct cli_val_filter_compare_prev_arg *arg,
-	cli_val curr,
-	cli_val prev)
+inline int cli_val_filter_compare_prev(struct cli_val_filter_compare_prev_arg *arg, cli_val curr, cli_val prev)
 {
 	cli_val nil = cli_val_nil();
 
@@ -95,8 +90,7 @@ inline int cli_val_filter_compare_prev(
 		cli_val up_to = cli_val_create_clone(prev);
 
 		if (cli_val_add(up_to, arg->inc_up_to)
-			&& !(cli_val_cmp(curr, up_to) <= 0
-				&& cli_val_cmp(curr, prev) > 0)) {
+			&& !(cli_val_cmp(curr, up_to) <= 0 && cli_val_cmp(curr, prev) > 0)) {
 			cli_val_destroy(up_to);
 			return 0;
 		}
@@ -120,8 +114,7 @@ inline int cli_val_filter_compare_prev(
 		cli_val up_to = cli_val_create_clone(prev);
 
 		if (cli_val_sub(up_to, arg->dec_up_to)
-			&& !(cli_val_cmp(curr, up_to) >= 0
-				&& cli_val_cmp(curr, prev) < 0)) {
+			&& !(cli_val_cmp(curr, up_to) >= 0 && cli_val_cmp(curr, prev) < 0)) {
 			cli_val_destroy(up_to);
 			return 0;
 		}

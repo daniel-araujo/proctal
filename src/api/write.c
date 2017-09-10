@@ -1,28 +1,28 @@
 #include "api/proctal.h"
 #include "api/implementation.h"
 
-#define FORWARD_NATIVE(P, ADDR, VAL) \
-	proctal_write(P, ADDR, (const char *) &VAL, sizeof(VAL))
+#define FORWARD_NATIVE(P, ADDRESS, VAL) \
+	proctal_write(P, ADDRESS, (const char *) &VAL, sizeof(VAL))
 
-#define FORWARD_NATIVE_ARRAY(P, ADDR, VAL, SIZE) \
-	proctal_write(P, ADDR, (const char *) VAL, SIZE * sizeof(*VAL))
+#define FORWARD_NATIVE_ARRAY(P, ADDRESS, VAL, SIZE) \
+	proctal_write(P, ADDRESS, (const char *) VAL, SIZE * sizeof(*VAL))
 
 #define DEFINE_FORWARD_NATIVE(SUFFIX, TYPE) \
-	size_t proctal_write_##SUFFIX(struct proctal *p, void *addr, TYPE in) \
+	size_t proctal_write_##SUFFIX(struct proctal *p, void *address, TYPE in) \
 	{ \
-		return FORWARD_NATIVE(p, addr, in) / sizeof(TYPE); \
+		return FORWARD_NATIVE(p, address, in) / sizeof(TYPE); \
 	} \
 	DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX##_array, TYPE)
 
 #define DEFINE_FORWARD_NATIVE_ARRAY(SUFFIX, TYPE) \
-	size_t proctal_write_##SUFFIX(struct proctal *p, void *addr, const TYPE *in, size_t size) \
+	size_t proctal_write_##SUFFIX(struct proctal *p, void *address, const TYPE *in, size_t size) \
 	{ \
-		return FORWARD_NATIVE_ARRAY(p, addr, in, size) / sizeof(TYPE); \
+		return FORWARD_NATIVE_ARRAY(p, address, in, size) / sizeof(TYPE); \
 	}
 
-size_t proctal_write(struct proctal *p, void *addr, const char *in, size_t size)
+size_t proctal_write(struct proctal *p, void *address, const char *in, size_t size)
 {
-	return proctal_implementation_write(p, addr, in, size);
+	return proctal_implementation_write(p, address, in, size);
 }
 
 DEFINE_FORWARD_NATIVE(char, char)

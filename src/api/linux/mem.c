@@ -24,7 +24,7 @@ static inline FILE *mem(struct proctal_linux *pl)
 	return pl->mem;
 }
 
-size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, size_t size)
+size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, char *out, size_t size)
 {
 	FILE *f = mem(pl);
 
@@ -32,7 +32,7 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, s
 		return 0;
 	}
 
-	fseek(f, (long) addr, SEEK_SET);
+	fseek(f, (long) address, SEEK_SET);
 
 	long i = fread(out, size, 1, f);
 
@@ -48,7 +48,7 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *addr, char *out, s
 	return size;
 }
 
-size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char *in, size_t size)
+size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const char *in, size_t size)
 {
 	FILE *f = mem(pl);
 
@@ -56,7 +56,7 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
 		return 0;
 	}
 
-	fseek(f, (long) addr, SEEK_SET);
+	fseek(f, (long) address, SEEK_SET);
 
 	long i = fwrite(in, size, 1, f);
 
@@ -72,7 +72,7 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *addr, const char 
 	return size;
 }
 
-int proctal_linux_mem_swap(struct proctal_linux *pl, void *addr, char *dst, char *src, size_t size)
+int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, char *dst, char *src, size_t size)
 {
 	int ret = 0;
 
@@ -84,11 +84,11 @@ int proctal_linux_mem_swap(struct proctal_linux *pl, void *addr, char *dst, char
 		goto exit1;
 	}
 
-	if (!proctal_linux_mem_read(pl, addr, darr_data(&tmp), size)) {
+	if (!proctal_linux_mem_read(pl, address, darr_data(&tmp), size)) {
 		goto exit1;
 	}
 
-	if (!proctal_linux_mem_write(pl, addr, src, size)) {
+	if (!proctal_linux_mem_write(pl, address, src, size)) {
 		goto exit1;
 	}
 

@@ -13,10 +13,7 @@
 /*
  * Attempts to disable breakpoints on as many tasks as possible.
  */
-static inline void try_disable_breakpoints(
-	struct proctal_linux *pl,
-	struct proctal_linux_ptrace_task *begin,
-	struct proctal_linux_ptrace_task *end)
+static inline void try_disable_breakpoints(struct proctal_linux *pl, struct proctal_linux_ptrace_task *begin, struct proctal_linux_ptrace_task *end)
 {
 	struct proctal_linux_ptrace_task *task;
 
@@ -56,7 +53,7 @@ void proctal_linux_watch_stop(struct proctal_linux *pl)
 	proctal_linux_ptrace_detach(pl);
 }
 
-int proctal_linux_watch_next(struct proctal_linux *pl, void **addr)
+int proctal_linux_watch_next(struct proctal_linux *pl, void **address)
 {
 	pid_t tid = proctal_linux_ptrace_catch_trap(pl, 0);
 
@@ -64,7 +61,7 @@ int proctal_linux_watch_next(struct proctal_linux *pl, void **addr)
 		return 0;
 	}
 
-	proctal_linux_ptrace_instruction_pointer(pl, tid, addr);
+	proctal_linux_ptrace_instruction_pointer(pl, tid, address);
 
 	if (!proctal_linux_ptrace_cont(pl, tid)) {
 		return 0;

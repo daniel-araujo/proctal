@@ -57,17 +57,7 @@ static inline int load_state(struct proctal_linux *pl, pid_t tid, struct state *
 	return 1;
 }
 
-int setup(
-	struct proctal_linux *pl,
-	pid_t tid,
-	unsigned long long sysnum,
-	void *arg1,
-	void *arg2,
-	void *arg3,
-	void *arg4,
-	void *arg5,
-	void *arg6,
-	void *arg7)
+int setup(struct proctal_linux *pl, pid_t tid, unsigned long long sysnum, void *arg1, void *arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7)
 {
 	if (!proctal_linux_ptrace_register_set(pl, tid, PROCTAL_LINUX_PTRACE_REGISTER_X86_64_RAX, &sysnum)) {
 		return 0;
@@ -161,17 +151,7 @@ static int execute(struct proctal_linux *pl, pid_t tid, void *ret)
  *
  * Returns 1 on success and 0 on failure.
  */
-int proctal_linux_execute_implementation_syscall(
-	struct proctal_linux *pl,
-	int sysnum,
-	void *ret,
-	void *arg1,
-	void *arg2,
-	void *arg3,
-	void *arg4,
-	void *arg5,
-	void *arg6,
-	void *arg7)
+int proctal_linux_execute_implementation_syscall(struct proctal_linux *pl, int sysnum, void *ret, void *arg1, void *arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7)
 {
 	int r = 0;
 
@@ -205,14 +185,7 @@ exit0:
 
 // TODO: Should eventually generate these definitions with a script.
 
-void *proctal_linux_execute_implementation_syscall_mmap(
-	struct proctal_linux *pl,
-	void *addr,
-	size_t length,
-	int prot,
-	int flags,
-	int fd,
-	off_t offset)
+void *proctal_linux_execute_implementation_syscall_mmap(struct proctal_linux *pl, void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 {
 	unsigned long long return_register;
 	unsigned long long addr_register = (uintptr_t) addr;
@@ -222,41 +195,18 @@ void *proctal_linux_execute_implementation_syscall_mmap(
 	unsigned long long fd_register = fd;
 	unsigned long long offset_register = offset;
 
-	proctal_linux_execute_implementation_syscall(
-		pl,
-		SYS_mmap,
-		&return_register,
-		&addr_register,
-		&length_register,
-		&prot_register,
-		&flags_register,
-		&fd_register,
-		&offset_register,
-		NULL);
+	proctal_linux_execute_implementation_syscall(pl, SYS_mmap, &return_register, &addr_register, &length_register, &prot_register, &flags_register, &fd_register, &offset_register, NULL);
 
 	return (void *) (uintptr_t) return_register;
 }
 
-int proctal_linux_execute_implementation_syscall_munmap(
-	struct proctal_linux *pl,
-	void *addr,
-	size_t length)
+int proctal_linux_execute_implementation_syscall_munmap(struct proctal_linux *pl, void *addr, size_t length)
 {
 	unsigned long long return_register;
 	unsigned long long addr_register = (uintptr_t) addr;
 	unsigned long long length_register = length;
 
-	proctal_linux_execute_implementation_syscall(
-		pl,
-		SYS_munmap,
-		&return_register,
-		&addr_register,
-		&length_register,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL);
+	proctal_linux_execute_implementation_syscall(pl, SYS_munmap, &return_register, &addr_register, &length_register, NULL, NULL, NULL, NULL, NULL);
 
 	return return_register;
 }

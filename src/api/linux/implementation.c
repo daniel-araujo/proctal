@@ -52,18 +52,18 @@ int proctal_implementation_pid(struct proctal *p)
 	return (int) proctal_linux_pid(pl);
 }
 
-size_t proctal_implementation_read(struct proctal *p, void *addr, char *out, size_t size)
+size_t proctal_implementation_read(struct proctal *p, void *address, char *out, size_t size)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_mem_read(pl, addr, out, size);
+	return proctal_linux_mem_read(pl, address, out, size);
 }
 
-size_t proctal_implementation_write(struct proctal *p, void *addr, const char *in, size_t size)
+size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_mem_write(pl, addr, in, size);
+	return proctal_linux_mem_write(pl, address, in, size);
 }
 
 void proctal_implementation_freeze(struct proctal *p)
@@ -94,11 +94,11 @@ void proctal_implementation_scan_address_stop(struct proctal *p)
 	proctal_linux_scan_address_stop(pl);
 }
 
-int proctal_implementation_scan_address_next(struct proctal *p, void **addr)
+int proctal_implementation_scan_address_next(struct proctal *p, void **address)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_scan_address_next(pl, addr);
+	return proctal_linux_scan_address_next(pl, address);
 }
 
 void proctal_implementation_scan_region_start(struct proctal *p)
@@ -136,11 +136,11 @@ void proctal_implementation_watch_stop(struct proctal *p)
 	proctal_linux_watch_stop(pl);
 }
 
-int proctal_implementation_watch_next(struct proctal *p, void **addr)
+int proctal_implementation_watch_next(struct proctal *p, void **address)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	return proctal_linux_watch_next(pl, addr);
+	return proctal_linux_watch_next(pl, address);
 }
 
 void proctal_implementation_execute(struct proctal *p, const char *bytecode, size_t bytecode_length)
@@ -157,9 +157,9 @@ void *proctal_implementation_allocate(struct proctal *p, size_t size)
 	return proctal_linux_allocate(pl, size);
 }
 
-void proctal_implementation_deallocate(struct proctal *p, void *addr)
+void proctal_implementation_deallocate(struct proctal *p, void *address)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
-	proctal_linux_deallocate(pl, addr);
+	proctal_linux_deallocate(pl, address);
 }

@@ -3,9 +3,7 @@
 #include "cli/val/integer.h"
 #include "magic/magic.h"
 
-int cli_val_integer_signed_add(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v)
+int cli_val_integer_signed_add(struct cli_val_integer *v, struct cli_val_integer *other_v)
 {
 	switch (v->attr.bits) {
 	case CLI_VAL_INTEGER_BITS_8:
@@ -28,9 +26,7 @@ int cli_val_integer_signed_add(
 	return 0;
 }
 
-int cli_val_integer_signed_sub(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v)
+int cli_val_integer_signed_sub(struct cli_val_integer *v, struct cli_val_integer *other_v)
 {
 	switch (v->attr.bits) {
 	case CLI_VAL_INTEGER_BITS_8:
@@ -53,9 +49,7 @@ int cli_val_integer_signed_sub(
 	return 0;
 }
 
-int cli_val_integer_signed_cmp(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v)
+int cli_val_integer_signed_cmp(struct cli_val_integer *v, struct cli_val_integer *other_v)
 {
 	switch (v->attr.bits) {
 	case CLI_VAL_INTEGER_BITS_8:

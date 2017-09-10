@@ -38,13 +38,14 @@ int proctal_implementation_pid(struct proctal *p)
 	return 0;
 }
 
-size_t proctal_implementation_read(struct proctal *p, void *addr, char *out, size_t size)
+size_t proctal_implementation_read(struct proctal *p, void *address, char *out,
+	size_t size)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
 }
 
-size_t proctal_implementation_write(struct proctal *p, void *addr, const char *in, size_t size)
+size_t proctal_implementation_write(struct proctal *p, void *address, const char *in, size_t size)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
@@ -70,7 +71,7 @@ void proctal_implementation_scan_address_stop(struct proctal *p)
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }
 
-int proctal_implementation_scan_address_next(struct proctal *p, void **addr)
+int proctal_implementation_scan_address_next(struct proctal *p, void **address)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
@@ -102,7 +103,7 @@ void proctal_implementation_watch_stop(struct proctal *p)
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }
 
-int proctal_implementation_watch_next(struct proctal *p, void **addr)
+int proctal_implementation_watch_next(struct proctal *p, void **address)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 	return 0;
@@ -119,7 +120,7 @@ void *proctal_implementation_allocate(struct proctal *p, size_t size)
 	return NULL;
 }
 
-void proctal_implementation_deallocate(struct proctal *p, void *addr)
+void proctal_implementation_deallocate(struct proctal *p, void *address)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }

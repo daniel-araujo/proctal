@@ -73,15 +73,24 @@
 #define PROCTAL_X86_64_DR_LEN_8B 2
 
 /*
- * Sets and gets the RW portion.
+ * Sets the RW portion.
  */
-void proctal_x86_64_dr_rw_set(unsigned long long *dr7, int r, unsigned int state);
+void proctal_x86_64_dr_rw_set(unsigned long long *dr7, int r,
+	unsigned int state);
+
+/*
+ * Gets the RW portion.
+ */
 unsigned int proctal_x86_64_dr_rw(unsigned long long dr7, int r);
 
 /*
- * Sets and gets the LEN portion.
+ * Sets the LEN portion.
  */
 void proctal_x86_64_dr_len_set(unsigned long long *dr7, int r, unsigned int state);
+
+/*
+ * Gets the LEN portion.
+ */
 unsigned int proctal_x86_64_dr_len(unsigned long long dr7, int r);
 
 /*

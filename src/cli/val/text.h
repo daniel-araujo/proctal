@@ -42,9 +42,7 @@ inline void cli_val_text_attr_init(struct cli_val_text_attr *a)
 /*
  * Sets chararacter set.
  */
-inline void cli_val_text_attr_encoding_set(
-	struct cli_val_text_attr *a,
-	enum cli_val_text_encoding encoding)
+inline void cli_val_text_attr_encoding_set(struct cli_val_text_attr *a, enum cli_val_text_encoding encoding)
 {
 	a->encoding = encoding;
 }
@@ -122,9 +120,7 @@ size_t cli_val_text_sizeof(struct cli_val_text *v);
  * Returns 0 if they're equal.
  * Returns either 1 or -1 if they're different.
  */
-int cli_val_text_cmp(
-	struct cli_val_text *v,
-	struct cli_val_text *other_v);
+int cli_val_text_cmp(struct cli_val_text *v, struct cli_val_text *other_v);
 
 /*
  * Attempts to write the text value as text to a file.

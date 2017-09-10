@@ -75,10 +75,7 @@ static void deallocate(struct proctal_linux *pl, void *location)
 	proctal_linux_deallocate(pl, location);
 }
 
-int proctal_linux_execute_implementation(
-	struct proctal_linux *pl,
-	const char *bytecode,
-	size_t bytecode_length)
+int proctal_linux_execute_implementation(struct proctal_linux *pl, const char *bytecode, size_t bytecode_length)
 {
 	int ret = 0;
 

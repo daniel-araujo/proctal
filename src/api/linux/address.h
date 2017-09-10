@@ -10,6 +10,6 @@ void proctal_linux_scan_address_start(struct proctal_linux *pl);
 
 void proctal_linux_scan_address_stop(struct proctal_linux *pl);
 
-int proctal_linux_scan_address_next(struct proctal_linux *pl, void **addr);
+int proctal_linux_scan_address_next(struct proctal_linux *pl, void **address);
 
 #endif /* API_LINUX_ADDRESS_H */

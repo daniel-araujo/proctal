@@ -87,9 +87,7 @@ inline void cli_val_integer_attr_init(struct cli_val_integer_attr *a)
 /*
  * Sets endianness.
  */
-inline void cli_val_integer_attr_endianness_set(
-	struct cli_val_integer_attr *a,
-	enum cli_val_integer_endianness endianness)
+inline void cli_val_integer_attr_endianness_set(struct cli_val_integer_attr *a, enum cli_val_integer_endianness endianness)
 {
 	a->endianness = endianness;
 }
@@ -97,9 +95,7 @@ inline void cli_val_integer_attr_endianness_set(
 /*
  * Sets number of bits.
  */
-inline void cli_val_integer_attr_bits_set(
-	struct cli_val_integer_attr *a,
-	enum cli_val_integer_bits bits)
+inline void cli_val_integer_attr_bits_set(struct cli_val_integer_attr *a, enum cli_val_integer_bits bits)
 {
 	a->bits = bits;
 }
@@ -107,9 +103,7 @@ inline void cli_val_integer_attr_bits_set(
 /*
  * Sets sign type.
  */
-inline void cli_val_integer_attr_sign_set(
-	struct cli_val_integer_attr *a,
-	enum cli_val_integer_sign sign)
+inline void cli_val_integer_attr_sign_set(struct cli_val_integer_attr *a, enum cli_val_integer_sign sign)
 {
 	a->sign = sign;
 }
@@ -261,16 +255,12 @@ inline struct cli_val_integer *cli_val_integer_create_clone(struct cli_val_integ
 /*
  * Adds the other value.
  */
-int cli_val_integer_add(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v);
+int cli_val_integer_add(struct cli_val_integer *v, struct cli_val_integer *other_v);
 
 /*
  * Subtracts the other value.
  */
-int cli_val_integer_sub(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v);
+int cli_val_integer_sub(struct cli_val_integer *v, struct cli_val_integer *other_v);
 
 /*
  * Compares two integer values.
@@ -279,9 +269,7 @@ int cli_val_integer_sub(
  * Returns 1 if the first integer value is greater than the second one.
  * Returns -1 if the first integer value is less than the second one.
  */
-int cli_val_integer_cmp(
-	struct cli_val_integer *v,
-	struct cli_val_integer *other_v);
+int cli_val_integer_cmp(struct cli_val_integer *v, struct cli_val_integer *other_v);
 
 /*
  * Attempts to write the integer value as text to a file.

@@ -8,10 +8,7 @@ extern inline int swbuf_error(struct otrap *o);
 
 extern inline FILE *otrap_file(struct otrap *o);
 
-extern inline size_t otrap_read(
-	struct otrap *o,
-	char *destination,
-	size_t size);
+extern inline size_t otrap_read(struct otrap *o, char *destination, size_t size);
 
 extern inline size_t otrap_skip(struct otrap *o, size_t size);
 

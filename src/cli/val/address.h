@@ -96,9 +96,7 @@ inline int cli_val_address_parse_binary(struct cli_val_address *v, const char *s
  * Returns 1 if the first value is greater than the second one.
  * Returns -1 if the first value is less than the second one.
  */
-inline int cli_val_address_cmp(
-	struct cli_val_address *v,
-	struct cli_val_address *other_v)
+inline int cli_val_address_cmp(struct cli_val_address *v, struct cli_val_address *other_v)
 {
 	return v->address == other_v->address
 		? 0

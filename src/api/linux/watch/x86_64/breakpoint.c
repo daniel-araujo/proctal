@@ -29,7 +29,7 @@ int proctal_linux_watch_implementation_breakpoint_enable(struct proctal_linux *p
 		return 0;
 	}
 
-	if (!proctal_linux_ptrace_register_set(pl, tid, PROCTAL_LINUX_PTRACE_REGISTER_X86_64_DR0, &pl->p.watch.addr)) {
+	if (!proctal_linux_ptrace_register_set(pl, tid, PROCTAL_LINUX_PTRACE_REGISTER_X86_64_DR0, &pl->p.watch.address)) {
 		return 0;
 	}
 

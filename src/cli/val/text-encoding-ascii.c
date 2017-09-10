@@ -7,9 +7,7 @@ size_t cli_val_text_ascii_sizeof(struct cli_val_text *v)
 	return 1;
 }
 
-int cli_val_text_ascii_cmp(
-	struct cli_val_text *v,
-	struct cli_val_text *other_v)
+int cli_val_text_ascii_cmp(struct cli_val_text *v, struct cli_val_text *other_v)
 {
 	return COMPARE(DEREF(char, v->data), DEREF(char, other_v->data));
 }
