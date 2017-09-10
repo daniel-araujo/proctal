@@ -15,7 +15,7 @@ extern inline size_t swbuf_size(struct swbuf *b);
 
 extern inline void swbuf_swap(struct swbuf *b);
 
-extern inline void *swbuf_address_offset(struct swbuf *b, ssize_t offset);
+extern inline void *swbuf_offset(struct swbuf *b, ptrdiff_t offset);
 
 void swbuf_malloc_set(void *(*f)(size_t))
 {

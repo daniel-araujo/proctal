@@ -87,7 +87,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 			char *offset = chunk_offset(&chunk);
 			curr_size = chunk_size(&chunk);
 
-			proctal_read(p, offset, swbuf_address_offset(&buf, 0), curr_size);
+			proctal_read(p, offset, swbuf_offset(&buf, 0), curr_size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -106,7 +106,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 			size_t remaining = curr_size;
 
 			while (remaining) {
-				size_t read = cli_pattern_input(cp, swbuf_address_offset(&buf, curr_size - remaining), remaining);
+				size_t read = cli_pattern_input(cp, swbuf_offset(&buf, curr_size - remaining), remaining);
 
 				if (cli_pattern_finished(cp)) {
 					if (cli_pattern_matched(cp)) {
@@ -147,7 +147,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 
 							assert(prev_remaining < buffer_size);
 
-							cli_pattern_input(cp, swbuf_address_offset(&buf, prev_size - prev_remaining - buffer_size), prev_remaining);
+							cli_pattern_input(cp, swbuf_offset(&buf, prev_size - prev_remaining - buffer_size), prev_remaining);
 						} else {
 							// Start at the next
 							// character now.

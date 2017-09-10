@@ -126,7 +126,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 			char *offset = align_addr(chunk_offset(&chunk), align);
 			curr_size = chunk_size(&chunk);
 
-			proctal_read(p, offset, swbuf_address_offset(&buf, 0), curr_size);
+			proctal_read(p, offset, swbuf_offset(&buf, 0), curr_size);
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
@@ -145,8 +145,8 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 				size_t rightover = size - leftover;
 
 				// Read what's left from the previous chunk.
-				memcpy(cli_val_data(value), swbuf_address_offset(&buf, prev_size - leftover - buffer_size), leftover);
-				memcpy((char *) cli_val_data(value) + leftover, swbuf_address_offset(&buf, rightover), rightover);
+				memcpy(cli_val_data(value), swbuf_offset(&buf, prev_size - leftover - buffer_size), leftover);
+				memcpy((char *) cli_val_data(value) + leftover, swbuf_offset(&buf, rightover), rightover);
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset - leftover;
@@ -165,7 +165,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 					leftover = curr_size - i;
 				}
 
-				memcpy(cli_val_data(value), swbuf_address_offset(&buf, i), size);
+				memcpy(cli_val_data(value), swbuf_offset(&buf, i), size);
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset + i;

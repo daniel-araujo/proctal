@@ -2,6 +2,7 @@
 #define SWBUF_SWBUF_H
 
 #include <stdlib.h>
+#include <stddef.h>
 
 /*
  * The swbuf structure. You will want to initialize it by passing a pointer to
@@ -91,15 +92,15 @@ inline int swbuf_error(struct swbuf *b)
 }
 
 /*
- * Returns an offset to the buffer.
+ * Returns a pointer to the buffer.
  *
  * If offset is 0 or a positive value, this will return an address that can be
  * used up to the size of the buffer minus offset.
  * If offset is a negative value, this will return an address that can be used
  * up to the absolute value of offset (for example, an offset of -12 yields
- * 12) and down to the size of the buffer minus the offset.
+ * 12) and down to the size of the buffer minus the absolute value of offset.
  */
-inline void *swbuf_address_offset(struct swbuf *b, ssize_t offset)
+inline void *swbuf_offset(struct swbuf *b, ptrdiff_t offset)
 {
 	if (offset >= 0) {
 		return (char *) b->curr + offset;
