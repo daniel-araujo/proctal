@@ -231,8 +231,8 @@ src/cli/yuck/proctal-main.$(OBJEXT): src/cli/yuck/args.yucc
 src/cli/yuck/args.yuck: $(srcdir)/src/cli/yuck/args.yuck.m4
 	$(AM_V_GEN)m4 $^ > $@
 
-# PHP script that generates C code.
-src/cli/parser-name.c: $(srcdir)/src/cli/parser-name.c.php
+# PHP scripts that generate C code.
+%.c: %.c.php
 	$(AM_V_GEN)$(PHP) $^ > $@
 
 # Generates argument parsing code.
@@ -256,6 +256,7 @@ libproctal_la_SOURCES = \
 	src/api/proctal.h \
 	src/api/version.c \
 	src/api/error.c \
+	src/api/error-message.c \
 	src/api/watch.c \
 	src/api/freeze.c \
 	src/api/write.c \
