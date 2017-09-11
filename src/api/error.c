@@ -13,6 +13,11 @@ int proctal_error(struct proctal *p)
 
 void proctal_error_set(struct proctal *p, int error)
 {
+	if (p->error) {
+		// Will not override.
+		return;
+	}
+
 	p->error = error;
 }
 
