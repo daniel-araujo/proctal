@@ -2,14 +2,77 @@
 <document>
 	<title>Overview</title>
 
-	You're going to learn how to read, write and search for values,
-	allocate memory, execute code, freeze execution, dump memory and watch
-	for memory accesses straight from your terminal.
+	With text commands you can read, write and search for values, allocate
+	memory, execute code, freeze execution, dump memory and watch for
+	memory accesses in programs that are running on your system.
 
-	The following sample is a bash script that can make a program print
-	Hello, world!
+	<section>
+		<title>What it looks like</title>
 
-	<code type="bash">
+		The <quote>proctal</quote> program accepts a set of commands
+		that perform actions. Each command accepts a set of options and
+		may require a set number of arguments.
+
+		Options are prefixed with <quote>--</quote> (two dashes). This
+		allows the program to distinguish them from positional
+		arguments. Unlike positional arguments, options can be passed
+		in any order.
+
+		The <quote>--help</quote> option is accepted by all commands.
+		It will make the program print help information related to the
+		command and exit without doing anything else.
+
+		<code type="bash-prompt">
+$ proctal read --help
+$ proctal write --help
+		</code>
+
+		<note>
+			You can use the <quote>--help</quote> option if you
+			ever forget what a command does and what options and
+			arguments it takes.
+		</note>
+
+		Options may also take a value. The <quote>=</quote> (equals
+		sign) is placed between the name of the option and the value.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=ff00
+		</code>
+
+		Positional arguments come after the options.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=ff00 1
+		</code>
+
+		If a positional argument starts with <quote>--</quote>, it will
+		be mistaken for an option. You can pass <quote>--</quote> as an
+		argument to tell the program that any arguments coming after it
+		should not be interpreted as options.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=ff00 --type=text -- --text-that-starts-with-two-dashes
+		</code>
+	</section>
+
+	<section>
+		<title>Why use this</title>
+
+		The command line interface provides a simple way to introspect
+		a program without attaching a dedicated debugger or using an
+		integrated development environment.
+
+		This makes it easily scriptable.
+	</section>
+
+	<section>
+		<title>Example</title>
+
+		This is a bash script that can make a program print
+		<quote>Hello, world!</quote>.
+
+		<code type="bash">
 #!/usr/bin/env bash
 
 set -e
@@ -22,7 +85,7 @@ if [[ -z "$pid" ]]; then
 fi
 
 # Allocates memory to store Hello, world!
-address="$(proctal alloc --pid="$pid" -rw 14)"
+address="$(proctal allocate --pid="$pid" -rw 14)"
 
 # Writes Hello, world! to memory.
 proctal write --pid="$pid" --address="$address" --type=text 'Hello, world!' $'\n'
@@ -37,6 +100,7 @@ proctal execute --pid="$pid" &lt;&lt;EOD
 EOD
 
 # Deallocates memory that was used to store Hello, world!
-proctal dealloc --pid="$pid" "$address"
-	</code>
+proctal deallocate --pid="$pid" "$address"
+		</code>
+	</section>
 </document>
