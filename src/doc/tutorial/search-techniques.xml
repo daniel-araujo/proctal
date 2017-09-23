@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Search techniques</title>
+
+	This is a compilation of techniques for using the <quote>search</quote>
+	command.
+
+	<section>
+		<title>IEEE754 number with any decimal part</title>
+
+		This approach is wrong:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=ieee754 --eq=2
+		</code>
+
+		That would only match numbers that are exactly
+		<quote>2</quote>, not <quote>2.1</quote>, not
+		<quote>2.000001</quote>.
+
+		What you need to do is to search for all numbers that are
+		greater or equal than <quote>2</quote> and less than
+		<quote>3</quote>.
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=ieee754 --gte=2 --lt=3
+		</code>
+	</section>
+</document>
