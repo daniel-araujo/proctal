@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Finding the Process ID (PID) on Linux</title>
+
+	Every program running on your system is assigned a number that uniquely
+	identifies it. This is known as the Process ID (commonly referred to as
+	PID). Proctal needs this number to identify the program you want to
+	take control of.
+
+	This tutorial teaches a couple of ways to find the PID of a program.
+
+	<section>
+		<title>pidof</title>
+
+		<quote>pidof</quote> takes the name of the program as its first
+		argument and prints a list of PIDs of all matching programs,
+		separated by spaces.
+
+		<code type="bash-prompt">
+$ pidof program-name
+12345
+		</code>
+	</section>
+
+	<section>
+		<title>pgrep</title>
+
+		<quote>pgrep</quote> takes an Extended Regular Expression and
+		prints a list of PIDs of all programs whose name or command
+		line match the expression.
+
+		<code type="bash-prompt">
+$ pgrep prog*am-n?me
+12345 12346
+		</code>
+	</section>
+
+	<section>
+		<title>ps and grep</title>
+
+		<quote>grep</quote> matches patterns and <quote>ps</quote>
+		prints a row with information about each program running on the
+		system. By piping the output of <quote>ps</quote> to
+		<quote>grep</quote>, you can filter out most of the rows that
+		you're not interested in.
+
+		<code type="bash-prompt">
+$ ps ax | grep program-name
+12345 pts/0    S+     0:00 program-name argument1 argument2
+		</code>
+
+		The first column is the PID and the last column is the command
+		line.
+
+		<note>
+			Due to a race condition, the grep command matches
+			itself sometimes.
+		</note>
+	</section>
+</document>
