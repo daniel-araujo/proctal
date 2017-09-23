@@ -9,7 +9,7 @@ size_t cli_val_text_ascii_sizeof(struct cli_val_text *v)
 
 int cli_val_text_ascii_cmp(struct cli_val_text *v, struct cli_val_text *other_v)
 {
-	return COMPARE(DEREF(char, v->data), DEREF(char, other_v->data));
+	return COMPARE_INT(DEREF(char, v->data), DEREF(char, other_v->data));
 }
 
 int cli_val_text_ascii_print(struct cli_val_text *v, FILE *f)

@@ -16,11 +16,16 @@
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof(A[0]))
 
 /*
- * Compares two values.
+ * Compares two integer values.
  * 
  * Results in 0 if both are equal, 1 if X is greater than Y and -1 if X is
  * less than Y.
  */
-#define COMPARE(X, Y) (((X) > (Y)) - ((X) < (Y)))
+#define COMPARE_INT(X, Y) (((X) > (Y)) - ((X) < (Y)))
+
+/*
+ * Like COMPARE_INT but works on floating point numbers.
+ */
+#define COMPARE_FLOAT(X, Y) ((X) == (Y) ? 0 : ((X) > (Y) ? 1 : -1))
 
 #endif /* MAGIC_MAGIC_H */

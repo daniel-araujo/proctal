@@ -53,16 +53,16 @@ int cli_val_integer_signed_cmp(struct cli_val_integer *v, struct cli_val_integer
 {
 	switch (v->attr.bits) {
 	case CLI_VAL_INTEGER_BITS_8:
-		return COMPARE(DEREF(int8_t, v->data), DEREF(int8_t, other_v->data));
+		return COMPARE_INT(DEREF(int8_t, v->data), DEREF(int8_t, other_v->data));
 
 	case CLI_VAL_INTEGER_BITS_16:
-		return COMPARE(DEREF(int16_t, v->data), DEREF(int16_t, other_v->data));
+		return COMPARE_INT(DEREF(int16_t, v->data), DEREF(int16_t, other_v->data));
 
 	case CLI_VAL_INTEGER_BITS_32:
-		return COMPARE(DEREF(int32_t, v->data), DEREF(int32_t, other_v->data));
+		return COMPARE_INT(DEREF(int32_t, v->data), DEREF(int32_t, other_v->data));
 
 	case CLI_VAL_INTEGER_BITS_64:
-		return COMPARE(DEREF(int64_t, v->data), DEREF(int64_t, other_v->data));
+		return COMPARE_INT(DEREF(int64_t, v->data), DEREF(int64_t, other_v->data));
 	}
 
 	return 0;

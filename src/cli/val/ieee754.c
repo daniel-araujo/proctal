@@ -68,7 +68,7 @@ int cli_val_ieee754_sub(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other
 int cli_val_ieee754_cmp(struct cli_val_ieee754 *v, struct cli_val_ieee754 *other_v)
 {
 #define NATIVE_CMP(TYPE) \
-	COMPARE(DEREF(TYPE, v->data), DEREF(TYPE, other_v->data))
+	COMPARE_FLOAT(DEREF(TYPE, v->data), DEREF(TYPE, other_v->data))
 
 	switch (v->attr.precision) {
 	case CLI_VAL_IEEE754_PRECISION_SINGLE:

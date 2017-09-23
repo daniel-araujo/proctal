@@ -104,7 +104,7 @@ inline int cli_val_byte_sub(struct cli_val_byte *v, struct cli_val_byte *other_v
  */
 inline int cli_val_byte_cmp(struct cli_val_byte *v, struct cli_val_byte *other_v)
 {
-	return COMPARE(v->byte, other_v->byte);
+	return COMPARE_INT(v->byte, other_v->byte);
 }
 
 /*
