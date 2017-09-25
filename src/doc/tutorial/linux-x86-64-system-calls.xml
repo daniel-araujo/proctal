@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Linux x86-64 system calls</title>
+
+	Applications can communicate with the Linux kernel through system calls
+	to perform tasks such as reading and writing to files.
+
+	You're going to learn how to perform system calls on behalf of any
+	program using the command line interface of Proctal on the x86-64
+	architecture.
+
+	<section>
+		<title>How system calls work</title>
+
+		On x86-64 Linux, system calls are performed by running the
+		<quote>syscall</quote> instruction. The instruction passes
+		control to the kernel which figures out what to do by looking
+		up the system call number in the <quote>rax</quote> register.
+
+		The kernel looks up arguments in the following registers, in
+		the given order:
+
+		<list>
+			<item><quote>rdi</quote></item>
+			<item><quote>rsi</quote></item>
+			<item><quote>rdx</quote></item>
+			<item><quote>r10</quote></item>
+			<item><quote>r8</quote></item>
+			<item><quote>r9</quote></item>
+		</list>
+
+		When the kernel returns control back to the program, the
+		<quote>rax</quote> register contains the return value.
+
+		The registers used as arguments and <quote>rcx</quote> and
+		<quote>r11</quote> are not guaranteed to hold the same values
+		after the call.
+
+		You can find tables of system call numbers and their
+		corresponding number of arguments on the internet.
+	</section>
+
+	<section>
+		<title>Calling write</title>
+
+		Here's how you need to set up the registers.
+
+		<list>
+			<item><quote>rax</quote> system call number</item>
+			<item><quote>rdi</quote> file descriptor</item>
+			<item><quote>rsi</quote> buffer address</item>
+			<item><quote>rdx</quote> size of buffer</item>
+		</list>
+
+		The system call number is 1. The file descriptor for standard
+		output is usually 1. All that is left is a buffer and its size.
+
+		Using the <quote>allocate</quote> and <quote>write</quote>
+		commands, you can easily store things in memory.
+
+		<code type="bash-prompt">
+$ proctal allocate --pid=12345 -rw 14
+89AF8C08
+$ proctal write --pid=12345 --address=89AF8C08 --type=text 'Hello, world!' $'\n'
+		</code>
+
+		With the <quote>execute</quote> command you can write some
+		assembly code that sets up the registers and executes the
+		<quote>syscall</quote> instruction.
+
+		<code type="bash-prompt">
+proctal execute --pid=12345 &lt;&lt;EOD
+	mov	rax, 1
+	mov	rdi, 1
+	mov	rsi, 0x89AF8C08
+	mov	rdx, 14
+	syscall
+EOD
+		</code>
+
+		You should see the contents in the buffer in the output of the
+		program now.
+
+		Now all that is left to do is to deallocate the memory block
+		that was used for the buffer.
+
+		<code type="bash-prompt">
+$ proctal deallocate --pid=12345 89AF8C08
+		</code>
+	</section>
+</document>
