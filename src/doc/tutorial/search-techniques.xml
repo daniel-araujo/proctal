@@ -19,7 +19,7 @@ $ proctal search --pid=12345 --type=ieee754 --eq=2
 		<quote>2.000001</quote>.
 
 		What you need to do is to search for all numbers that are
-		greater or equal than <quote>2</quote> and less than
+		greater than or equal to <quote>2</quote> and less than
 		<quote>3</quote>.
 
 		<code type="bash-prompt">
