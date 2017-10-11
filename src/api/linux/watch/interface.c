@@ -28,16 +28,16 @@ void proctal_linux_watch_start(struct proctal_linux *pl)
 		return;
 	}
 
-	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (struct proctal_linux_ptrace_task *task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		if (!proctal_linux_watch_implementation_breakpoint_enable(pl, task->tid)) {
-			try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), task);
+			try_disable_breakpoints(pl, proctal_darr_begin(&pl->ptrace.tasks), task);
 			proctal_linux_ptrace_detach(pl);
 			return;
 		}
 	}
 
 	if (!proctal_linux_ptrace_cont(pl, 0)) {
-		try_disable_breakpoints(pl, darr_begin(&pl->ptrace.tasks), darr_end(&pl->ptrace.tasks));
+		try_disable_breakpoints(pl, proctal_darr_begin(&pl->ptrace.tasks), proctal_darr_end(&pl->ptrace.tasks));
 		proctal_linux_ptrace_detach(pl);
 		return;
 	}
@@ -45,7 +45,7 @@ void proctal_linux_watch_start(struct proctal_linux *pl)
 
 void proctal_linux_watch_stop(struct proctal_linux *pl)
 {
-	for (struct proctal_linux_ptrace_task *task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (struct proctal_linux_ptrace_task *task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		proctal_linux_ptrace_stop(pl, task->tid);
 		proctal_linux_watch_implementation_breakpoint_disable(pl, task->tid);
 	}

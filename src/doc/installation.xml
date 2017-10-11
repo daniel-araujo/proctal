@@ -2,17 +2,18 @@
 <document>
 	<title>Installation</title>
 
-	You can find the latest version
-	<link ref="proctal:download">here</link>.
+	The latest version can be found on the website's
+	<link ref="proctal:download">download page</link>.
 
-	You will need the following programs installed on your system:
+	To compile you need the following programs installed on your system:
 
 	<list>
 		<item><link ref="gcc">GCC</link></item>
 		<item><link ref="libtool">libtool</link></item>
 	</list>
 
-	Optional:
+	Proctal can optionally compile with the following libraries listed with
+	the features they enable:
 
 	<list>
 		<item><link ref="capstone">capstone</link> - Disassembling instructions.</item>

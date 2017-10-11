@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <darr.h>
+
+#include "api/darr/darr.h"
 
 /*
  * An entry in the maps file.
@@ -26,7 +27,7 @@ struct proctal_linux_proc_maps_region {
 
 	// Name of the region. Ends with a NUL character. Will be empty if the
 	// region has no name.
-	struct darr name;
+	struct proctal_darr name;
 };
 
 /*
@@ -85,16 +86,16 @@ struct proctal_linux_proc_maps_region *proctal_linux_proc_maps_read(struct proct
  */
 int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *region, struct proctal_linux_proc_maps_region_check *check);
 
-const struct darr *proctal_linux_proc_path(pid_t pid, const char *file);
+const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file);
 
-void proctal_linux_proc_path_dispose(const struct darr *path);
+void proctal_linux_proc_path_dispose(const struct proctal_darr *path);
 
-const struct darr *proctal_linux_program_path(pid_t pid);
+const struct proctal_darr *proctal_linux_program_path(pid_t pid);
 
-void proctal_linux_program_path_dispose(const struct darr *path);
+void proctal_linux_program_path_dispose(const struct proctal_darr *path);
 
-const struct darr *proctal_linux_task_ids(pid_t pid);
+const struct proctal_darr *proctal_linux_task_ids(pid_t pid);
 
-void proctal_linux_task_ids_dispose(const struct darr *tids);
+void proctal_linux_task_ids_dispose(const struct proctal_darr *tids);
 
 #endif /* API_LINUX_PROC_H */

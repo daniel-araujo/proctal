@@ -28,17 +28,17 @@ int main(void)
 	for (size_t i = 0; i < ARRAY_SIZE(tests); ++i) {
 		struct test *test = &tests[i];
 
-		const struct darr *path = proctal_linux_proc_path(test->pid, test->file);
+		const struct proctal_darr *path = proctal_linux_proc_path(test->pid, test->file);
 
 		size_t expected_size = strlen(test->expected_path);
 
-		if (darr_size(path) != expected_size) {
+		if (proctal_darr_size(path) != expected_size) {
 			fprintf(stderr, "Unexpected size in test #%d.\n", (int) i);
 			proctal_linux_proc_path_dispose(path);
 			return 1;
 		}
 
-		if (strncmp(test->expected_path, darr_data_const(path), expected_size) != 0) {
+		if (strncmp(test->expected_path, proctal_darr_data_const(path), expected_size) != 0) {
 			fprintf(stderr, "Unexpected path in test #%d.\n", (int) i);
 			proctal_linux_proc_path_dispose(path);
 			return 1;

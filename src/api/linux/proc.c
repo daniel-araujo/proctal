@@ -7,13 +7,13 @@
 #include "api/linux/proctal.h"
 #include "api/linux/proc.h"
 
-const struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
+const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file)
 {
 #define PID_MAX_DIGITS 5
 
 	static char proc_dir[] = "/proc";
 
-	struct darr *path = proctal_global_malloc(sizeof(struct darr));
+	struct proctal_darr *path = proctal_global_malloc(sizeof(struct proctal_darr));
 
 	if (path == NULL) {
 		return NULL;
@@ -21,26 +21,26 @@ const struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 
 	size_t file_size = strlen(file);
 
-	darr_init(path, sizeof(char));
-	darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + PID_MAX_DIGITS + 1 + file_size + 1);
+	proctal_darr_init(path, sizeof(char));
+	proctal_darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + PID_MAX_DIGITS + 1 + file_size + 1);
 
 	int n = snprintf(
-		darr_data(path),
-		darr_size(path),
+		proctal_darr_data(path),
+		proctal_darr_size(path),
 		"%s/%d/%s",
 		proc_dir,
 		pid,
 		file);
 
-	if (!(n > 0 && n < (int) (darr_size(path) - 1))) {
-		darr_deinit(path);
+	if (!(n > 0 && n < (int) (proctal_darr_size(path) - 1))) {
+		proctal_darr_deinit(path);
 		proctal_global_free(path);
 		return NULL;
 	}
 
-	if (n < (int) darr_size(path)) {
+	if (n < (int) proctal_darr_size(path)) {
 		// Discards extra space.
-		darr_resize(path, n);
+		proctal_darr_resize(path, n);
 	}
 
 	return path;
@@ -48,26 +48,26 @@ const struct darr *proctal_linux_proc_path(pid_t pid, const char *file)
 #undef PID_MAX_DIGITS
 }
 
-void proctal_linux_proc_path_dispose(const struct darr *path)
+void proctal_linux_proc_path_dispose(const struct proctal_darr *path)
 {
-	darr_deinit((struct darr *) path);
+	proctal_darr_deinit((struct proctal_darr *) path);
 	proctal_global_free(path);
 }
 
-const struct darr *proctal_linux_program_path(pid_t pid)
+const struct proctal_darr *proctal_linux_program_path(pid_t pid)
 {
-	struct darr *path = proctal_global_malloc(sizeof(struct darr));
+	struct proctal_darr *path = proctal_global_malloc(sizeof(struct proctal_darr));
 
 	if (path == NULL) {
 		return NULL;
 	}
 
-	darr_init(path, sizeof(char));
-	darr_resize(path, 255);
-	char *path_data = darr_data(path);
+	proctal_darr_init(path, sizeof(char));
+	proctal_darr_resize(path, 255);
+	char *path_data = proctal_darr_data(path);
 
-	const struct darr *link = proctal_linux_proc_path(pid, "exe");
-	size_t e = readlink(darr_data_const(link), path_data, darr_size(path) - 1);
+	const struct proctal_darr *link = proctal_linux_proc_path(pid, "exe");
+	size_t e = readlink(proctal_darr_data_const(link), path_data, proctal_darr_size(path) - 1);
 	proctal_linux_proc_path_dispose(link);
 
 	path_data[e] = '\0';
@@ -75,24 +75,24 @@ const struct darr *proctal_linux_program_path(pid_t pid)
 	return path;
 }
 
-void proctal_linux_program_path_dispose(const struct darr *path)
+void proctal_linux_program_path_dispose(const struct proctal_darr *path)
 {
-	darr_deinit((struct darr *) path);
+	proctal_darr_deinit((struct proctal_darr *) path);
 	proctal_global_free(path);
 }
 
-const struct darr *proctal_linux_task_ids(pid_t pid)
+const struct proctal_darr *proctal_linux_task_ids(pid_t pid)
 {
-	struct darr *tids = proctal_global_malloc(sizeof(struct darr));
+	struct proctal_darr *tids = proctal_global_malloc(sizeof(struct proctal_darr));
 
 	if (tids == NULL) {
 		return NULL;
 	}
 
-	darr_init(tids, sizeof(pid_t));
+	proctal_darr_init(tids, sizeof(pid_t));
 
-	const struct darr *path = proctal_linux_proc_path(pid, "task");
-	DIR *dir = opendir(darr_data_const(path));
+	const struct proctal_darr *path = proctal_linux_proc_path(pid, "task");
+	DIR *dir = opendir(proctal_darr_data_const(path));
 	proctal_linux_proc_path_dispose(path);
 
 	if (dir == NULL) {
@@ -114,8 +114,8 @@ const struct darr *proctal_linux_task_ids(pid_t pid)
 			continue;
 		}
 
-		darr_resize(tids, darr_size(tids) + 1);
-		pid_t *e = darr_element(tids, darr_size(tids) - 1);
+		proctal_darr_resize(tids, proctal_darr_size(tids) + 1);
+		pid_t *e = proctal_darr_element(tids, proctal_darr_size(tids) - 1);
 		*e = atoi(dirent->d_name);
 	}
 
@@ -124,8 +124,8 @@ const struct darr *proctal_linux_task_ids(pid_t pid)
 	return tids;
 }
 
-void proctal_linux_task_ids_dispose(const struct darr *tids)
+void proctal_linux_task_ids_dispose(const struct proctal_darr *tids)
 {
-	darr_deinit((struct darr *) tids);
+	proctal_darr_deinit((struct proctal_darr *) tids);
 	proctal_global_free(tids);
 }

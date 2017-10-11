@@ -10,7 +10,7 @@ void proctal_linux_init(struct proctal_linux *pl)
 	pl->mem = NULL;
 
 	pl->ptrace.count = 0;
-	darr_init(&pl->ptrace.tasks, sizeof(struct proctal_linux_ptrace_task));
+	proctal_darr_init(&pl->ptrace.tasks, sizeof(struct proctal_linux_ptrace_task));
 
 	pl->address.started = 0;
 
@@ -26,7 +26,7 @@ void proctal_linux_deinit(struct proctal_linux *pl)
 	}
 
 	proctal_linux_ptrace_detach_force(pl);
-	darr_deinit(&pl->ptrace.tasks);
+	proctal_darr_deinit(&pl->ptrace.tasks);
 
 	proctal_linux_scan_address_stop(pl);
 

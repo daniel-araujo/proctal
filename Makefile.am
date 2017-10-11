@@ -245,13 +245,18 @@ src/cli/proctal.1: src/cli/yuck/args.yuck
 
 
 # C library.
+CLEANFILES += \
+	src/api/darr/darr.h \
+	src/api/darr/darr.c \
+	src/api/acur/acur.h \
+	src/api/acur/acur.c
 lib_LTLIBRARIES += libproctal.la
 include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
-	darr/src/darr.h \
-	darr/src/darr.c \
-	acur/src/acur.h \
-	acur/src/acur.c \
+	src/api/darr/darr.h \
+	src/api/darr/darr.c \
+	src/api/acur/acur.h \
+	src/api/acur/acur.c \
 	src/api/implementation.h \
 	src/api/proctal.h \
 	src/api/version.c \
@@ -357,6 +362,22 @@ endif
 
 libproctal_la_CFLAGS = $(PROCTAL_CFLAGS)
 libproctal_la_LDFLAGS = -version-info $(PROCTAL_LIBTOOL_VERSION)
+
+src/api/darr/darr.h: $(srcdir)/darr/src/darr.h
+	$(AM_V_GEN)$(SED) 's/darr_/proctal_darr_/g' $^ > $@
+	$(AM_V_GEN)$(SED) -i 's/struct darr/struct proctal_darr/g' $@
+
+src/api/darr/darr.c: $(srcdir)/darr/src/darr.c src/api/darr/darr.h
+	$(AM_V_GEN)$(SED) 's/darr_/proctal_darr_/g' $^ > $@
+	$(AM_V_GEN)$(SED) -i 's/struct darr/struct proctal_darr/g' $@
+
+src/api/acur/acur.h: $(srcdir)/acur/src/acur.h
+	$(AM_V_GEN)$(SED) 's/acur_/proctal_acur_/g' $^ > $@
+	$(AM_V_GEN)$(SED) -i 's/struct acur/struct proctal_acur/g' $@
+
+src/api/acur/acur.c: $(srcdir)/acur/src/acur.c src/api/acur/acur.h
+	$(AM_V_GEN)$(SED) 's/acur_/proctal_acur_/g' $^ > $@
+	$(AM_V_GEN)$(SED) -i 's/struct acur/struct proctal_acur/g' $@
 
 
 # Swbuf module.

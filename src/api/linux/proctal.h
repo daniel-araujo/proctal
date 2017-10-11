@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <darr.h>
-#include <acur.h>
 
+#include "api/darr/darr.h"
+#include "api/acur/acur.h"
 #include "api/proctal.h"
 #include "api/linux/proc.h"
 
@@ -38,13 +38,13 @@ struct proctal_linux {
 
 		// Tasks tracked by ptrace. An array of
 		// struct proctal_linux_ptrace_task.
-		struct darr tasks;
+		struct proctal_darr tasks;
 
 		// A cursor on the whole tasks array.
-		struct acur tasks_cursor;
+		struct proctal_acur tasks_cursor;
 
 		// A cursor on a single task.
-		struct acur task_cursor;
+		struct proctal_acur task_cursor;
 	} ptrace;
 
 	struct proctal_linux_address {

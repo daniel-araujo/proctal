@@ -7,28 +7,28 @@
 #include <unistd.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
-#include <darr.h>
 
+#include "api/darr/darr.h"
 #include "api/linux/proctal.h"
 #include "api/linux/ptrace.h"
 #include "api/linux/ptrace/internal.h"
 #include "api/linux/ptrace/implementation.h"
 
-static struct acur *choose_tasks(struct proctal_linux *pl, pid_t tid)
+static struct proctal_acur *choose_tasks(struct proctal_linux *pl, pid_t tid)
 {
 	if (tid == 0) {
 		return &pl->ptrace.tasks_cursor;
 	} else {
 		struct proctal_linux_ptrace_task *task;
 
-		for (task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+		for (task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 			if (task->tid == tid) {
-				acur_init1(&pl->ptrace.task_cursor, sizeof(*task), task, 1);
+				proctal_acur_init1(&pl->ptrace.task_cursor, sizeof(*task), task, 1);
 				return &pl->ptrace.task_cursor;
 			}
 		}
 
-		acur_init1(&pl->ptrace.task_cursor, sizeof(*task), NULL, 0);
+		proctal_acur_init1(&pl->ptrace.task_cursor, sizeof(*task), NULL, 0);
 		return &pl->ptrace.task_cursor;
 	}
 }
@@ -36,7 +36,7 @@ static struct acur *choose_tasks(struct proctal_linux *pl, pid_t tid)
 static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_ptrace_task *task, int wstatus)
 {
 	if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
-		for (task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+		for (task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 			// Mark all tasks as stopped.
 			task->running = 0;
 		}
@@ -108,7 +108,7 @@ static int detach_threads(struct proctal_linux *pl)
 {
 	struct proctal_linux_ptrace_task *task;
 
-	for (task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		if (task->running) {
 			continue;
 		}
@@ -119,7 +119,7 @@ static int detach_threads(struct proctal_linux *pl)
 		}
 	}
 
-	darr_resize(&pl->ptrace.tasks, 0);
+	proctal_darr_resize(&pl->ptrace.tasks, 0);
 
 	return 1;
 }
@@ -128,7 +128,7 @@ static int is_thread_attached(struct proctal_linux *pl, pid_t tid)
 {
 	struct proctal_linux_ptrace_task *task;
 
-	for (task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		if (task->tid == tid) {
 			return !task->running;
 		}
@@ -150,8 +150,8 @@ static int attach_threads(struct proctal_linux *pl)
 		return 0;
 	}
 
-	darr_resize(&pl->ptrace.tasks, 1);
-	task = darr_element(&pl->ptrace.tasks, 0);
+	proctal_darr_resize(&pl->ptrace.tasks, 1);
+	task = proctal_darr_element(&pl->ptrace.tasks, 0);
 	*task = (struct proctal_linux_ptrace_task) {
 		.tid = pl->pid,
 		.running = 1,
@@ -159,13 +159,13 @@ static int attach_threads(struct proctal_linux *pl)
 
 	// Now look up the ids of the other threads.
 
-	const struct darr *tids = proctal_linux_task_ids(pl->pid);
+	const struct proctal_darr *tids = proctal_linux_task_ids(pl->pid);
 
-	darr_resize(&pl->ptrace.tasks, darr_size(&pl->ptrace.tasks) + darr_size(tids) - 1);
+	proctal_darr_resize(&pl->ptrace.tasks, proctal_darr_size(&pl->ptrace.tasks) + proctal_darr_size(tids) - 1);
 
-	task = darr_element(&pl->ptrace.tasks, 1); 
+	task = proctal_darr_element(&pl->ptrace.tasks, 1); 
 
-	for (const pid_t *tid = darr_begin_const(tids); tid != darr_end_const(tids); ++tid) {
+	for (const pid_t *tid = proctal_darr_begin_const(tids); tid != proctal_darr_end_const(tids); ++tid) {
 		if (pl->pid == *tid) {
 			// Skip main thread. We've already added it.
 			continue;
@@ -180,7 +180,7 @@ static int attach_threads(struct proctal_linux *pl)
 	proctal_linux_task_ids_dispose(tids);
 
 	// Now attach to the rest.
-	for (task = darr_element(&pl->ptrace.tasks, 1); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (task = proctal_darr_element(&pl->ptrace.tasks, 1); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		if (ptrace(PTRACE_ATTACH, task->tid, 0L, 0L) == -1) {
 			proctal_linux_ptrace_check_run_state_errno(pl);
 			detach_threads(pl);
@@ -190,7 +190,7 @@ static int attach_threads(struct proctal_linux *pl)
 
 	// Now that we've attached to all tasks, we're going to wait for the
 	// mandatory stop signal for each one.
-	for (task = darr_begin(&pl->ptrace.tasks); task != darr_end(&pl->ptrace.tasks); ++task) {
+	for (task = proctal_darr_begin(&pl->ptrace.tasks); task != proctal_darr_end(&pl->ptrace.tasks); ++task) {
 		if (!wait_ptrace_stop(pl, task)) {
 			detach_threads(pl);
 			return 0;
@@ -198,7 +198,7 @@ static int attach_threads(struct proctal_linux *pl)
 	}
 
 	// Now we can create the cursor.
-	acur_init1(&pl->ptrace.tasks_cursor, sizeof(struct proctal_linux_ptrace_task), darr_data(&pl->ptrace.tasks), darr_size(&pl->ptrace.tasks));
+	proctal_acur_init1(&pl->ptrace.tasks_cursor, sizeof(struct proctal_linux_ptrace_task), proctal_darr_data(&pl->ptrace.tasks), proctal_darr_size(&pl->ptrace.tasks));
 
 	return 1;
 }
@@ -239,14 +239,14 @@ void proctal_linux_ptrace_detach_force(struct proctal_linux *pl)
 
 int proctal_linux_ptrace_stop(struct proctal_linux *pl, pid_t tid)
 {
-	struct acur *tasks = choose_tasks(pl, tid);
+	struct proctal_acur *tasks = choose_tasks(pl, tid);
 
-	for (size_t i = 0, l = acur_size(tasks); i < l; acur_next(tasks), ++i) {
-		if (acur_finished(tasks)) {
-			acur_rewind(tasks);
+	for (size_t i = 0, l = proctal_acur_size(tasks); i < l; proctal_acur_next(tasks), ++i) {
+		if (proctal_acur_finished(tasks)) {
+			proctal_acur_rewind(tasks);
 		}
 
-		struct proctal_linux_ptrace_task *task = acur_element(tasks);
+		struct proctal_linux_ptrace_task *task = proctal_acur_element(tasks);
 
 		if (!task->running) {
 			// This task has already been stopped.
@@ -265,14 +265,14 @@ int proctal_linux_ptrace_stop(struct proctal_linux *pl, pid_t tid)
 
 int proctal_linux_ptrace_cont(struct proctal_linux *pl, pid_t tid)
 {
-	struct acur *tasks = choose_tasks(pl, tid);
+	struct proctal_acur *tasks = choose_tasks(pl, tid);
 
-	for (size_t i = 0, l = acur_size(tasks); i < l; acur_next(tasks), ++i) {
-		if (acur_finished(tasks)) {
-			acur_rewind(tasks);
+	for (size_t i = 0, l = proctal_acur_size(tasks); i < l; proctal_acur_next(tasks), ++i) {
+		if (proctal_acur_finished(tasks)) {
+			proctal_acur_rewind(tasks);
 		}
 
-		struct proctal_linux_ptrace_task *task = acur_element(tasks);
+		struct proctal_linux_ptrace_task *task = proctal_acur_element(tasks);
 
 		if (task->running) {
 			// This task is still running.
@@ -292,14 +292,14 @@ int proctal_linux_ptrace_cont(struct proctal_linux *pl, pid_t tid)
 
 int proctal_linux_ptrace_step(struct proctal_linux *pl, pid_t tid)
 {
-	struct acur *tasks = choose_tasks(pl, tid);
+	struct proctal_acur *tasks = choose_tasks(pl, tid);
 
-	for (size_t i = 0, l = acur_size(tasks); i < l; acur_next(tasks), ++i) {
-		if (acur_finished(tasks)) {
-			acur_rewind(tasks);
+	for (size_t i = 0, l = proctal_acur_size(tasks); i < l; proctal_acur_next(tasks), ++i) {
+		if (proctal_acur_finished(tasks)) {
+			proctal_acur_rewind(tasks);
 		}
 
-		struct proctal_linux_ptrace_task *task = acur_element(tasks);
+		struct proctal_linux_ptrace_task *task = proctal_acur_element(tasks);
 
 		if (task->running) {
 			// This task is running. Don't touch it.
@@ -321,15 +321,15 @@ int proctal_linux_ptrace_step(struct proctal_linux *pl, pid_t tid)
 
 pid_t proctal_linux_ptrace_wait_trap(struct proctal_linux *pl, pid_t tid)
 {
-	struct acur *tasks = choose_tasks(pl, tid);
+	struct proctal_acur *tasks = choose_tasks(pl, tid);
 
 	for (;;) {
-		for (size_t i = 0, l = acur_size(tasks); i < l; acur_next(tasks), ++i) {
-			if (acur_finished(tasks)) {
-				acur_rewind(tasks);
+		for (size_t i = 0, l = proctal_acur_size(tasks); i < l; proctal_acur_next(tasks), ++i) {
+			if (proctal_acur_finished(tasks)) {
+				proctal_acur_rewind(tasks);
 			}
 
-			struct proctal_linux_ptrace_task *task = acur_element(tasks);
+			struct proctal_linux_ptrace_task *task = proctal_acur_element(tasks);
 
 			int wstatus;
 			int wresult = waitpid(task->tid, &wstatus, WUNTRACED);
@@ -356,18 +356,18 @@ pid_t proctal_linux_ptrace_wait_trap(struct proctal_linux *pl, pid_t tid)
 
 pid_t proctal_linux_ptrace_catch_trap(struct proctal_linux *pl, pid_t tid)
 {
-	struct acur *tasks = choose_tasks(pl, tid);
+	struct proctal_acur *tasks = choose_tasks(pl, tid);
 
 	int wstatus;
 	int wresult;
 	struct proctal_linux_ptrace_task *task;
 
-	for (size_t i = 0, l = acur_size(tasks); i < l; acur_next(tasks), ++i) {
-		if (acur_finished(tasks)) {
-			acur_rewind(tasks);
+	for (size_t i = 0, l = proctal_acur_size(tasks); i < l; proctal_acur_next(tasks), ++i) {
+		if (proctal_acur_finished(tasks)) {
+			proctal_acur_rewind(tasks);
 		}
 
-		task = acur_element(tasks);
+		task = proctal_acur_element(tasks);
 
 		wresult = waitpid(task->tid, &wstatus, WUNTRACED | WNOHANG);
 

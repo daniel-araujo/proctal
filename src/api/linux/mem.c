@@ -1,16 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <darr.h>
 
+#include "api/darr/darr.h"
 #include "api/linux/mem.h"
 #include "api/linux/proc.h"
 
 static inline FILE *mem(struct proctal_linux *pl)
 {
 	if (pl->mem == NULL) {
-		const struct darr *path = proctal_linux_proc_path(pl->pid, "mem");
-		pl->mem = fopen(darr_data_const(path), "r+");
+		const struct proctal_darr *path = proctal_linux_proc_path(pl->pid, "mem");
+		pl->mem = fopen(proctal_darr_data_const(path), "r+");
 		proctal_linux_proc_path_dispose(path);
 
 		if (pl->mem == NULL) {
@@ -76,15 +76,15 @@ int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, void *dst, c
 {
 	int ret = 0;
 
-	struct darr tmp;
-	darr_init(&tmp, sizeof(char));
+	struct proctal_darr tmp;
+	proctal_darr_init(&tmp, sizeof(char));
 
-	if (!darr_resize(&tmp, size)) {
+	if (!proctal_darr_resize(&tmp, size)) {
 		proctal_error_set(&pl->p, PROCTAL_ERROR_OUT_OF_MEMORY);
 		goto exit1;
 	}
 
-	if (!proctal_linux_mem_read(pl, address, darr_data(&tmp), size)) {
+	if (!proctal_linux_mem_read(pl, address, proctal_darr_data(&tmp), size)) {
 		goto exit1;
 	}
 
@@ -92,11 +92,11 @@ int proctal_linux_mem_swap(struct proctal_linux *pl, void *address, void *dst, c
 		goto exit1;
 	}
 
-	memcpy(dst, darr_data(&tmp), size);
+	memcpy(dst, proctal_darr_data(&tmp), size);
 
 	ret = 1;
 exit1:
-	darr_deinit(&tmp);
+	proctal_darr_deinit(&tmp);
 exit0:
 	return ret;
 }

@@ -77,13 +77,13 @@ static inline int is_there_more(FILE *maps)
 	return r;
 }
 
-static inline void read_until_nl(FILE *maps, struct darr *buffer)
+static inline void read_until_nl(FILE *maps, struct proctal_darr *buffer)
 {
-	darr_resize(buffer, 255);
+	proctal_darr_resize(buffer, 255);
 
 	int ch;
 	size_t i = 0;
-	char *bufferbuf = darr_data(buffer);
+	char *bufferbuf = proctal_darr_data(buffer);
 
 	for (;;) {
 		ch = fgetc(maps);
@@ -99,34 +99,34 @@ static inline void read_until_nl(FILE *maps, struct darr *buffer)
 
 		bufferbuf[i++] = ch;
 
-		if (i > darr_size(buffer)) {
-			darr_grow(buffer, darr_size(buffer));
-			bufferbuf = darr_data(buffer);
+		if (i > proctal_darr_size(buffer)) {
+			proctal_darr_grow(buffer, proctal_darr_size(buffer));
+			bufferbuf = proctal_darr_data(buffer);
 		}
 	}
 
-	darr_resize(buffer, i + 1);
-	bufferbuf = darr_data(buffer);
+	proctal_darr_resize(buffer, i + 1);
+	bufferbuf = proctal_darr_data(buffer);
 	bufferbuf[i] = '\0';
 }
 
 int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *region, struct proctal_linux_proc_maps_region_check *check)
 {
 	if (check->mask & PROCTAL_REGION_STACK) {
-		if (darr_size(&region->name) == 0 || strncmp(darr_data(&region->name), "[stack", 6) == 0) {
+		if (proctal_darr_size(&region->name) == 0 || strncmp(proctal_darr_data(&region->name), "[stack", 6) == 0) {
 			return 0;
 		}
 	}
 
 	if (check->mask & PROCTAL_REGION_HEAP) {
-		if (darr_size(&region->name) == 0 || strcmp(darr_data(&region->name), "[heap]") == 0) {
+		if (proctal_darr_size(&region->name) == 0 || strcmp(proctal_darr_data(&region->name), "[heap]") == 0) {
 			return 0;
 		}
 	}
 
 	if (check->mask & PROCTAL_REGION_PROGRAM_CODE) {
-		const struct darr *program_path = proctal_linux_program_path(check->pid);
-		int same_path = strcmp(darr_data(&region->name), darr_data_const(program_path)) == 0;
+		const struct proctal_darr *program_path = proctal_linux_program_path(check->pid);
+		int same_path = strcmp(proctal_darr_data(&region->name), proctal_darr_data_const(program_path)) == 0;
 		proctal_linux_program_path_dispose(program_path);
 
 		if (same_path && region->execute) {
@@ -143,7 +143,7 @@ int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *
 			return 0;
 		}
 
-		if (darr_size(&region->name) && strcmp(darr_data(&region->name), "[vvar]") == 0) {
+		if (proctal_darr_size(&region->name) && strcmp(proctal_darr_data(&region->name), "[vvar]") == 0) {
 			// Can't seem to read from this region regardless of it
 			// being readable.
 			return 0;
@@ -167,8 +167,8 @@ int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *
 
 int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid)
 {
-	const struct darr *path = proctal_linux_proc_path(pid, "maps");
-	FILE *file = fopen(darr_data_const(path), "r");
+	const struct proctal_darr *path = proctal_linux_proc_path(pid, "maps");
+	FILE *file = fopen(proctal_darr_data_const(path), "r");
 	proctal_linux_proc_path_dispose(path);
 
 	if (file == NULL) {
@@ -176,7 +176,7 @@ int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid
 	}
 
 	maps->file = file;
-	darr_init(&maps->current.name, sizeof(char));
+	proctal_darr_init(&maps->current.name, sizeof(char));
 
 	return 1;
 }
@@ -184,7 +184,7 @@ int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid
 void proctal_linux_proc_maps_close(struct proctal_linux_proc_maps *maps)
 {
 	fclose(maps->file);
-	darr_deinit(&maps->current.name);
+	proctal_darr_deinit(&maps->current.name);
 }
 
 struct proctal_linux_proc_maps_region *proctal_linux_proc_maps_read(struct proctal_linux_proc_maps *maps)
@@ -211,7 +211,7 @@ struct proctal_linux_proc_maps_region *proctal_linux_proc_maps_read(struct proct
 		read_until_nl(maps->file, &maps->current.name);
 	} else {
 		skip_until_nl(maps->file);
-		darr_resize(&maps->current.name, 0);
+		proctal_darr_resize(&maps->current.name, 0);
 	}
 
 	skip_nl(maps->file);

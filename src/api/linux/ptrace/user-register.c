@@ -8,8 +8,8 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/ptrace.h>
-#include <darr.h>
 
+#include "api/darr/darr.h"
 #include "api/linux/proctal.h"
 #include "api/linux/ptrace/internal.h"
 #include "api/linux/ptrace/implementation.h"
