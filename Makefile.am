@@ -255,6 +255,8 @@ include_HEADERS += src/api/include/proctal.h
 libproctal_la_SOURCES = \
 	src/api/darr/darr.h \
 	src/api/darr/darr.c \
+	src/api/darr/memory-support.h \
+	src/api/darr/memory-support.c \
 	src/api/acur/acur.h \
 	src/api/acur/acur.c \
 	src/api/implementation.h \
@@ -378,6 +380,37 @@ src/api/acur/acur.h: $(srcdir)/acur/src/acur.h
 src/api/acur/acur.c: $(srcdir)/acur/src/acur.c src/api/acur/acur.h
 	$(AM_V_GEN)$(SED) 's/acur_/proctal_acur_/g' $^ > $@
 	$(AM_V_GEN)$(SED) -i 's/struct acur/struct proctal_acur/g' $@
+
+TESTS += tests/api/darr/realloc/null-argument
+check_PROGRAMS += tests/api/darr/realloc/null-argument
+tests_api_darr_realloc_null_argument_SOURCES = src/api/darr/tests/realloc/null-argument.c
+tests_api_darr_realloc_null_argument_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_darr_realloc_null_argument_LDADD = libproctal.la tests/api/darr/realloc/libblocksize.a
+
+TESTS += tests/api/darr/realloc/decrease-size-new-block
+check_PROGRAMS += tests/api/darr/realloc/decrease-size-new-block
+tests_api_darr_realloc_decrease_size_new_block_SOURCES = src/api/darr/tests/realloc/decrease-size-new-block.c
+tests_api_darr_realloc_decrease_size_new_block_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_darr_realloc_decrease_size_new_block_LDADD = libproctal.la tests/api/darr/realloc/libblocksize.a
+
+TESTS += tests/api/darr/realloc/decrease-size-same-block
+check_PROGRAMS += tests/api/darr/realloc/decrease-size-same-block
+tests_api_darr_realloc_decrease_size_same_block_SOURCES = src/api/darr/tests/realloc/decrease-size-same-block.c
+tests_api_darr_realloc_decrease_size_same_block_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_darr_realloc_decrease_size_same_block_LDADD = libproctal.la tests/api/darr/realloc/libblocksize.a
+
+TESTS += tests/api/darr/realloc/increase-size-new-block
+check_PROGRAMS += tests/api/darr/realloc/increase-size-new-block
+tests_api_darr_realloc_increase_size_new_block_SOURCES = src/api/darr/tests/realloc/increase-size-new-block.c
+tests_api_darr_realloc_increase_size_new_block_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_darr_realloc_increase_size_new_block_LDADD = libproctal.la tests/api/darr/realloc/libblocksize.a
+
+# Realloc test utilities
+noinst_LIBRARIES += tests/api/darr/realloc/libblocksize.a
+tests_api_darr_realloc_libblocksize_a_SOURCES = \
+	src/api/darr/tests/realloc/util/block-size.h \
+	src/api/darr/tests/realloc/util/block-size.c
+tests_api_darr_realloc_libblocksize_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 
 # Swbuf module.
