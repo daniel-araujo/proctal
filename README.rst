@@ -4,9 +4,8 @@
 
 https://proctal.io
 
-Proctal is an application software that offers a command line interface (CLI)
-and an abstract programming interface (API) to access the inner workings of
-programs on Linux.
+Proctal is a tool for modding programs on Linux through a command line
+interface (CLI) and an abstract programming interface (API).
 
 **Features:**
 
