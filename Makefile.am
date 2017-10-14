@@ -590,6 +590,7 @@ darr/libdarr.a:
 
 darr-dist-hook:
 	cp -r $(srcdir)/darr $(distdir)
+	rm -rf $(distdir)/darr/autom4te.cache
 	rm -rf $(distdir)/darr/.git
 
 
@@ -604,4 +605,5 @@ acur/libacur.a:
 
 acur-dist-hook:
 	cp -r $(srcdir)/acur $(distdir)
+	rm -rf $(distdir)/acur/autom4te.cache
 	rm -rf $(distdir)/acur/.git
