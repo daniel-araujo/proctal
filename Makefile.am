@@ -16,7 +16,8 @@ clean-local: darr-clean acur-clean
 dist-hook: darr-dist-hook acur-dist-hook
 
 
-# Cli tool.
+# CLI
+###############################################################################
 bin_PROGRAMS += proctal
 dist_man_MANS += src/cli/proctal.1
 EXTRA_DIST += src/cli/yuck/args.yuck.m4 src/cli/yuck/args.yuck src/cli/yuck/args.yucc
@@ -252,7 +253,8 @@ src/cli/proctal.1: src/cli/yuck/args.yuck
 	$(AM_V_GEN)$(YUCK) genman $^ -o $@
 
 
-# C library.
+# API
+###############################################################################
 CLEANFILES += \
 	src/api/darr/darr.h \
 	src/api/darr/darr.c \
@@ -428,7 +430,8 @@ tests_api_darr_realloc_libblocksize_a_SOURCES = \
 tests_api_darr_realloc_libblocksize_a_CFLAGS = $(PROCTAL_CFLAGS)
 
 
-# Swbuf module.
+# Swbuf
+###############################################################################
 noinst_LIBRARIES += libswbuf.a
 libswbuf_a_SOURCES = \
 	src/swbuf/swbuf.h \
@@ -466,7 +469,8 @@ tests_swbuf_size_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_size_LDADD = libswbuf.a
 
 
-# Chunk module.
+# Chunk
+###############################################################################
 noinst_LIBRARIES += libchunk.a
 libchunk_a_SOURCES = \
 	src/chunk/chunk.h \
@@ -492,7 +496,8 @@ tests_chunk_finished_CFLAGS = $(PROCTAL_CFLAGS)
 tests_chunk_finished_LDADD = libchunk.a
 
 
-# Magic module.
+# Magic
+###############################################################################
 EXTRA_DIST += src/magic/magic.h
 
 TESTS += tests/magic/array-size
@@ -511,7 +516,8 @@ tests_magic_deref_SOURCES = src/magic/tests/deref.c
 tests_magic_deref_CFLAGS = $(PROCTAL_CFLAGS)
 
 
-# Otrap module.
+# Otrap
+###############################################################################
 noinst_LIBRARIES += libotrap.a
 libotrap_a_SOURCES = \
 	src/otrap/otrap.h \
@@ -567,7 +573,8 @@ tests_otrap_skip_nothing_CFLAGS = $(PROCTAL_CFLAGS)
 tests_otrap_skip_nothing_LDADD = libotrap.a
 
 
-# Pq module.
+# Pq
+###############################################################################
 noinst_LIBRARIES += libpq.a
 libpq_a_SOURCES = \
 	src/pq/pq.h \
@@ -594,7 +601,8 @@ endif
 endif
 
 
-# Darr.
+# Darr
+###############################################################################
 .PHONY: darr-dist-hook darr-clean darr/libdarr.a
 
 darr-clean:
@@ -609,7 +617,8 @@ darr-dist-hook:
 	rm -rf $(distdir)/darr/.git
 
 
-# Acur.
+# Acur
+###############################################################################
 .PHONY: acur-dist-hook acur-clean acur/libacur.a
 
 acur-clean:
