@@ -15,14 +15,16 @@ int main(void)
 		} \
 	} while (0);
 
-	float float_value = 2.0;
-	float *float_pointer = &float_value;
+	union {
+		float f;
+		int i;
+	} value;
 
-	// Using a pointer.
+	value.f = 2.0;
+	CHECK(&value, int, 0x40000000);
+
+	float *float_pointer = &value.f;
 	CHECK(float_pointer, int, 0x40000000);
-
-	// Using an address.
-	CHECK(&float_value, int, 0x40000000);
 
 	return 0;
 
