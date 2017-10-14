@@ -101,19 +101,27 @@ libcliassembler_a_SOURCES = \
 	src/cli/assembler/interface.c
 
 if PROCTAL_CAPSTONE
+
 libcliassembler_a_SOURCES += \
 	src/cli/assembler/implementation/capstone-keystone/with-capstone.c
+
 else
+
 libcliassembler_a_SOURCES += \
 	src/cli/assembler/implementation/capstone-keystone/without-capstone.c
+
 endif
 
 if PROCTAL_KEYSTONE
+
 libcliassembler_a_SOURCES += \
 	src/cli/assembler/implementation/capstone-keystone/with-keystone.c
+
 else
+
 libcliassembler_a_SOURCES += \
 	src/cli/assembler/implementation/capstone-keystone/without-keystone.c
+
 endif
 
 libcliassembler_a_CFLAGS = $(PROCTAL_CFLAGS)
@@ -278,6 +286,7 @@ libproctal_la_SOURCES = \
 	src/api/init.c
 
 if PROCTAL_PLATFORM_LINUX
+
 libproctal_la_SOURCES += \
 	src/api/linux/implementation.c \
 	src/api/linux/address.c \
@@ -312,6 +321,7 @@ tests_api_linux_proc_path_size_CFLAGS = $(PROCTAL_CFLAGS)
 tests_api_linux_proc_path_size_LDADD = libproctal.la
 
 if PROCTAL_CPU_ARCHITECTURE_X86_64
+
 libproctal_la_SOURCES += \
 	src/api/linux/ptrace/x86_64/instruction-pointer.c \
 	src/api/linux/ptrace/x86_64/register.c \
@@ -327,7 +337,9 @@ libproctal_la_SOURCES += \
 
 libproctal_la_SOURCES += \
 	src/api/linux/watch/x86_64/breakpoint.c
+
 else
+
 libproctal_la_SOURCES += \
 	src/api/linux/ptrace/unimplemented.c
 
@@ -336,6 +348,7 @@ libproctal_la_SOURCES += \
 
 libproctal_la_SOURCES += \
 	src/api/linux/watch/unimplemented.c
+
 endif
 
 else
@@ -357,9 +370,11 @@ endif
 endif
 
 if PROCTAL_CPU_ARCHITECTURE_X86_64
+
 libproctal_la_SOURCES += \
 	src/api/x86_64/dr.c \
 	src/api/x86_64/dr.h
+
 endif
 
 libproctal_la_CFLAGS = $(PROCTAL_CFLAGS)
