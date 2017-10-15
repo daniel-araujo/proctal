@@ -62,7 +62,7 @@ define(`TYPE_OPTIONS', `
                         intel
 ')dnl
 Usage: proctal
-Accesses the inner workings of programs.
+Modding programs.
 
 
   -h, --help            Display help information and exit. If a command is
