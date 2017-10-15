@@ -8,6 +8,82 @@
 #include "magic/magic.h"
 #include "pq/pq.h"
 
+/*
+ * Tracks addresses that matched.
+ */
+struct matches {
+	// Actual storage for addresses.
+	struct darr addresses;
+
+	// Number of addresses stored.
+	size_t count;
+};
+
+/*
+ * Initializes the structure that keeps track of addresses.
+ *
+ * Returns 0 on success, 1 when out of memory.
+ */
+static inline int matches_init(struct matches *matches)
+{
+	darr_init(&matches->addresses, sizeof(void *));
+
+	if (!darr_resize(&matches->addresses, 42)) {
+		darr_deinit(&matches->addresses);
+		return 1;
+	}
+
+	return 0;
+}
+
+/*
+ * Deinitializes the structure.
+ */
+static inline void matches_deinit(struct matches *matches)
+{
+	darr_deinit(&matches->addresses);
+}
+
+/*
+ * Checks whether the given address has already been seen.
+ */
+static inline int matches_contains(struct matches *matches, void *address)
+{
+	// TODO: Should use a data structure with better look up performance.
+
+	for (size_t i = 0; i < matches->count; ++i) {
+		void **candidate = darr_element(&matches->addresses, i);
+
+		if (address == *candidate) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+/*
+ * Marks an address as seen.
+ *
+ * Returns 0 on success, 1 when out of memory.
+ */
+static inline int matches_register(struct matches *matches, void *address)
+{
+	matches->count += 1;
+
+	if (matches->count > darr_size(&matches->addresses)) {
+		// We're out of space. Let's double it.
+		if (!darr_grow(&matches->addresses, matches->count)) {
+			return 1;
+		}
+	}
+
+	void **e = darr_element(&matches->addresses, matches->count - 1);
+	*e = address;
+
+	return 0;
+}
+
 int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 {
 	int ret = 1;
@@ -43,16 +119,21 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_write_set(p, arg->write);
 	proctal_watch_execute_set(p, arg->execute);
 
-	// TODO: Should use a data structure with better look up performance.
-	struct darr matches;
-	darr_init(&matches, sizeof(void *));
+	struct matches matches;
+	if (arg->unique) {
+		switch (matches_init(&matches)) {
+		case 0:
+			break;
 
-	if (!darr_resize(&matches, 42)) {
-		fprintf(stderr, "Out of memory.\n");
-		goto exit3;
+		case 1:
+			fprintf(stderr, "Out of memory.\n");
+			goto exit2;
+
+		default:
+			fprintf(stderr, "Unexpected failure.\n");
+			goto exit2;
+		}
 	}
-
-	size_t match_count = 0;
 
 	proctal_watch_start(p);
 
@@ -62,9 +143,9 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	}
 
 	while (!pq_check()) {
-		void *addr;
+		void *address;
 
-		if (!proctal_watch_next(p, &addr)) {
+		if (!proctal_watch_next(p, &address)) {
 			switch (proctal_error(p)) {
 			case 0:
 				continue;
@@ -82,33 +163,25 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		}
 
 		if (arg->unique) {
-			int match = 0;
-
-			for (size_t i = 0; i < match_count; ++i) {
-				void **prev = darr_element(&matches, i);
-
-				if (addr == *prev) {
-					match = 1;
-					break;
-				}
-			}
-
-			if (match) {
+			if (matches_contains(&matches, address)) {
 				continue;
 			} else {
-				match_count += 1;
+				switch (matches_register(&matches, address)) {
+				case 0:
+					break;
 
-				if (match_count > darr_size(&matches)) {
-					// We're out of space. Let's double it.
-					darr_resize(&matches, darr_size(&matches) * 2);
+				case 1:
+					fprintf(stderr, "Out of memory.\n");
+					goto exit4;
+
+				default:
+					fprintf(stderr, "Unexpected failure.\n");
+					goto exit4;
 				}
-
-				void **e = darr_element(&matches, match_count - 1);
-				*e = addr;
 			}
 		}
 
-		cli_print_address(addr);
+		cli_print_address(address);
 		printf("\n");
 	}
 
@@ -116,7 +189,9 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 exit4:
 	proctal_watch_stop(p);
 exit3:
-	darr_deinit(&matches);
+	if (arg->unique) {
+		matches_deinit(&matches);
+	}
 exit2:
 	proctal_close(p);
 exit1:
