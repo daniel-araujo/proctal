@@ -19,10 +19,12 @@ struct matches {
 	size_t count;
 };
 
+#define MATCHES_ERROR_OUT_OF_MEMORY 1
+
 /*
  * Initializes the structure that keeps track of addresses.
  *
- * Returns 0 on success, 1 when out of memory.
+ * Returns 0 on success, an error code on failure.
  */
 static inline int matches_init(struct matches *matches)
 {
@@ -30,7 +32,7 @@ static inline int matches_init(struct matches *matches)
 
 	if (!darr_resize(&matches->addresses, 42)) {
 		darr_deinit(&matches->addresses);
-		return 1;
+		return MATCHES_ERROR_OUT_OF_MEMORY;
 	}
 
 	return 0;
@@ -65,7 +67,7 @@ static inline int matches_contains(struct matches *matches, void *address)
 /*
  * Marks an address as seen.
  *
- * Returns 0 on success, 1 when out of memory.
+ * Returns 0 on success, an error code on failure.
  */
 static inline int matches_register(struct matches *matches, void *address)
 {
@@ -74,7 +76,7 @@ static inline int matches_register(struct matches *matches, void *address)
 	if (matches->count > darr_size(&matches->addresses)) {
 		// We're out of space. Let's double it.
 		if (!darr_grow(&matches->addresses, matches->count)) {
-			return 1;
+			return MATCHES_ERROR_OUT_OF_MEMORY;
 		}
 	}
 
@@ -82,6 +84,27 @@ static inline int matches_register(struct matches *matches, void *address)
 	*e = address;
 
 	return 0;
+}
+
+/*
+ * Handles an error from matches.
+ *
+ * Returns 1 when handled, 0 when nothing done.
+ */
+static inline int handle_matches_error(int code)
+{
+	switch (code) {
+	case 0:
+		return 0;
+
+	case MATCHES_ERROR_OUT_OF_MEMORY:
+		fprintf(stderr, "Out of memory.\n");
+		return 1;
+
+	default:
+		fprintf(stderr, "Unexpected failure.\n");
+		return 1;
+	}
 }
 
 int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
@@ -121,16 +144,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 	struct matches matches;
 	if (arg->unique) {
-		switch (matches_init(&matches)) {
-		case 0:
-			break;
-
-		case 1:
-			fprintf(stderr, "Out of memory.\n");
-			goto exit2;
-
-		default:
-			fprintf(stderr, "Unexpected failure.\n");
+		if (handle_matches_error(matches_init(&matches))) {
 			goto exit2;
 		}
 	}
@@ -166,16 +180,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 			if (matches_contains(&matches, address)) {
 				continue;
 			} else {
-				switch (matches_register(&matches, address)) {
-				case 0:
-					break;
-
-				case 1:
-					fprintf(stderr, "Out of memory.\n");
-					goto exit4;
-
-				default:
-					fprintf(stderr, "Unexpected failure.\n");
+				if (handle_matches_error(matches_register(&matches, address))) {
 					goto exit4;
 				}
 			}
