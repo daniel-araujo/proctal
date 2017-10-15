@@ -1,9 +1,9 @@
-define(`PID_ARGUMENT', `
-  -p, --pid=PID         Process ID (PID) of a program.
+define(`PID_OPTION', `
+  --pid=PID             Process ID (PID) of a program.
 ')dnl
 define(`TYPE_OPTIONS', `
-  -t, --type=TYPE
-                        Type of value. If omitted, TYPE is implicitly byte.
+  --type=TYPE
+                        Type of value. By default TYPE is byte.
                         TYPE can be:
                         byte
                         integer
@@ -12,13 +12,14 @@ define(`TYPE_OPTIONS', `
                         address
                         instruction
   --integer-endianness=ENDIANNESS
-                        If type is integer, this determines the order of bytes.
-                        By default ENDIANNESS is the same that the system uses.
+                        If type is integer, determines the byte order in
+                        memory. By default ENDIANNESS is the same that the
+                        system uses.
                         ENDIANNESS can be:
                         little
                         big
   --integer-bits=SIZE
-                        If type is integer, this determines the number of bits
+                        If type is integer, determines the number of bits
                         stored in memory. By default SIZE is 8.
                         SIZE can be:
                         8
@@ -26,27 +27,26 @@ define(`TYPE_OPTIONS', `
                         32
                         64
   --integer-sign=SIGN
-                        If type is integer, this determines what signing
-                        notation is used to distinguish negative from positive
-                        numbers. By default SIGN is twos-complement.
+                        If type is integer, determines what signing notation is
+                        used to distinguish negative from positive numbers. By
+                        default SIGN is twos-complement.
                         SIGN can be:
                         unsigned
                         twos-complement
   --text-encoding=ENCODING
-                        If type is text, this determines the encoding.
-                        By default ENCODING is ascii.
+                        If type is text, determines the encoding. By default
+                        ENCODING is ascii.
                         ENCODING can be:
                         ascii
   --ieee754-precision=PRECISION
-                        If type is ieee754, this determines the precision of
-                        the floating point number. By default PRECISION is
-                        single.
+                        If type is ieee754, determines the precision of the
+                        floating point number. By default PRECISION is single.
                         PRECISION can be:
                         single
                         double
                         extended
   --instruction-architecture=ARCHITECTURE
-                        If type is instruction, this sets the architecture.
+                        If type is instruction, determines the architecture.
                         By default ARCHITECTURE is set to be the native
                         architecture of the system if supported.
                         ARCHITECTURE can be:
@@ -55,8 +55,8 @@ define(`TYPE_OPTIONS', `
                         arm
                         aarch64
   --instruction-syntax=SYNTAX
-                        If type is instruction, this sets the syntax.
-                        By default SYNTAX is intel.
+                        If type is instruction, determines the syntax. By
+                        default SYNTAX is intel.
                         SYNTAX can be:
                         att
                         intel
@@ -72,47 +72,40 @@ Modding programs.
 
 
 Usage: proctal read
-Reads values.
+Reads values from memory.
 
-Will output the value found at the given address.
-
-If the --array option is given, it will read values that come after the given
-address.
-
-You can optionally prefix the values with their respective addresses by passing
-the --show-address option.
+The --array option makes the command read values in consecutive addresses.
+With the --show-address option, the command will additionally print the
+respective address of a value.
 
 Examples:
-  Reading single byte
+  Reading 1 byte
         proctal read --pid=12345 --address=1c09346
 
-  Reading multiple bytes
+  Reading 12 bytes
         proctal read --pid=12345 --address=1c09346 --array=12
 
   Reading IEEE754 floating point number
         proctal read --pid=12345 --address=1c09346 --type=ieee754
 
 
-  PID_ARGUMENT
-  -a, --address=ADDRESS Start address of values to read.
+  PID_OPTION
+  --address=ADDRESS     Address to read from.
   --freeze              Whether to keep the program frozen while reading.
-  --array=SIZE          Makes the command read SIZE values in adjacent memory
-                        addresses. By default SIZE is equal to 1.
+  --array=SIZE          Read SIZE values in consecutive addresses. By default
+                        SIZE is 1.
   TYPE_OPTIONS
-  --show-address        Additionally prints the address before the value.
+  --show-address        Additionally prints the respective address of a value.
                         As a side effect, all values will be separated by new
                         lines.
-  --show-bytes
-                        Additionally prints a sequence of numbers in
+  --show-bytes          Additionally prints a sequence of numbers in
                         hexadecimal that represent the bytes of the value in
-                        memory, from the smallest address to the largest.
+                        memory, from the smallest to the largest address.
 
 
 
 Usage: proctal write VALUES...
-Writes values.
-
-Will write the given values starting at the given address.
+Writes values to memory.
 
 Examples:
   Writing 99 to address 1c09346
@@ -131,16 +124,15 @@ Examples:
         proctal write --pid=12345 --address=1c09346 --type=ieee754 99.999999
 
 
-  PID_ARGUMENT
-  -a, --address=ADDRESS Start address where to begin writing values.
+  PID_OPTION
+  --address=ADDRESS     Address to write to.
   --freeze              Whether to keep the program frozen while writing.
-  --array=SIZE          Makes the command write SIZE values in adjacent
-                        addresses. If less than SIZE values are provided, then
-                        when in need of more values it will cycle back through
-                        the provided values. This behavior allows you to
-                        specify a single value and have it repeatedly written
-                        SIZE times. If SIZE is not provided, it will be set to
-                        the number of given values.
+  --array=SIZE          Write SIZE values in consecutive addresses. If less
+                        than SIZE values are provided, then when in need of
+                        more values the command will cycle through the provided
+                        values. This behavior allows you to specify a single
+                        value and have it repeatedly written SIZE times. By
+                        default SIZE is set to the number of given values.
   --repeat              Whether to repeatedly write the same values to the
                         address until the command is interrupted by the SIGINT
                         signal.
@@ -156,12 +148,11 @@ Examples:
 Usage: proctal search
 Searches for values in memory.
 
-Outputs a list of addresses and their current values that match the given
+Prints an address and the current value of every match that passes the given
 filters.
 
-You can additionally filter against the results of a previous search by passing
-the --input option which expects the output of the previous command to be
-streamed to the standard input stream.
+By passing the --input option the command will read the output of a previous
+run and match against the given filters.
 
 Examples:
   Searching for all bytes that equal 12
@@ -173,7 +164,7 @@ Examples:
   Searching for all floating point values in memory
         proctal search --pid=12345 --type=ieee754
 
-  Filtering against the search results of a previous search
+  Searching for values that increased from the results of a previous search
         proctal search --pid=12345 --eq 12 > previous-search-results
         proctal search --pid=12345 --increased < previous-search-results
 
@@ -181,37 +172,37 @@ Examples:
         proctal search --pid=12345 -x --eq 12
 
 
-  PID_ARGUMENT
-  -i, --input           Reads the output of a previous scan of the same type
-                        from standard input.
+  PID_OPTION
+  --input               Matches against the output of a previous run of the
+                        same type.
   --freeze              Whether to keep the program frozen while searching.
   TYPE_OPTIONS
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
-  --eq=VAL              Equal to VAL
-  --ne=VAL              Not equal to VAL
-  --gt=VAL              Greater than VAL
-  --gte=VAL             Greater than or equal to VAL
-  --lt=VAL              Less than VAL
-  --lte=VAL             Less than or equal to VAL
-  --inc=VAL             Incremented by VAL
-  --inc-up-to=VAL       Incremented up to and including VAL
-  --dec=VAL             Decremented by VAL
-  --dec-up-to=VAL       Decremented up to and including VAL
-  --changed             Value from previous search changed
-  --unchanged           Value from previous search did not change
-  --increased           Value from previous search increased
-  --decreased           Value from previous search decreased
+  --eq=VALUE            Equal to VALUE.
+  --ne=VALUE            Not equal to VALUE.
+  --gt=VALUE            Greater than VALUE.
+  --gte=VALUE           Greater than or equal to VALUE.
+  --lt=VALUE            Less than VALUE.
+  --lte=VALUE           Less than or equal to VALUE.
+  --inc=VALUE           Incremented by VALUE.
+  --inc-up-to=VALUE     Incremented up to and including VALUE.
+  --dec=VALUE           Decremented by VALUE.
+  --dec-up-to=VALUE     Decremented up to and including VALUE.
+  --changed             Value changed.
+  --unchanged           Value did not change.
+  --increased           Value increased.
+  --decreased           Value decreased.
 
 
 
 Usage: proctal pattern PATTERN
 Searches for patterns in memory.
 
-Outputs the starting address of each match.
+Prints the address of each match.
 
-The following patterns are available:
+Available patterns:
 
  00 to FF - Exact byte value
 
@@ -233,7 +224,7 @@ Examples:
         proctal pattern --pid=12345 --program-code "48 83 C0 01"
 
 
-  PID_ARGUMENT
+  PID_OPTION
   --freeze              Whether to keep the program frozen while searching.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
@@ -245,25 +236,25 @@ Examples:
 Usage: proctal freeze
 Freezes program execution.
 
-The program will be frozen as long as the command is running.
+The program will be frozen for as long as the command is running.
 
 Examples:
   Pause program execution
         proctal freeze --pid=12345
 
 
-  PID_ARGUMENT
+  PID_OPTION
 
 
 
 Usage: proctal watch
 Detects when a memory address is accessed.
 
-A way to get the value of the instruction pointer the moment after a memory
-address is read, written or executed.
+Prints the memory address of the instruction to be executed the moment after a
+memory address is read, written or executed.
 
-Note that the instruction pointer may not actually be pointing at the
-instruction that actually accessed the memory address.
+Because detection only happens after the fact, the detected memory address may
+not be of the instruction that actually accessed the given memory address.
 
 Examples:
   Watching for any instruction reading or writing to 1c09346
@@ -273,8 +264,8 @@ Examples:
         proctal watch --pid=12345 --address=1c09346 -x
 
 
-  PID_ARGUMENT
-  -a, --address=ADDRESS Address to watch.
+  PID_OPTION
+  --address=ADDRESS     Address to watch.
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.
@@ -287,12 +278,11 @@ Executes arbitrary code.
 
 The given instructions will be embedded at some place in memory and executed in
 a new stack frame in the context of the main thread. The other threads will be
-paused. Your code is free to modify any registers because they will be restored
-to their original values. Control will be given back to the program after the
-last instruction is executed.
+paused. Control will be given back to the program after the last instruction is
+executed. The stack frame will be destroyed and the CPU registers will be
+restored.
 
-The instructions are expected to be passed through standard input and cannot
-rely on where they will be placed in memory.
+The instructions cannot rely on where they will be placed in memory.
 
 Examples:
   Executing instructions from an assembly file
@@ -302,14 +292,14 @@ Examples:
         proctal execute --pid=12345 --format=bytecode < code.bin
 
 
-  PID_ARGUMENT
+  PID_OPTION
   --format=FORMAT       Input format. By default FORMAT is assembly.
                         FORMAT can be:
                         assembly
                         bytecode
   --assembly-architecture=ARCHITECTURE
-                        If type is instruction, this sets the architecture.
-                        By default ARCHITECTURE is set to be the native
+                        If format is assembly, determines the architecture. By
+                        default ARCHITECTURE is set to be the native
                         architecture of the system if supported.
                         ARCHITECTURE can be:
                         x86
@@ -317,8 +307,7 @@ Examples:
                         arm
                         aarch64
   --assembly-syntax=SYNTAX
-                        If type is architecture, this determines the syntax
-                        used for assembly.
+                        If format is assembly, determines the syntax.
                         By default SYNTAX is intel.
                         SYNTAX can be:
                         att
@@ -329,11 +318,10 @@ Examples:
 Usage: proctal allocate SIZE
 Allocates memory.
 
-Will output the start address of an allocated chunk of memory with at least
-SIZE bytes.
+Will print the address of a newly allocated block of memory with the capacity
+to store at least SIZE bytes.
 
-When you no longer need it, you should deallocate it with the deallocate
-command.
+Deallocate the block with the deallocate command.
 
 Examples:
   Allocating 8 bytes
@@ -343,7 +331,7 @@ Examples:
         proctal allocate --pid=12345 -rx 8
 
 
-  PID_ARGUMENT
+  PID_OPTION
   -r, --read            Read permission.
   -w, --write           Write permission.
   -x, --execute         Execute permission.
@@ -353,31 +341,32 @@ Examples:
 Usage: proctal deallocate ADDRESS
 Deallocates memory.
 
-Should only be used to deallocate memory allocated by the allocate command.
+Takes the address of a block of memory allocated by the allocate command and
+deallocates it.
 
 Examples:
   Deallocating memory starting at 7fbf7b6b2000
         proctal deallocate --pid=12345 7fbf7b6b2000
 
 
-  PID_ARGUMENT
+  PID_OPTION
 
 
 
 Usage: proctal measure VALUES...
 Measure size of values.
 
-If you don't know how much space the values you want to write would take, you
-can use this command to measure them.
+Let's you measure how many bytes a value, or multiple values, would take up in
+memory.
 
 Examples:
   Measuring how many bytes a call instruction would take
         proctal measure --address=1c09346 --type=instruction "call 0x5"
 
 
-  -a, --address=ADDRESS Address where the first value would reside in memory.
-  --array=SIZE          Emulates the same behavior described in the write
-                        command.
+  --address=ADDRESS     Address where the values would be in memory.
+  --array=SIZE          Simulates the same behavior described for the --array
+                        option for the write command.
   TYPE_OPTIONS
 
 
@@ -385,7 +374,7 @@ Examples:
 Usage: proctal dump
 Dumps memory.
 
-Will output contents in memory.
+Will print the contents in memory.
 
 Examples:
   Dumping everything in memory to a file
@@ -398,7 +387,7 @@ Examples:
 	proctal dump --pid=12345 -x > dump
 
 
-  PID_ARGUMENT
+  PID_OPTION
   --freeze              Whether to keep the program frozen while dumping.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
