@@ -6,12 +6,13 @@
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg)
 {
+	int ret = 1;
+
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_close(p);
-		return 1;
+		goto exit1;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -21,8 +22,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-			proctal_close(p);
-			return 1;
+			goto exit1;
 		}
 	}
 
@@ -44,13 +44,7 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 
 			if (proctal_error(p)) {
 				cli_print_proctal_error(p);
-
-				if (arg->freeze) {
-					proctal_unfreeze(p);
-				}
-
-				proctal_close(p);
-				return 1;
+				goto exit2;
 			}
 
 			address += size;
@@ -61,11 +55,13 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 		}
 	} while (arg->repeat);
 
+	ret = 0;
+exit2:
 	if (arg->freeze) {
 		proctal_unfreeze(p);
 	}
-
+exit1:
 	proctal_close(p);
-
-	return 0;
+exit0:
+	return ret;
 }
