@@ -92,6 +92,11 @@ static inline void *align_address(void *address, size_t align)
 	return (void *) ((char *) address + offset);
 }
 
+/*
+ * Matches against the contents in memory.
+ *
+ * Returns 0 on failure, 1 on success.
+ */
 static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 {
 	int ret = 0;
@@ -103,8 +108,6 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	size_t size = cli_val_sizeof(value);
 	size_t align = cli_val_alignof(value);
-
-	proctal_scan_region_mask_set(p, 0);
 
 	proctal_scan_region_start(p);
 
@@ -204,6 +207,96 @@ exit0:
 	return ret;
 }
 
+#define PARSE_INPUT_ERROR_INVALID_ADDRESS 2
+#define PARSE_INPUT_ERROR_INVALID_VALUE 3
+
+/*
+ * Parses input in the same format that this command would have printed.
+ *
+ * The standard input stream will be consumed up to the first new line
+ * character.
+ *
+ * Returns 0 on success, an error code on failure.
+ *
+ * If the error code is PARSE_INPUT_ERROR_INVALID_VALUE, the address can be
+ * assumed to have been parsed correctly.
+ */
+static inline int parse_input(cli_val address, cli_val value)
+{
+	if (!cli_val_scan(address, stdin)) {
+		cli_scan_skip_until_chars(stdin, "\n");
+		return PARSE_INPUT_ERROR_INVALID_ADDRESS;
+	}
+
+	cli_scan_skip_chars(stdin, " ");
+
+	if (!cli_val_scan(value, stdin)) {
+		cli_scan_skip_until_chars(stdin, "\n");
+		return PARSE_INPUT_ERROR_INVALID_VALUE;
+	}
+
+	return 0;
+}
+
+/*
+ * Handles an input error.
+ *
+ * Returns 1 if it handled, 0 if it did nothing.
+ */
+static inline int handle_parse_input_error(int code, cli_val address)
+{
+	switch (code) {
+	case 0:
+		return 0;
+
+	case PARSE_INPUT_ERROR_INVALID_ADDRESS:
+		fprintf(stderr, "Failed to read address.\n");
+		return 1;
+
+	case PARSE_INPUT_ERROR_INVALID_VALUE:
+		fprintf(stderr, "Failed to parse previous value of address ");
+		cli_val_print(address, stderr);
+		fprintf(stderr, ".\n");
+		return 1;
+
+	default:
+		fprintf(stderr, "Failed to read line.\n");
+		return 1;
+	}
+}
+
+/*
+ * Handles a read failure in Proctal when attempting to read from an address
+ * from a previous search.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+static inline int handle_proctal_read_previous_error(proctal_t p, cli_val address)
+{
+	switch (proctal_error(p)) {
+	case PROCTAL_ERROR_PERMISSION_DENIED:
+		fprintf(stderr, "No permission to read from address ");
+		cli_val_print(address, stderr);
+		fprintf(stderr, ".\n");
+		return 1;
+
+	default:
+		fprintf(stderr, "Failed to read from address ");
+		cli_val_print(address, stderr);
+		fprintf(stderr, ".\n");
+		return 1;
+	}
+
+	if (!proctal_error_recover(p)) {
+		return 0;
+	}
+}
+
+/*
+ * Matches against the output of a previous run.
+ *
+ * Returns 0 on failure, 1 on success.
+ */
 static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 {
 	int ret = 0;
@@ -223,52 +316,17 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 			break;
 		}
 
-		if (!cli_val_scan(address, stdin)) {
-			fprintf(stderr, "Failed to read address.\n");
-
-			cli_scan_skip_until_chars(stdin, "\n");
-			continue;
-		}
-
-		cli_scan_skip_chars(stdin, " ");
-
-		if (!cli_val_scan(previous_value, stdin)) {
-			fprintf(stderr, "Failed to parse previous value of address ");
-			cli_val_print(address, stderr);
-			fprintf(stderr, ".\n");
-
-			cli_scan_skip_until_chars(stdin, "\n");
+		if (handle_parse_input_error(parse_input(address, previous_value), address)) {
 			continue;
 		}
 
 		size_t size = cli_val_sizeof(previous_value);
 
 		if (proctal_read(p, DEREF(void *, cli_val_data(address)), cli_val_data(value), size) != size) {
-			switch (proctal_error(p)) {
-			case PROCTAL_ERROR_PERMISSION_DENIED:
-				fprintf(stderr, "No permission to read from address ");
-				cli_val_print(address, stderr);
-				fprintf(stderr, ".\n");
-
-				if (!proctal_error_recover(p)) {
-					goto exit2;
-				}
-
-				break;
-
-			default:
-				fprintf(stderr, "Failed to read from address ");
-				cli_val_print(address, stderr);
-				fprintf(stderr, ".\n");
-
-				if (!proctal_error_recover(p)) {
-					goto exit2;
-				}
-
-				break;
+			if (!handle_proctal_read_previous_error(p, address)) {
+				goto exit2;
 			}
 
-			// Can't seem to read anymore. Dropping it.
 			continue;
 		}
 
@@ -294,27 +352,12 @@ exit0:
 	return ret;
 }
 
-int cli_cmd_search(struct cli_cmd_search_arg *arg)
+/*
+ * Configures Proctal based on the arguments passed.
+ */
+void setup_proctal(struct cli_cmd_search_arg *arg, proctal_t p)
 {
-	int ret = 1;
-
-	proctal_t p = proctal_open();
-
-	if (proctal_error(p)) {
-		cli_print_proctal_error(p);
-		goto exit1;
-	}
-
 	proctal_pid_set(p, arg->pid);
-
-	if (arg->freeze) {
-		proctal_freeze(p);
-
-		if (proctal_error(p)) {
-			cli_print_proctal_error(p);
-			goto exit1;
-		}
-	}
 
 	if (!arg->read && !arg->write && !arg->execute) {
 		// By default will search readable memory.
@@ -333,6 +376,32 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 		proctal_scan_region_read_set(p, arg->read);
 		proctal_scan_region_write_set(p, arg->write);
 		proctal_scan_region_execute_set(p, arg->execute);
+	}
+
+	proctal_scan_address_region_set(p, 0);
+	proctal_scan_region_mask_set(p, 0);
+}
+
+int cli_cmd_search(struct cli_cmd_search_arg *arg)
+{
+	int ret = 1;
+
+	proctal_t p = proctal_open();
+
+	if (proctal_error(p)) {
+		cli_print_proctal_error(p);
+		goto exit1;
+	}
+
+	setup_proctal(arg, p);
+
+	if (arg->freeze) {
+		proctal_freeze(p);
+
+		if (proctal_error(p)) {
+			cli_print_proctal_error(p);
+			goto exit1;
+		}
 	}
 
 	if (arg->input) {
