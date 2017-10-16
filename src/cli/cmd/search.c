@@ -73,23 +73,23 @@ static inline void destroy_filter_compare_prev_arg(struct cli_val_filter_compare
 	free(filter_arg);
 }
 
-static inline void print_search_match(cli_val addr, cli_val value)
+static inline void print_search_match(cli_val address, cli_val value)
 {
-	cli_val_print(addr, stdout);
+	cli_val_print(address, stdout);
 	printf(" ");
 	cli_val_print(value, stdout);
 	printf("\n");
 }
 
-static inline void *align_addr(void *addr, size_t align)
+static inline void *align_address(void *address, size_t align)
 {
-	ptrdiff_t offset = ((uintptr_t) addr % align);
+	ptrdiff_t offset = ((uintptr_t) address % align);
 
 	if (offset != 0) {
 		offset = align - offset;
 	}
 
-	return (void *) ((char *) addr + offset);
+	return (void *) ((char *) address + offset);
 }
 
 static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
@@ -98,7 +98,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
-	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 	cli_val value = arg->value;
 
 	size_t size = cli_val_sizeof(value);
@@ -123,7 +123,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 		chunk_init(&chunk, start, end, buffer_size);
 
 		do {
-			char *offset = align_addr(chunk_offset(&chunk), align);
+			char *offset = align_address(chunk_offset(&chunk), align);
 			curr_size = chunk_size(&chunk);
 
 			proctal_read(p, offset, swbuf_offset(&buf, 0), curr_size);
@@ -150,9 +150,9 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset - leftover;
-					cli_val_parse_binary(addr, (char *) &a, sizeof(a));
+					cli_val_parse_binary(address, (char *) &a, sizeof(a));
 
-					print_search_match(addr, value);
+					print_search_match(address, value);
 				}
 
 				leftover = 0;
@@ -169,9 +169,9 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 				if (cli_val_filter_compare(filter_compare_arg, value)) {
 					void *a = offset + i;
-					cli_val_parse_binary(addr, (char *) &a, sizeof(a));
+					cli_val_parse_binary(address, (char *) &a, sizeof(a));
 
-					print_search_match(addr, value);
+					print_search_match(address, value);
 				}
 
 				i += align;
@@ -195,7 +195,7 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 exit4:
 	swbuf_deinit(&buf);
 exit3:
-	cli_val_destroy(addr);
+	cli_val_destroy(address);
 exit2:
 	destroy_filter_compare_arg(filter_compare_arg);
 exit1:
@@ -211,7 +211,7 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 	struct cli_val_filter_compare_prev_arg *filter_compare_prev_arg = create_filter_compare_prev_arg(arg);
 
-	cli_val addr = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 	cli_val value = arg->value;
 	cli_val previous_value = cli_val_create_clone(value);
 
@@ -223,7 +223,7 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 			break;
 		}
 
-		if (!cli_val_scan(addr, stdin)) {
+		if (!cli_val_scan(address, stdin)) {
 			fprintf(stderr, "Failed to read address.\n");
 
 			cli_scan_skip_until_chars(stdin, "\n");
@@ -234,7 +234,7 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 
 		if (!cli_val_scan(previous_value, stdin)) {
 			fprintf(stderr, "Failed to parse previous value of address ");
-			cli_val_print(addr, stderr);
+			cli_val_print(address, stderr);
 			fprintf(stderr, ".\n");
 
 			cli_scan_skip_until_chars(stdin, "\n");
@@ -243,11 +243,11 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 
 		size_t size = cli_val_sizeof(previous_value);
 
-		if (proctal_read(p, DEREF(void *, cli_val_data(addr)), cli_val_data(value), size) != size) {
+		if (proctal_read(p, DEREF(void *, cli_val_data(address)), cli_val_data(value), size) != size) {
 			switch (proctal_error(p)) {
 			case PROCTAL_ERROR_PERMISSION_DENIED:
 				fprintf(stderr, "No permission to read from address ");
-				cli_val_print(addr, stderr);
+				cli_val_print(address, stderr);
 				fprintf(stderr, ".\n");
 
 				if (!proctal_error_recover(p)) {
@@ -258,7 +258,7 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 
 			default:
 				fprintf(stderr, "Failed to read from address ");
-				cli_val_print(addr, stderr);
+				cli_val_print(address, stderr);
 				fprintf(stderr, ".\n");
 
 				if (!proctal_error_recover(p)) {
@@ -280,12 +280,12 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 			continue;
 		}
 
-		print_search_match(addr, value);
+		print_search_match(address, value);
 	}
 
 	ret = 1;
 exit2:
-	cli_val_destroy(addr);
+	cli_val_destroy(address);
 	cli_val_destroy(previous_value);
 exit1:
 	destroy_filter_compare_prev_arg(filter_compare_prev_arg);
