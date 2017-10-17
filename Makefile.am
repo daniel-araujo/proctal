@@ -220,6 +220,9 @@ dist_check_SCRIPTS += src/cli/tests/freeze-multiple-threads.py
 TESTS += src/cli/tests/watch-multiple-threads.py
 dist_check_SCRIPTS += src/cli/tests/watch-multiple-threads.py
 
+TESTS += src/cli/tests/search-boundaries.py
+dist_check_SCRIPTS += src/cli/tests/search-boundaries.py
+
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
 tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)
@@ -229,6 +232,10 @@ check_PROGRAMS += tests/cli/program/read-mem-mt
 tests_cli_program_read_mem_mt_SOURCES = src/cli/tests/program/read-mem-mt.c
 tests_cli_program_read_mem_mt_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_program_read_mem_mt_LDADD = -lpthread
+
+check_PROGRAMS += tests/cli/program/sleeper
+tests_cli_program_sleeper_SOURCES = src/cli/tests/program/sleeper.c
+tests_cli_program_sleeper_CFLAGS = $(PROCTAL_CFLAGS)
 
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
 # documentation, automake does not support a convenient method for specifying
