@@ -404,7 +404,7 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 		}
 	}
 
-	if (arg->input) {
+	if (arg->review) {
 		if (!search_input(arg, p)) {
 			goto exit2;
 		}

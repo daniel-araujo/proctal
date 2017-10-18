@@ -557,7 +557,7 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 	arg->inc_up_to = 0;
 	arg->dec = 0;
 	arg->dec_up_to = 0;
-	arg->input = 0;
+	arg->review = 0;
 
 	arg->read = yuck_arg->search.read_flag == 1;
 	arg->write = yuck_arg->search.write_flag == 1;
@@ -607,8 +607,8 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	if (yuck_arg->search.input_flag) {
-		arg->input = 1;
+	if (yuck_arg->search.review_flag) {
+		arg->review = 1;
 	}
 
 #define FORCE_POSITIVE(NAME) \

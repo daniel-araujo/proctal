@@ -73,7 +73,7 @@ $ wc -l &lt; search-1
 		addresses stores the value you care about is by causing actions
 		in the game that change the value.
 
-		The search command has the <quote>--input</quote> option that
+		The search command has the <quote>--review</quote> option that
 		allows you to match against the results from a previous search.
 
 		Assuming that your actions in game changed the value to 53,
@@ -81,7 +81,7 @@ $ wc -l &lt; search-1
 		results looks like:
 
 		<code type="bash-prompt">
-$ proctal search --input --pid=12345 --type=integer --integer-bits=8 --eq=53 &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53 --review &lt; search-1 &gt; search-2
 		</code>
 
 		And counting yields:
@@ -99,7 +99,7 @@ $ wc -l &lt; search-2
 		the values change as you're playing the game:
 
 		<code type="bash-prompt">
-$ watch proctal search --input --pid=12345 --type=integer --integer-bits=8 &lt; search-2
+$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; search-2
 Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8
 7FCDB1D577F8 53
 7FCDB1D57F38 53
@@ -143,13 +143,13 @@ $ proctal search --pid=12345 --type=integer --integer-bits=8 > search-1
 		Here's how you would search for increased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased --input &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased --review &lt; search-1 &gt; search-2
 		</code>
 
 		And here's how you would search for decreased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased --input &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased --review &lt; search-1 &gt; search-2
 		</code>
 	</section>
 

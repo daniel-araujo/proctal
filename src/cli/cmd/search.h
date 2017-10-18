@@ -18,8 +18,8 @@ struct cli_cmd_search_arg {
 	// Whether to search executable memory addresses.
 	int execute;
 
-	// Whether we're going to read from stdin.
-	int input;
+	// Whether to review the results of a previous search.
+	int review;
 
 	// Whether to perform an equality check.
 	int eq;

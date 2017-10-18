@@ -50,7 +50,7 @@
 			memory.</item>
 		</list>
 
-		If you pass the <quote>--input</quote> option, the command will
+		If you pass the <quote>--review</quote> option, the command will
 		expect you to pass the output of a previous search result. That
 		will allow you to specify filters that compare the old values
 		with the current ones in memory.
@@ -96,7 +96,7 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --g
 
 		<code type="bash-prompt">
 $ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --gt=0 --lte=100 &gt; search-1
-$ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --input &lt; search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; search-1
 		</code>
 
 		You can pass the <quote>--freeze</quote> option to keep the

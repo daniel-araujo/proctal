@@ -151,8 +151,8 @@ Searches for values in memory.
 Prints an address and the current value of every match that passes the given
 filters.
 
-By passing the --input option the command will read the output of a previous
-run and match against the given filters.
+By passing the --review option the command will read the output of a previous
+run and match against the given filters but you must use the same type options.
 
 Examples:
   Searching for all bytes that equal 12
@@ -164,17 +164,16 @@ Examples:
   Searching for all floating point values in memory
         proctal search --pid=12345 --type=ieee754
 
-  Searching for values that increased from the results of a previous search
-        proctal search --pid=12345 --eq 12 > previous-search-results
-        proctal search --pid=12345 --increased < previous-search-results
+  Searching for values that changed from the results of a previous search
+        proctal search --pid=12345 --eq 12 --review > previous-search-results
+        proctal search --pid=12345 --changed --review < previous-search-results
 
   Searching in executable memory only
         proctal search --pid=12345 -x --eq 12
 
 
   PID_OPTION
-  --input               Matches against the output of a previous run of the
-                        same type.
+  --review              Matches against the output of a previous run.
   --freeze              Whether to keep the program frozen while searching.
   TYPE_OPTIONS
   -r, --read            Readable memory.
