@@ -87,7 +87,7 @@ Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
 [...]
 		</code>
 
-		The interval can be changing by passing the <quote>-n</quote>
+		The interval can be changed by passing the <quote>-n</quote>
 		option with the number of seconds. You can use decimal numbers
 		but you cannot go lower than 100 milliseconds.
 
