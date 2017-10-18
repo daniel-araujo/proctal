@@ -2,8 +2,8 @@
 <document>
 	<title>Search techniques</title>
 
-	This is a compilation of techniques for using the <quote>search</quote>
-	command.
+	This is a compilation of techniques on how the <quote>search</quote>
+	command can be used.
 
 	<section>
 		<title>IEEE754 number with any decimal part</title>
@@ -25,5 +25,85 @@ $ proctal search --pid=12345 --type=ieee754 --eq=2
 		<code type="bash-prompt">
 $ proctal search --pid=12345 --type=ieee754 --gte=2 --lt=3
 		</code>
+	</section>
+
+	<section>
+		<title>Counting matches</title>
+
+		You can get the number of matches by counting how many lines
+		the output has because every match is displayed in its own
+		line.
+
+		It's impractical to count all the lines manually, though. You
+		may have hundreds or thousands.
+
+		Use the <quote>wc</quote> program with the <quote>-l</quote>
+		option. It will count the number of lines passed to the
+		standard input stream or a file if you pass its name as an
+		argument.
+
+		The following example shows you the output of the
+		<quote>search</quote> command being piped to <quote>wc</quote>
+		and displaying the number of matches:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=ieee754 --eq=2 | wc -l
+2562
+		</code>
+
+		This example uses a file:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=ieee754 --eq=2 > search-results
+$ wc -l search-results
+2562 search-results
+		</code>
+
+		You may also just redirect the contents of the file if you do
+		not want to see the file name in the output of
+		<quote>wc</quote>.
+
+		<code type="bash-prompt">
+$ wc -l &lt; search-results
+2562
+		</code>
+	</section>
+
+	<section>
+		<title>Watch results</title>
+
+		The <quote>watch</quote> program can run a command repeatedly.
+		You can have it run the <quote>search</quote> command which
+		allows you to watch the search results change over time. By
+		default it runs the command every 2 seconds.
+
+		<code type="bash-prompt">
+$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
+7FCDB1D577F8 53
+7FCDB1D57F38 53
+7FCDB1D58738 53
+7FCDB1D58BA8 53
+[...]
+		</code>
+
+		The interval can be changing by passing the <quote>-n</quote>
+		option with the number of seconds. You can use decimal numbers
+		but you cannot go lower than 100 milliseconds.
+
+		Here's how you would set the interval to 500 milliseconds:
+
+		<code type="bash-prompt">
+$ watch -n 0.5 proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
+Every 0.5s: proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
+7FCDB1D577F8 53
+7FCDB1D57F38 53
+7FCDB1D58738 53
+7FCDB1D58BA8 53
+[...]
+		</code>
+
+		You can stop <quote>watch</quote> by sending it the
+		<quote>SIGINT</quote> signal.
 	</section>
 </document>
