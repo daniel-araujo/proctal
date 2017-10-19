@@ -28,6 +28,8 @@ struct matches {
  */
 static inline int matches_init(struct matches *matches)
 {
+	matches->count = 0;
+
 	darr_init(&matches->addresses, sizeof(void *));
 
 	if (!darr_resize(&matches->addresses, 42)) {
@@ -57,11 +59,11 @@ static inline int matches_contains(struct matches *matches, void *address)
 		void **candidate = darr_element(&matches->addresses, i);
 
 		if (address == *candidate) {
-			return 0;
+			return 1;
 		}
 	}
 
-	return 1;
+	return 0;
 }
 
 /*
