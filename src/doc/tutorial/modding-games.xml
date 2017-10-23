@@ -99,8 +99,8 @@ $ wc -l &lt; search-2
 		the values change as you're playing the game:
 
 		<code type="bash-prompt">
-$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; search-2
-Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8
+$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review '&lt;' search-2
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; search-2
 7FCDB1D577F8 53
 7FCDB1D57F38 53
 7FCDB1D58738 53

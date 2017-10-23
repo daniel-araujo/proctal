@@ -103,6 +103,21 @@ Every 0.5s: proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53
 [...]
 		</code>
 
+		If you're going to redirect the input stream to read from a
+		file for the <quote>--review</quote> option, you need to escape
+		the redirection operator otherwise the <quote>watch</quote>
+		program won't see it because the shell will interpret it first.
+
+		<code type="bash-prompt">
+$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review '&lt;' search-2
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; search-2
+7FCDB1D577F8 53
+7FCDB1D57F38 53
+7FCDB1D58738 53
+7FCDB1D58BA8 53
+[...]
+		</code>
+
 		You can stop <quote>watch</quote> by sending it the
 		<quote>SIGINT</quote> signal.
 	</section>
