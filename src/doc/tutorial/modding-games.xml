@@ -56,14 +56,14 @@ $ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100
 		previously shown should look like this now:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100 &gt; search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100 &gt; results1
 		</code>
 
 		Using the <quote>wc</quote> program you can count exactly how
 		many matches you got.
 
 		<code type="bash-prompt">
-$ wc -l &lt; search-1
+$ wc -l &lt; results1
 3463
 		</code>
 
@@ -81,13 +81,13 @@ $ wc -l &lt; search-1
 		results looks like:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53 --review &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53 --review &lt; results1 &gt; results2
 		</code>
 
 		And counting yields:
 
 		<code type="bash-prompt">
-$ wc -l &lt; search-2
+$ wc -l &lt; results2
 34
 		</code>
 
@@ -99,8 +99,8 @@ $ wc -l &lt; search-2
 		the values change as you're playing the game:
 
 		<code type="bash-prompt">
-$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review '&lt;' search-2
-Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; search-2
+$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review '&lt;' results2
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; results2
 7FCDB1D577F8 53
 7FCDB1D57F38 53
 7FCDB1D58738 53
@@ -135,7 +135,7 @@ Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review 
 		can search for all possible 8-bit integers:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 > search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=8 > results1
 		</code>
 
 		And then depending on whether you gain and or lose health, you
@@ -143,13 +143,13 @@ $ proctal search --pid=12345 --type=integer --integer-bits=8 > search-1
 		Here's how you would search for increased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased --review &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased --review &lt; results1 &gt; results2
 		</code>
 
-		And here's how you would search for decreased values:
+		And here's how you would then search for decreased values:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased --review &lt; search-1 &gt; search-2
+$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased --review &lt; results2 &gt; results3
 		</code>
 	</section>
 

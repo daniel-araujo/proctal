@@ -95,8 +95,8 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --g
 		increased after a previous search.
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --gt=0 --lte=100 &gt; search-1
-$ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; search-1
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --gt=0 --lte=100 &gt; results1
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; results1
 		</code>
 
 		You can pass the <quote>--freeze</quote> option to keep the
