@@ -6,9 +6,6 @@ struct cli_cmd_pattern_arg {
 
 	const char *pattern;
 
-	// Whether to quit when no more input is available.
-	int input;
-
 	// Whether to search readable memory addresses.
 	int read;
 
