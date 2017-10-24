@@ -27,3 +27,44 @@ def freeze(pid):
     time.sleep(0.033)
 
     return FreezeProcess(process)
+
+class WatchProcess:
+    """Controls the watch command."""
+
+    def __init__(self, process):
+        self.process = process
+
+    def has_match(self):
+        """Checks whether the watch process has found a match."""
+        poll = select.poll()
+        poll.register(self.process.stdout, select.POLLIN)
+
+        return poll.poll(100)
+
+    def stop(self):
+        """Stops the watch command."""
+        self.process.kill()
+        self.process.wait()
+
+def watch(pid, address, permission="rw"):
+    """Runs the watch command."""
+    cmd = [
+        proctal_exe,
+        "watch",
+        "--pid=" + str(pid),
+        "--address=" + address,
+        "-" + permission
+    ]
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+    # Waiting for the watch command to perform.
+    # TODO: Find a reliable way to detect when the watcher has started.
+    time.sleep(0.033)
+
+    process.poll()
+
+    if process.returncode != None:
+        return None
+
+    return WatchProcess(process)
