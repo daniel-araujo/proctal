@@ -6,6 +6,24 @@
 	command can be used.
 
 	<section>
+		<title>Only print addresses</title>
+
+		You can grab the addresses with <quote>awk</quote>.
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --eq=42 | awk '{ print $1 }'
+7F7BE73B9638
+7F7BE73B967C
+7F7BE75DFA40
+7F7BE75E0714
+7F7BE75ED1A0
+7FFC64E15EF0
+7FFC64E16514
+[...]
+		</code>
+	</section>
+
+	<section>
 		<title>IEEE754 number with any decimal part</title>
 
 		This approach is wrong:
