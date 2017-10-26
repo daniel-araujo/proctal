@@ -331,3 +331,61 @@ def write(pid, address, type, value, array=None):
         return True
     else:
         return False
+
+def execute(pid, code):
+    """Runs the execute command."""
+
+    cmd = [
+        proctal_exe,
+        "execute",
+        "--pid=" + str(pid),
+    ]
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    process.communicate(input=code.encode())
+
+    if process.returncode == 0:
+        return True
+    else:
+        return False
+
+class ReadProcess:
+    """Controls the read command."""
+
+    def __init__(self, process, type):
+        self.process = process
+        self._type = type
+
+    def next_value(self):
+        line = self.process.stdout.readline().decode("utf-8")
+
+        if line == '':
+            return None
+
+        value = self._type.create_value()
+        value.parse(line[:-1])
+
+        return value
+
+    def stop(self):
+        """Stops the command."""
+        self.process.kill()
+        self.process.wait()
+
+def read(pid, address, type, array=None):
+    """Runs the read command."""
+
+    cmd = [
+        proctal_exe,
+        "read",
+        "--pid=" + str(pid),
+        "--address=" + str(address),
+    ]
+    cmd = cmd + type.type_options()
+
+    if array != None:
+        cmd.append("--array=" + str(array))
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+    return ReadProcess(process, type)

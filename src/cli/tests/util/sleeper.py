@@ -18,6 +18,10 @@ class Proc:
         """Returns the process id (PID) of the program."""
         return self.process.pid
 
+    def read_line(self):
+        """Reads the next available line."""
+        return self.process.stdout.readline().decode("utf-8")
+
 def run():
     """Runs the program and returns an object that can communicate with it."""
     process = subprocess.Popen([exe], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
