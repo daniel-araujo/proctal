@@ -17,6 +17,9 @@
 /ltmain.sh
 /test-driver
 
+# Python cache directory.
+__pycache__/
+
 # Dependencies.
 /darr
 /acur
