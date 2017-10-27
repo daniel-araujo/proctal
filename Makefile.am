@@ -235,6 +235,9 @@ dist_check_SCRIPTS += src/cli/tests/allocate-permissions-default.py
 TESTS += src/cli/tests/deallocate.py
 dist_check_SCRIPTS += src/cli/tests/deallocate.py
 
+TESTS += src/cli/tests/search-permissions-default.py
+dist_check_SCRIPTS += src/cli/tests/search-permissions-default.py
+
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
 tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)
