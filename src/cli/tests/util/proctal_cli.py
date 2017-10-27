@@ -146,7 +146,7 @@ class ValueInteger(Value):
         return other
 
     def size(self):
-        return self._type.bits() / 8
+        return self._type.bits() // 8
 
     def cmp(self, other):
         if not self._type.bits() == other._type.bits():
@@ -263,7 +263,7 @@ class SearchProcess:
         self.process.kill()
         self.process.wait()
 
-def search(pid, type=TypeByte, eq=None):
+def search(pid, type=TypeByte, eq=None, permission=None):
     """Runs the search command."""
     cmd = [
         proctal_exe,
@@ -274,6 +274,9 @@ def search(pid, type=TypeByte, eq=None):
 
     if eq != None:
         cmd.append("--eq=" + str(eq))
+
+    if permission != None:
+        cmd.append("-" + str(permission))
 
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
 
