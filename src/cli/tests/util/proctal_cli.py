@@ -311,6 +311,23 @@ def allocate(pid, size, permission=None):
 
     return v
 
+def deallocate(pid, address):
+    """Runs the deallocate command."""
+
+    cmd = [
+        proctal_exe,
+        "deallocate",
+        "--pid=" + str(pid),
+        str(address)
+    ]
+
+    code = subprocess.call(cmd)
+
+    if code == 0:
+        return True
+    else:
+        return False
+
 def write(pid, address, type, value, array=None):
     """Runs the write command."""
 
