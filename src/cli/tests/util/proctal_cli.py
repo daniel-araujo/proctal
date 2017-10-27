@@ -287,16 +287,18 @@ def search(pid, type=TypeByte, eq=None, permission=None):
 
     return SearchProcess(process, type)
 
-def allocate(pid, size, permission="rwx"):
+def allocate(pid, size, permission=None):
     """Runs the allocate command and returns the address."""
 
     cmd = [
         proctal_exe,
         "allocate",
         "--pid=" + str(pid),
-        "-" + permission,
         str(size)
     ]
+
+    if permission != None:
+        cmd.append("-" + str(permission))
 
     address = subprocess.check_output(cmd)
     address = address.strip().decode("utf-8")
