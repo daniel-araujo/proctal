@@ -4,6 +4,12 @@
 struct cli_cmd_dump_arg {
 	int pid;
 
+	// Where to start dumping. Pass NULL to ignore this.
+	void *address_start;
+
+	// Where to stop dumping. Pass NULL to ignore this.
+	void *address_stop;
+
 	// Whether to dump readable memory addresses.
 	int read;
 

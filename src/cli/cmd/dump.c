@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 
 #include "cli/cmd/dump.h"
 #include "cli/printer.h"
@@ -38,6 +39,10 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 		proctal_scan_region_execute_set(p, arg->execute);
 	}
 
+	if (arg->address_stop == NULL) {
+		arg->address_stop = (void *) ~((uintptr_t) 0);
+	}
+
 	long mask = 0;
 
 	if (arg->program_code) {
@@ -66,6 +71,21 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 	struct chunk chunk;
 
 	while (proctal_scan_region_next(p, &start, &end)) {
+		if (start < arg->address_start) {
+			// We can start from here.
+			start = arg->address_start;
+		}
+
+		if (end > arg->address_stop) {
+			// We can end here.
+			end = arg->address_stop;
+		}
+
+		if (start >= end) {
+			// Out of range. Try next region.
+			continue;
+		}
+
 		chunk_init(&chunk, start, end, output_block_size);
 
 		do {

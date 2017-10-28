@@ -1053,6 +1053,26 @@ static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
+	if (yuck_arg->dump.address_start_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->dump.address_start_arg, &arg->address_start)) {
+			fputs("Invalid start address.\n", stderr);
+			destroy_cli_cmd_dump_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_start = NULL;
+	}
+
+	if (yuck_arg->dump.address_stop_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->dump.address_stop_arg, &arg->address_stop)) {
+			fputs("Invalid stop address.\n", stderr);
+			destroy_cli_cmd_dump_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_stop = NULL;
+	}
+
 	arg->read = yuck_arg->dump.read_flag == 1;
 	arg->write = yuck_arg->dump.write_flag == 1;
 	arg->execute = yuck_arg->dump.execute_flag == 1;

@@ -1,6 +1,12 @@
 define(`PID_OPTION', `
   --pid=PID             Process ID (PID) of a program.
 ')dnl
+define(`ADDRESS_RANGE_OPTIONS', `
+  --address-start=ADDRESS
+                        Where to start in memory.
+  --address-stop=ADDRESS
+                        Where to stop in memory.
+')dnl
 define(`TYPE_OPTIONS', `
   --type=TYPE
                         Type of value. By default TYPE is byte.
@@ -392,7 +398,7 @@ Examples:
 Usage: proctal dump
 Dumps memory.
 
-Will print the contents in memory.
+Will print byte for byte what's in memory.
 
 Examples:
   Dumping everything in memory to a file
@@ -404,8 +410,12 @@ Examples:
   Dumping memory marked as executable to a file
 	proctal dump --pid=12345 -x > dump
 
+  Dumping memory from address DCA0 to DCAF
+	proctal dump --pid=123 --address-start=DCA0 --address-stop=DCAF > dump
+
 
   PID_OPTION
+  ADDRESS_RANGE_OPTIONS
   --freeze              Whether to keep the program frozen while dumping.
   -r, --read            Readable memory.
   -w, --write           Writable memory.

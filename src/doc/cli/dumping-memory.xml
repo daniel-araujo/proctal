@@ -2,22 +2,47 @@
 <document>
 	<title>Dumping memory</title>
 
-	With the <quote>dump</quote> command you can dump the contents in
-	memory to a file.
+	The <quote>dump</quote> command prints byte for byte what's in memory.
 
-	Here's how you would dump everything in memory of the program whose PID
-	is 12345:
+	Here's how you would create <quote>dump.bin</quote>, a file that
+	contains the entire contents in memory of the program whose PID is
+	12345:
 
 	<code type="bash-prompt">
 $ proctal dump --pid=12345 &gt; dump.bin
 	</code>
 
-	You may optionally pass options to only dump certain portions in
-	memory. You may pass <quote>--program-code</quote> if you only want to
-	dump the code, <quote>--read</quote> for readable memory,
-	<quote>--write</quote> for writable memory and <quote>--execute</quote>
-	for executable memory. These can be combined.
+	These options restrict what to dump from memory:
 
-	You can pass the <quote>--freeze</quote> option to keep the program
-	frozen while dumping.
+	<list>
+		<item><quote>--read</quote> readable memory</item>
+
+		<item><quote>--write</quote> writable memory.</item>
+
+		<item><quote>--execute</quote> executable memory.</item>
+
+		<item><quote>--program-code</quote> program's code.</item>
+	</list>
+
+	Here's how you would dump anything that is executable in memory to the
+	file <quote>dump2.bin</quote>:
+
+	<code type="bash-prompt">
+$ proctal dump --pid=12345 --execute &gt; dump2.bin
+	</code>
+
+	The <quote>--address-start</quote> option specifies where to start
+	dumping the contents in memory and the <quote>--address-stop</quote>
+	option specifies where to stop.
+
+	Here's how you would dump the contents starting from the address
+	<quote>7F7BE75E0714</quote> up to the address
+	<quote>7F7BE75ED1A0</quote> to the file <quote>dump3.bin</quote>:
+
+	<code type="bash-prompt">
+$ proctal dump --pid=12345 --address-start=7F7BE75E0714 --address-stop=7F7BE75ED1A0 &gt; dump3.bin
+	</code>
+
+	The <quote>--freeze</quote> option prevents the program from executing
+	code while the command is running.
 </document>

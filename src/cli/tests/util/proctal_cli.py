@@ -74,6 +74,9 @@ class Value:
     def parse(self, s):
         raise NotImplementedError("Must parse a string.")
 
+    def parse_binary(self, s):
+        raise NotImplementedError("Must parse a sequence of bytes.")
+
     def clone(self):
         raise NotImplementedError("Must create a copy of this value.")
 
@@ -85,6 +88,41 @@ class Value:
 
     def __str__(self):
         return self.format()
+
+class ValueByte(Value):
+    """Represents a byte value."""
+
+    def __init__(self, type):
+        self._type = type
+        self._value = 0
+
+    def type(self):
+        return self._type
+
+    def parse(self, s):
+        self._value = int(s, 16)
+
+    def parse_binary(self, s):
+        self._value = s[0];
+
+    def format(self):
+        return hex(int(self._value))[2:].upper()
+
+    def clone(self):
+        other = ValueAddress(self._type)
+        other._value = self._value
+        return other
+
+    def size(self):
+        return 1
+
+    def cmp(self, other):
+        if self._value > other._value:
+            return 1
+        elif self._value < other._value:
+            return -1
+        else:
+            return 0
 
 class ValueAddress(Value):
     """Represents an address value."""
@@ -411,3 +449,57 @@ def read(pid, address, type, array=None):
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
     return ReadProcess(process, type)
+
+class DumpProcess:
+    """Controls the dump command."""
+
+    def __init__(self, process):
+        self.process = process
+
+    def byte_iterator(self):
+        """Iterates over every byte that is being dumped."""
+
+        poll = select.poll()
+        poll.register(self.process.stdout, select.POLLIN)
+
+        while True:
+            if not poll.poll(33):
+                break
+
+            byte = self.process.stdout.read(1)
+
+            if len(byte) == 0:
+                break
+
+            yield byte
+
+    def stop(self):
+        """Stops the command."""
+        self.process.kill()
+        self.process.wait()
+
+def dump(pid, permission=None, address_start=None, address_stop=None):
+    """Runs the dump command."""
+    cmd = [
+        proctal_exe,
+        "dump",
+        "--pid=" + str(pid),
+    ]
+
+    if address_start != None:
+        cmd.append("--address-start=" + str(address_start))
+
+    if address_stop != None:
+        cmd.append("--address-stop=" + str(address_stop))
+
+    if permission != None:
+        cmd.append("-" + str(permission))
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+    process.poll()
+
+    if process.returncode != None:
+        return None
+
+    return DumpProcess(process)
