@@ -364,7 +364,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->read.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_read_arg(arg);
 		return NULL;
 	}
@@ -376,7 +376,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->read.address_arg == NULL) {
-		fputs("OPTION -a, --address is required.\n", stderr);
+		fputs("OPTION --address is required.\n", stderr);
 		destroy_cli_cmd_read_arg(arg);
 		return NULL;
 	}
@@ -447,7 +447,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->write.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_write_arg(arg);
 		return NULL;
 	}
@@ -459,7 +459,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->write.address_arg == NULL) {
-		fputs("OPTION -a, --address is required.\n", stderr);
+		fputs("OPTION --address is required.\n", stderr);
 		destroy_cli_cmd_write_arg(arg);
 		return NULL;
 	}
@@ -576,7 +576,7 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->search.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_search_arg(arg);
 		return NULL;
 	}
@@ -691,7 +691,7 @@ static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->pattern.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_pattern_arg(arg);
 		return NULL;
 	}
@@ -734,7 +734,7 @@ static struct cli_cmd_freeze_arg *create_cli_cmd_freeze_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->freeze.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_freeze_arg(arg);
 		return NULL;
 	}
@@ -770,7 +770,7 @@ static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->watch.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_watch_arg(arg);
 		return NULL;
 	}
@@ -782,7 +782,7 @@ static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->watch.address_arg == NULL) {
-		fputs("OPTION -a, --address is required.\n", stderr);
+		fputs("OPTION --address is required.\n", stderr);
 		destroy_cli_cmd_watch_arg(arg);
 		return NULL;
 	}
@@ -823,7 +823,7 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->execute.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_execute_arg(arg);
 		return NULL;
 	}
@@ -895,7 +895,7 @@ static struct cli_cmd_allocate_arg *create_cli_cmd_allocate_arg(yuck_t *yuck_arg
 	}
 
 	if (yuck_arg->allocate.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_allocate_arg(arg);
 		return NULL;
 	}
@@ -941,7 +941,7 @@ static struct cli_cmd_deallocate_arg *create_cli_cmd_deallocate_arg(yuck_t *yuck
 	}
 
 	if (yuck_arg->deallocate.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_deallocate_arg(arg);
 		return NULL;
 	}
@@ -980,7 +980,7 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->measure.address_arg == NULL) {
-		fputs("OPTION -a, --address is required.\n", stderr);
+		fputs("OPTION --address is required.\n", stderr);
 		destroy_cli_cmd_measure_arg(arg);
 		return NULL;
 	}
@@ -1042,7 +1042,7 @@ static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg(yuck_t *yuck_arg)
 	}
 
 	if (yuck_arg->dump.pid_arg == NULL) {
-		fputs("OPTION -p, --pid is required.\n", stderr);
+		fputs("OPTION --pid is required.\n", stderr);
 		destroy_cli_cmd_dump_arg(arg);
 		return NULL;
 	}
