@@ -7,15 +7,14 @@
 	<section>
 		<title>Value search</title>
 
-		The <quote>search</quote> command lets you search for values
-		with a combination of filters.
+		The <quote>search</quote> command matches values in memory.
 
 		You can pass <link ref="proctal:cli:type-options">type
 		options</link> to specify what type of values you want to
 		search for.
 
-		The following filters allow you to compare against another
-		value:
+		These options let you specify filters that compare against the
+		value in memory.
 
 		<list>
 			<item><quote>--eq</quote> matches values that equal to
@@ -37,7 +36,7 @@
 			lesser than or equal to the given value.</item>
 		</list>
 
-		You can pass options that restrict where to search in memory:
+		These options restrict where to search in memory:
 
 		<list>
 			<item><quote>--read</quote> search readable
@@ -50,12 +49,13 @@
 			memory.</item>
 		</list>
 
-		If you pass the <quote>--review</quote> option, the command will
-		expect you to pass the output of a previous search result. That
-		will allow you to specify filters that compare the old values
-		with the current ones in memory.
+		The <quote>--review</quote> option makes the command read the
+		output of a previous run and allow you to use filters that
+		compare against the previous values. Both runs must use the
+		same type options.
 
-		The following filters allow you to compare against the old value:
+		The following options specify filters that compare against the
+		values from the previous run:
 
 		<list>
 			<item><quote>--inc</quote> matches values that were

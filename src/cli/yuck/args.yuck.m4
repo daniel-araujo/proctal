@@ -148,11 +148,30 @@ Examples:
 Usage: proctal search
 Searches for values in memory.
 
-Prints an address and the current value of every match that passes the given
+Prints the address and the current value of every match that passes the given
 filters.
 
 By passing the --review option the command will read the output of a previous
-run and match against the given filters but you must use the same type options.
+run and allow you to use filters that compare against the previous values. Both
+runs must use the same type options.
+
+Options that compare against values in memory:
+  --eq
+  --ne
+  --gt
+  --gte
+  --lt
+  --lte
+
+Options that compare against values from the previous run:
+  --inc
+  --inc-up-to
+  --dec
+  --dec-up-to
+  --changed
+  --unchanged
+  --increased
+  --decreased
 
 Examples:
   Searching for all bytes that equal 12
