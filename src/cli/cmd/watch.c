@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <stdint.h>
 #include <darr.h>
 
 #include "cli/cmd/watch.h"
@@ -158,6 +159,9 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 		goto exit3;
 	}
 
+	void *address_start = arg->address_start;
+	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;
+
 	while (!pq_check()) {
 		void *address;
 
@@ -176,6 +180,11 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 				cli_print_proctal_error(p);
 				goto exit4;
 			}
+		}
+
+		if (address < address_start || address >= address_stop) {
+			// Out of range.
+			continue;
 		}
 
 		if (arg->unique) {

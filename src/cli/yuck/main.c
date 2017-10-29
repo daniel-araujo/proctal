@@ -833,6 +833,26 @@ static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
+	if (yuck_arg->watch.address_start_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->watch.address_start_arg, &arg->address_start)) {
+			fputs("Invalid start address.\n", stderr);
+			destroy_cli_cmd_watch_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_start = NULL;
+	}
+
+	if (yuck_arg->watch.address_stop_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->watch.address_stop_arg, &arg->address_stop)) {
+			fputs("Invalid stop address.\n", stderr);
+			destroy_cli_cmd_watch_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_stop = NULL;
+	}
+
 	arg->read = yuck_arg->watch.read_flag == 1;
 	arg->write = yuck_arg->watch.write_flag == 1;
 	arg->execute = yuck_arg->watch.execute_flag == 1;

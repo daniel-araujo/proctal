@@ -6,6 +6,12 @@ struct cli_cmd_watch_arg {
 
 	void *address;
 
+	// If not NULL, watch after this address.
+	void *address_start;
+
+	// If not NULL, watch up to this address.
+	void *address_stop;
+
 	// Whether to watch for reads.
 	int read;
 

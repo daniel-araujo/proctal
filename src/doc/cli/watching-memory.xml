@@ -26,6 +26,10 @@ $ proctal watch --pid=12345 --address=1c09346 --read --write
 	You can stop the command by sending it the <quote>SIGINT</quote> signal
 	(<quote>^C</quote> on most terminals).
 
+	The <quote>--address-start</quote> option specifies where to start the
+	<quote>--address-stop</quote> option specifies where to stop detecting
+	accesses.
+
 	If you're seeing the same address get printed several times it might be
 	helpful to use the <quote>--unique</quote> option that will make the
 	command print an address only once.

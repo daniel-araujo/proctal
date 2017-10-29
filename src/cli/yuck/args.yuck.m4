@@ -297,6 +297,7 @@ Examples:
 
 
   PID_OPTION
+  ADDRESS_RANGE_OPTIONS
   --address=ADDRESS     Address to watch.
   -r, --read            Read access.
   -w, --write           Write access.
