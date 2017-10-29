@@ -196,8 +196,12 @@ Examples:
   Searching in executable memory only
         proctal search --pid=12345 -x --eq 12
 
+  Searching from address DCA0 to DCAF
+	proctal search --pid=12345 --address-start=DCA0 --address-stop=DCAF
+
 
   PID_OPTION
+  ADDRESS_RANGE_OPTIONS
   --review              Matches against the output of a previous run.
   --freeze              Whether to keep the program frozen while searching.
   TYPE_OPTIONS

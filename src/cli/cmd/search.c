@@ -111,6 +111,9 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	proctal_scan_region_start(p);
 
+	void *address_start = arg->address_start;
+	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;
+
 	const size_t buffer_size = 1024 * 1024;
 	struct swbuf buf;
 	swbuf_init(&buf, buffer_size);
@@ -121,6 +124,19 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 	struct chunk chunk;
 
 	while (proctal_scan_region_next(p, &start, &end)) {
+		if (start < address_start) {
+			start = address_start;
+		}
+
+		if (end > address_stop) {
+			end = address_stop;
+		}
+
+		if (start >= end) {
+			// Out of range.
+			continue;
+		}
+
 		size_t leftover = 0;
 
 		chunk_init(&chunk, start, end, buffer_size);
@@ -308,6 +324,9 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 	cli_val value = arg->value;
 	cli_val previous_value = cli_val_create_clone(value);
 
+	void *address_start = arg->address_start;
+	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;
+
 	for (;;) {
 		cli_scan_skip_chars(stdin, "\n ");
 
@@ -317,6 +336,12 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 		}
 
 		if (handle_parse_input_error(parse_input(address, previous_value), address)) {
+			continue;
+		}
+
+		if (DEREF(void *, cli_val_data(address)) < address_start
+			|| DEREF(void *, cli_val_data(address)) >= address_stop) {
+			// Out of range.
 			continue;
 		}
 

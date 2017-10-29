@@ -6,6 +6,12 @@
 struct cli_cmd_search_arg {
 	int pid;
 
+	// If not NULL, start searching from this address.
+	void *address_start;
+
+	// If not NULL, search up to this address.
+	void *address_stop;
+
 	// How we're going to interpret values.
 	cli_val value;
 

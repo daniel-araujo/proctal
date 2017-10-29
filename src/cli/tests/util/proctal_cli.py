@@ -301,7 +301,7 @@ class SearchProcess:
         self.process.kill()
         self.process.wait()
 
-def search(pid, type=TypeByte, eq=None, permission=None):
+def search(pid, type=TypeByte, eq=None, permission=None, address_start=None, address_stop=None, review=None):
     """Runs the search command."""
     cmd = [
         proctal_exe,
@@ -316,7 +316,22 @@ def search(pid, type=TypeByte, eq=None, permission=None):
     if permission != None:
         cmd.append("-" + str(permission))
 
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    if address_start != None:
+        cmd.append("--address-start=" + str(address_start))
+
+    if address_stop != None:
+        cmd.append("--address-stop=" + str(address_stop))
+
+    if review != None:
+        cmd.append("--review")
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+    if review != None:
+        for match in review:
+            match_line = match.address.format() + " " + match.value.format() + "\n"
+            process.stdin.write(match_line.encode())
+        process.stdin.close()
 
     process.poll()
 

@@ -587,6 +587,26 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
+	if (yuck_arg->search.address_start_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->search.address_start_arg, &arg->address_start)) {
+			fputs("Invalid start address.\n", stderr);
+			destroy_cli_cmd_search_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_start = NULL;
+	}
+
+	if (yuck_arg->search.address_stop_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->search.address_stop_arg, &arg->address_stop)) {
+			fputs("Invalid stop address.\n", stderr);
+			destroy_cli_cmd_search_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_stop = NULL;
+	}
+
 	struct type_options type_args;
 	if (!cli_type_options_search(&type_args, &yuck_arg->search)) {
 		destroy_cli_cmd_search_arg(arg);

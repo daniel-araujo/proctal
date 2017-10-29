@@ -66,21 +66,22 @@ def start(test):
 
     for match in searcher.match_iterator():
         if test.value.cmp(match.value) != 0:
+            guinea.stop()
             searcher.stop()
             raise UnexpectedMatchValue(test.value, match.value)
 
         if not (start_address.cmp(match.address) <= 0 and end_address.cmp(match.address) > 0):
+            guinea.stop()
             searcher.stop()
             raise UnexpectedMatchAddress(start_address, end_address, match.address)
 
         found += 1
 
     searcher.stop()
+    guinea.stop()
 
     if test.length != found:
         raise UnexpectedTotalMatches(test.length, found)
-
-    guinea.stop()
 
 int32 = proctal_cli.TypeInteger(32);
 int32_test_val = proctal_cli.ValueInteger(int32)

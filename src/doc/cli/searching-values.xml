@@ -83,6 +83,10 @@
 			have decreased.</item>
 		</list>
 
+		The <quote>--address-start</quote> option specifies where to
+		start searching for values in memory and the
+		<quote>--address-stop</quote> option specifies where to stop.
+
 		Here's how you would find all 32-bit integers greater than 0
 		and less than or equal to 100 in readable and writable memory
 		regions of a program whose PID is 12345.
@@ -99,8 +103,8 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --g
 $ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; results1
 		</code>
 
-		You can pass the <quote>--freeze</quote> option to keep the
-		program frozen while searching.
+		The <quote>--freeze</quote> option prevents the program from
+		executing code while the command is running.
 	</section>
 
 	<section>
