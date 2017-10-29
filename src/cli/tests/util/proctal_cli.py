@@ -340,6 +340,59 @@ def search(pid, type=TypeByte, eq=None, permission=None, address_start=None, add
 
     return SearchProcess(process, type)
 
+class PatternProcess:
+    """Controls the pattern command."""
+
+    def __init__(self, process):
+        self.process = process
+
+    def match_iterator(self):
+        address_type = TypeAddress()
+
+        while True:
+            line = self.process.stdout.readline().decode("utf-8")
+
+            if line == '':
+                # No more lines to read.
+                break
+
+            address = ValueAddress(address_type)
+            address.parse(line[:-1])
+
+            yield SearchMatch(address, None)
+
+    def stop(self):
+        """Stops the command."""
+        self.process.kill()
+        self.process.wait()
+
+def pattern(pid, pattern, permission=None, address_start=None, address_stop=None):
+    """Runs the pattern command."""
+    cmd = [
+        proctal_exe,
+        "pattern",
+        "--pid=" + str(pid),
+        pattern
+    ]
+
+    if permission != None:
+        cmd.append("-" + str(permission))
+
+    if address_start != None:
+        cmd.append("--address-start=" + str(address_start))
+
+    if address_stop != None:
+        cmd.append("--address-stop=" + str(address_stop))
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+    process.poll()
+
+    if process.returncode != None:
+        return None
+
+    return PatternProcess(process)
+
 def allocate(pid, size, permission=None):
     """Runs the allocate command and returns the address."""
 

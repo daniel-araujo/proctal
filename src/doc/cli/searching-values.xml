@@ -119,7 +119,7 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --revi
 $ proctal pattern --pid=12345 --program-code 'E8 ?? ?? ?? ??'
 		</code>
 
-		You can pass options that restrict where to search in memory:
+		These options restrict where to search in memory:
 
 		<list>
 			<item><quote>--read</quote> search readable
@@ -135,9 +135,11 @@ $ proctal pattern --pid=12345 --program-code 'E8 ?? ?? ?? ??'
 			program's code.</item>
 		</list>
 
-		These options can be used together.
+		The <quote>--address-start</quote> option specifies where to
+		start searching for patterns in memory and the
+		<quote>--address-stop</quote> option specifies where to stop.
 
-		The <quote>--freeze</quote> option keeps the program frozen
-		while the search is going.
+		The <quote>--freeze</quote> option prevents the program from
+		executing code while the command is running.
 	</section>
 </document>

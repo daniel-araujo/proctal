@@ -722,6 +722,26 @@ static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
+	if (yuck_arg->pattern.address_start_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->pattern.address_start_arg, &arg->address_start)) {
+			fputs("Invalid start address.\n", stderr);
+			destroy_cli_cmd_pattern_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_start = NULL;
+	}
+
+	if (yuck_arg->pattern.address_stop_arg != NULL) {
+		if (!cli_parse_address(yuck_arg->pattern.address_stop_arg, &arg->address_stop)) {
+			fputs("Invalid stop address.\n", stderr);
+			destroy_cli_cmd_pattern_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->address_stop = NULL;
+	}
+
 	arg->pattern = yuck_arg->args[0];
 
 	arg->read = yuck_arg->pattern.read_flag == 1;

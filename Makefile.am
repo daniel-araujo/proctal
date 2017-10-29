@@ -247,6 +247,9 @@ dist_check_SCRIPTS += src/cli/tests/search-range.py
 TESTS += src/cli/tests/search-review-range.py
 dist_check_SCRIPTS += src/cli/tests/search-review-range.py
 
+TESTS += src/cli/tests/pattern-range.py
+dist_check_SCRIPTS += src/cli/tests/pattern-range.py
+
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
 tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)

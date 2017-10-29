@@ -251,8 +251,12 @@ Examples:
   Searching for patterns in program code
         proctal pattern --pid=12345 --program-code "48 83 C0 01"
 
+  Searching from address DCA0 to DCAF
+	proctal pattern --pid=12345 --address-start=DCA0 --address-stop=DCAF 42
+
 
   PID_OPTION
+  ADDRESS_RANGE_OPTIONS
   --freeze              Whether to keep the program frozen while searching.
   -r, --read            Readable memory.
   -w, --write           Writable memory.

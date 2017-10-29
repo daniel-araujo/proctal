@@ -6,6 +6,12 @@ struct cli_cmd_pattern_arg {
 
 	const char *pattern;
 
+	// If not NULL, start searching from this address.
+	void *address_start;
+
+	// If not NULL, search up to this address.
+	void *address_stop;
+
 	// Whether to search readable memory addresses.
 	int read;
 

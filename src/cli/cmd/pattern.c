@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include <stdint.h>
 
 #include "cli/cmd/pattern.h"
 #include "cli/printer.h"
@@ -8,9 +9,9 @@
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
 
-static void print_match(void *addr)
+static void print_match(void *address)
 {
-	cli_print_address(addr);
+	cli_print_address(address);
 	printf("\n");
 }
 
@@ -65,6 +66,9 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		goto exit4;
 	}
 
+	void *address_start = arg->address_start;
+	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;
+
 	const size_t buffer_size = 1024 * 1024;
 	struct swbuf buf;
 	swbuf_init(&buf, buffer_size);
@@ -75,6 +79,19 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 	struct chunk chunk;
 
 	while (proctal_scan_region_next(p, &start, &end)) {
+		if (start < address_start) {
+			start = address_start;
+		}
+
+		if (end > address_stop) {
+			end = address_stop;
+		}
+
+		if (start >= end) {
+			// Out of range.
+			continue;
+		}
+
 		// Starting address of the matching pattern.
 		char *pattern_start = start;
 		cli_pattern_new(cp);
