@@ -199,6 +199,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 
 		cli_print_address(address);
 		printf("\n");
+		fflush(stdout);
 	}
 
 	ret = 0;
