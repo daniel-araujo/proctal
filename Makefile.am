@@ -250,6 +250,12 @@ dist_check_SCRIPTS += src/cli/tests/search-review-range.py
 TESTS += src/cli/tests/pattern-range.py
 dist_check_SCRIPTS += src/cli/tests/pattern-range.py
 
+TESTS += src/cli/tests/watch-range.py
+dist_check_SCRIPTS += src/cli/tests/watch-range.py
+
+TESTS += src/cli/tests/watch-unique.py
+dist_check_SCRIPTS += src/cli/tests/watch-unique.py
+
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
 tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)
@@ -259,6 +265,10 @@ check_PROGRAMS += tests/cli/program/read-mem-mt
 tests_cli_program_read_mem_mt_SOURCES = src/cli/tests/program/read-mem-mt.c
 tests_cli_program_read_mem_mt_CFLAGS = $(PROCTAL_CFLAGS)
 tests_cli_program_read_mem_mt_LDADD = -lpthread
+
+check_PROGRAMS += tests/cli/program/read-mem
+tests_cli_program_read_mem_SOURCES = src/cli/tests/program/read-mem.c
+tests_cli_program_read_mem_CFLAGS = $(PROCTAL_CFLAGS)
 
 check_PROGRAMS += tests/cli/program/sleeper
 tests_cli_program_sleeper_SOURCES = src/cli/tests/program/sleeper.c

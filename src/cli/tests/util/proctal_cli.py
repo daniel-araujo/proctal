@@ -11,6 +11,15 @@ Error messages are piped to stderr.
 
 proctal_exe = "./proctal"
 
+class Error(Exception):
+    pass
+
+class StopError(Error):
+    """Raised when the process is not running but was expected to be."""
+
+    def __init__(self):
+        super().__init__("Proctal is not running.")
+
 class Type:
     """Base class that all types must inherit."""
 
@@ -197,70 +206,63 @@ class ValueInteger(Value):
         else:
             return 0
 
-class FreezeProcess:
+class Process:
+    def __init__(self, process):
+        self._process = process
+
+    def _assert_running(self):
+        """Asserts that the process is still running."""
+        self._process.poll()
+
+        if self._process.returncode != None:
+            raise StopError()
+
+    def stop(self):
+        """Stops the command."""
+        self._process.kill()
+        self._process.wait()
+
+class FreezeProcess(Process):
     """Controls the freeze command."""
 
     def __init__(self, process):
-        self.process = process
+        super().__init__(process)
 
-    def stop(self):
-        """Stops the freeze command."""
-        self.process.kill()
-
-def freeze(pid):
-    """Runs the freeze command and returns an object that can control it."""
-    cmd = [proctal_exe, "freeze", "--pid=" + str(pid)]
-
-    process = subprocess.Popen(cmd)
-
-    # Waiting for the freeze command to perform. We should probably figure out
-    # a reliable way for it to tell us in some way when it has frozen the
-    # program instead of guessing when. This will be the culprit of
-    # false-positives.
-    time.sleep(0.033)
-
-    return FreezeProcess(process)
-
-class WatchProcess:
+class WatchProcess(Process):
     """Controls the watch command."""
 
     def __init__(self, process):
-        self.process = process
+        super().__init__(process)
+        self.poll = select.poll()
+        self.poll.register(self._process.stdout, select.POLLIN)
 
-    def has_match(self):
-        """Checks whether the watch process has found a match."""
-        poll = select.poll()
-        poll.register(self.process.stdout, select.POLLIN)
+    def wait_match(self, timeout):
+        """Waits for the watch process to report a match."""
+        self._assert_running()
 
-        return poll.poll(100)
+        r = self.poll.poll(timeout)
 
-    def stop(self):
-        """Stops the watch command."""
-        self.process.kill()
-        self.process.wait()
+        if not r:
+            return False
 
-def watch(pid, address, permission="rw"):
-    """Runs the watch command."""
-    cmd = [
-        proctal_exe,
-        "watch",
-        "--pid=" + str(pid),
-        "--address=" + address,
-        "-" + permission
-    ]
+        return any([i[1] == select.POLLIN for i in r])
 
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    def next_match(self):
+        """Reads the next available match."""
+        self._assert_running()
 
-    # Waiting for the watch command to perform.
-    # TODO: Find a reliable way to detect when the watcher has started.
-    time.sleep(0.033)
+        address_type = TypeAddress()
 
-    process.poll()
+        line = self._process.stdout.readline().decode("utf-8")
 
-    if process.returncode != None:
-        return None
+        if line == '':
+            # No more lines to read.
+            return None
 
-    return WatchProcess(process)
+        address = ValueAddress(address_type)
+        address.parse(line[:-1])
+
+        return SearchMatch(address, None)
 
 class SearchMatch:
     """Represents a search match."""
@@ -269,18 +271,22 @@ class SearchMatch:
         self.address = address
         self.value = value
 
-class SearchProcess:
+class SearchProcess(Process):
     """Controls the search command."""
 
     def __init__(self, process, type):
-        self.process = process
+        super().__init__(process)
         self._type = type
 
     def match_iterator(self):
+        """An iterator that goes through all the matches that are currently
+        available."""
+        self._assert_running()
+
         address_type = TypeAddress()
 
         while True:
-            line = self.process.stdout.readline().decode("utf-8")
+            line = self._process.stdout.readline().decode("utf-8")
 
             if line == '':
                 # No more lines to read.
@@ -296,10 +302,119 @@ class SearchProcess:
 
             yield SearchMatch(address, value)
 
-    def stop(self):
-        """Stops the command."""
-        self.process.kill()
-        self.process.wait()
+class PatternProcess(Process):
+    """Controls the pattern command."""
+
+    def __init__(self, process):
+        super().__init__(process)
+
+    def match_iterator(self):
+        """An iterator that goes through all the matches that are currently
+        available."""
+        self._assert_running()
+
+        address_type = TypeAddress()
+
+        while True:
+            line = self._process.stdout.readline().decode("utf-8")
+
+            if line == '':
+                # No more lines to read.
+                break
+
+            address = ValueAddress(address_type)
+            address.parse(line[:-1])
+
+            yield SearchMatch(address, None)
+
+class ReadProcess(Process):
+    """Controls the read command."""
+
+    def __init__(self, process, type):
+        super().__init__(process)
+        self._type = type
+
+    def next_value(self):
+        """Gets the next available value."""
+        self._assert_running()
+
+        line = self._process.stdout.readline().decode("utf-8")
+
+        if line == '':
+            return None
+
+        value = self._type.create_value()
+        value.parse(line[:-1])
+
+        return value
+
+class DumpProcess(Process):
+    """Controls the dump command."""
+
+    def __init__(self, process):
+        super().__init__(process)
+
+    def byte_iterator(self):
+        """Iterates over every byte that is being dumped."""
+        self._assert_running()
+
+        poll = select.poll()
+        poll.register(self._process.stdout, select.POLLIN)
+
+        while True:
+            if not poll.poll(33):
+                break
+
+            byte = self._process.stdout.read(1)
+
+            if len(byte) == 0:
+                break
+
+            yield byte
+
+def freeze(pid):
+    """Runs the freeze command and returns an object that can control it."""
+    cmd = [proctal_exe, "freeze", "--pid=" + str(pid)]
+
+    process = subprocess.Popen(cmd)
+
+    # Waiting for the freeze command to perform. We should probably figure out
+    # a reliable way for it to tell us in some way when it has frozen the
+    # program instead of guessing when. This will be the culprit of
+    # false-positives.
+    time.sleep(0.033)
+
+    return FreezeProcess(process)
+
+def watch(pid, address, watch=None, address_start=None, address_stop=None, unique=None):
+    """Runs the watch command."""
+    cmd = [
+        proctal_exe,
+        "watch",
+        "--pid=" + str(pid),
+        "--address=" + str(address),
+    ]
+
+    if watch != None:
+        cmd.append("-" + str(watch))
+
+    if address_start != None:
+        cmd.append("--address-start=" + str(address_start))
+
+    if address_stop != None:
+        cmd.append("--address-stop=" + str(address_stop))
+
+    if unique:
+        cmd.append("--unique")
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+    process.poll()
+
+    if process.returncode != None:
+        return None
+
+    return WatchProcess(process)
 
 def search(pid, type=TypeByte, eq=None, permission=None, address_start=None, address_stop=None, review=None):
     """Runs the search command."""
@@ -339,32 +454,6 @@ def search(pid, type=TypeByte, eq=None, permission=None, address_start=None, add
         return None
 
     return SearchProcess(process, type)
-
-class PatternProcess:
-    """Controls the pattern command."""
-
-    def __init__(self, process):
-        self.process = process
-
-    def match_iterator(self):
-        address_type = TypeAddress()
-
-        while True:
-            line = self.process.stdout.readline().decode("utf-8")
-
-            if line == '':
-                # No more lines to read.
-                break
-
-            address = ValueAddress(address_type)
-            address.parse(line[:-1])
-
-            yield SearchMatch(address, None)
-
-    def stop(self):
-        """Stops the command."""
-        self.process.kill()
-        self.process.wait()
 
 def pattern(pid, pattern, permission=None, address_start=None, address_stop=None):
     """Runs the pattern command."""
@@ -477,29 +566,6 @@ def execute(pid, code):
     else:
         return False
 
-class ReadProcess:
-    """Controls the read command."""
-
-    def __init__(self, process, type):
-        self.process = process
-        self._type = type
-
-    def next_value(self):
-        line = self.process.stdout.readline().decode("utf-8")
-
-        if line == '':
-            return None
-
-        value = self._type.create_value()
-        value.parse(line[:-1])
-
-        return value
-
-    def stop(self):
-        """Stops the command."""
-        self.process.kill()
-        self.process.wait()
-
 def read(pid, address, type, array=None):
     """Runs the read command."""
 
@@ -517,34 +583,6 @@ def read(pid, address, type, array=None):
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
     return ReadProcess(process, type)
-
-class DumpProcess:
-    """Controls the dump command."""
-
-    def __init__(self, process):
-        self.process = process
-
-    def byte_iterator(self):
-        """Iterates over every byte that is being dumped."""
-
-        poll = select.poll()
-        poll.register(self.process.stdout, select.POLLIN)
-
-        while True:
-            if not poll.poll(33):
-                break
-
-            byte = self.process.stdout.read(1)
-
-            if len(byte) == 0:
-                break
-
-            yield byte
-
-    def stop(self):
-        """Stops the command."""
-        self.process.kill()
-        self.process.wait()
 
 def dump(pid, permission=None, address_start=None, address_stop=None):
     """Runs the dump command."""
