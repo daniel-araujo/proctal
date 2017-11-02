@@ -15,6 +15,18 @@ class Proc:
         self.process.kill()
         self.process.wait()
 
+    def stopped(self):
+        """Stops whether the program has stopped."""
+        self.process.poll()
+        return self.process.returncode != None
+
+    def wait_stop(self, timeout):
+        """Waits for the program to stop."""
+        try:
+            self.process.wait(timeout)
+        except subprocess.TimeoutExpired:
+            return
+
     def address(self):
         """Returns the address of the variable that is being read."""
         return self._address
