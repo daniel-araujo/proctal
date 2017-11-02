@@ -24,6 +24,7 @@ static const char *proctal_error_messages[] = {
 	[PROCTAL_ERROR_PROGRAM_EXITED] = "Program has exited.",
 	[PROCTAL_ERROR_PROGRAM_STOPPED] = "Program has stopped.",
 	[PROCTAL_ERROR_PROGRAM_UNTAMEABLE] = "Program is in a state that cannot be dealt with.",
+	[PROCTAL_ERROR_PROGRAM_TRAPPED] = "Program got trapped.",
 	[PROCTAL_ERROR_INTERRUPT] = "An interrupt occurred.",
 	[PROCTAL_ERROR_PROGRAM_INTERRUPT] = "Program got interrupt.",
 };
