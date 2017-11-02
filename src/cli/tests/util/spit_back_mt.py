@@ -10,7 +10,8 @@ class Proc:
 
     def stop(self):
         """Stops the program."""
-        self.process.kill()
+        self.process.terminate()
+        self.process.wait()
 
     def ping(self):
         """Checks whether the program is responsive."""

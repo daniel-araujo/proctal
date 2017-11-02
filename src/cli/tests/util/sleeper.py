@@ -11,7 +11,7 @@ class Proc:
 
     def stop(self):
         """Stops the program."""
-        self.process.kill()
+        self.process.terminate()
         self.process.wait()
 
     def pid(self):

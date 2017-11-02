@@ -219,7 +219,7 @@ class Process:
 
     def stop(self):
         """Stops the command."""
-        self._process.kill()
+        self._process.terminate()
         self._process.wait()
 
 class FreezeProcess(Process):
