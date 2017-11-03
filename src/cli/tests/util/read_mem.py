@@ -23,7 +23,7 @@ class Proc:
     def wait_stop(self, timeout):
         """Waits for the program to stop."""
         try:
-            self.process.wait(timeout)
+            self.process.wait(timeout / 1000)
         except subprocess.TimeoutExpired:
             return
 

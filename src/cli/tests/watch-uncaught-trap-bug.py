@@ -18,7 +18,7 @@ try:
         watcher.stop()
 
     # If a trap was not caught, the program will stop.
-    guinea.wait_stop(100)
+    guinea.wait_stop(200)
 
     if guinea.stopped():
         sys.stderr.write("Program died.\n")
