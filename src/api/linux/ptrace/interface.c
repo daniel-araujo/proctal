@@ -79,10 +79,31 @@ static int wait_ptrace_stop(struct proctal_linux *pl, struct proctal_linux_ptrac
 	for (;;) {
 		waitpid(task->tid, &wstatus, WUNTRACED);
 
-		if (WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP) {
-			task->running = 0;
-			return 1;
-		} else if (!handle_signal_status(pl, task, wstatus)) {
+		if (WIFSTOPPED(wstatus)) {
+			switch (WSTOPSIG(wstatus)) {
+			case SIGTRAP:
+				// We may have placed a breakpoint but were not
+				// able to handle it quickly enough, so if we
+				// sent SIGSTOP while the program was "trapped"
+				// we are never going to receive it unless we
+				// restore execution and check for the signal
+				// again.
+				if (ptrace(PTRACE_CONT, task->tid, 0, 0) != 0) {
+					proctal_linux_ptrace_check_stop_state_errno(pl);
+					return 0;
+				}
+				continue;
+
+			case SIGSTOP:
+				task->running = 0;
+				return 1;
+
+			default:
+				break;
+			}
+		}
+
+		if (!handle_signal_status(pl, task, wstatus)) {
 			return 0;
 		}
 	}
