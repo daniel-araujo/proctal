@@ -182,7 +182,7 @@ while (proctal_scan_region_next(proctal, &amp;start, &amp;end)) {}
 
 		When the return value is 1, it means that the function has
 		provided you with addresses. When it returns 0 it can mean two
-		things. Either the function has iterated over all regions it
+		things. Either the function has iterated over all regions or it
 		has hit an error.
 
 		To find out whether the return value 0 indicates an error, you
