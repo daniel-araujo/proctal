@@ -7,7 +7,8 @@
 	PID). Proctal needs this number to identify the program you want to
 	take control of.
 
-	This tutorial teaches a couple of ways to find the PID of a program.
+	These are a couple of methods for finding the PID of a program on
+	Linux.
 
 	<section>
 		<title>pidof</title>
@@ -39,10 +40,9 @@ $ pgrep prog*am-n?me
 		<title>ps and grep</title>
 
 		<quote>grep</quote> matches patterns and <quote>ps</quote>
-		prints a row with information about each program running on the
-		system. By piping the output of <quote>ps</quote> to
-		<quote>grep</quote>, you can filter out most of the rows that
-		you're not interested in.
+		prints a row for each program running on the system. By piping
+		the output of <quote>ps</quote> to <quote>grep</quote>, you can
+		find the row for the program you are interested in.
 
 		<code type="bash-prompt">
 $ ps ax | grep program-name
