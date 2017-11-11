@@ -5,17 +5,7 @@
 #include "api/proctal.h"
 #include "api/implementation.h"
 
-unsigned int proctal_version_major(void)
+unsigned int proctal_version(void)
 {
-	return PROCTAL_VERSION_MAJOR;
-}
-
-unsigned int proctal_version_minor(void)
-{
-	return PROCTAL_VERSION_MINOR;
-}
-
-unsigned int proctal_version_patch(void)
-{
-	return PROCTAL_VERSION_PATCH;
+	return PROCTAL_VERSION;
 }

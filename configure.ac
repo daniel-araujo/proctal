@@ -1,6 +1,6 @@
 AC_PREREQ([2.69])
 
-AC_INIT([proctal], [0.0.0], [bugs@proctal.io], [proctal], [https://proctal.io])
+AC_INIT([proctal], [0], [bugs@proctal.io], [proctal], [https://proctal.io])
 
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([src/api/include/proctal.h])
@@ -43,7 +43,7 @@ PROCTAL_FIND_LIB([PROCTAL_KEYSTONE], [keystone], [ks_version])
 
 PROCTAL_COMPILATION_FLAGS
 
-PROCTAL_VERSION
+PROCTAL_RELEASE_VERSION
 PROCTAL_SO_VERSION([0], [0], [0])
 
 PROCTAL_RUN_CONFIGURE([$srcdir/darr], [darr])

@@ -762,18 +762,8 @@ void proctal_malloc_set(void *(*malloc)(size_t));
 void proctal_free_set(void (*free)(void *));
 
 /*
- * Returns the major part of the version number.
+ * Returns the version number.
  */
-unsigned int proctal_version_major(void);
-
-/*
- * Returns the minor part of the version number.
- */
-unsigned int proctal_version_minor(void);
-
-/*
- * Returns the patch part of the version number.
- */
-unsigned int proctal_version_patch(void);
+unsigned int proctal_version(void);
 
 #endif /* PROCTAL_H */
