@@ -15,13 +15,13 @@
 	look like this:
 
 	<code type="bash-prompt">
-$ proctal watch --pid=12345 --address=1c09346 --read --write
+$ proctal watch --pid=12345 --read --write 1c09346
 	</code>
 
 	The command will print the value of the instruction pointer after
 	detecting that the given memory address was accessed. Note that the
-	the instruction pointer may not actually be pointing at the instruction
-	that actually accessed the memory address.
+	instruction pointer may not actually be pointing at the instruction
+	that accessed the memory address.
 
 	You can stop the command by sending it the <quote>SIGINT</quote> signal
 	(<quote>^C</quote> on most terminals).

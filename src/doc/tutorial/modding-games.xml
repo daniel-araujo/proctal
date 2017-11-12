@@ -233,13 +233,14 @@ $ proctal write --pid=12345 --type=integer --integer-bits=32 --address=726BA1DA 
 		726BA1DA, here's how the command looks like:
 
 		<code type="bash-prompt">
-$ proctal watch -rw --pid=12345 --address=726BA1DA --unique
+$ proctal watch --pid=12345 --read --write --unique 726BA1DA
 [...]
 418BAC
 		</code>
 
 		So somewhere at address <quote>418BAC</quote> sits the
-		instruction that accessed the health meter after it decreased.
+		instruction that accessed the health meter as it's being
+		decreased.
 
 		<note>
 			TODO: This part needs to be written.

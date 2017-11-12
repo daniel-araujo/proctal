@@ -392,7 +392,7 @@ def watch(pid, address, watch=None, address_start=None, address_stop=None, uniqu
         proctal_exe,
         "watch",
         "--pid=" + str(pid),
-        "--address=" + str(address),
+        str(address),
     ]
 
     if watch != None:

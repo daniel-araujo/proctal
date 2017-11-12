@@ -279,26 +279,23 @@ Examples:
 
 
 
-Usage: proctal watch
-Detects when a memory address is accessed.
+Usage: proctal watch ADDRESS
+Detects accesses to a memory address.
 
-Prints the memory address of the instruction to be executed the moment after a
-memory address is read, written or executed.
-
-Because detection only happens after the fact, the detected memory address may
-not be of the instruction that actually accessed the given memory address.
+Prints the value of the instruction pointer after detecting that the given
+memory address was accessed. Note that the instruction pointer may not actually
+be pointing at the instruction that accessed the memory address.
 
 Examples:
   Watching for any instruction reading or writing to 1c09346
-        proctal watch --pid=12345 --address=1c09346 -rw
+        proctal watch --pid=12345 --read --write 1c09346
 
-  Watching for 1c09346 being executed as an instruction
-        proctal watch --pid=12345 --address=1c09346 -x
+  Watching for 1c09346 being executed
+        proctal watch --pid=12345 --execute 1c09346
 
 
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
-  --address=ADDRESS     Address to watch.
   -r, --read            Read access.
   -w, --write           Write access.
   -x, --execute         Execute instruction.

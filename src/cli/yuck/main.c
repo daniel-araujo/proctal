@@ -803,8 +803,14 @@ static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	if (yuck_arg->nargs != 0) {
-		fputs("Too many arguments.\n", stderr);
+	if (yuck_arg->nargs != 1) {
+		fputs("Wrong number of arguments.\n", stderr);
+		destroy_cli_cmd_watch_arg(arg);
+		return NULL;
+	}
+
+	if (!cli_parse_address(yuck_arg->args[0], &arg->address)) {
+		fputs("Invalid address.\n", stderr);
 		destroy_cli_cmd_watch_arg(arg);
 		return NULL;
 	}
@@ -817,18 +823,6 @@ static struct cli_cmd_watch_arg *create_cli_cmd_watch_arg(yuck_t *yuck_arg)
 
 	if (!cli_parse_int(yuck_arg->watch.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_cli_cmd_watch_arg(arg);
-		return NULL;
-	}
-
-	if (yuck_arg->watch.address_arg == NULL) {
-		fputs("OPTION --address is required.\n", stderr);
-		destroy_cli_cmd_watch_arg(arg);
-		return NULL;
-	}
-
-	if (!cli_parse_address(yuck_arg->watch.address_arg, &arg->address)) {
-		fputs("Invalid address.\n", stderr);
 		destroy_cli_cmd_watch_arg(arg);
 		return NULL;
 	}
