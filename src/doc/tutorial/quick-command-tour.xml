@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Quick command tour</title>
+
+	<section>
+		<title>Reading values in memory</title>
+
+		32-bit integer:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=EC5E096F --type=integer --integer-bits=32
+571
+		</code>
+
+		Double precision floating-point number:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=3B0335D5 --type=ieee754 --ieee754-precision=double
+25.2
+		</code>
+
+		Array of 32-bit integers:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=EC5E096F --type=integer --integer-bits=32 --array=4
+571
+
+0
+-235893634
+-759425
+		</code>
+	</section>
+
+	<section>
+		<title>Writing values to memory</title>
+
+		32-bit integer:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=EC5E096F --type=integer --integer-bits=32 571
+		</code>
+
+		Double precision floating-point number:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=3B0335D5 --type=ieee754 --ieee754-precision=double 25.2
+		</code>
+
+		Four 32-bit integers:
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --address=EC5E096F --type=integer --integer-bits=32 571 0 -235893634 -759425
+		</code>
+	</section>
+
+	<section>
+		<title>Searching values in memory</title>
+
+		All 32-bit integers with the value 32:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --eq=32
+211399D0 32
+783BC3F7 32
+B0032BAD 32
+F263741D 32
+[...]
+		</code>
+
+		Checking which have changed since the previous search:
+
+		<code type="bash-prompt">
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --eq=32 &gt; results
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --changed --review &lt; results
+211399D0 35
+783BC3F7 1
+B0032BAD -1245
+F263741D 239478923
+[...]
+		</code>
+	</section>
+
+	<section>
+		<title>Watching for memory accesses</title>
+
+		Watching for reads and writes on address
+		<quote>1c09346</quote>.
+
+		<code type="bash-prompt">
+$ proctal watch --pid=12345 --address=1c09346 --read --write
+		</code>
+	</section>
+
+	<section>
+		<title>Finding instructions in memory</title>
+
+		A <quote>call</quote> instruction followed by a
+		<quote>sub</quote> that acts on the <quote>rsp</quote>
+		register.
+
+		<code type="bash-prompt">
+$ proctal pattern --pid=12345 '48 83 EC ?? E8 ?? ?? ?? ??'
+493690
+8F255B
+9DD660
+$ proctal read --pid=12345 --address=493690 --type=instruction --array=2 --show-address --show-bytes
+493690  sub     rsp, 0x18
+        48 83 EC 18
+493694  call    0x49364c
+        E8 AF FF FF FF
+		</code>
+	</section>
+
+	<section>
+		<title>Disassembling instructions in memory</title>
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=400570 --type=instruction --array=5
+sub     rsp, 0x18
+mov     dword ptr [rsp + 0xc], 0
+call    0x400530
+mov     edi, 0x400764
+mov     esi, eax
+		</code>
+
+		With corresponding addresses:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address
+400570  sub     rsp, 0x18
+400574  mov     dword ptr [rsp + 0xc], 0
+40057C  call    0x400530
+400581  mov     edi, 0x400764
+400586  mov     esi, eax
+		</code>
+
+		With bytecode:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address --show-bytes
+400570  sub     rsp, 0x18
+        48 83 EC 18
+400574  mov     dword ptr [rsp + 0xc], 0
+        C7 44 24 0C 00 00 00 00
+40057C  call    0x400530
+        E8 AF FF FF FF
+400581  mov     edi, 0x400764
+        BF 64 07 40 00
+400586  mov     esi, eax
+        89 C6
+		</code>
+	</section>
+
+	<section>
+		<title>Allocating memory</title>
+
+		Allocating 32 bytes:
+
+		<code type="bash-prompt">
+$ proctal allocate --pid=12345 32
+636DFF6F
+		</code>
+
+		Deallocating:
+
+		<code type="bash-prompt">
+$ proctal deallocate --pid=12345 636DFF6F
+		</code>
+	</section>
+
+	<section>
+		<title>Dumping memory contents to file</title>
+
+		Dump everything to <quote>dump.bin</quote>:
+
+		<code type="bash-prompt">
+$ proctal dump --pid=12345 &gt; dump.bin
+		</code>
+
+		Only dump what's between <quote>7F7BE75E0714</quote> and
+		<quote>7F7BE75ED1A0</quote>:
+
+		<code type="bash-prompt">
+$ proctal dump --pid=12345 --address-start=7F7BE75E0714 --address-stop=7F7BE75ED1A0 &gt; dump.bin
+		</code>
+	</section>
+
+	<section>
+		<title>Pausing program execution</title>
+
+		Stop the command to unpause on your terminal by pressing
+		<quote>CTRL + C</quote>.
+
+		<code type="bash-prompt">
+$ proctal freeze --pid=12345
+		</code>
+	</section>
+
+	<section>
+		<title>Executing code</title>
+
+		Executing a couple of no-ops.
+
+		<code type="bash-prompt">
+$ proctal execute --pid=12345 &lt;&lt;EOD
+	nop ; This is a comment
+	nop
+	nop
+	nop
+	nop
+EOD
+		</code>
+	</section>
+</document>
