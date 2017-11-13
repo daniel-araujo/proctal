@@ -420,3 +420,12 @@ AC_DEFUN([PROCTAL_COMPILATION_FLAGS], [
 		AS_VAR_APPEND([PROCTAL_LDFLAGS], [" -static"])
 	])
 ])
+
+dnl PROCTAL_META
+dnl
+dnl Allows code to reference contents inside the project.
+AC_DEFUN([PROCTAL_META], [
+	AH_TEMPLATE([PROCTAL_META_DIR_SRC], [Define to source directory.])
+
+	AC_DEFINE_UNQUOTED([PROCTAL_META_DIR_SRC], ["$srcdir/src"])
+])

@@ -66,6 +66,13 @@ struct proctal_linux_proc_maps_region_check {
 int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid);
 
 /*
+ * Opens a maps file.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int proctal_linux_proc_maps_fopen(struct proctal_linux_proc_maps *maps, const char *path);
+
+/*
  * Closes a maps file.
  */
 void proctal_linux_proc_maps_close(struct proctal_linux_proc_maps *maps);

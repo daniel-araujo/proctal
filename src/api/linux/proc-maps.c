@@ -112,32 +112,6 @@ static inline void read_until_nl(FILE *maps, struct proctal_darr *buffer)
 
 int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *region, struct proctal_linux_proc_maps_region_check *check)
 {
-	if (check->mask & PROCTAL_REGION_STACK) {
-		if (proctal_darr_size(&region->name) == 0 || strncmp(proctal_darr_data(&region->name), "[stack", 6) == 0) {
-			return 0;
-		}
-	}
-
-	if (check->mask & PROCTAL_REGION_HEAP) {
-		if (proctal_darr_size(&region->name) == 0 || strcmp(proctal_darr_data(&region->name), "[heap]") == 0) {
-			return 0;
-		}
-	}
-
-	if (check->mask & PROCTAL_REGION_PROGRAM_CODE) {
-		const struct proctal_darr *program_path = proctal_linux_program_path(check->pid);
-		int same_path = strcmp(proctal_darr_data(&region->name), proctal_darr_data_const(program_path)) == 0;
-		proctal_linux_program_path_dispose(program_path);
-
-		if (same_path && region->execute) {
-			return 1;
-		}
-	}
-
-	if (check->mask != 0) {
-		return 0;
-	}
-
 	if (check->read) {
 		if (!region->read) {
 			return 0;
@@ -158,18 +132,47 @@ int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *
 		return 0;
 	}
 
-	if (check->mask == 0) {
-		return 1;
+	if (check->mask) {
+		if (check->mask & PROCTAL_REGION_STACK) {
+			if (proctal_darr_size(&region->name) != 0 && strncmp(proctal_darr_data(&region->name), "[stack", 6) == 0) {
+				return 1;
+			}
+		}
+
+		if (check->mask & PROCTAL_REGION_HEAP) {
+			if (proctal_darr_size(&region->name) != 0 && strcmp(proctal_darr_data(&region->name), "[heap]") == 0) {
+				return 1;
+			}
+		}
+
+		if (check->mask & PROCTAL_REGION_PROGRAM_CODE) {
+			const struct proctal_darr *program_path = proctal_linux_program_path(check->pid);
+			int same_path = strcmp(proctal_darr_data(&region->name), proctal_darr_data_const(program_path)) == 0;
+			proctal_linux_program_path_dispose(program_path);
+
+			if (same_path && region->execute) {
+				return 1;
+			}
+		}
+
+		return 0;
 	}
 
-	return 0;
+	return 1;
 }
 
 int proctal_linux_proc_maps_open(struct proctal_linux_proc_maps *maps, pid_t pid)
 {
 	const struct proctal_darr *path = proctal_linux_proc_path(pid, "maps");
-	FILE *file = fopen(proctal_darr_data_const(path), "r");
+	int ret = proctal_linux_proc_maps_fopen(maps, proctal_darr_data_const(path));
 	proctal_linux_proc_path_dispose(path);
+
+	return ret;
+}
+
+int proctal_linux_proc_maps_fopen(struct proctal_linux_proc_maps *maps, const char *path)
+{
+	FILE *file = fopen(path, "r");
 
 	if (file == NULL) {
 		return 0;

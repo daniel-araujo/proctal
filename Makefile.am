@@ -369,6 +369,18 @@ tests_api_linux_proc_path_size_SOURCES = src/api/linux/tests/proc-path-size.c
 tests_api_linux_proc_path_size_CFLAGS = $(PROCTAL_CFLAGS)
 tests_api_linux_proc_path_size_LDADD = libproctal.la
 
+TESTS += tests/api/linux/proc-maps/correct-properties
+check_PROGRAMS += tests/api/linux/proc-maps/correct-properties
+tests_api_linux_proc_maps_correct_properties_SOURCES = src/api/linux/tests/proc-maps/correct-properties.c
+tests_api_linux_proc_maps_correct_properties_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_linux_proc_maps_correct_properties_LDADD = libproctal.la
+
+TESTS += tests/api/linux/proc-maps/check
+check_PROGRAMS += tests/api/linux/proc-maps/check
+tests_api_linux_proc_maps_check_SOURCES = src/api/linux/tests/proc-maps/check.c
+tests_api_linux_proc_maps_check_CFLAGS = $(PROCTAL_CFLAGS)
+tests_api_linux_proc_maps_check_LDADD = libproctal.la
+
 if PROCTAL_CPU_ARCHITECTURE_X86_64
 
 libproctal_la_SOURCES += \
