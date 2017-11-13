@@ -80,5 +80,6 @@ int cli_parse_val_instruction_syntax(const char *s, enum cli_val_instruction_syn
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 int cli_parse_assembler_architecture(const char *s, enum cli_assembler_architecture *val);
 int cli_parse_assembler_syntax(const char *s, enum cli_assembler_syntax *val);
+int cli_parse_proctal_region(const char *s, int *val);
 
 #endif /* CLI_PARSER_H */

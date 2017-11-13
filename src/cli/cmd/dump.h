@@ -10,6 +10,10 @@ struct cli_cmd_dump_arg {
 	// Where to stop dumping. Pass NULL to ignore this.
 	void *address_stop;
 
+	// Regions to search. Set to 0 to search all. Choose regions by using
+	// macros that start with PROCTAL_REGION.
+	int region;
+
 	// Whether to dump readable memory addresses.
 	int read;
 
@@ -18,9 +22,6 @@ struct cli_cmd_dump_arg {
 
 	// Whether to dump executable memory addresses.
 	int execute;
-
-	// Whether to dump program code.
-	int program_code;
 
 	// Whether to keep the program frozen while dumping.
 	int freeze;

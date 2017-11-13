@@ -43,13 +43,7 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 		arg->address_stop = (void *) ~((uintptr_t) 0);
 	}
 
-	long mask = 0;
-
-	if (arg->program_code) {
-		mask |= PROCTAL_REGION_PROGRAM_CODE;
-	}
-
-	proctal_scan_region_mask_set(p, mask);
+	proctal_scan_region_mask_set(p, arg->region);
 
 	proctal_scan_region_start(p);
 

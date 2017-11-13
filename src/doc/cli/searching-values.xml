@@ -36,17 +36,28 @@
 			lesser than or equal to the given value.</item>
 		</list>
 
-		These options restrict where to search in memory:
+		The <quote>--region</quote> option lets you specify which
+		memory regions to dump. It takes the following values:
 
 		<list>
-			<item><quote>--read</quote> search readable
-			memory</item>
+			<item><quote>stack</quote> contents on the stack of
+			every thread</item>
 
-			<item><quote>--write</quote> search writable
-			memory.</item>
+			<item><quote>heap</quote> contents on the heap</item>
 
-			<item><quote>--execute</quote> search executable
-			memory.</item>
+			<item><quote>program-code</quote> instructions from the
+			executable (does not include shared libraries)</item>
+		</list>
+
+		These options let you specify whether the memory regions have
+		to be readable, writeable or executable:
+
+		<list>
+			<item><quote>--read</quote></item>
+
+			<item><quote>--write</quote></item>
+
+			<item><quote>--execute</quote></item>
 		</list>
 
 		The <quote>--review</quote> option makes the command read the
@@ -116,23 +127,31 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --revi
 		Here's how you would search for potential function calls in x86:
 
 		<code type="bash-prompt">
-$ proctal pattern --pid=12345 --program-code 'E8 ?? ?? ?? ??'
+$ proctal pattern --pid=12345 --region=program-code 'E8 ?? ?? ?? ??'
 		</code>
 
-		These options restrict where to search in memory:
+		The <quote>--region</quote> option lets you specify which
+		memory regions to dump. It takes the following values:
 
 		<list>
-			<item><quote>--read</quote> search readable
-			memory</item>
+			<item><quote>stack</quote> contents on the stack of
+			every thread</item>
 
-			<item><quote>--write</quote> search writable
-			memory.</item>
+			<item><quote>heap</quote> contents on the heap</item>
 
-			<item><quote>--execute</quote> search executable
-			memory.</item>
+			<item><quote>program-code</quote> instructions from the
+			executable (does not include shared libraries)</item>
+		</list>
 
-			<item><quote>--program-code</quote> search in the
-			program's code.</item>
+		These options let you specify whether the memory regions have
+		to be readable, writeable or executable:
+
+		<list>
+			<item><quote>--read</quote></item>
+
+			<item><quote>--write</quote></item>
+
+			<item><quote>--execute</quote></item>
 		</list>
 
 		The <quote>--address-start</quote> option specifies where to

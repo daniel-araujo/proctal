@@ -12,6 +12,10 @@ struct cli_cmd_search_arg {
 	// If not NULL, search up to this address.
 	void *address_stop;
 
+	// Regions to search. Set to 0 to search all. Use macros that start
+	// with PROCTAL_REGION to choose regions.
+	int region;
+
 	// How we're going to interpret values.
 	cli_val value;
 

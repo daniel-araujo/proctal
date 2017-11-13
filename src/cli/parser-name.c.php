@@ -99,11 +99,21 @@ $parsers = [
 			"att" => "CLI_ASSEMBLER_SYNTAX_ATT",
 		],
 	],
+	[
+		"name" => "proctal_region",
+		"type" => "int",
+		"values" => [
+			"stack" => "PROCTAL_REGION_STACK",
+			"heap" => "PROCTAL_REGION_HEAP",
+			"program-code" => "PROCTAL_REGION_PROGRAM_CODE",
+		],
+	],
 ];
 
 ?>
 #include <string.h>
 
+#include "api/include/proctal.h"
 #include "cli/parser.h"
 #include "magic/magic.h"
 

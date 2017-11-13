@@ -1,6 +1,12 @@
 define(`PID_OPTION', `
   --pid=PID             Process ID (PID) of a program.
 ')dnl
+define(`REGION_OPTION', `
+  --region=REGION       Memory region. REGION can be:
+                        stack
+                        heap
+                        program-code
+')dnl
 define(`ADDRESS_RANGE_OPTIONS', `
   --address-start=ADDRESS
                         Where to start in memory.
@@ -202,6 +208,7 @@ Examples:
 
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
+  REGION_OPTION
   --review              Matches against the output of a previous run.
   --freeze              Whether to keep the program frozen while searching.
   TYPE_OPTIONS
@@ -249,7 +256,7 @@ Examples:
         proctal pattern --pid=12345 -x "E8 ?? ?? ?? ??  48 83 C0 01"
 
   Searching for patterns in program code
-        proctal pattern --pid=12345 --program-code "48 83 C0 01"
+        proctal pattern --pid=12345 --region=program-code "48 83 C0 01"
 
   Searching from address DCA0 to DCAF
 	proctal pattern --pid=12345 --address-start=DCA0 --address-stop=DCAF 42
@@ -257,11 +264,11 @@ Examples:
 
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
+  REGION_OPTION
   --freeze              Whether to keep the program frozen while searching.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
-  --program-code        Program code in memory.
 
 
 
@@ -411,7 +418,7 @@ Examples:
         proctal dump --pid=12345 > dump
 
   Dumping program code in memory to a file
-	proctal dump --pid=12345 --program-code > dump
+	proctal dump --pid=12345 --region=program-code > dump
 
   Dumping memory marked as executable to a file
 	proctal dump --pid=12345 -x > dump
@@ -422,8 +429,8 @@ Examples:
 
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
+  REGION_OPTION
   --freeze              Whether to keep the program frozen while dumping.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
-  --program-code        Program code in memory.

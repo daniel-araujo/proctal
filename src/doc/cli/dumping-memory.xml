@@ -12,16 +12,28 @@
 $ proctal dump --pid=12345 &gt; dump.bin
 	</code>
 
-	These options restrict what to dump from memory:
+	The <quote>--region</quote> option lets you specify which memory
+	regions to dump. It takes the following values:
 
 	<list>
-		<item><quote>--read</quote> readable memory</item>
+		<item><quote>stack</quote> contents on the stack of every
+		thread</item>
 
-		<item><quote>--write</quote> writable memory.</item>
+		<item><quote>heap</quote> contents on the heap</item>
 
-		<item><quote>--execute</quote> executable memory.</item>
+		<item><quote>program-code</quote> instructions from the
+		executable (does not include shared libraries)</item>
+	</list>
 
-		<item><quote>--program-code</quote> program's code.</item>
+	These options let you specify whether the memory regions have to be
+	readable, writeable or executable:
+
+	<list>
+		<item><quote>--read</quote></item>
+
+		<item><quote>--write</quote></item>
+
+		<item><quote>--execute</quote></item>
 	</list>
 
 	Here's how you would dump anything that is executable in memory to the

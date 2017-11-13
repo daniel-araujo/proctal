@@ -48,13 +48,7 @@ int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg)
 		proctal_scan_region_execute_set(p, arg->execute);
 	}
 
-	long mask = 0;
-
-	if (arg->program_code) {
-		mask |= PROCTAL_REGION_PROGRAM_CODE;
-	}
-
-	proctal_scan_region_mask_set(p, mask);
+	proctal_scan_region_mask_set(p, arg->region);
 
 	proctal_scan_region_start(p);
 

@@ -403,8 +403,8 @@ void setup_proctal(struct cli_cmd_search_arg *arg, proctal_t p)
 		proctal_scan_region_execute_set(p, arg->execute);
 	}
 
-	proctal_scan_address_region_set(p, 0);
-	proctal_scan_region_mask_set(p, 0);
+	proctal_scan_address_region_set(p, arg->region);
+	proctal_scan_region_mask_set(p, arg->region);
 }
 
 int cli_cmd_search(struct cli_cmd_search_arg *arg)

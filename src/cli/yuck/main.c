@@ -607,6 +607,16 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		arg->address_stop = NULL;
 	}
 
+	if (yuck_arg->search.region_arg != NULL) {
+		if (!cli_parse_proctal_region(yuck_arg->search.region_arg, &arg->region)) {
+			fputs("Invalid region.\n", stderr);
+			destroy_cli_cmd_search_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->region = 0;
+	}
+
 	struct type_options type_args;
 	if (!cli_type_options_search(&type_args, &yuck_arg->search)) {
 		destroy_cli_cmd_search_arg(arg);
@@ -742,12 +752,21 @@ static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 		arg->address_stop = NULL;
 	}
 
+	if (yuck_arg->pattern.region_arg != NULL) {
+		if (!cli_parse_proctal_region(yuck_arg->pattern.region_arg, &arg->region)) {
+			fputs("Invalid region.\n", stderr);
+			destroy_cli_cmd_pattern_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->region = 0;
+	}
+
 	arg->pattern = yuck_arg->args[0];
 
 	arg->read = yuck_arg->pattern.read_flag == 1;
 	arg->write = yuck_arg->pattern.write_flag == 1;
 	arg->execute = yuck_arg->pattern.execute_flag == 1;
-	arg->program_code = yuck_arg->pattern.program_code_flag == 1;
 
 	return arg;
 }
@@ -1127,10 +1146,19 @@ static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg(yuck_t *yuck_arg)
 		arg->address_stop = NULL;
 	}
 
+	if (yuck_arg->dump.region_arg != NULL) {
+		if (!cli_parse_proctal_region(yuck_arg->dump.region_arg, &arg->region)) {
+			fputs("Invalid region.\n", stderr);
+			destroy_cli_cmd_dump_arg(arg);
+			return NULL;
+		}
+	} else {
+		arg->region = 0;
+	}
+
 	arg->read = yuck_arg->dump.read_flag == 1;
 	arg->write = yuck_arg->dump.write_flag == 1;
 	arg->execute = yuck_arg->dump.execute_flag == 1;
-	arg->program_code = yuck_arg->dump.program_code_flag == 1;
 
 	return arg;
 }

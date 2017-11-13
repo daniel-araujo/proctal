@@ -12,6 +12,10 @@ struct cli_cmd_pattern_arg {
 	// If not NULL, search up to this address.
 	void *address_stop;
 
+	// Regions to search. Set to 0 to search all. Choose regions by using
+	// macros that start with PROCTAL_REGION.
+	int region;
+
 	// Whether to search readable memory addresses.
 	int read;
 
@@ -20,9 +24,6 @@ struct cli_cmd_pattern_arg {
 
 	// Whether to search executable memory addresses.
 	int execute;
-
-	// Whether to search program code.
-	int program_code;
 
 	// Whether to keep the program frozen while searching.
 	int freeze;
