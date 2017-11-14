@@ -1,6 +1,6 @@
 AC_PREREQ([2.69])
 
-AC_INIT([proctal], [0], [bugs@proctal.io], [proctal], [https://proctal.io])
+AC_INIT([Proctal], [0], [bugs@proctal.io], [proctal], [https://proctal.io])
 
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([src/api/include/proctal.h])
