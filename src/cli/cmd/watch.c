@@ -146,10 +146,8 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 	proctal_watch_execute_set(p, arg->execute);
 
 	struct matches matches;
-	if (arg->unique) {
-		if (handle_matches_error(matches_init(&matches))) {
-			goto exit2;
-		}
+	if (handle_matches_error(matches_init(&matches))) {
+		goto exit2;
 	}
 
 	proctal_watch_start(p);
@@ -206,9 +204,7 @@ int cli_cmd_watch(struct cli_cmd_watch_arg *arg)
 exit4:
 	proctal_watch_stop(p);
 exit3:
-	if (arg->unique) {
-		matches_deinit(&matches);
-	}
+	matches_deinit(&matches);
 exit2:
 	proctal_close(p);
 exit1:
