@@ -38,8 +38,12 @@ common_tests = [
         "expected_output": "Invalid text encoding.",
     },
     {
-        "command_args": ["--type=instruction", "--instruction-architecture=linux"],
-        "expected_output": "Invalid architecture.",
+        "command_args": ["--type=x86", "--x86-mode=8"],
+        "expected_output": "Invalid x86 mode.",
+    },
+    {
+        "command_args": ["--type=x86", "--x86-syntax=attt"],
+        "expected_output": "Invalid x86 syntax.",
     },
 ]
 

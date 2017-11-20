@@ -6,8 +6,10 @@
 #include "cli/val.h"
 #include "cli/val/integer.h"
 #include "cli/val/ieee754.h"
-#include "cli/val/instruction.h"
 #include "cli/val/text.h"
+#include "cli/val/x86.h"
+#include "cli/val/arm.h"
+#include "cli/val/aarch64.h"
 #include "cli/cmd/execute.h"
 #include "cli/assembler.h"
 
@@ -75,10 +77,11 @@ int cli_parse_val_integer_bits(const char *s, enum cli_val_integer_bits* val);
 int cli_parse_val_integer_sign(const char *s, enum cli_val_integer_sign *val);
 int cli_parse_val_ieee754_precision(const char *s, enum cli_val_ieee754_precision *val);
 int cli_parse_val_text_encoding(const char *s, enum cli_val_text_encoding *val);
-int cli_parse_val_instruction_architecture(const char *s, enum cli_val_instruction_architecture *val);
-int cli_parse_val_instruction_syntax(const char *s, enum cli_val_instruction_syntax *val);
+int cli_parse_val_x86_mode(const char *s, enum cli_val_x86_mode *val);
+int cli_parse_val_x86_syntax(const char *s, enum cli_val_x86_syntax *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 int cli_parse_assembler_architecture(const char *s, enum cli_assembler_architecture *val);
+int cli_parse_assembler_mode(const char *s, enum cli_assembler_mode *val);
 int cli_parse_assembler_syntax(const char *s, enum cli_assembler_syntax *val);
 int cli_parse_proctal_region(const char *s, int *val);
 

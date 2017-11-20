@@ -133,19 +133,47 @@ static struct cli_val_implementation implementations[] = {
 		.create_clone = (void *) cli_val_address_create_clone,
 		.destroy = (void *) cli_val_address_destroy,
 	},
-	[CLI_VAL_TYPE_INSTRUCTION] = {
-		.type = CLI_VAL_TYPE_INSTRUCTION,
+	[CLI_VAL_TYPE_X86] = {
+		.type = CLI_VAL_TYPE_X86,
 
-		.address_set = (void *) cli_val_instruction_address_set,
-		.address = (void *) cli_val_instruction_address,
-		.size = (void *) cli_val_instruction_sizeof,
-		.data = (void *) cli_val_instruction_data,
-		.print = (void *) cli_val_instruction_print,
-		.parse_text = (void *) cli_val_instruction_parse_text,
-		.parse_binary = (void *) cli_val_instruction_parse_binary,
+		.address_set = (void *) cli_val_x86_address_set,
+		.address = (void *) cli_val_x86_address,
+		.size = (void *) cli_val_x86_sizeof,
+		.data = (void *) cli_val_x86_data,
+		.print = (void *) cli_val_x86_print,
+		.parse_text = (void *) cli_val_x86_parse_text,
+		.parse_binary = (void *) cli_val_x86_parse_binary,
 
-		.create_clone = (void *) cli_val_instruction_create_clone,
-		.destroy = (void *) cli_val_instruction_destroy,
+		.create_clone = (void *) cli_val_x86_create_clone,
+		.destroy = (void *) cli_val_x86_destroy,
+	},
+	[CLI_VAL_TYPE_ARM] = {
+		.type = CLI_VAL_TYPE_ARM,
+
+		.address_set = (void *) cli_val_arm_address_set,
+		.address = (void *) cli_val_arm_address,
+		.size = (void *) cli_val_arm_sizeof,
+		.data = (void *) cli_val_arm_data,
+		.print = (void *) cli_val_arm_print,
+		.parse_text = (void *) cli_val_arm_parse_text,
+		.parse_binary = (void *) cli_val_arm_parse_binary,
+
+		.create_clone = (void *) cli_val_arm_create_clone,
+		.destroy = (void *) cli_val_arm_destroy,
+	},
+	[CLI_VAL_TYPE_AARCH64] = {
+		.type = CLI_VAL_TYPE_AARCH64,
+
+		.address_set = (void *) cli_val_aarch64_address_set,
+		.address = (void *) cli_val_aarch64_address,
+		.size = (void *) cli_val_aarch64_sizeof,
+		.data = (void *) cli_val_aarch64_data,
+		.print = (void *) cli_val_aarch64_print,
+		.parse_text = (void *) cli_val_aarch64_parse_text,
+		.parse_binary = (void *) cli_val_aarch64_parse_binary,
+
+		.create_clone = (void *) cli_val_aarch64_create_clone,
+		.destroy = (void *) cli_val_aarch64_destroy,
 	},
 };
 

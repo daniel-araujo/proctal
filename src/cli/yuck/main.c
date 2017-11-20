@@ -34,8 +34,8 @@ struct type_options {
 	enum cli_val_integer_bits integer_bits;
 	enum cli_val_ieee754_precision ieee754_precision;
 	enum cli_val_text_encoding text_encoding;
-	enum cli_val_instruction_architecture instruction_architecture;
-	enum cli_val_instruction_syntax instruction_syntax;
+	enum cli_val_x86_mode x86_mode;
+	enum cli_val_x86_syntax x86_syntax;
 };
 
 /*
@@ -109,15 +109,45 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 		return cli_val_wrap(ta->type, v);
 	}
 
-	case CLI_VAL_TYPE_INSTRUCTION: {
-		struct cli_val_instruction_attr a;
-		cli_val_instruction_attr_init(&a);
-		cli_val_instruction_attr_architecture_set(&a, ta->instruction_architecture);
-		cli_val_instruction_attr_syntax_set(&a, ta->instruction_syntax);
+	case CLI_VAL_TYPE_X86: {
+		struct cli_val_x86_attr a;
+		cli_val_x86_attr_init(&a);
+		cli_val_x86_attr_mode_set(&a, ta->x86_mode);
+		cli_val_x86_attr_syntax_set(&a, ta->x86_syntax);
 
-		struct cli_val_instruction *v = cli_val_instruction_create(&a);
+		struct cli_val_x86 *v = cli_val_x86_create(&a);
 
-		cli_val_instruction_attr_deinit(&a);
+		cli_val_x86_attr_deinit(&a);
+
+		if (v == NULL) {
+			break;
+		}
+
+		return cli_val_wrap(ta->type, v);
+	}
+
+	case CLI_VAL_TYPE_ARM: {
+		struct cli_val_arm_attr a;
+		cli_val_arm_attr_init(&a);
+
+		struct cli_val_arm *v = cli_val_arm_create(&a);
+
+		cli_val_arm_attr_deinit(&a);
+
+		if (v == NULL) {
+			break;
+		}
+
+		return cli_val_wrap(ta->type, v);
+	}
+
+	case CLI_VAL_TYPE_AARCH64: {
+		struct cli_val_aarch64_attr a;
+		cli_val_aarch64_attr_init(&a);
+
+		struct cli_val_aarch64 *v = cli_val_aarch64_create(&a);
+
+		cli_val_aarch64_attr_deinit(&a);
 
 		if (v == NULL) {
 			break;
@@ -297,26 +327,28 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 		} \
 		break; \
 \
-	case CLI_VAL_TYPE_INSTRUCTION: \
-		if (yuck_arg->instruction_architecture_arg) { \
-			if (!cli_parse_val_instruction_architecture(yuck_arg->instruction_architecture_arg, &type->instruction_architecture)) { \
-				fputs("Invalid architecture.\n", stderr); \
+	case CLI_VAL_TYPE_X86: \
+		if (yuck_arg->x86_mode_arg) { \
+			if (!cli_parse_val_x86_mode(yuck_arg->x86_mode_arg, &type->x86_mode)) { \
+				fputs("Invalid x86 mode.\n", stderr); \
 				return 0; \
 			} \
 		} else { \
-			type->instruction_architecture = CLI_VAL_INSTRUCTION_ARCHITECTURE_DEFAULT; \
+			type->x86_mode = CLI_VAL_X86_MODE_DEFAULT; \
 		} \
 \
-		if (yuck_arg->instruction_syntax_arg) { \
-			if (!cli_parse_val_instruction_syntax(yuck_arg->instruction_syntax_arg, &type->instruction_syntax)) { \
-				fputs("Invalid assembly syntax.\n", stderr); \
+		if (yuck_arg->x86_syntax_arg) { \
+			if (!cli_parse_val_x86_syntax(yuck_arg->x86_syntax_arg, &type->x86_syntax)) { \
+				fputs("Invalid x86 syntax.\n", stderr); \
 				return 0; \
 			} \
 		} else { \
-			type->instruction_syntax = CLI_VAL_INSTRUCTION_SYNTAX_DEFAULT; \
+			type->x86_syntax = CLI_VAL_X86_SYNTAX_DEFAULT; \
 		} \
 		break; \
 \
+	case CLI_VAL_TYPE_ARM: \
+	case CLI_VAL_TYPE_AARCH64: \
 	case CLI_VAL_TYPE_BYTE: \
 	case CLI_VAL_TYPE_ADDRESS: \
 		break; \
@@ -623,12 +655,6 @@ static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 		return NULL;
 	}
 
-	if (type_args.type == CLI_VAL_TYPE_INSTRUCTION) {
-		fprintf(stderr, "Searching for assembly code is not supported.\n");
-		destroy_cli_cmd_search_arg(arg);
-		return NULL;
-	}
-
 	arg->value = create_cli_val_from_type_options(&type_args);
 
 	if (arg->value == cli_val_nil()) {
@@ -925,6 +951,15 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 			}
 		} else {
 			arg->assembly_architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
+		}
+
+		if (yuck_arg->execute.assembly_mode_arg) {
+			if (!cli_parse_assembler_mode(yuck_arg->execute.assembly_mode_arg, &arg->assembly_mode)) {
+				fputs("Invalid architecture mode.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->assembly_mode = CLI_ASSEMBLER_MODE_DEFAULT;
 		}
 
 		if (yuck_arg->execute.assembly_syntax_arg) {

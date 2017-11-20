@@ -10,7 +10,9 @@ $parsers = [
 			"ieee754" => "CLI_VAL_TYPE_IEEE754",
 			"text" => "CLI_VAL_TYPE_TEXT",
 			"address" => "CLI_VAL_TYPE_ADDRESS",
-			"instruction" => "CLI_VAL_TYPE_INSTRUCTION",
+			"x86" => "CLI_VAL_TYPE_X86",
+			"arm" => "CLI_VAL_TYPE_ARM",
+			"aarch64" => "CLI_VAL_TYPE_AARCH64",
 		],
 	],
 	[
@@ -56,21 +58,20 @@ $parsers = [
 		],
 	],
 	[
-		"name" => "val_instruction_architecture",
-		"type" => "enum cli_val_instruction_architecture",
+		"name" => "val_x86_mode",
+		"type" => "enum cli_val_x86_mode",
 		"values" => [
-			"x86" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_X86",
-			"x86-64" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64",
-			"arm" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_ARM",
-			"aarch64" => "CLI_VAL_INSTRUCTION_ARCHITECTURE_AARCH64",
+			"16" => "CLI_VAL_X86_MODE_16",
+			"32" => "CLI_VAL_X86_MODE_32",
+			"64" => "CLI_VAL_X86_MODE_64",
 		],
 	],
 	[
-		"name" => "val_instruction_syntax",
-		"type" => "enum cli_val_instruction_syntax",
+		"name" => "val_x86_syntax",
+		"type" => "enum cli_val_x86_syntax",
 		"values" => [
-			"intel" => "CLI_VAL_INSTRUCTION_SYNTAX_INTEL",
-			"att" => "CLI_VAL_INSTRUCTION_SYNTAX_ATT",
+			"intel" => "CLI_VAL_X86_SYNTAX_INTEL",
+			"att" => "CLI_VAL_X86_SYNTAX_ATT",
 		],
 	],
 	[
@@ -86,9 +87,17 @@ $parsers = [
 		"type" => "enum cli_assembler_architecture",
 		"values" => [
 			"x86" => "CLI_ASSEMBLER_ARCHITECTURE_X86",
-			"x86-64" => "CLI_ASSEMBLER_ARCHITECTURE_X86_64",
 			"arm" => "CLI_ASSEMBLER_ARCHITECTURE_ARM",
 			"aarch64" => "CLI_ASSEMBLER_ARCHITECTURE_AARCH64",
+		],
+	],
+	[
+		"name" => "assembler_mode",
+		"type" => "enum cli_assembler_mode",
+		"values" => [
+			"x86-16" => "CLI_ASSEMBLER_MODE_X86_16",
+			"x86-32" => "CLI_ASSEMBLER_MODE_X86_32",
+			"x86-64" => "CLI_ASSEMBLER_MODE_X86_64",
 		],
 	],
 	[

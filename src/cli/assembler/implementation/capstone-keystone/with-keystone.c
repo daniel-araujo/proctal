@@ -14,16 +14,29 @@ struct ks_parameters {
 
 static int init_ks_parameters(struct cli_assembler *assembler, struct ks_parameters *params)
 {
-	switch (assembler->arch) {
+	switch (assembler->architecture) {
 	case CLI_ASSEMBLER_ARCHITECTURE_X86:
-		params->arch = KS_ARCH_X86;
-		params->mode = KS_MODE_32;
-		return 1;
+		switch (assembler->mode) {
+		case CLI_ASSEMBLER_MODE_X86_16:
+			params->arch = KS_ARCH_X86;
+			params->mode = KS_MODE_16;
+			return 1;
 
-	case CLI_ASSEMBLER_ARCHITECTURE_X86_64:
-		params->arch = KS_ARCH_X86;
-		params->mode = KS_MODE_64;
-		return 1;
+		case CLI_ASSEMBLER_MODE_X86_32:
+			params->arch = KS_ARCH_X86;
+			params->mode = KS_MODE_32;
+			return 1;
+
+		case CLI_ASSEMBLER_MODE_X86_64:
+			params->arch = KS_ARCH_X86;
+			params->mode = KS_MODE_64;
+			return 1;
+
+		default:
+			// Not supported.
+			return 0;
+		}
+		break;
 
 	case CLI_ASSEMBLER_ARCHITECTURE_ARM:
 		params->arch = KS_ARCH_ARM;

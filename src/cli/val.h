@@ -9,7 +9,9 @@
 #include "cli/val/address.h"
 #include "cli/val/byte.h"
 #include "cli/val/text.h"
-#include "cli/val/instruction.h"
+#include "cli/val/x86.h"
+#include "cli/val/arm.h"
+#include "cli/val/aarch64.h"
 
 /*
  * Known types.
@@ -21,7 +23,9 @@ enum cli_val_type {
 	CLI_VAL_TYPE_IEEE754,
 	CLI_VAL_TYPE_TEXT,
 	CLI_VAL_TYPE_ADDRESS,
-	CLI_VAL_TYPE_INSTRUCTION,
+	CLI_VAL_TYPE_X86,
+	CLI_VAL_TYPE_ARM,
+	CLI_VAL_TYPE_AARCH64,
 };
 
 typedef struct cli_val *cli_val;

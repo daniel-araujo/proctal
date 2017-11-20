@@ -16,7 +16,9 @@
 		<item>ieee754</item>
 		<item>text</item>
 		<item>address</item>
-		<item>instruction</item>
+		<item>x86</item>
+		<item>arm</item>
+		<item>aarch64</item>
 	</list>
 
 	The following sections will describe each one and their specific
@@ -96,22 +98,31 @@
 	</section>
 
 	<section>
-		<title>Instruction</title>
+		<title>x86</title>
 
-		This represents a CPU instruction. It's printed in assembly.
+		Represents an x86 CPU instruction. It's printed in assembly.
 
-		The <quote>--instruction-arch</quote> option defines the
-		architecture of the instruction. You may use
-		<quote>x86</quote>, <quote>x86-64</quote>, <quote>arm</quote>
-		and <quote>aarch64</quote>.
+		The <quote>--x86-mode</quote> option lets you set the mode. You
+		may use <quote>16</quote>, <quote>32</quote> and
+		<quote>64</quote> for 16-bit, 32-bit and 64-bit mode,
+		respectively.
 
-		By default the architecture is the same as the tool was
-		compiled in.
+		The <quote>--x86-syntax</quote> option defines the syntax for
+		assembly. You may use either <quote>att</quote> or
+		<quote>intel</quote>. By default <quote>intel</quote> is used.
+	</section>
 
-		The <quote>--instruction-syntax</quote> option defines the
-		syntax for assembly. You may use either <quote>att</quote> or
-		<quote>intel</quote>.
+	<section>
+		<title>arm</title>
 
-		By default <quote>intel</quote> is used.
+		Represents an ARM A32/T32 CPU instruction. It's printed in
+		assembly.
+	</section>
+
+	<section>
+		<title>aarch64</title>
+
+		Represents an ARM A64 CPU instruction. It's printed in
+		assembly.
 	</section>
 </document>

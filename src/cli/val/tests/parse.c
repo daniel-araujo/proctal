@@ -140,7 +140,7 @@ static int run_parse_binary(const char *name, struct test *test, cli_val v)
 
 static int run_scan(const char *name, struct test *test, cli_val v)
 {
-	if (cli_val_type(v) == CLI_VAL_TYPE_INSTRUCTION) {
+	if (cli_val_type(v) == CLI_VAL_TYPE_X86) {
 		// Not supported.
 		return 0;
 	}
@@ -529,11 +529,11 @@ static void test_address()
 
 static void test_instruction_x86_64()
 {
-	struct cli_val_instruction_attr a;
-	cli_val_instruction_attr_init(&a);
-	cli_val_instruction_attr_architecture_set(&a, CLI_VAL_INSTRUCTION_ARCHITECTURE_X86_64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INSTRUCTION, cli_val_instruction_create(&a));
-	cli_val_instruction_attr_deinit(&a);
+	struct cli_val_x86_attr a;
+	cli_val_x86_attr_init(&a);
+	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_64);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_x86_attr_deinit(&a);
 
 	struct test tests[] = {
 		// Without operand.

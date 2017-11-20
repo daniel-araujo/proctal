@@ -103,7 +103,7 @@ $ proctal pattern --pid=12345 '48 83 EC ?? E8 ?? ?? ?? ??'
 493690
 8F255B
 9DD660
-$ proctal read --pid=12345 --address=493690 --type=instruction --array=2 --show-address --show-bytes
+$ proctal read --pid=12345 --address=493690 --type=x86 --array=2 --show-address --show-bytes
 493690  sub     rsp, 0x18
         48 83 EC 18
 493694  call    0x49364c
@@ -114,8 +114,10 @@ $ proctal read --pid=12345 --address=493690 --type=instruction --array=2 --show-
 	<section>
 		<title>Disassembling instructions in memory</title>
 
+		Disassembling <quote>x86</quote> instructions:
+
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=400570 --type=instruction --array=5
+$ proctal read --pid=12345 --address=400570 --type=x86 --array=5
 sub     rsp, 0x18
 mov     dword ptr [rsp + 0xc], 0
 call    0x400530
@@ -126,7 +128,7 @@ mov     esi, eax
 		With corresponding addresses:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address
+$ proctal read --pid=12345 --address=400570 --type=x86 --array=5 --show-address
 400570  sub     rsp, 0x18
 400574  mov     dword ptr [rsp + 0xc], 0
 40057C  call    0x400530
@@ -137,7 +139,7 @@ $ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-
 		With bytecode:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address --show-bytes
+$ proctal read --pid=12345 --address=400570 --type=x86 --array=5 --show-address --show-bytes
 400570  sub     rsp, 0x18
         48 83 EC 18
 400574  mov     dword ptr [rsp + 0xc], 0

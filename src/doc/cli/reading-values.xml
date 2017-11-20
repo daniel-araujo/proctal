@@ -45,7 +45,7 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-bits=
 	</section>
 
 	<section>
-		<title>Showing the address</title>
+		<title>Showing address</title>
 
 		The command also accepts the <quote>--show-address</quote>
 		option. This makes it print the address of the value. But
@@ -57,7 +57,7 @@ $ proctal read --pid=12345 --address=7FFE79DEA90C --type=integer --integer-bits=
 		Here's how that would look like:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address
+$ proctal read --pid=12345 --address=400570 --type=x86 --array=5 --show-address
 400570  sub     rsp, 0x18
 400574  mov     dword ptr [rsp + 0xc], 0
 40057C  call    0x400530
@@ -67,7 +67,7 @@ $ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-
 	</section>
 
 	<section>
-		<title>Showing the bytes in memory</title>
+		<title>Showing bytes in memory</title>
 
 		The <quote>--show-bytes</quote> option will additionally print
 		a sequence of numbers in hexadecimal that represent the bytes
@@ -79,7 +79,7 @@ $ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-
 		of the instructions.
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --address=400570 --type=instruction --array=5 --show-address --show-bytes
+$ proctal read --pid=12345 --address=400570 --type=x86 --array=5 --show-address --show-bytes
 400570  sub     rsp, 0x18
         48 83 EC 18
 400574  mov     dword ptr [rsp + 0xc], 0

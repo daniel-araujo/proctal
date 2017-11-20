@@ -78,10 +78,16 @@ libclival_a_SOURCES = \
 	src/cli/val/text.h \
 	src/cli/val/text.c \
 	src/cli/val/text-encoding-ascii.c \
-	src/cli/val/instruction.h \
-	src/cli/val/instruction.c \
+	src/cli/val/assembler.h \
+	src/cli/val/assembler.c \
 	src/cli/val/filter.h \
 	src/cli/val/filter.c \
+	src/cli/val/x86.h \
+	src/cli/val/x86.c \
+	src/cli/val/arm.h \
+	src/cli/val/arm.c \
+	src/cli/val/aarch64.h \
+	src/cli/val/aarch64.c \
 	src/cli/val.h \
 	src/cli/val.c
 libclival_a_CFLAGS = $(PROCTAL_CFLAGS)

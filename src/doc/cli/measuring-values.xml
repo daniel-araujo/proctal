@@ -23,7 +23,7 @@ $ proctal measure --address=1c09346 --type=integer --integer-bits=32 0
 4
 $ proctal measure --address=1c09346 --type=integer --integer-bits=64 0
 8
-$ proctal measure --address=1c09346 --type=instruction "call 0x5"
+$ proctal measure --address=1c09346 --type=x86 "call 0x5"
 5
 	</code>
 

@@ -22,7 +22,9 @@ define(`TYPE_OPTIONS', `
                         ieee754
                         text
                         address
-                        instruction
+                        x86
+                        arm
+                        aarch64
   --integer-endianness=ENDIANNESS
                         If type is integer, determines the byte order in
                         memory. By default ENDIANNESS is the same that the
@@ -57,21 +59,18 @@ define(`TYPE_OPTIONS', `
                         single
                         double
                         extended
-  --instruction-architecture=ARCHITECTURE
-                        If type is instruction, determines the architecture.
-                        By default ARCHITECTURE is set to be the native
-                        architecture of the system if supported.
-                        ARCHITECTURE can be:
-                        x86
-                        x86-64
-                        arm
-                        aarch64
-  --instruction-syntax=SYNTAX
-                        If type is instruction, determines the syntax. By
-                        default SYNTAX is intel.
+  --x86-syntax=SYNTAX
+                        Determines the syntax for x86 instructions. By default
+                        SYNTAX is intel.
                         SYNTAX can be:
                         att
                         intel
+  --x86-mode=MODE
+                        In what mode to operate. By default MODE is 64.
+                        MODE can be:
+                        16
+                        32
+                        64
 ')dnl
 Usage: proctal
 Modding programs.
@@ -291,7 +290,7 @@ Detects accesses to a memory address.
 
 Prints the value of the instruction pointer after detecting that the given
 memory address was accessed. Note that the instruction pointer may not actually
-be pointing at the instruction that accessed the memory address.
+be pointing to the instruction that accessed the memory address.
 
 Examples:
   Watching for any instruction reading or writing to 1c09346
@@ -340,9 +339,15 @@ Examples:
                         architecture of the system if supported.
                         ARCHITECTURE can be:
                         x86
-                        x86-64
                         arm
                         aarch64
+  --assembly-mode=MODE
+                        Architecture mode. By default mode is set to be the
+                        native mode of the system if supported.
+                        MODE can be:
+                        x86-16
+                        x86-32
+                        x86-64
   --assembly-syntax=SYNTAX
                         If format is assembly, determines the syntax.
                         By default SYNTAX is intel.
@@ -397,8 +402,8 @@ Let's you measure how many bytes a value, or multiple values, would take up in
 memory.
 
 Examples:
-  Measuring how many bytes a call instruction would take
-        proctal measure --address=1c09346 --type=instruction "call 0x5"
+  Measuring how many bytes a call instruction on x86 would take
+        proctal measure --address=1c09346 --type=x86 "call 0x5"
 
 
   --address=ADDRESS     Address where the values would be in memory.

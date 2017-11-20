@@ -12,9 +12,13 @@ extern inline void cli_assembler_deinit(struct cli_assembler *assembler);
 
 extern inline void cli_assembler_architecture_set(struct cli_assembler *assembler, enum cli_assembler_architecture architecture);
 
+extern inline void cli_assembler_mode_set(struct cli_assembler *assembler, enum cli_assembler_mode mode);
+
 extern inline void cli_assembler_syntax_set(struct cli_assembler *assembler, enum cli_assembler_syntax syntax);
 
 extern inline void cli_assembler_address_set(struct cli_assembler *assembler, void *address);
+
+extern inline void* cli_assembler_address(struct cli_assembler *assembler);
 
 extern inline const char *cli_assembler_error_message(struct cli_assembler *assembler);
 
