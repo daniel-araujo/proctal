@@ -168,9 +168,9 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 	case CLI_CMD_EXECUTE_FORMAT_ASSEMBLY: {
 		struct cli_assembler assembler;
 		cli_assembler_init(&assembler);
-		cli_assembler_architecture_set(&assembler, arg->assembly_architecture);
-		cli_assembler_mode_set(&assembler, arg->assembly_mode);
-		cli_assembler_syntax_set(&assembler, arg->assembly_syntax);
+		cli_assembler_architecture_set(&assembler, arg->architecture);
+		cli_assembler_x86_mode_set(&assembler, arg->x86_mode);
+		cli_assembler_x86_syntax_set(&assembler, arg->x86_syntax);
 
 		struct darr bytecode;
 		darr_init(&bytecode, sizeof(char));

@@ -13,42 +13,43 @@ enum cli_assembler_architecture {
 };
 
 /*
- * Architecture modes.
+ * Supported x86 modes.
  */
-enum cli_assembler_mode {
-	CLI_ASSEMBLER_MODE_X86_16,
-	CLI_ASSEMBLER_MODE_X86_32,
-	CLI_ASSEMBLER_MODE_X86_64,
+enum cli_assembler_x86_mode {
+	CLI_ASSEMBLER_X86_MODE_16,
+	CLI_ASSEMBLER_X86_MODE_32,
+	CLI_ASSEMBLER_X86_MODE_64,
 };
 
 /*
  * Supported assembly syntaxes.
  */
-enum cli_assembler_syntax {
-	CLI_ASSEMBLER_SYNTAX_INTEL,
-	CLI_ASSEMBLER_SYNTAX_ATT,
+enum cli_assembler_x86_syntax {
+	CLI_ASSEMBLER_X86_SYNTAX_INTEL,
+	CLI_ASSEMBLER_X86_SYNTAX_ATT,
 };
 
 #if PROCTAL_CPU_ARCHITECTURE_X86
 	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_MODE_DEFAULT CLI_ASSEMBLER_MODE_X86_32
+	#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_32
 #elif PROCTAL_CPU_ARCHITECTURE_X86_64
 	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_MODE_DEFAULT CLI_ASSEMBLER_MODE_X86_64
+	#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_64
 #elif PROCTAL_CPU_ARCHITECTURE_ARM
 	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_ARM
-	#define CLI_ASSEMBLER_MODE_DEFAULT 0
 #elif PROCTAL_CPU_ARCHITECTURE_AARCH64
 	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_AARCH64
-	#define CLI_ASSEMBLER_MODE_DEFAULT 0
 #else
-	// Unknown CPU architecture. Define macro with some random architecture
-	// to keep code simple.
+	// Unknown CPU architecture. Use most common.
 	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
 	#define CLI_ASSEMBLER_MODE_DEFAULT CLI_ASSEMBLER_MODE_X86_64
 #endif
 
-#define CLI_ASSEMBLER_SYNTAX_DEFAULT CLI_ASSEMBLER_SYNTAX_INTEL
+#ifndef CLI_ASSEMBLER_X86_MODE_DEFAULT
+	#define CLI_ASSEMBLER_X86_MODE_DEFAULT 0
+#endif
+
+#define CLI_ASSEMBLER_X86_SYNTAX_DEFAULT CLI_ASSEMBLER_X86_SYNTAX_INTEL
 
 /*
  * The assembler struct. This keeps track of a lot of information that is
@@ -58,11 +59,11 @@ struct cli_assembler {
 	// CPU architecture.
 	enum cli_assembler_architecture architecture;
 
-	// Architecture mode
-	enum cli_assembler_mode mode;
+	// x86 mode
+	enum cli_assembler_x86_mode x86_mode;
 
-	// Assembly syntax.
-	enum cli_assembler_syntax syntax;
+	// x86 syntax.
+	enum cli_assembler_x86_syntax x86_syntax;
 
 	// Address where the instruction is located in memory.
 	// This information is important when calculating the
@@ -110,8 +111,8 @@ struct cli_assembler_decompile_result {
 inline void cli_assembler_init(struct cli_assembler *assembler)
 {
 	assembler->architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
-	assembler->mode = CLI_ASSEMBLER_MODE_DEFAULT;
-	assembler->syntax = CLI_ASSEMBLER_SYNTAX_DEFAULT;
+	assembler->x86_mode = CLI_ASSEMBLER_X86_MODE_DEFAULT;
+	assembler->x86_syntax = CLI_ASSEMBLER_X86_SYNTAX_DEFAULT;
 	assembler->address = NULL;
 	assembler->error_message = NULL;
 }
@@ -134,17 +135,17 @@ inline void cli_assembler_architecture_set(struct cli_assembler *assembler, enum
 /*
  * Sets the architecture mode.
  */
-inline void cli_assembler_mode_set(struct cli_assembler *assembler, enum cli_assembler_mode mode)
+inline void cli_assembler_x86_mode_set(struct cli_assembler *assembler, enum cli_assembler_x86_mode x86_mode)
 {
-	assembler->mode = mode;
+	assembler->x86_mode = x86_mode;
 }
 
 /*
  * Sets the assembly syntax.
  */
-inline void cli_assembler_syntax_set(struct cli_assembler *assembler, enum cli_assembler_syntax syntax)
+inline void cli_assembler_x86_syntax_set(struct cli_assembler *assembler, enum cli_assembler_x86_syntax x86_syntax)
 {
-	assembler->syntax = syntax;
+	assembler->x86_syntax = x86_syntax;
 }
 
 /*

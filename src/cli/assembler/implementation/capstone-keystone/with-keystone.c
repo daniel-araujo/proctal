@@ -16,18 +16,18 @@ static int init_ks_parameters(struct cli_assembler *assembler, struct ks_paramet
 {
 	switch (assembler->architecture) {
 	case CLI_ASSEMBLER_ARCHITECTURE_X86:
-		switch (assembler->mode) {
-		case CLI_ASSEMBLER_MODE_X86_16:
+		switch (assembler->x86_mode) {
+		case CLI_ASSEMBLER_X86_MODE_16:
 			params->arch = KS_ARCH_X86;
 			params->mode = KS_MODE_16;
 			return 1;
 
-		case CLI_ASSEMBLER_MODE_X86_32:
+		case CLI_ASSEMBLER_X86_MODE_32:
 			params->arch = KS_ARCH_X86;
 			params->mode = KS_MODE_32;
 			return 1;
 
-		case CLI_ASSEMBLER_MODE_X86_64:
+		case CLI_ASSEMBLER_X86_MODE_64:
 			params->arch = KS_ARCH_X86;
 			params->mode = KS_MODE_64;
 			return 1;
@@ -56,12 +56,12 @@ static int init_ks_parameters(struct cli_assembler *assembler, struct ks_paramet
 
 static int set_ks_syntax(struct cli_assembler *assembler, ks_engine *ks)
 {
-	switch (assembler->syntax) {
-	case CLI_ASSEMBLER_SYNTAX_INTEL:
+	switch (assembler->x86_syntax) {
+	case CLI_ASSEMBLER_X86_SYNTAX_INTEL:
 		ks_option(ks, KS_OPT_SYNTAX, KS_OPT_SYNTAX_INTEL);
 		return 1;
 
-	case CLI_ASSEMBLER_SYNTAX_ATT:
+	case CLI_ASSEMBLER_X86_SYNTAX_ATT:
 		ks_option(ks, KS_OPT_SYNTAX, KS_OPT_SYNTAX_ATT);
 		return 1;
 

@@ -333,24 +333,25 @@ Examples:
                         FORMAT can be:
                         assembly
                         bytecode
-  --assembly-architecture=ARCHITECTURE
-                        If format is assembly, determines the architecture. By
-                        default ARCHITECTURE is set to be the native
-                        architecture of the system if supported.
+  --architecture=ARCHITECTURE
+                        This defines which assembly language to use based on
+                        the given architecture. By default ARCHITECTURE is set
+                        to be the native architecture of the system if
+                        supported.
                         ARCHITECTURE can be:
                         x86
                         arm
                         aarch64
-  --assembly-mode=MODE
-                        Architecture mode. By default mode is set to be the
-                        native mode of the system if supported.
+  --x86-mode=MODE
+                        Sets x86 mode. By default, mode is set to be the native
+                        mode of the system if supported.
                         MODE can be:
-                        x86-16
-                        x86-32
-                        x86-64
-  --assembly-syntax=SYNTAX
-                        If format is assembly, determines the syntax.
-                        By default SYNTAX is intel.
+                        16
+                        32
+                        64
+  --x86-syntax=SYNTAX
+                        Sets the syntax for x86 assembly. By default SYNTAX is
+                        intel.
                         SYNTAX can be:
                         att
                         intel

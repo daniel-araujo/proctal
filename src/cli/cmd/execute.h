@@ -15,13 +15,13 @@ struct cli_cmd_execute_arg {
 	enum cli_cmd_execute_format format;
 
 	// Assembly architecture.
-	enum cli_assembler_architecture assembly_architecture;
+	enum cli_assembler_architecture architecture;
 
 	// Assembly syntax.
-	enum cli_assembler_mode assembly_mode;
+	enum cli_assembler_x86_mode x86_mode;
 
 	// Assembly syntax.
-	enum cli_assembler_syntax assembly_syntax;
+	enum cli_assembler_x86_syntax x86_syntax;
 };
 
 int cli_cmd_execute(struct cli_cmd_execute_arg *arg);

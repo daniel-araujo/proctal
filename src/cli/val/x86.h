@@ -88,17 +88,17 @@ inline struct cli_val_x86 *cli_val_x86_create(struct cli_val_x86_attr *a)
 	switch (a->mode) {
 	case CLI_VAL_X86_MODE_16:
 		cli_assembler_architecture_set(&assembler, CLI_ASSEMBLER_ARCHITECTURE_X86);
-		cli_assembler_mode_set(&assembler, CLI_ASSEMBLER_MODE_X86_16);
+		cli_assembler_x86_mode_set(&assembler, CLI_ASSEMBLER_X86_MODE_16);
 		break;
 
 	case CLI_VAL_X86_MODE_32:
 		cli_assembler_architecture_set(&assembler, CLI_ASSEMBLER_ARCHITECTURE_X86);
-		cli_assembler_mode_set(&assembler, CLI_ASSEMBLER_MODE_X86_32);
+		cli_assembler_x86_mode_set(&assembler, CLI_ASSEMBLER_X86_MODE_32);
 		break;
 
 	case CLI_VAL_X86_MODE_64:
 		cli_assembler_architecture_set(&assembler, CLI_ASSEMBLER_ARCHITECTURE_X86);
-		cli_assembler_mode_set(&assembler, CLI_ASSEMBLER_MODE_X86_64);
+		cli_assembler_x86_mode_set(&assembler, CLI_ASSEMBLER_X86_MODE_64);
 		break;
 
 	default:
@@ -109,11 +109,11 @@ inline struct cli_val_x86 *cli_val_x86_create(struct cli_val_x86_attr *a)
 
 	switch (a->syntax) {
 	case CLI_VAL_X86_SYNTAX_INTEL:
-		cli_assembler_syntax_set(&assembler, CLI_ASSEMBLER_SYNTAX_INTEL);
+		cli_assembler_x86_syntax_set(&assembler, CLI_ASSEMBLER_X86_SYNTAX_INTEL);
 		break;
 
 	case CLI_VAL_X86_SYNTAX_ATT:
-		cli_assembler_syntax_set(&assembler, CLI_ASSEMBLER_SYNTAX_ATT);
+		cli_assembler_x86_syntax_set(&assembler, CLI_ASSEMBLER_X86_SYNTAX_ATT);
 		break;
 
 	default:

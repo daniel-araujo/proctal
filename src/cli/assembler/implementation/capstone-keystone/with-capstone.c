@@ -16,18 +16,18 @@ static int init_cs_parameters(struct cli_assembler *assembler, struct cs_paramet
 {
 	switch (assembler->architecture) {
 	case CLI_ASSEMBLER_ARCHITECTURE_X86:
-		switch (assembler->mode) {
-		case CLI_ASSEMBLER_MODE_X86_16:
+		switch (assembler->x86_mode) {
+		case CLI_ASSEMBLER_X86_MODE_16:
 			params->arch = CS_ARCH_X86;
 			params->mode = CS_MODE_16;
 			return 1;
 
-		case CLI_ASSEMBLER_MODE_X86_32:
+		case CLI_ASSEMBLER_X86_MODE_32:
 			params->arch = CS_ARCH_X86;
 			params->mode = CS_MODE_32;
 			return 1;
 
-		case CLI_ASSEMBLER_MODE_X86_64:
+		case CLI_ASSEMBLER_X86_MODE_64:
 			params->arch = CS_ARCH_X86;
 			params->mode = CS_MODE_64;
 			return 1;
@@ -56,12 +56,12 @@ static int init_cs_parameters(struct cli_assembler *assembler, struct cs_paramet
 
 static int set_cs_syntax(struct cli_assembler *assembler, csh cs)
 {
-	switch (assembler->syntax) {
-	case CLI_ASSEMBLER_SYNTAX_INTEL:
+	switch (assembler->x86_syntax) {
+	case CLI_ASSEMBLER_X86_SYNTAX_INTEL:
 		cs_option(cs, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
 		return 1;
 
-	case CLI_ASSEMBLER_SYNTAX_ATT:
+	case CLI_ASSEMBLER_X86_SYNTAX_ATT:
 		cs_option(cs, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
 		return 1;
 

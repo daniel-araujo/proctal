@@ -81,8 +81,8 @@ int cli_parse_val_x86_mode(const char *s, enum cli_val_x86_mode *val);
 int cli_parse_val_x86_syntax(const char *s, enum cli_val_x86_syntax *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 int cli_parse_assembler_architecture(const char *s, enum cli_assembler_architecture *val);
-int cli_parse_assembler_mode(const char *s, enum cli_assembler_mode *val);
-int cli_parse_assembler_syntax(const char *s, enum cli_assembler_syntax *val);
+int cli_parse_assembler_x86_mode(const char *s, enum cli_assembler_x86_mode *val);
+int cli_parse_assembler_x86_syntax(const char *s, enum cli_assembler_x86_syntax *val);
 int cli_parse_proctal_region(const char *s, int *val);
 
 #endif /* CLI_PARSER_H */

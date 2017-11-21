@@ -92,20 +92,20 @@ $parsers = [
 		],
 	],
 	[
-		"name" => "assembler_mode",
-		"type" => "enum cli_assembler_mode",
+		"name" => "assembler_x86_mode",
+		"type" => "enum cli_assembler_x86_mode",
 		"values" => [
-			"x86-16" => "CLI_ASSEMBLER_MODE_X86_16",
-			"x86-32" => "CLI_ASSEMBLER_MODE_X86_32",
-			"x86-64" => "CLI_ASSEMBLER_MODE_X86_64",
+			"16" => "CLI_ASSEMBLER_X86_MODE_16",
+			"32" => "CLI_ASSEMBLER_X86_MODE_32",
+			"64" => "CLI_ASSEMBLER_X86_MODE_64",
 		],
 	],
 	[
-		"name" => "assembler_syntax",
-		"type" => "enum cli_assembler_syntax",
+		"name" => "assembler_x86_syntax",
+		"type" => "enum cli_assembler_x86_syntax",
 		"values" => [
-			"intel" => "CLI_ASSEMBLER_SYNTAX_INTEL",
-			"att" => "CLI_ASSEMBLER_SYNTAX_ATT",
+			"intel" => "CLI_ASSEMBLER_X86_SYNTAX_INTEL",
+			"att" => "CLI_ASSEMBLER_X86_SYNTAX_ATT",
 		],
 	],
 	[

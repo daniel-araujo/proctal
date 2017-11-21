@@ -944,31 +944,31 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 	}
 
 	if (arg->format == CLI_CMD_EXECUTE_FORMAT_ASSEMBLY) {
-		if (yuck_arg->execute.assembly_architecture_arg) {
-			if (!cli_parse_assembler_architecture(yuck_arg->execute.assembly_architecture_arg, &arg->assembly_architecture)) {
+		if (yuck_arg->execute.architecture_arg) {
+			if (!cli_parse_assembler_architecture(yuck_arg->execute.architecture_arg, &arg->architecture)) {
 				fputs("Invalid architecture.\n", stderr);
 				return 0;
 			}
 		} else {
-			arg->assembly_architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
+			arg->architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
 		}
 
-		if (yuck_arg->execute.assembly_mode_arg) {
-			if (!cli_parse_assembler_mode(yuck_arg->execute.assembly_mode_arg, &arg->assembly_mode)) {
-				fputs("Invalid architecture mode.\n", stderr);
+		if (yuck_arg->execute.x86_mode_arg) {
+			if (!cli_parse_assembler_x86_mode(yuck_arg->execute.x86_mode_arg, &arg->x86_mode)) {
+				fputs("Invalid x86 mode.\n", stderr);
 				return 0;
 			}
 		} else {
-			arg->assembly_mode = CLI_ASSEMBLER_MODE_DEFAULT;
+			arg->x86_mode = CLI_ASSEMBLER_X86_MODE_DEFAULT;
 		}
 
-		if (yuck_arg->execute.assembly_syntax_arg) {
-			if (!cli_parse_assembler_syntax(yuck_arg->execute.assembly_syntax_arg, &arg->assembly_syntax)) {
-				fputs("Invalid assembly syntax.\n", stderr);
+		if (yuck_arg->execute.x86_syntax_arg) {
+			if (!cli_parse_assembler_x86_syntax(yuck_arg->execute.x86_syntax_arg, &arg->x86_syntax)) {
+				fputs("Invalid x86 syntax.\n", stderr);
 				return 0;
 			}
 		} else {
-			arg->assembly_syntax = CLI_ASSEMBLER_SYNTAX_DEFAULT;
+			arg->x86_syntax = CLI_ASSEMBLER_X86_SYNTAX_DEFAULT;
 		}
 	}
 

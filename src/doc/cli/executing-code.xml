@@ -26,18 +26,20 @@ $ proctal execute --pid=12345 &lt; code.asm
 	<quote>;</quote> character can be used to start a comment that spans to
 	the end of the line.
 
-	The <quote>--assembly-arch</quote> option allows you to set the CPU
+	The <quote>--architecture</quote> option allows you to set the CPU
 	architecture. By default it's the same architecture that the tool was
 	compiled in. At the moment the available values are <quote>x86</quote>,
 	<quote>x86-64</quote>, <quote>arm</quote> and <quote>aarch64</quote>.
 
-	The <quote>--assembly-syntax</quote> option allows you to change the
-	syntax. By default it uses <quote>intel</quote>. You can switch to
-	<quote>att</quote> if you prefer.
+	The <quote>--x86-syntax</quote> option allows you to change the
+	syntax for x86 assembly. By default it's set to <quote>intel</quote>.
+	You can switch to <quote>att</quote> if you prefer.
 
-	If you'd rather execute bytecode instead you would pass the
-	<quote>--format</quote> option with the value
-	<quote>bytecode</quote>.
+	The <quote>--x86-mode</quote> option lets you set whether to work with
+	the 16-bit, 32-bit or 64-bit versions of the x86 instruction set.
+
+	You can execute bytecode by passing the <quote>--format</quote> option
+	with the value <quote>bytecode</quote>.
 
 	Here's how you would execute bytecode from a binary file:
 
