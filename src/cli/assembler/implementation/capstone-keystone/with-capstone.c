@@ -43,7 +43,7 @@ static int init_cs_parameters(struct cli_assembler *assembler, struct cs_paramet
 		params->mode = CS_MODE_ARM;
 		return 1;
 
-	case CLI_ASSEMBLER_ARCHITECTURE_AARCH64:
+	case CLI_ASSEMBLER_ARCHITECTURE_ARM64:
 		params->arch = CS_ARCH_ARM64;
 		params->mode = 0;
 		return 1;

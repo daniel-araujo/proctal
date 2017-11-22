@@ -29,7 +29,7 @@ $ proctal execute --pid=12345 &lt; code.asm
 	The <quote>--architecture</quote> option allows you to set the CPU
 	architecture. By default it's the same architecture that the tool was
 	compiled in. At the moment the available values are <quote>x86</quote>,
-	<quote>x86-64</quote>, <quote>arm</quote> and <quote>aarch64</quote>.
+	<quote>x86-64</quote>, <quote>arm</quote> and <quote>arm64</quote>.
 
 	The <quote>--x86-syntax</quote> option allows you to change the
 	syntax for x86 assembly. By default it's set to <quote>intel</quote>.

@@ -18,7 +18,7 @@
 		<item>address</item>
 		<item>x86</item>
 		<item>arm</item>
-		<item>aarch64</item>
+		<item>arm64</item>
 	</list>
 
 	The following sections will describe each one and their specific
@@ -120,7 +120,7 @@
 	</section>
 
 	<section>
-		<title>aarch64</title>
+		<title>arm64</title>
 
 		Represents an ARM A64 CPU instruction. It's printed in
 		assembly.

@@ -12,7 +12,7 @@ $parsers = [
 			"address" => "CLI_VAL_TYPE_ADDRESS",
 			"x86" => "CLI_VAL_TYPE_X86",
 			"arm" => "CLI_VAL_TYPE_ARM",
-			"aarch64" => "CLI_VAL_TYPE_AARCH64",
+			"arm64" => "CLI_VAL_TYPE_ARM64",
 		],
 	],
 	[
@@ -88,7 +88,7 @@ $parsers = [
 		"values" => [
 			"x86" => "CLI_ASSEMBLER_ARCHITECTURE_X86",
 			"arm" => "CLI_ASSEMBLER_ARCHITECTURE_ARM",
-			"aarch64" => "CLI_ASSEMBLER_ARCHITECTURE_AARCH64",
+			"arm64" => "CLI_ASSEMBLER_ARCHITECTURE_ARM64",
 		],
 	],
 	[

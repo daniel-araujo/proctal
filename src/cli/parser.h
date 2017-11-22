@@ -9,7 +9,7 @@
 #include "cli/val/text.h"
 #include "cli/val/x86.h"
 #include "cli/val/arm.h"
-#include "cli/val/aarch64.h"
+#include "cli/val/arm64.h"
 #include "cli/cmd/execute.h"
 #include "cli/assembler.h"
 

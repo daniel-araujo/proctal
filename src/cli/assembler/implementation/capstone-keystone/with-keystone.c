@@ -43,7 +43,7 @@ static int init_ks_parameters(struct cli_assembler *assembler, struct ks_paramet
 		params->mode = KS_MODE_ARM;
 		return 1;
 
-	case CLI_ASSEMBLER_ARCHITECTURE_AARCH64:
+	case CLI_ASSEMBLER_ARCHITECTURE_ARM64:
 		params->arch = KS_ARCH_ARM64;
 		params->mode = 0;
 		return 1;

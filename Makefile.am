@@ -86,8 +86,8 @@ libclival_a_SOURCES = \
 	src/cli/val/x86.c \
 	src/cli/val/arm.h \
 	src/cli/val/arm.c \
-	src/cli/val/aarch64.h \
-	src/cli/val/aarch64.c \
+	src/cli/val/arm64.h \
+	src/cli/val/arm64.c \
 	src/cli/val.h \
 	src/cli/val.c
 libclival_a_CFLAGS = $(PROCTAL_CFLAGS)

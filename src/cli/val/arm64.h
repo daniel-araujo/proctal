@@ -1,5 +1,5 @@
-#ifndef CLI_VAL_AARCH64_H
-#define CLI_VAL_AARCH64_H
+#ifndef CLI_VAL_ARM64_H
+#define CLI_VAL_ARM64_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,49 +11,49 @@
 /*
  * Describes the behavior of the instruction value.
  */
-struct cli_val_aarch64_attr {};
+struct cli_val_arm64_attr {};
 
 /*
  * The structure.
  */
-struct cli_val_aarch64 {
+struct cli_val_arm64 {
 	struct cli_val_assembler implementation;
 };
 
 /*
  * Sets the initial state of instruction value attributes.
  */
-inline void cli_val_aarch64_attr_init(struct cli_val_aarch64_attr *a)
+inline void cli_val_arm64_attr_init(struct cli_val_arm64_attr *a)
 {
 }
 
 /*
  * Disposes attributes.
  */
-inline void cli_val_aarch64_attr_deinit(struct cli_val_aarch64_attr *a)
+inline void cli_val_arm64_attr_deinit(struct cli_val_arm64_attr *a)
 {
 }
 
 /*
- * Creates an aarch64 instruction value.
+ * Creates an arm64 instruction value.
  *
  * Returns a NULL pointer on failure.
  */
-inline struct cli_val_aarch64 *cli_val_aarch64_create(struct cli_val_aarch64_attr *a)
+inline struct cli_val_arm64 *cli_val_arm64_create(struct cli_val_arm64_attr *a)
 {
 	struct cli_assembler assembler;
 	cli_assembler_init(&assembler);
-	cli_assembler_architecture_set(&assembler, CLI_ASSEMBLER_ARCHITECTURE_AARCH64);
+	cli_assembler_architecture_set(&assembler, CLI_ASSEMBLER_ARCHITECTURE_ARM64);
 
-	return (struct cli_val_aarch64 *) cli_val_assembler_create(&assembler);
+	return (struct cli_val_arm64 *) cli_val_assembler_create(&assembler);
 }
 
 /*
- * Destroys an instruction value created by a call to cli_val_aarch64_create.
+ * Destroys an instruction value created by a call to cli_val_arm64_create.
  *
  * Must only be used once on the same structure and not be NULL.
  */
-inline void cli_val_aarch64_destroy(struct cli_val_aarch64 *v)
+inline void cli_val_arm64_destroy(struct cli_val_arm64 *v)
 {
 	cli_val_assembler_destroy(&v->implementation);
 }
@@ -61,7 +61,7 @@ inline void cli_val_aarch64_destroy(struct cli_val_aarch64 *v)
 /*
  * Sets the address the instruction would be executed at.
  */
-inline void cli_val_aarch64_address_set(struct cli_val_aarch64 *v, void *address)
+inline void cli_val_arm64_address_set(struct cli_val_arm64 *v, void *address)
 {
 	cli_val_assembler_address_set(&v->implementation, address);
 }
@@ -69,7 +69,7 @@ inline void cli_val_aarch64_address_set(struct cli_val_aarch64 *v, void *address
 /*
  * Returns the address that the instruction would be executed at.
  */
-inline void *cli_val_aarch64_address(struct cli_val_aarch64 *v)
+inline void *cli_val_arm64_address(struct cli_val_arm64 *v)
 {
 	return cli_val_assembler_address(&v->implementation);
 }
@@ -80,7 +80,7 @@ inline void *cli_val_aarch64_address(struct cli_val_aarch64 *v)
  * The pointer can be dereferenced but you really must know what you're
  * doing.
  */
-inline void *cli_val_aarch64_data(struct cli_val_aarch64 *v)
+inline void *cli_val_arm64_data(struct cli_val_arm64 *v)
 {
 	return cli_val_assembler_data(&v->implementation);
 }
@@ -88,7 +88,7 @@ inline void *cli_val_aarch64_data(struct cli_val_aarch64 *v)
 /*
  * Size of the instruction value.
  */
-inline size_t cli_val_aarch64_sizeof(struct cli_val_aarch64 *v)
+inline size_t cli_val_arm64_sizeof(struct cli_val_arm64 *v)
 {
 	return cli_val_assembler_sizeof(&v->implementation);
 }
@@ -98,7 +98,7 @@ inline size_t cli_val_aarch64_sizeof(struct cli_val_aarch64 *v)
  *
  * Returns how many characters were written.
  */
-inline int cli_val_aarch64_print(struct cli_val_aarch64 *v, FILE *f)
+inline int cli_val_arm64_print(struct cli_val_arm64 *v, FILE *f)
 {
 	return cli_val_assembler_print(&v->implementation, f);
 }
@@ -108,7 +108,7 @@ inline int cli_val_aarch64_print(struct cli_val_aarch64 *v, FILE *f)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_aarch64_parse_binary(struct cli_val_aarch64 *v, const char *s, size_t length)
+inline int cli_val_arm64_parse_binary(struct cli_val_arm64 *v, const char *s, size_t length)
 {
 	return cli_val_assembler_parse_binary(&v->implementation, s, length);
 }
@@ -118,7 +118,7 @@ inline int cli_val_aarch64_parse_binary(struct cli_val_aarch64 *v, const char *s
  *
  * Returns 1 on success, 0 on failure.
  */
-inline int cli_val_aarch64_parse_text(struct cli_val_aarch64 *v, const char *s)
+inline int cli_val_arm64_parse_text(struct cli_val_arm64 *v, const char *s)
 {
 	return cli_val_assembler_parse_text(&v->implementation, s);
 }
@@ -128,9 +128,9 @@ inline int cli_val_aarch64_parse_text(struct cli_val_aarch64 *v, const char *s)
  *
  * Returns null on failure.
  */
-inline struct cli_val_aarch64 *cli_val_aarch64_create_clone(struct cli_val_aarch64 *other_v)
+inline struct cli_val_arm64 *cli_val_arm64_create_clone(struct cli_val_arm64 *other_v)
 {
-	return (struct cli_val_aarch64 *) cli_val_assembler_create_clone(&other_v->implementation);
+	return (struct cli_val_arm64 *) cli_val_assembler_create_clone(&other_v->implementation);
 }
 
-#endif /* CLI_VAL_AARCH64_H */
+#endif /* CLI_VAL_ARM64_H */

@@ -161,19 +161,19 @@ static struct cli_val_implementation implementations[] = {
 		.create_clone = (void *) cli_val_arm_create_clone,
 		.destroy = (void *) cli_val_arm_destroy,
 	},
-	[CLI_VAL_TYPE_AARCH64] = {
-		.type = CLI_VAL_TYPE_AARCH64,
+	[CLI_VAL_TYPE_ARM64] = {
+		.type = CLI_VAL_TYPE_ARM64,
 
-		.address_set = (void *) cli_val_aarch64_address_set,
-		.address = (void *) cli_val_aarch64_address,
-		.size = (void *) cli_val_aarch64_sizeof,
-		.data = (void *) cli_val_aarch64_data,
-		.print = (void *) cli_val_aarch64_print,
-		.parse_text = (void *) cli_val_aarch64_parse_text,
-		.parse_binary = (void *) cli_val_aarch64_parse_binary,
+		.address_set = (void *) cli_val_arm64_address_set,
+		.address = (void *) cli_val_arm64_address,
+		.size = (void *) cli_val_arm64_sizeof,
+		.data = (void *) cli_val_arm64_data,
+		.print = (void *) cli_val_arm64_print,
+		.parse_text = (void *) cli_val_arm64_parse_text,
+		.parse_binary = (void *) cli_val_arm64_parse_binary,
 
-		.create_clone = (void *) cli_val_aarch64_create_clone,
-		.destroy = (void *) cli_val_aarch64_destroy,
+		.create_clone = (void *) cli_val_arm64_create_clone,
+		.destroy = (void *) cli_val_arm64_destroy,
 	},
 };
 

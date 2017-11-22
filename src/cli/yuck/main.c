@@ -141,13 +141,13 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 		return cli_val_wrap(ta->type, v);
 	}
 
-	case CLI_VAL_TYPE_AARCH64: {
-		struct cli_val_aarch64_attr a;
-		cli_val_aarch64_attr_init(&a);
+	case CLI_VAL_TYPE_ARM64: {
+		struct cli_val_arm64_attr a;
+		cli_val_arm64_attr_init(&a);
 
-		struct cli_val_aarch64 *v = cli_val_aarch64_create(&a);
+		struct cli_val_arm64 *v = cli_val_arm64_create(&a);
 
-		cli_val_aarch64_attr_deinit(&a);
+		cli_val_arm64_attr_deinit(&a);
 
 		if (v == NULL) {
 			break;
@@ -348,7 +348,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 		break; \
 \
 	case CLI_VAL_TYPE_ARM: \
-	case CLI_VAL_TYPE_AARCH64: \
+	case CLI_VAL_TYPE_ARM64: \
 	case CLI_VAL_TYPE_BYTE: \
 	case CLI_VAL_TYPE_ADDRESS: \
 		break; \

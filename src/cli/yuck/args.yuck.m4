@@ -24,7 +24,7 @@ define(`TYPE_OPTIONS', `
                         address
                         x86
                         arm
-                        aarch64
+                        arm64
   --integer-endianness=ENDIANNESS
                         If type is integer, determines the byte order in
                         memory. By default ENDIANNESS is the same that the
@@ -341,7 +341,7 @@ Examples:
                         ARCHITECTURE can be:
                         x86
                         arm
-                        aarch64
+                        arm64
   --x86-mode=MODE
                         Sets x86 mode. By default, mode is set to be the native
                         mode of the system if supported.
