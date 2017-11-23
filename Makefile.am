@@ -265,6 +265,9 @@ dist_check_SCRIPTS += src/cli/tests/watch-unique.py
 TESTS += src/cli/tests/watch-uncaught-trap-bug.py
 dist_check_SCRIPTS += src/cli/tests/watch-uncaught-trap-bug.py
 
+TESTS += src/cli/tests/read-write.py
+dist_check_SCRIPTS += src/cli/tests/read-write.py
+
 check_PROGRAMS += tests/cli/program/spit-back-mt
 tests_cli_program_spit_back_mt_SOURCES = src/cli/tests/program/spit-back-mt.c
 tests_cli_program_spit_back_mt_CFLAGS = $(PROCTAL_CFLAGS)
