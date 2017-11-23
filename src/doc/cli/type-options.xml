@@ -2,13 +2,13 @@
 <document>
 	<title>Type options</title>
 
-	Commands that deal with values such as <quote>read</quote>,
-	<quote>write</quote>, <quote>search</quote> and <quote>measure</quote>
-	take a common set of options that are called the type options.
-	These options are used to describe the value.
+	Commands like <quote>read</quote>, <quote>write</quote>,
+	<quote>search</quote> and <quote>measure</quote> deal with values that
+	can be configured with a common set of options. These are known as type
+	options.
 
-	The <quote>--type</quote> option specifies the type of the value.
-	The following types are available:
+	To choose a type you pass the appropriately named <quote>--type</quote>
+	option one of the following values:
 
 	<list>
 		<item>byte</item>
@@ -21,8 +21,8 @@
 		<item>arm64</item>
 	</list>
 
-	The following sections will describe each one and their specific
-	options.
+	The following sections will describe each type and their specific
+	options individually.
 
 	<section>
 		<title>Byte</title>
