@@ -24,7 +24,9 @@ define(`TYPE_OPTIONS', `
                         address
                         x86
                         arm
-                        arm64
+                        sparc
+                        powerpc
+                        mips
   --integer-endianness=ENDIANNESS
                         If type is integer, determines the byte order in
                         memory. By default ENDIANNESS is the same that the
@@ -71,6 +73,47 @@ define(`TYPE_OPTIONS', `
                         16
                         32
                         64
+  --arm-mode=MODE
+                        Sets ARM mode. By default MODE is a64.
+                        MODE can be:
+                        a32
+                        t32
+                        a64
+  --arm-endianness=ENDIANNESS
+                        By default ENDIANNESS is the same that the system uses.
+                        ENDIANNESS can be:
+                        little
+                        big
+  --sparc-mode=MODE
+                        Sets SPARC mode. By default MODE is 64.
+                        MODE can be:
+                        32
+                        64
+  --sparc-endianness=ENDIANNESS
+                        By default ENDIANNESS is the same that the system uses.
+                        ENDIANNESS can be:
+                        little
+                        big
+  --powerpc-mode=MODE
+                        Sets PowerPC mode. By default MODE is 64.
+                        MODE can be:
+                        32
+                        64
+  --powerpc-endianness=ENDIANNESS
+                        By default ENDIANNESS is the same that the system uses.
+                        ENDIANNESS can be:
+                        little
+                        big
+  --mips-mode=MODE
+                        Sets MIPS mode. By default MODE is 64.
+                        MODE can be:
+                        32
+                        64
+  --mips-endianness=ENDIANNESS
+                        By default ENDIANNESS is the same that the system uses.
+                        ENDIANNESS can be:
+                        little
+                        big
 ')dnl
 Usage: proctal
 Modding programs.
@@ -341,7 +384,16 @@ Examples:
                         ARCHITECTURE can be:
                         x86
                         arm
-                        arm64
+                        sparc
+                        powerpc
+                        mips
+  --endianness=ENDIANNESS
+                        Sets the endianness of the architecture. By default
+                        ENDIANNESS is set to be the same that the system is
+                        using if it's supported.
+                        ENDIANNESS can be:
+                        little
+                        big
   --x86-mode=MODE
                         Sets x86 mode. By default, mode is set to be the native
                         mode of the system if supported.
@@ -355,6 +407,31 @@ Examples:
                         SYNTAX can be:
                         att
                         intel
+  --arm-mode=MODE
+                        Sets ARM mode. By default, mode is set to be the native
+                        mode of the system if supported.
+                        MODE can be:
+                        a32
+                        t32
+                        a64
+  --sparc-mode=MODE
+                        Sets SPARC mode. By default, mode is set to be the native
+                        mode of the system if supported.
+                        MODE can be:
+                        32
+                        64
+  --powerpc-mode=MODE
+                        Sets PowerPC mode. By default, mode is set to be the native
+                        mode of the system if supported.
+                        MODE can be:
+                        32
+                        64
+  --mips-mode=MODE
+                        Sets MIPS mode. By default, mode is set to be the native
+                        mode of the system if supported.
+                        MODE can be:
+                        32
+                        64
 
 
 

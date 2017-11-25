@@ -29,7 +29,13 @@ $ proctal execute --pid=12345 &lt; code.asm
 	The <quote>--architecture</quote> option allows you to set the CPU
 	architecture. By default it's the same architecture that the tool was
 	compiled in. At the moment the available values are <quote>x86</quote>,
-	<quote>x86-64</quote>, <quote>arm</quote> and <quote>arm64</quote>.
+	<quote>x86-64</quote>, <quote>arm</quote>, <quote>sparc</quote>,
+	<quote>powerpc</quote> and <quote>mips</quote>.
+
+	The <quote>--endianness</quote> options allows you to set the
+	endianness of the instructions. This can be <quote>little</quote> or
+	<quote>big</quote>. By default the endianness of your system is used if
+	support.
 
 	The <quote>--x86-syntax</quote> option allows you to change the
 	syntax for x86 assembly. By default it's set to <quote>intel</quote>.
@@ -37,6 +43,18 @@ $ proctal execute --pid=12345 &lt; code.asm
 
 	The <quote>--x86-mode</quote> option lets you set whether to work with
 	the 16-bit, 32-bit or 64-bit versions of the x86 instruction set.
+
+	The <quote>--arm-mode</quote> option lets you choose between
+	<quote>a32</quote>, <quote>t32</quote> and <quote>a64</quote>.
+
+	The <quote>--sparc-mode</quote> option lets you choose between
+	<quote>32</quote> and <quote>64</quote>.
+
+	The <quote>--powerpc-mode</quote> option lets you choose
+	between <quote>32</quote>, <quote>64</quote>.
+
+	The <quote>--mips-mode</quote> option lets you choose between
+	<quote>32</quote> and <quote>64</quote>.
 
 	You can execute bytecode by passing the <quote>--format</quote> option
 	with the value <quote>bytecode</quote>.

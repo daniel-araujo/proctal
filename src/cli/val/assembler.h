@@ -54,6 +54,8 @@ inline void cli_val_assembler_destroy(struct cli_val_assembler *v)
 		free(v->bytecode);
 	}
 
+	cli_assembler_deinit(&v->assembler);
+
 	free(v);
 }
 

@@ -2,6 +2,10 @@
 
 extern inline void cli_val_arm_attr_init(struct cli_val_arm_attr *a);
 
+extern inline void cli_val_arm_attr_mode_set(struct cli_val_arm_attr *a, enum cli_val_arm_mode mode);
+
+extern inline void cli_val_arm_attr_endianness_set(struct cli_val_arm_attr *a, enum cli_val_arm_endianness endianness);
+
 extern inline void cli_val_arm_attr_deinit(struct cli_val_arm_attr *a);
 
 extern inline struct cli_val_arm *cli_val_arm_create(struct cli_val_arm_attr *a);

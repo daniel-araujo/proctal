@@ -11,7 +11,9 @@
 #include "cli/val/text.h"
 #include "cli/val/x86.h"
 #include "cli/val/arm.h"
-#include "cli/val/arm64.h"
+#include "cli/val/sparc.h"
+#include "cli/val/powerpc.h"
+#include "cli/val/mips.h"
 
 /*
  * Known types.
@@ -25,7 +27,9 @@ enum cli_val_type {
 	CLI_VAL_TYPE_ADDRESS,
 	CLI_VAL_TYPE_X86,
 	CLI_VAL_TYPE_ARM,
-	CLI_VAL_TYPE_ARM64,
+	CLI_VAL_TYPE_SPARC,
+	CLI_VAL_TYPE_POWERPC,
+	CLI_VAL_TYPE_MIPS,
 };
 
 typedef struct cli_val *cli_val;

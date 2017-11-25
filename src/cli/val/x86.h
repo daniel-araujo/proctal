@@ -9,7 +9,7 @@
 #include "cli/val/assembler.h"
 
 /*
- * Architecture modes.
+ * Modes.
  */
 enum cli_val_x86_mode {
 	CLI_VAL_X86_MODE_16,
@@ -18,7 +18,7 @@ enum cli_val_x86_mode {
 };
 
 /*
- * Supported assembly syntaxes.
+ * Syntaxes.
  */
 enum cli_val_x86_syntax {
 	CLI_VAL_X86_SYNTAX_INTEL,
@@ -44,7 +44,7 @@ struct cli_val_x86 {
 };
 
 /*
- * Sets the initial state of instruction value attributes.
+ * Sets the initial state of attributes.
  */
 inline void cli_val_x86_attr_init(struct cli_val_x86_attr *a)
 {
@@ -122,7 +122,11 @@ inline struct cli_val_x86 *cli_val_x86_create(struct cli_val_x86_attr *a)
 		return NULL;
 	}
 
-	return (struct cli_val_x86 *) cli_val_assembler_create(&assembler);
+	struct cli_val_x86 *v = (struct cli_val_x86 *) cli_val_assembler_create(&assembler);
+
+	cli_assembler_deinit(&assembler);
+
+	return v;
 }
 
 /*

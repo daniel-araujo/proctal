@@ -229,9 +229,15 @@ dnl PROCTAL_CPU_ARCHITECTURE
 dnl
 dnl Defines the following macros and Automake conditionals:
 dnl - PROCTAL_CPU_ARCHITECTURE_X86
-dnl - PROCTAL_CPU_ARCHITECTURE_X86_64
+dnl - PROCTAL_CPU_ARCHITECTURE_X86_MODE_32
+dnl - PROCTAL_CPU_ARCHITECTURE_X86_MODE_64
 dnl - PROCTAL_CPU_ARCHITECTURE_ARM
-dnl - PROCTAL_CPU_ARCHITECTURE_AARCH64
+dnl - PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32
+dnl - PROCTAL_CPU_ARCHITECTURE_ARM_MODE_T32
+dnl - PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64
+dnl - PROCTAL_CPU_ARCHITECTURE_POWERPC
+dnl - PROCTAL_CPU_ARCHITECTURE_SPARC
+dnl - PROCTAL_CPU_ARCHITECTURE_MIPS
 dnl - PROCTAL_CPU_ARCHITECTURE_UNKNOWN
 AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AC_CANONICAL_HOST
@@ -241,18 +247,34 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	case $proctal_cpu_architecture_autoconf_arch in
 	i[3456]86)
 		proctal_cpu_architecture_arch=x86
+		proctal_cpu_architecture_x86_mode=32
 		;;
 
 	x86_64)
-		proctal_cpu_architecture_arch=x86_64
+		proctal_cpu_architecture_arch=x86
+		proctal_cpu_architecture_x86_mode=64
 		;;
 
 	arm*)
 		proctal_cpu_architecture_arch=arm
+		proctal_cpu_architecture_arm_mode=a32
 		;;
 
 	aarch64)
-		proctal_cpu_architecture_arch=aarch64
+		proctal_cpu_architecture_arch=arm
+		proctal_cpu_architecture_arm_mode=a64
+		;;
+
+	sparc)
+		proctal_cpu_architecture_arch=sparc
+		;;
+
+	powerpc*)
+		proctal_cpu_architecture_arch=powerpc
+		;;
+
+	mips)
+		proctal_cpu_architecture_arch=mips
 		;;
 
 	*)
@@ -265,17 +287,37 @@ AC_DEFUN([PROCTAL_CPU_ARCHITECTURE], [
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86], [test "$proctal_cpu_architecture_arch" = "x86"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_64], [Define to 1 if the CPU architecture is x86-64.])
-	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86_64], [test "$proctal_cpu_architecture_arch" = "x86_64"])
-	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86_64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_64])])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_MODE_32], [Define to 1 if the x86 architecture is in 32-bit mode.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86_MODE_32], [test "$proctal_cpu_architecture_x86_mode" = "32"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86_MODE_32], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_MODE_32])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Define to 1 if the CPU architecture is arm.])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_X86_MODE_64], [Define to 1 if the x86 architecture is in 64-bit mode.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_X86_MODE_64], [test "$proctal_cpu_architecture_x86_mode" = "64"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_X86_MODE_64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_X86_MODE_64])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM], [Define to 1 if the CPU architecture is ARM.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_ARM], [test "$proctal_cpu_architecture_arch" = "arm"])
 	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_ARM], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM])])
 
-	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_AARCH64], [Define to 1 if the CPU architecture is aarch64.])
-	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_AARCH64], [test "$proctal_cpu_architecture_arch" = "aarch64"])
-	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_AARCH64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_AARCH64])])
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32], [Define to 1 if the system is primarily running A32.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32], [test "$proctal_cpu_architecture_arm_mode" = "a32"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64], [Define to 1 if the system is primarily running A64.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64], [test "$proctal_cpu_architecture_arm_mode" = "a64"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_SPARC], [Define to 1 if the CPU architecture is SPARC.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_SPARC], [test "$proctal_cpu_architecture_arch" = "sparc"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_SPARC], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_SPARC])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_POWERPC], [Define to 1 if the CPU architecture is PowerPC.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_POWERPC], [test "$proctal_cpu_architecture_arch" = "powerpc"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_POWERPC], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_POWERPC])])
+
+	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_MIPS], [Define to 1 if the CPU architecture is MIPS.])
+	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_MIPS], [test "$proctal_cpu_architecture_arch" = "mips"])
+	AM_COND_IF([PROCTAL_CPU_ARCHITECTURE_MIPS], [AC_DEFINE([PROCTAL_CPU_ARCHITECTURE_MIPS])])
 
 	AH_TEMPLATE([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [Define to 1 if the CPU architecture is unknown.])
 	AM_CONDITIONAL([PROCTAL_CPU_ARCHITECTURE_UNKNOWN], [test "$proctal_cpu_architecture_arch" = "unknown"])

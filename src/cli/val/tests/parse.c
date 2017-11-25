@@ -82,7 +82,10 @@ static int run_parse_text(const char *name, struct test *test, cli_val v)
 	struct otrap otrap;
 	otrap_init(&otrap);
 
-	cli_val_print(v, otrap_file(&otrap));
+	if (cli_val_print(v, otrap_file(&otrap)) == 0) {
+		fprintf(stderr, "%s parse: Failed to print '%s'\n", name, test->value);
+		return 1;
+	}
 
 	char output[255];
 	size_t output_size = otrap_read(&otrap, output, sizeof(output));
@@ -140,9 +143,17 @@ static int run_parse_binary(const char *name, struct test *test, cli_val v)
 
 static int run_scan(const char *name, struct test *test, cli_val v)
 {
-	if (cli_val_type(v) == CLI_VAL_TYPE_X86) {
+	switch (cli_val_type(v)) {
+	case CLI_VAL_TYPE_X86:
+	case CLI_VAL_TYPE_ARM:
+	case CLI_VAL_TYPE_SPARC:
+	case CLI_VAL_TYPE_POWERPC:
+	case CLI_VAL_TYPE_MIPS:
 		// Not supported.
 		return 0;
+
+	default:
+		break;
 	}
 
 	FILE *file = tmpfile();
@@ -527,7 +538,87 @@ static void test_address()
 	}
 }
 
-static void test_instruction_x86_64()
+static void test_x86_16()
+{
+	struct cli_val_x86_attr a;
+	cli_val_x86_attr_init(&a);
+	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_32);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_x86_attr_deinit(&a);
+
+	struct test tests[] = {
+		// Without operand.
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		// With one operand.
+		{
+			.value = "dec	ax",
+			.result = "dec	ax",
+		},
+		// With two operands.
+		{
+			.value = "sub	sp, 8",
+			.result = "sub	sp, 8",
+		},
+		// Using spaces.
+		{
+			.value = "sub  sp, 8",
+			.result = "sub	sp, 8",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_x86_32()
+{
+	struct cli_val_x86_attr a;
+	cli_val_x86_attr_init(&a);
+	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_32);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_x86_attr_deinit(&a);
+
+	struct test tests[] = {
+		// Without operand.
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		// With one operand.
+		{
+			.value = "dec	eax",
+			.result = "dec	eax",
+		},
+		// With two operands.
+		{
+			.value = "sub	esp, 8",
+			.result = "sub	esp, 8",
+		},
+		// Using spaces.
+		{
+			.value = "sub  esp, 8",
+			.result = "sub	esp, 8",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_x86_64()
 {
 	struct cli_val_x86_attr a;
 	cli_val_x86_attr_init(&a);
@@ -567,12 +658,260 @@ static void test_instruction_x86_64()
 	}
 }
 
+static void test_arm_a32()
+{
+	struct cli_val_arm_attr a;
+	cli_val_arm_attr_init(&a);
+	cli_val_arm_attr_mode_set(&a, CLI_VAL_ARM_MODE_A32);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
+	cli_val_arm_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "mov	r0, #1",
+			.result = "mov	r0, #1",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_arm_a64()
+{
+	struct cli_val_arm_attr a;
+	cli_val_arm_attr_init(&a);
+	cli_val_arm_attr_mode_set(&a, CLI_VAL_ARM_MODE_A64);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
+	cli_val_arm_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "mov	w19, w0",
+			.result = "mov	w19, w0",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_sparc_32()
+{
+	struct cli_val_sparc_attr a;
+	cli_val_sparc_attr_init(&a);
+	cli_val_sparc_attr_mode_set(&a, CLI_VAL_SPARC_MODE_32);
+	cli_val_sparc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
+	cli_val_sparc_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "add	%l1, %l2, %l3",
+			.result = "add	%l1, %l2, %l3",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_sparc_64()
+{
+	struct cli_val_sparc_attr a;
+	cli_val_sparc_attr_init(&a);
+	cli_val_sparc_attr_mode_set(&a, CLI_VAL_SPARC_MODE_64);
+	cli_val_sparc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
+	cli_val_sparc_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "add	%l1, %l2, %l3",
+			.result = "add	%l1, %l2, %l3",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_powerpc_32()
+{
+	struct cli_val_powerpc_attr a;
+	cli_val_powerpc_attr_init(&a);
+	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_32);
+	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
+	cli_val_powerpc_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "li	0, 3",
+			.result = "li	0, 3",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_powerpc_64()
+{
+	struct cli_val_powerpc_attr a;
+	cli_val_powerpc_attr_init(&a);
+	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_64);
+	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
+	cli_val_powerpc_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "li	0, 3",
+			.result = "li	0, 3",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_mips_32()
+{
+	struct cli_val_mips_attr a;
+	cli_val_mips_attr_init(&a);
+	cli_val_mips_attr_mode_set(&a, CLI_VAL_MIPS_MODE_32);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
+	cli_val_mips_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "add	$t1, $t1, $t0",
+			.result = "add	$t1, $t1, $t0",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
+static void test_mips_64()
+{
+	struct cli_val_mips_attr a;
+	cli_val_mips_attr_init(&a);
+	cli_val_mips_attr_mode_set(&a, CLI_VAL_MIPS_MODE_64);
+	cli_val v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
+	cli_val_mips_attr_deinit(&a);
+
+	struct test tests[] = {
+		{
+			.value = "nop",
+			.result = "nop",
+		},
+		{
+			.value = "sll	$at, $at, 0x10",
+			.result = "sll	$at, $at, 0x10",
+		},
+	};
+
+	int ret = run(__FUNCTION__, tests, ARRAY_SIZE(tests), v);
+
+	cli_val_destroy(v);
+
+	if (ret) {
+		exit(1);
+	}
+}
+
 /*
  * Tests all addition operations.
  */
 int main(void)
 {
-	test_instruction_x86_64();
+	test_address();
+	test_byte();
+	test_ieee754_double();
+	test_ieee754_extended();
+	test_ieee754_single();
+	test_integer_16_twos_complement();
+	test_integer_16_unsigned();
+	test_integer_32_twos_complement();
+	test_integer_32_unsigned();
+	test_integer_64_twos_complement();
+	test_integer_64_unsigned();
+	test_integer_8_twos_complement();
+	test_integer_8_unsigned();
+	test_text_ascii();
+	test_x86_16();
+	test_x86_32();
+	test_x86_64();
+	test_arm_a32();
+	test_arm_a64();
+	test_sparc_32();
+	test_sparc_64();
+	test_powerpc_32();
+	test_powerpc_64();
+	test_mips_32();
+	test_mips_64();
 
 	return 0;
 }

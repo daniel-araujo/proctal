@@ -14,14 +14,29 @@ struct cli_cmd_execute_arg {
 	// What format we're expecting the input to be.
 	enum cli_cmd_execute_format format;
 
-	// Assembly architecture.
+	// Architecture.
 	enum cli_assembler_architecture architecture;
 
-	// Assembly syntax.
+	// Endianness.
+	enum cli_assembler_endianness endianness;
+
+	// x86 mode.
 	enum cli_assembler_x86_mode x86_mode;
 
-	// Assembly syntax.
+	// x86 syntax.
 	enum cli_assembler_x86_syntax x86_syntax;
+
+	// ARM mode.
+	enum cli_assembler_arm_mode arm_mode;
+
+	// Sparc mode.
+	enum cli_assembler_sparc_mode sparc_mode;
+
+	// PowerPC mode.
+	enum cli_assembler_powerpc_mode powerpc_mode;
+
+	// Mips mode.
+	enum cli_assembler_mips_mode mips_mode;
 };
 
 int cli_cmd_execute(struct cli_cmd_execute_arg *arg);

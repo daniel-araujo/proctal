@@ -12,9 +12,19 @@ extern inline void cli_assembler_deinit(struct cli_assembler *assembler);
 
 extern inline void cli_assembler_architecture_set(struct cli_assembler *assembler, enum cli_assembler_architecture architecture);
 
+extern inline void cli_assembler_endianness_set(struct cli_assembler *assembler, enum cli_assembler_endianness endianness);
+
 extern inline void cli_assembler_x86_mode_set(struct cli_assembler *assembler, enum cli_assembler_x86_mode x86_mode);
 
 extern inline void cli_assembler_x86_syntax_set(struct cli_assembler *assembler, enum cli_assembler_x86_syntax x86_syntax);
+
+extern inline void cli_assembler_arm_mode_set(struct cli_assembler *assembler, enum cli_assembler_arm_mode arm_mode);
+
+extern inline void cli_assembler_sparc_mode_set(struct cli_assembler *assembler, enum cli_assembler_sparc_mode sparc_mode);
+
+extern inline void cli_assembler_powerpc_mode_set(struct cli_assembler *assembler, enum cli_assembler_powerpc_mode powerpc_mode);
+
+extern inline void cli_assembler_mips_mode_set(struct cli_assembler *assembler, enum cli_assembler_mips_mode mips_mode);
 
 extern inline void cli_assembler_address_set(struct cli_assembler *assembler, void *address);
 

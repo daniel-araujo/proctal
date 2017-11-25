@@ -169,8 +169,13 @@ int cli_cmd_execute(struct cli_cmd_execute_arg *arg)
 		struct cli_assembler assembler;
 		cli_assembler_init(&assembler);
 		cli_assembler_architecture_set(&assembler, arg->architecture);
+		cli_assembler_endianness_set(&assembler, arg->endianness);
 		cli_assembler_x86_mode_set(&assembler, arg->x86_mode);
 		cli_assembler_x86_syntax_set(&assembler, arg->x86_syntax);
+		cli_assembler_arm_mode_set(&assembler, arg->arm_mode);
+		cli_assembler_sparc_mode_set(&assembler, arg->sparc_mode);
+		cli_assembler_powerpc_mode_set(&assembler, arg->powerpc_mode);
+		cli_assembler_mips_mode_set(&assembler, arg->mips_mode);
 
 		struct darr bytecode;
 		darr_init(&bytecode, sizeof(char));

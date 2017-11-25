@@ -86,8 +86,12 @@ libclival_a_SOURCES = \
 	src/cli/val/x86.c \
 	src/cli/val/arm.h \
 	src/cli/val/arm.c \
-	src/cli/val/arm64.h \
-	src/cli/val/arm64.c \
+	src/cli/val/sparc.h \
+	src/cli/val/sparc.c \
+	src/cli/val/powerpc.h \
+	src/cli/val/powerpc.c \
+	src/cli/val/mips.h \
+	src/cli/val/mips.c \
 	src/cli/val.h \
 	src/cli/val.c
 libclival_a_CFLAGS = $(PROCTAL_CFLAGS)
@@ -390,7 +394,7 @@ tests_api_linux_proc_maps_check_SOURCES = src/api/linux/tests/proc-maps/check.c
 tests_api_linux_proc_maps_check_CFLAGS = $(PROCTAL_CFLAGS)
 tests_api_linux_proc_maps_check_LDADD = libproctal.la
 
-if PROCTAL_CPU_ARCHITECTURE_X86_64
+if PROCTAL_CPU_ARCHITECTURE_X86_MODE_64
 
 libproctal_la_SOURCES += \
 	src/api/linux/ptrace/x86_64/instruction-pointer.c \
@@ -439,7 +443,7 @@ libproctal_la_SOURCES += \
 endif
 endif
 
-if PROCTAL_CPU_ARCHITECTURE_X86_64
+if PROCTAL_CPU_ARCHITECTURE_X86_MODE_64
 
 libproctal_la_SOURCES += \
 	src/api/x86_64/dr.c \

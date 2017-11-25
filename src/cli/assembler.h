@@ -4,16 +4,18 @@
 #include <stdlib.h>
 
 /*
- * Supported CPU architectures.
+ * CPU architectures.
  */
 enum cli_assembler_architecture {
 	CLI_ASSEMBLER_ARCHITECTURE_X86,
 	CLI_ASSEMBLER_ARCHITECTURE_ARM,
-	CLI_ASSEMBLER_ARCHITECTURE_ARM64,
+	CLI_ASSEMBLER_ARCHITECTURE_SPARC,
+	CLI_ASSEMBLER_ARCHITECTURE_POWERPC,
+	CLI_ASSEMBLER_ARCHITECTURE_MIPS,
 };
 
 /*
- * Supported x86 modes.
+ * x86 modes.
  */
 enum cli_assembler_x86_mode {
 	CLI_ASSEMBLER_X86_MODE_16,
@@ -22,34 +24,130 @@ enum cli_assembler_x86_mode {
 };
 
 /*
- * Supported assembly syntaxes.
+ * x86 syntaxes.
  */
 enum cli_assembler_x86_syntax {
 	CLI_ASSEMBLER_X86_SYNTAX_INTEL,
 	CLI_ASSEMBLER_X86_SYNTAX_ATT,
 };
 
-#if PROCTAL_CPU_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_32
-#elif PROCTAL_CPU_ARCHITECTURE_X86_64
-	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_64
-#elif PROCTAL_CPU_ARCHITECTURE_ARM
-	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_ARM
-#elif PROCTAL_CPU_ARCHITECTURE_ARM64
-	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_ARM64
-#else
-	// Unknown CPU architecture. Use most common.
-	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
-	#define CLI_ASSEMBLER_MODE_DEFAULT CLI_ASSEMBLER_MODE_X86_64
-#endif
+/*
+ * ARM modes.
+ */
+enum cli_assembler_arm_mode {
+	CLI_ASSEMBLER_ARM_MODE_A32,
+	CLI_ASSEMBLER_ARM_MODE_T32,
+	CLI_ASSEMBLER_ARM_MODE_A64,
+};
 
-#ifndef CLI_ASSEMBLER_X86_MODE_DEFAULT
-	#define CLI_ASSEMBLER_X86_MODE_DEFAULT 0
-#endif
+/*
+ * SPARC modes.
+ */
+enum cli_assembler_sparc_mode {
+	CLI_ASSEMBLER_SPARC_MODE_32,
+	CLI_ASSEMBLER_SPARC_MODE_64,
+	CLI_ASSEMBLER_SPARC_MODE_V9,
+};
 
+/*
+ * PowerPC modes.
+ */
+enum cli_assembler_powerpc_mode {
+	CLI_ASSEMBLER_POWERPC_MODE_32,
+	CLI_ASSEMBLER_POWERPC_MODE_64,
+	CLI_ASSEMBLER_POWERPC_MODE_QPX,
+};
+
+/*
+ * MIPS modes.
+ */
+enum cli_assembler_mips_mode {
+	CLI_ASSEMBLER_MIPS_MODE_MICRO,
+	CLI_ASSEMBLER_MIPS_MODE_3,
+	CLI_ASSEMBLER_MIPS_MODE_32R6,
+	CLI_ASSEMBLER_MIPS_MODE_32,
+	CLI_ASSEMBLER_MIPS_MODE_64,
+};
+
+/*
+ * Endianness.
+ */
+enum cli_assembler_endianness {
+	CLI_ASSEMBLER_ENDIANNESS_LITTLE,
+	CLI_ASSEMBLER_ENDIANNESS_BIG,
+};
+
+/*
+ * Default values.
+ */
+#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
+#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_64
 #define CLI_ASSEMBLER_X86_SYNTAX_DEFAULT CLI_ASSEMBLER_X86_SYNTAX_INTEL
+#define CLI_ASSEMBLER_ARM_MODE_DEFAULT CLI_ASSEMBLER_ARM_MODE_A64
+#define CLI_ASSEMBLER_POWERPC_MODE_DEFAULT CLI_ASSEMBLER_POWERPC_MODE_64
+#define CLI_ASSEMBLER_SPARC_MODE_DEFAULT CLI_ASSEMBLER_SPARC_MODE_64
+#define CLI_ASSEMBLER_MIPS_MODE_DEFAULT CLI_ASSEMBLER_MIPS_MODE_64
+
+#if PROCTAL_CPU_ARCHITECTURE_X86
+
+	#undef CLI_ASSEMBLER_ARCHITECTURE_DEFAULT
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_X86
+
+	#if PROCTAL_CPU_ARCHITECTURE_X86_MODE_32
+
+		#undef CLI_ASSEMBLER_X86_MODE_DEFAULT
+		#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_32
+
+	#elif PROCTAL_CPU_ARCHITECTURE_X86_MODE_64
+
+		#undef CLI_ASSEMBLER_X86_MODE_DEFAULT
+		#define CLI_ASSEMBLER_X86_MODE_DEFAULT CLI_ASSEMBLER_X86_MODE_64
+
+	#endif
+
+#elif PROCTAL_CPU_ARCHITECTURE_ARM
+
+	#undef CLI_ASSEMBLER_ARCHITECTURE_DEFAULT
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_ARM
+
+	#if PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A32
+
+		#undef CLI_ASSEMBLER_ARM_MODE_DEFAULT
+		#define CLI_ASSEMBLER_ARM_MODE_DEFAULT CLI_ASSEMBLER_ARM_MODE_A32
+
+	#elif PROCTAL_CPU_ARCHITECTURE_ARM_MODE_A64
+
+		#undef CLI_ASSEMBLER_ARM_MODE_DEFAULT
+		#define CLI_ASSEMBLER_ARM_MODE_DEFAULT CLI_ASSEMBLER_ARM_MODE_A64
+
+	#endif
+
+#elif PROCTAL_CPU_ARCHITECTURE_SPARC
+
+	#undef CLI_ASSEMBLER_ARCHITECTURE_DEFAULT
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_SPARC
+
+#elif PROCTAL_CPU_ARCHITECTURE_POWERPC
+
+	#undef CLI_ASSEMBLER_ARCHITECTURE_DEFAULT
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_POWERPC
+
+#elif PROCTAL_CPU_ARCHITECTURE_MIPS
+
+	#undef CLI_ASSEMBLER_ARCHITECTURE_DEFAULT
+	#define CLI_ASSEMBLER_ARCHITECTURE_DEFAULT CLI_ASSEMBLER_ARCHITECTURE_MIPS
+
+#endif
+
+#if PROCTAL_INTEGER_ENDIANNESS_LITTLE
+
+	#define CLI_ASSEMBLER_ENDIANNESS_DEFAULT CLI_ASSEMBLER_ENDIANNESS_LITTLE
+
+#elif PROCTAL_INTEGER_ENDIANNESS_BIG
+
+	#define CLI_ASSEMBLER_ENDIANNESS_DEFAULT CLI_ASSEMBLER_ENDIANNESS_BIG
+
+#endif
 
 /*
  * The assembler struct. This keeps track of a lot of information that is
@@ -59,11 +157,26 @@ struct cli_assembler {
 	// CPU architecture.
 	enum cli_assembler_architecture architecture;
 
-	// x86 mode
+	// Endianness.
+	enum cli_assembler_endianness endianness;
+
+	// x86 mode.
 	enum cli_assembler_x86_mode x86_mode;
 
 	// x86 syntax.
 	enum cli_assembler_x86_syntax x86_syntax;
+
+	// ARM mode.
+	enum cli_assembler_arm_mode arm_mode;
+
+	// SPARC mode.
+	enum cli_assembler_sparc_mode sparc_mode;
+
+	// PowerPC mode.
+	enum cli_assembler_powerpc_mode powerpc_mode;
+
+	// MIPS mode.
+	enum cli_assembler_mips_mode mips_mode;
 
 	// Address where the instruction is located in memory.
 	// This information is important when calculating the
@@ -111,8 +224,13 @@ struct cli_assembler_decompile_result {
 inline void cli_assembler_init(struct cli_assembler *assembler)
 {
 	assembler->architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
+	assembler->endianness = CLI_ASSEMBLER_ENDIANNESS_DEFAULT;
 	assembler->x86_mode = CLI_ASSEMBLER_X86_MODE_DEFAULT;
 	assembler->x86_syntax = CLI_ASSEMBLER_X86_SYNTAX_DEFAULT;
+	assembler->arm_mode = CLI_ASSEMBLER_ARM_MODE_DEFAULT;
+	assembler->powerpc_mode = CLI_ASSEMBLER_POWERPC_MODE_DEFAULT;
+	assembler->sparc_mode = CLI_ASSEMBLER_SPARC_MODE_DEFAULT;
+	assembler->mips_mode = CLI_ASSEMBLER_MIPS_MODE_DEFAULT;
 	assembler->address = NULL;
 	assembler->error_message = NULL;
 }
@@ -133,7 +251,15 @@ inline void cli_assembler_architecture_set(struct cli_assembler *assembler, enum
 }
 
 /*
- * Sets the architecture mode.
+ * Sets endianness
+ */
+inline void cli_assembler_endianness_set(struct cli_assembler *assembler, enum cli_assembler_endianness endianness)
+{
+	assembler->endianness = endianness;
+}
+
+/*
+ * Sets x86 mode.
  */
 inline void cli_assembler_x86_mode_set(struct cli_assembler *assembler, enum cli_assembler_x86_mode x86_mode)
 {
@@ -141,11 +267,43 @@ inline void cli_assembler_x86_mode_set(struct cli_assembler *assembler, enum cli
 }
 
 /*
- * Sets the assembly syntax.
+ * Sets the syntax for x86.
  */
 inline void cli_assembler_x86_syntax_set(struct cli_assembler *assembler, enum cli_assembler_x86_syntax x86_syntax)
 {
 	assembler->x86_syntax = x86_syntax;
+}
+
+/*
+ * Sets arm mode.
+ */
+inline void cli_assembler_arm_mode_set(struct cli_assembler *assembler, enum cli_assembler_arm_mode arm_mode)
+{
+	assembler->arm_mode = arm_mode;
+}
+
+/*
+ * Sets sparc mode.
+ */
+inline void cli_assembler_sparc_mode_set(struct cli_assembler *assembler, enum cli_assembler_sparc_mode sparc_mode)
+{
+	assembler->sparc_mode = sparc_mode;
+}
+
+/*
+ * Sets powerpc mode.
+ */
+inline void cli_assembler_powerpc_mode_set(struct cli_assembler *assembler, enum cli_assembler_powerpc_mode powerpc_mode)
+{
+	assembler->powerpc_mode = powerpc_mode;
+}
+
+/*
+ * Sets mips mode.
+ */
+inline void cli_assembler_mips_mode_set(struct cli_assembler *assembler, enum cli_assembler_mips_mode mips_mode)
+{
+	assembler->mips_mode = mips_mode;
 }
 
 /*

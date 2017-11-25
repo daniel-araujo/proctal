@@ -29,13 +29,29 @@
  */
 struct type_options {
 	enum cli_val_type type;
+
 	enum cli_val_integer_endianness integer_endianness;
 	enum cli_val_integer_sign integer_sign;
 	enum cli_val_integer_bits integer_bits;
+
 	enum cli_val_ieee754_precision ieee754_precision;
+
 	enum cli_val_text_encoding text_encoding;
+
 	enum cli_val_x86_mode x86_mode;
 	enum cli_val_x86_syntax x86_syntax;
+
+	enum cli_val_arm_mode arm_mode;
+	enum cli_val_arm_endianness arm_endianness;
+
+	enum cli_val_sparc_mode sparc_mode;
+	enum cli_val_sparc_endianness sparc_endianness;
+
+	enum cli_val_powerpc_mode powerpc_mode;
+	enum cli_val_powerpc_endianness powerpc_endianness;
+
+	enum cli_val_mips_mode mips_mode;
+	enum cli_val_mips_endianness mips_endianness;
 };
 
 /*
@@ -129,6 +145,8 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 	case CLI_VAL_TYPE_ARM: {
 		struct cli_val_arm_attr a;
 		cli_val_arm_attr_init(&a);
+		cli_val_arm_attr_mode_set(&a, ta->arm_mode);
+		cli_val_arm_attr_endianness_set(&a, ta->arm_endianness);
 
 		struct cli_val_arm *v = cli_val_arm_create(&a);
 
@@ -141,13 +159,49 @@ static cli_val create_cli_val_from_type_options(struct type_options *ta)
 		return cli_val_wrap(ta->type, v);
 	}
 
-	case CLI_VAL_TYPE_ARM64: {
-		struct cli_val_arm64_attr a;
-		cli_val_arm64_attr_init(&a);
+	case CLI_VAL_TYPE_SPARC: {
+		struct cli_val_sparc_attr a;
+		cli_val_sparc_attr_init(&a);
+		cli_val_sparc_attr_mode_set(&a, ta->sparc_mode);
+		cli_val_sparc_attr_endianness_set(&a, ta->sparc_endianness);
 
-		struct cli_val_arm64 *v = cli_val_arm64_create(&a);
+		struct cli_val_sparc *v = cli_val_sparc_create(&a);
 
-		cli_val_arm64_attr_deinit(&a);
+		cli_val_sparc_attr_deinit(&a);
+
+		if (v == NULL) {
+			break;
+		}
+
+		return cli_val_wrap(ta->type, v);
+	}
+
+	case CLI_VAL_TYPE_POWERPC: {
+		struct cli_val_powerpc_attr a;
+		cli_val_powerpc_attr_init(&a);
+		cli_val_powerpc_attr_mode_set(&a, ta->powerpc_mode);
+		cli_val_powerpc_attr_endianness_set(&a, ta->powerpc_endianness);
+
+		struct cli_val_powerpc *v = cli_val_powerpc_create(&a);
+
+		cli_val_powerpc_attr_deinit(&a);
+
+		if (v == NULL) {
+			break;
+		}
+
+		return cli_val_wrap(ta->type, v);
+	}
+
+	case CLI_VAL_TYPE_MIPS: {
+		struct cli_val_mips_attr a;
+		cli_val_mips_attr_init(&a);
+		cli_val_mips_attr_mode_set(&a, ta->mips_mode);
+		cli_val_mips_attr_endianness_set(&a, ta->mips_endianness);
+
+		struct cli_val_mips *v = cli_val_mips_create(&a);
+
+		cli_val_mips_attr_deinit(&a);
 
 		if (v == NULL) {
 			break;
@@ -348,7 +402,85 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 		break; \
 \
 	case CLI_VAL_TYPE_ARM: \
-	case CLI_VAL_TYPE_ARM64: \
+		if (yuck_arg->arm_mode_arg) { \
+			if (!cli_parse_val_arm_mode(yuck_arg->arm_mode_arg, &type->arm_mode)) { \
+				fputs("Invalid arm mode.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->arm_mode = CLI_VAL_X86_MODE_DEFAULT; \
+		} \
+\
+		if (yuck_arg->arm_endianness_arg) { \
+			if (!cli_parse_val_arm_endianness(yuck_arg->arm_endianness_arg, &type->arm_endianness)) { \
+				fputs("Invalid arm endianness.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->arm_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_SPARC: \
+		if (yuck_arg->sparc_mode_arg) { \
+			if (!cli_parse_val_sparc_mode(yuck_arg->sparc_mode_arg, &type->sparc_mode)) { \
+				fputs("Invalid sparc mode.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->sparc_mode = CLI_VAL_X86_MODE_DEFAULT; \
+		} \
+\
+		if (yuck_arg->sparc_endianness_arg) { \
+			if (!cli_parse_val_sparc_endianness(yuck_arg->sparc_endianness_arg, &type->sparc_endianness)) { \
+				fputs("Invalid sparc endianness.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->sparc_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_POWERPC: \
+		if (yuck_arg->powerpc_mode_arg) { \
+			if (!cli_parse_val_powerpc_mode(yuck_arg->powerpc_mode_arg, &type->powerpc_mode)) { \
+				fputs("Invalid powerpc mode.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->powerpc_mode = CLI_VAL_X86_MODE_DEFAULT; \
+		} \
+\
+		if (yuck_arg->powerpc_endianness_arg) { \
+			if (!cli_parse_val_powerpc_endianness(yuck_arg->powerpc_endianness_arg, &type->powerpc_endianness)) { \
+				fputs("Invalid powerpc endianness.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->powerpc_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+		} \
+		break; \
+\
+	case CLI_VAL_TYPE_MIPS: \
+		if (yuck_arg->mips_mode_arg) { \
+			if (!cli_parse_val_mips_mode(yuck_arg->mips_mode_arg, &type->mips_mode)) { \
+				fputs("Invalid mips mode.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->mips_mode = CLI_VAL_X86_MODE_DEFAULT; \
+		} \
+\
+		if (yuck_arg->mips_endianness_arg) { \
+			if (!cli_parse_val_mips_endianness(yuck_arg->mips_endianness_arg, &type->mips_endianness)) { \
+				fputs("Invalid mips endianness.\n", stderr); \
+				return 0; \
+			} \
+		} else { \
+			type->mips_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+		} \
+		break; \
+\
 	case CLI_VAL_TYPE_BYTE: \
 	case CLI_VAL_TYPE_ADDRESS: \
 		break; \
@@ -953,6 +1085,15 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 			arg->architecture = CLI_ASSEMBLER_ARCHITECTURE_DEFAULT;
 		}
 
+		if (yuck_arg->execute.endianness_arg) {
+			if (!cli_parse_assembler_endianness(yuck_arg->execute.endianness_arg, &arg->endianness)) {
+				fputs("Invalid endianness.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->endianness = CLI_ASSEMBLER_ENDIANNESS_DEFAULT;
+		}
+
 		if (yuck_arg->execute.x86_mode_arg) {
 			if (!cli_parse_assembler_x86_mode(yuck_arg->execute.x86_mode_arg, &arg->x86_mode)) {
 				fputs("Invalid x86 mode.\n", stderr);
@@ -969,6 +1110,42 @@ static struct cli_cmd_execute_arg *create_cli_cmd_execute_arg(yuck_t *yuck_arg)
 			}
 		} else {
 			arg->x86_syntax = CLI_ASSEMBLER_X86_SYNTAX_DEFAULT;
+		}
+
+		if (yuck_arg->execute.arm_mode_arg) {
+			if (!cli_parse_assembler_arm_mode(yuck_arg->execute.arm_mode_arg, &arg->arm_mode)) {
+				fputs("Invalid arm mode.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->arm_mode = CLI_ASSEMBLER_ARM_MODE_DEFAULT;
+		}
+
+		if (yuck_arg->execute.sparc_mode_arg) {
+			if (!cli_parse_assembler_sparc_mode(yuck_arg->execute.sparc_mode_arg, &arg->sparc_mode)) {
+				fputs("Invalid sparc mode.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->sparc_mode = CLI_ASSEMBLER_SPARC_MODE_DEFAULT;
+		}
+
+		if (yuck_arg->execute.powerpc_mode_arg) {
+			if (!cli_parse_assembler_powerpc_mode(yuck_arg->execute.powerpc_mode_arg, &arg->powerpc_mode)) {
+				fputs("Invalid powerpc mode.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->powerpc_mode = CLI_ASSEMBLER_POWERPC_MODE_DEFAULT;
+		}
+
+		if (yuck_arg->execute.mips_mode_arg) {
+			if (!cli_parse_assembler_mips_mode(yuck_arg->execute.mips_mode_arg, &arg->mips_mode)) {
+				fputs("Invalid mips mode.\n", stderr);
+				return 0;
+			}
+		} else {
+			arg->mips_mode = CLI_ASSEMBLER_MIPS_MODE_DEFAULT;
 		}
 	}
 

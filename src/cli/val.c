@@ -161,19 +161,47 @@ static struct cli_val_implementation implementations[] = {
 		.create_clone = (void *) cli_val_arm_create_clone,
 		.destroy = (void *) cli_val_arm_destroy,
 	},
-	[CLI_VAL_TYPE_ARM64] = {
-		.type = CLI_VAL_TYPE_ARM64,
+	[CLI_VAL_TYPE_SPARC] = {
+		.type = CLI_VAL_TYPE_SPARC,
 
-		.address_set = (void *) cli_val_arm64_address_set,
-		.address = (void *) cli_val_arm64_address,
-		.size = (void *) cli_val_arm64_sizeof,
-		.data = (void *) cli_val_arm64_data,
-		.print = (void *) cli_val_arm64_print,
-		.parse_text = (void *) cli_val_arm64_parse_text,
-		.parse_binary = (void *) cli_val_arm64_parse_binary,
+		.address_set = (void *) cli_val_sparc_address_set,
+		.address = (void *) cli_val_sparc_address,
+		.size = (void *) cli_val_sparc_sizeof,
+		.data = (void *) cli_val_sparc_data,
+		.print = (void *) cli_val_sparc_print,
+		.parse_text = (void *) cli_val_sparc_parse_text,
+		.parse_binary = (void *) cli_val_sparc_parse_binary,
 
-		.create_clone = (void *) cli_val_arm64_create_clone,
-		.destroy = (void *) cli_val_arm64_destroy,
+		.create_clone = (void *) cli_val_sparc_create_clone,
+		.destroy = (void *) cli_val_sparc_destroy,
+	},
+	[CLI_VAL_TYPE_POWERPC] = {
+		.type = CLI_VAL_TYPE_POWERPC,
+
+		.address_set = (void *) cli_val_powerpc_address_set,
+		.address = (void *) cli_val_powerpc_address,
+		.size = (void *) cli_val_powerpc_sizeof,
+		.data = (void *) cli_val_powerpc_data,
+		.print = (void *) cli_val_powerpc_print,
+		.parse_text = (void *) cli_val_powerpc_parse_text,
+		.parse_binary = (void *) cli_val_powerpc_parse_binary,
+
+		.create_clone = (void *) cli_val_powerpc_create_clone,
+		.destroy = (void *) cli_val_powerpc_destroy,
+	},
+	[CLI_VAL_TYPE_MIPS] = {
+		.type = CLI_VAL_TYPE_MIPS,
+
+		.address_set = (void *) cli_val_mips_address_set,
+		.address = (void *) cli_val_mips_address,
+		.size = (void *) cli_val_mips_sizeof,
+		.data = (void *) cli_val_mips_data,
+		.print = (void *) cli_val_mips_print,
+		.parse_text = (void *) cli_val_mips_parse_text,
+		.parse_binary = (void *) cli_val_mips_parse_binary,
+
+		.create_clone = (void *) cli_val_mips_create_clone,
+		.destroy = (void *) cli_val_mips_destroy,
 	},
 };
 

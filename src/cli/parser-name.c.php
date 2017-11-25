@@ -12,7 +12,6 @@ $parsers = [
 			"address" => "CLI_VAL_TYPE_ADDRESS",
 			"x86" => "CLI_VAL_TYPE_X86",
 			"arm" => "CLI_VAL_TYPE_ARM",
-			"arm64" => "CLI_VAL_TYPE_ARM64",
 		],
 	],
 	[
@@ -75,6 +74,76 @@ $parsers = [
 		],
 	],
 	[
+		"name" => "val_arm_mode",
+		"type" => "enum cli_val_arm_mode",
+		"values" => [
+			"a32" => "CLI_VAL_ARM_MODE_A32",
+			"t32" => "CLI_VAL_ARM_MODE_T32",
+			"a64" => "CLI_VAL_ARM_MODE_A64",
+		],
+	],
+	[
+		"name" => "val_arm_endianness",
+		"type" => "enum cli_val_arm_endianness",
+		"values" => [
+			"little" => "CLI_VAL_ARM_ENDIANNESS_LITTLE",
+			"big" => "CLI_VAL_ARM_ENDIANNESS_BIG",
+		],
+	],
+	[
+		"name" => "val_sparc_mode",
+		"type" => "enum cli_val_sparc_mode",
+		"values" => [
+			"32" => "CLI_VAL_SPARC_MODE_32",
+			"64" => "CLI_VAL_SPARC_MODE_64",
+			"v9" => "CLI_VAL_SPARC_MODE_V9",
+		],
+	],
+	[
+		"name" => "val_sparc_endianness",
+		"type" => "enum cli_val_sparc_endianness",
+		"values" => [
+			"little" => "CLI_VAL_SPARC_ENDIANNESS_LITTLE",
+			"big" => "CLI_VAL_SPARC_ENDIANNESS_BIG",
+		],
+	],
+	[
+		"name" => "val_powerpc_mode",
+		"type" => "enum cli_val_powerpc_mode",
+		"values" => [
+			"32" => "CLI_VAL_POWERPC_MODE_32",
+			"64" => "CLI_VAL_POWERPC_MODE_64",
+			"qpx" => "CLI_VAL_POWERPC_MODE_QPX",
+		],
+	],
+	[
+		"name" => "val_powerpc_endianness",
+		"type" => "enum cli_val_powerpc_endianness",
+		"values" => [
+			"little" => "CLI_VAL_POWERPC_ENDIANNESS_LITTLE",
+			"big" => "CLI_VAL_POWERPC_ENDIANNESS_BIG",
+		],
+	],
+	[
+		"name" => "val_mips_mode",
+		"type" => "enum cli_val_mips_mode",
+		"values" => [
+			"micro" => "CLI_VAL_MIPS_MODE_MICRO",
+			"3" => "CLI_VAL_MIPS_MODE_3",
+			"32r6" => "CLI_VAL_MIPS_MODE_32R6",
+			"32" => "CLI_VAL_MIPS_MODE_32",
+			"64" => "CLI_VAL_MIPS_MODE_64",
+		],
+	],
+	[
+		"name" => "val_mips_endianness",
+		"type" => "enum cli_val_mips_endianness",
+		"values" => [
+			"little" => "CLI_VAL_MIPS_ENDIANNESS_LITTLE",
+			"big" => "CLI_VAL_MIPS_ENDIANNESS_BIG",
+		],
+	],
+	[
 		"name" => "cmd_execute_format",
 		"type" => "enum cli_cmd_execute_format",
 		"values" => [
@@ -88,7 +157,17 @@ $parsers = [
 		"values" => [
 			"x86" => "CLI_ASSEMBLER_ARCHITECTURE_X86",
 			"arm" => "CLI_ASSEMBLER_ARCHITECTURE_ARM",
-			"arm64" => "CLI_ASSEMBLER_ARCHITECTURE_ARM64",
+			"sparc" => "CLI_ASSEMBLER_ARCHITECTURE_SPARC",
+			"powerpc" => "CLI_ASSEMBLER_ARCHITECTURE_POWERPC",
+			"mips" => "CLI_ASSEMBLER_ARCHITECTURE_MIPS",
+		],
+	],
+	[
+		"name" => "assembler_endianness",
+		"type" => "enum cli_assembler_endianness",
+		"values" => [
+			"little" => "CLI_ASSEMBLER_ENDIANNESS_LITTLE",
+			"big" => "CLI_ASSEMBLER_ENDIANNESS_BIG",
 		],
 	],
 	[
@@ -106,6 +185,44 @@ $parsers = [
 		"values" => [
 			"intel" => "CLI_ASSEMBLER_X86_SYNTAX_INTEL",
 			"att" => "CLI_ASSEMBLER_X86_SYNTAX_ATT",
+		],
+	],
+	[
+		"name" => "assembler_arm_mode",
+		"type" => "enum cli_assembler_arm_mode",
+		"values" => [
+			"a32" => "CLI_ASSEMBLER_ARM_MODE_A32",
+			"t32" => "CLI_ASSEMBLER_ARM_MODE_T32",
+			"a64" => "CLI_ASSEMBLER_ARM_MODE_A64",
+		],
+	],
+	[
+		"name" => "assembler_sparc_mode",
+		"type" => "enum cli_assembler_sparc_mode",
+		"values" => [
+			"32" => "CLI_ASSEMBLER_SPARC_MODE_32",
+			"64" => "CLI_ASSEMBLER_SPARC_MODE_64",
+			"v9" => "CLI_ASSEMBLER_SPARC_MODE_V9",
+		],
+	],
+	[
+		"name" => "assembler_powerpc_mode",
+		"type" => "enum cli_assembler_powerpc_mode",
+		"values" => [
+			"32" => "CLI_ASSEMBLER_POWERPC_MODE_32",
+			"64" => "CLI_ASSEMBLER_POWERPC_MODE_64",
+			"qpx" => "CLI_ASSEMBLER_POWERPC_MODE_QPX",
+		],
+	],
+	[
+		"name" => "assembler_mips_mode",
+		"type" => "enum cli_assembler_mips_mode",
+		"values" => [
+			"micro" => "CLI_ASSEMBLER_MIPS_MODE_MICRO",
+			"3" => "CLI_ASSEMBLER_MIPS_MODE_3",
+			"32r6" => "CLI_ASSEMBLER_MIPS_MODE_32R6",
+			"32" => "CLI_ASSEMBLER_MIPS_MODE_32",
+			"64" => "CLI_ASSEMBLER_MIPS_MODE_64",
 		],
 	],
 	[

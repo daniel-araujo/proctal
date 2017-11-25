@@ -11,14 +11,16 @@
 	option one of the following values:
 
 	<list>
-		<item>byte</item>
-		<item>integer</item>
-		<item>ieee754</item>
-		<item>text</item>
-		<item>address</item>
-		<item>x86</item>
-		<item>arm</item>
-		<item>arm64</item>
+		<item><quote>byte</quote></item>
+		<item><quote>integer</quote></item>
+		<item><quote>ieee754</quote></item>
+		<item><quote>text</quote></item>
+		<item><quote>address</quote></item>
+		<item><quote>x86</quote></item>
+		<item><quote>arm</quote></item>
+		<item><quote>sparc</quote></item>
+		<item><quote>powerpc</quote></item>
+		<item><quote>mips</quote></item>
 	</list>
 
 	The following sections will describe each type and their specific
@@ -113,16 +115,51 @@
 	</section>
 
 	<section>
-		<title>arm</title>
+		<title>ARM</title>
 
-		Represents an ARM A32/T32 CPU instruction. It's printed in
-		assembly.
+		An ARM A32/T32 or A64 CPU instruction.
+
+		The <quote>--arm-mode</quote> option lets you choose between
+		<quote>a32</quote>, <quote>t32</quote> and <quote>a64</quote>.
+
+		<quote>--arm-endianness</quote> lets you set the endianness. It
+		can be <quote>little</quote> or <quote>big</quote>.
 	</section>
 
 	<section>
-		<title>arm64</title>
+		<title>SPARC</title>
 
-		Represents an ARM A64 CPU instruction. It's printed in
-		assembly.
+		A SPARC CPU instruction.
+
+		The <quote>--sparc-mode</quote> option lets you choose between
+		<quote>32</quote>, <quote>64</quote>.
+
+		<quote>--arm-endianness</quote> lets you set the endianness. It
+		can be <quote>little</quote> or <quote>big</quote>.
+	</section>
+
+	<section>
+		<title>PowerPC</title>
+
+		A PowerPC CPU instruction.
+
+		The <quote>--powerpc-mode</quote> option lets you choose
+		between <quote>32</quote> and <quote>64</quote>.
+
+		<quote>--powerpc-endianness</quote> lets you set the
+		endianness. It can be <quote>little</quote> or
+		<quote>big</quote>.
+	</section>
+
+	<section>
+		<title>MIPS</title>
+
+		A MIPS CPU instruction.
+
+		The <quote>--mips-mode</quote> option lets you choose between
+		<quote>32</quote> and <quote>64</quote>.
+
+		<quote>--mips-endianness</quote> lets you set the endianness.
+		It can be <quote>little</quote> or <quote>big</quote>.
 	</section>
 </document>

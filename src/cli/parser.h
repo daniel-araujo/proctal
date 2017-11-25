@@ -9,7 +9,9 @@
 #include "cli/val/text.h"
 #include "cli/val/x86.h"
 #include "cli/val/arm.h"
-#include "cli/val/arm64.h"
+#include "cli/val/sparc.h"
+#include "cli/val/powerpc.h"
+#include "cli/val/mips.h"
 #include "cli/cmd/execute.h"
 #include "cli/assembler.h"
 
@@ -79,10 +81,23 @@ int cli_parse_val_ieee754_precision(const char *s, enum cli_val_ieee754_precisio
 int cli_parse_val_text_encoding(const char *s, enum cli_val_text_encoding *val);
 int cli_parse_val_x86_mode(const char *s, enum cli_val_x86_mode *val);
 int cli_parse_val_x86_syntax(const char *s, enum cli_val_x86_syntax *val);
+int cli_parse_val_arm_mode(const char *s, enum cli_val_arm_mode *val);
+int cli_parse_val_arm_endianness(const char *s, enum cli_val_arm_endianness *val);
+int cli_parse_val_sparc_mode(const char *s, enum cli_val_sparc_mode *val);
+int cli_parse_val_sparc_endianness(const char *s, enum cli_val_sparc_endianness *val);
+int cli_parse_val_powerpc_mode(const char *s, enum cli_val_powerpc_mode *val);
+int cli_parse_val_powerpc_endianness(const char *s, enum cli_val_powerpc_endianness *val);
+int cli_parse_val_mips_mode(const char *s, enum cli_val_mips_mode *val);
+int cli_parse_val_mips_endianness(const char *s, enum cli_val_mips_endianness *val);
 int cli_parse_cmd_execute_format(const char *s, enum cli_cmd_execute_format *val);
 int cli_parse_assembler_architecture(const char *s, enum cli_assembler_architecture *val);
+int cli_parse_assembler_endianness(const char *s, enum cli_assembler_endianness *val);
 int cli_parse_assembler_x86_mode(const char *s, enum cli_assembler_x86_mode *val);
 int cli_parse_assembler_x86_syntax(const char *s, enum cli_assembler_x86_syntax *val);
+int cli_parse_assembler_arm_mode(const char *s, enum cli_assembler_arm_mode *val);
+int cli_parse_assembler_sparc_mode(const char *s, enum cli_assembler_sparc_mode *val);
+int cli_parse_assembler_powerpc_mode(const char *s, enum cli_assembler_powerpc_mode *val);
+int cli_parse_assembler_mips_mode(const char *s, enum cli_assembler_mips_mode *val);
 int cli_parse_proctal_region(const char *s, int *val);
 
 #endif /* CLI_PARSER_H */
