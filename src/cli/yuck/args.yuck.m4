@@ -145,16 +145,18 @@ Examples:
 
   PID_OPTION
   --address=ADDRESS     Address to read from.
+  --binary              Whether to print in binary.
   --freeze              Whether to keep the program frozen while reading.
   --array=SIZE          Read SIZE values in consecutive addresses. By default
                         SIZE is 1.
   TYPE_OPTIONS
   --show-address        Additionally prints the respective address of a value.
                         As a side effect, all values will be separated by new
-                        lines.
+                        lines. Is ignored when printing in binary.
   --show-bytes          Additionally prints a sequence of numbers in
                         hexadecimal that represent the bytes of the value in
-                        memory, from the smallest to the largest address.
+                        memory, from the smallest to the largest address. Is
+                        ignored when printing in binary.
 
 
 

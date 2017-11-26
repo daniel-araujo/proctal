@@ -107,4 +107,14 @@ $ proctal read --pid=12345 --address=98F213B6 --type=integer --integer-bits=32 -
         FF FF FF 7F
 		</code>
 	</section>
+
+	<section>
+		<title>Printing in binary</title>
+
+		The <quote>--binary</quote> option makes the command print the
+		values in binary.
+
+		When using this option, the <quote>--show-address</quote> and
+		<quote>--show-bytes</quote> options have no effect.
+	</section>
 </document>

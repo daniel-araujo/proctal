@@ -512,6 +512,7 @@ static void destroy_cli_cmd_read_arg(struct cli_cmd_read_arg *arg)
 static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_read_arg *arg = malloc(sizeof(*arg));
+	arg->binary = yuck_arg->read.binary_flag == 1;
 	arg->freeze = yuck_arg->read.freeze_flag == 1;
 	arg->value = cli_val_nil();
 

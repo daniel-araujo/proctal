@@ -22,6 +22,9 @@ struct cli_cmd_read_arg {
 	// represent the bytes of the value in memory.
 	int show_bytes;
 
+	// Whether to print exactly what's in memory.
+	int binary;
+
 	// Whether to keep the program frozen while reading.
 	int freeze;
 };

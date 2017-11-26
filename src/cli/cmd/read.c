@@ -3,7 +3,12 @@
 #include "api/include/proctal.h"
 #include "magic/magic.h"
 
-static inline void print_separator(struct cli_cmd_read_arg *arg)
+typedef void (*printer_t)(struct cli_cmd_read_arg *arg, void *address, size_t i);
+
+/*
+ * Prints the separator between values.
+ */
+static inline void print_text_separator(struct cli_cmd_read_arg *arg)
 {
 	if (arg->show_address || arg->show_bytes) {
 		printf("\n");
@@ -26,19 +31,72 @@ static inline void print_separator(struct cli_cmd_read_arg *arg)
 	}
 }
 
-static inline void print_ending(struct cli_cmd_read_arg *arg)
+/*
+ * Prints the ending.
+ */
+static inline void print_text_ending(struct cli_cmd_read_arg *arg)
 {
 	printf("\n");
 }
 
+/*
+ * Prints the value as text.
+ */
+static inline void print_text(struct cli_cmd_read_arg *arg, void *address, size_t i)
+{
+	unsigned char *data = cli_val_data(arg->value);
+	size_t size = cli_val_sizeof(arg->value);
+
+	if (arg->show_address) {
+		cli_print_address(address);
+		printf("\t");
+	}
+
+	cli_val_print(arg->value, stdout);
+
+	if (arg->show_bytes) {
+		printf("\n\t");
+
+		for (size_t j = 0; j < size; j++) {
+			cli_print_byte(data[j]);
+
+			if (j < size - 1) {
+				printf(" ");
+			}
+		}
+
+		// Rely on the separator being a new line.
+	}
+
+	if (i < arg->array - 1) {
+		print_text_separator(arg);
+	} else {
+		print_text_ending(arg);
+	}
+}
+
+/*
+ * Prints the value as binary.
+ */
+static inline void print_binary(struct cli_cmd_read_arg *arg, void *address, size_t i)
+{
+	unsigned char *data = cli_val_data(arg->value);
+	size_t size = cli_val_sizeof(arg->value);
+
+	fwrite(data, 1, size, stdout);
+}
+
 int cli_cmd_read(struct cli_cmd_read_arg *arg)
 {
+	int ret = 0;
+
+	printer_t print = arg->binary ? print_binary : print_text;
+
 	proctal_t p = proctal_open();
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		proctal_close(p);
-		return 1;
+		goto exit1;
 	}
 
 	proctal_pid_set(p, arg->pid);
@@ -48,33 +106,22 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-			proctal_close(p);
-			return 1;
+			goto exit1;
 		}
 	}
 
 	char output[16];
 
-	char *addr = (char *) arg->address;
+	char *address = (char *) arg->address;
 	for (size_t i = 0; i < arg->array; ++i) {
-		proctal_read(p, addr, output, ARRAY_SIZE(output));
+		proctal_read(p, address, output, ARRAY_SIZE(output));
 
-		switch (proctal_error(p)) {
-		case 0:
-			break;
-
-		default:
+		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
-
-			if (arg->freeze) {
-				proctal_unfreeze(p);
-			}
-
-			proctal_close(p);
-			return 1;
+			goto exit2;
 		}
 
-		cli_val_address_set(arg->value, addr);
+		cli_val_address_set(arg->value, address);
 
 		int size = cli_val_parse_binary(arg->value, output, ARRAY_SIZE(output));
 
@@ -85,49 +132,21 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 				fprintf(stderr, "Failed to parse further values.\n");
 			}
 
-			if (arg->freeze) {
-				proctal_unfreeze(p);
-			}
-
-			proctal_close(p);
-			return 1;
+			goto exit2;
 		}
 
-		if (arg->show_address) {
-			cli_print_address(addr);
-			printf("\t");
-		}
+		print(arg, address, i);
 
-		cli_val_print(arg->value, stdout);
-
-		if (arg->show_bytes) {
-			printf("\n\t");
-
-			for (int j = 0; j < size; j++) {
-				cli_print_byte(output[j]);
-
-				if (j < size - 1) {
-					printf(" ");
-				}
-			}
-
-			// Rely on the separator being a new line.
-		}
-
-		if (i < arg->array - 1) {
-			print_separator(arg);
-		}
-
-		addr += size;
+		address += size;
 	}
 
-	print_ending(arg);
-
+	ret = 1;
+exit2:
 	if (arg->freeze) {
 		proctal_unfreeze(p);
 	}
-
+exit1:
 	proctal_close(p);
-
-	return 0;
+exit0:
+	return ret;
 }

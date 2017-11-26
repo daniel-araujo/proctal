@@ -20,6 +20,9 @@ class StopError(Error):
     def __init__(self):
         super().__init__("Proctal is not running.")
 
+class ParseError(Error):
+    """Raised when failing to parse a value."""
+
 class Type:
     """Base class that all types must inherit."""
 
@@ -80,6 +83,9 @@ class Value:
     def format(self):
         raise NotImplementedError("Must format this value into a string.")
 
+    def data(self):
+        raise NotImplementedError("Must return an array of bytes that represents the value in binary.")
+
     def parse(self, s):
         raise NotImplementedError("Must parse a string.")
 
@@ -112,10 +118,13 @@ class ValueByte(Value):
         self._value = int(s, 16)
 
     def parse_binary(self, s):
-        self._value = s[0];
+        self._value = s[0]
 
     def format(self):
         return hex(int(self._value))[2:].upper()
+
+    def data(self):
+        return self._value.to_bytes(self.size(), byteorder='little', signed=False)
 
     def clone(self):
         other = ValueAddress(self._type)
@@ -148,6 +157,9 @@ class ValueAddress(Value):
 
     def format(self):
         return hex(int(self._value))[2:].upper()
+
+    def data(self):
+        return self._value.to_bytes(self.size(), byteorder='little', signed=False)
 
     def clone(self):
         other = ValueAddress(self._type)
@@ -183,6 +195,20 @@ class ValueInteger(Value):
 
     def parse(self, s):
         self._value = int(s)
+
+    def parse_binary(self, s):
+        size = self.size()
+
+        if len(s) < size:
+            raise ParseError("Expecting at least {expected} bytes.".format(expected=size))
+
+        data = s[:size]
+        del s[:size]
+
+        self._value = int.from_bytes(data, byteorder='little', signed=True)
+
+    def data(self):
+        return self._value.to_bytes(self.size(), byteorder='little', signed=False)
 
     def format(self):
         return str(self._value)
@@ -221,6 +247,15 @@ class Process:
         """Stops the command."""
         self._process.terminate()
         self._process.wait()
+
+    def exit_code(self):
+        """Returns the exit code if the process has quit.
+        If the process is still running it will return None."""
+        return self._process.returncode
+
+    def has_stopped(self):
+        """Returns True if the process has stopped, False otherwise."""
+        return self.exit_code() != None
 
 class FreezeProcess(Process):
     """Controls the freeze command."""
@@ -348,6 +383,25 @@ class ReadProcess(Process):
 
         return value
 
+class ReadBinaryProcess(Process):
+    """Controls the read command with the binary option."""
+
+    def __init__(self, process, type):
+        super().__init__(process)
+        self._type = type
+        self._buffer = bytearray()
+
+    def next_value(self):
+        """Gets the next available value."""
+        self._assert_running()
+
+        self._buffer.extend(self._process.stdout.read(16));
+
+        value = self._type.create_value()
+        value.parse_binary(self._buffer)
+
+        return value
+
 class DumpProcess(Process):
     """Controls the dump command."""
 
@@ -371,6 +425,24 @@ class DumpProcess(Process):
                 break
 
             yield byte
+
+class WriteBinaryProcess(Process):
+    """Controls the write command with the binary option."""
+
+    def __init__(self, process):
+        super().__init__(process)
+        self._buffer = bytearray()
+
+    def write_value(self, value):
+        """Sends a value to be written."""
+        self._buffer.extend(value.data());
+
+    def stop(self):
+        """Flushes the output and stops the command."""
+        if not self.has_stopped():
+            self._process.communicate(input=self._buffer)
+
+        super().stop()
 
 def freeze(pid):
     """Runs the freeze command and returns an object that can control it."""
@@ -523,7 +595,7 @@ def deallocate(pid, address):
     else:
         return False
 
-def write(pid, address, type, value, array=None):
+def write(pid, address, type, value=None, array=None, binary=False):
     """Runs the write command."""
 
     cmd = [
@@ -534,20 +606,32 @@ def write(pid, address, type, value, array=None):
     ]
     cmd = cmd + type.type_options()
 
-    if isinstance(value, list):
-        cmd = cmd + list(map(lambda v: str(v), value))
+    if binary:
+        cmd.append("--binary")
+
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+        process.poll()
+
+        if process.returncode != None:
+            return False
+
+        return WriteBinaryProcess(process)
     else:
-        cmd.append(str(value))
+        if isinstance(value, list):
+            cmd = cmd + list(map(lambda v: str(v), value))
+        else:
+            cmd.append(str(value))
 
-    if array != None:
-        cmd.append("--array=" + str(array))
+        if array != None:
+            cmd.append("--array=" + str(array))
 
-    code = subprocess.call(cmd)
+        code = subprocess.call(cmd)
 
-    if code == 0:
-        return True
-    else:
-        return False
+        if code == 0:
+            return True
+        else:
+            return False
 
 def execute(pid, code):
     """Runs the execute command."""
@@ -566,7 +650,7 @@ def execute(pid, code):
     else:
         return False
 
-def read(pid, address, type, array=None):
+def read(pid, address, type, array=None, binary=False):
     """Runs the read command."""
 
     cmd = [
@@ -580,9 +664,13 @@ def read(pid, address, type, array=None):
     if array != None:
         cmd.append("--array=" + str(array))
 
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-
-    return ReadProcess(process, type)
+    if binary:
+        cmd.append("--binary")
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        return ReadBinaryProcess(process, type)
+    else:
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        return ReadProcess(process, type)
 
 def dump(pid, permission=None, address_start=None, address_stop=None):
     """Runs the dump command."""
