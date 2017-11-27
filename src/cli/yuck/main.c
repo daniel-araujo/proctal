@@ -1291,7 +1291,7 @@ static struct cli_cmd_measure_arg *create_cli_cmd_measure_arg(yuck_t *yuck_arg)
 	if (yuck_arg->measure.array_arg != NULL) {
 		unsigned long v;
 
-		if (!cli_parse_unsigned_long(yuck_arg->read.array_arg, &v)) {
+		if (!cli_parse_unsigned_long(yuck_arg->measure.array_arg, &v)) {
 			fputs("Invalid array size.\n", stderr);
 			destroy_cli_cmd_measure_arg(arg);
 			return NULL;
