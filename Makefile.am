@@ -92,6 +92,8 @@ libclival_a_SOURCES = \
 	src/cli/val/powerpc.c \
 	src/cli/val/mips.h \
 	src/cli/val/mips.c \
+	src/cli/vmagazine.h \
+	src/cli/vmagazine.c \
 	src/cli/val.h \
 	src/cli/val.c
 libclival_a_CFLAGS = $(PROCTAL_CFLAGS)

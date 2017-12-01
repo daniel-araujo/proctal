@@ -182,6 +182,7 @@ Examples:
 
   PID_OPTION
   --address=ADDRESS     Address to write to.
+  --binary              Whether to parse values in binary.
   --freeze              Whether to keep the program frozen while writing.
   --array=SIZE          Write SIZE values in consecutive addresses. If less
                         than SIZE values are provided, then when in need of

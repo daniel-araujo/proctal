@@ -13,8 +13,14 @@ struct cli_cmd_write_arg {
 	// Number of values expected to write.
 	size_t array;
 
+	// For parsing values.
+	cli_val value;
+
 	// Values to write.
-	struct darr values;
+	const char **values;
+
+	// How many values were passed.
+	size_t values_size;
 
 	// Whether to write the same value repeatedly until the program is told
 	// to shut down.
@@ -22,6 +28,9 @@ struct cli_cmd_write_arg {
 	// A delay in milliseconds before writing to the address again. Without
 	// a delay you could theoretically turn your CPU into a heater.
 	int repeat_delay;
+
+	// Whether to parse values in binary.
+	int binary;
 
 	// Whether to keep the program frozen while writing.
 	int freeze;

@@ -61,4 +61,11 @@ $ proctal write --pid=12345 --address=7FFE79DEA90C --type=integer --integer-bits
 
 		By default the delay is set to be 5 milliseconds.
 	</section>
+
+	<section>
+		<title>Binary input</title>
+
+		The <quote>--binary</quote> option makes the command write
+		values from the standard input stream in binary.
+	</section>
 </document>

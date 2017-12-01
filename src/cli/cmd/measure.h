@@ -12,8 +12,14 @@ struct cli_cmd_measure_arg {
 	// Number of values that would be expected to write.
 	size_t array;
 
-	// Values to measure.
-	struct darr values;
+	// For parsing values.
+	cli_val value;
+
+	// Values to write.
+	const char **values;
+	//
+	// How many values were passed.
+	size_t values_size;
 };
 
 int cli_cmd_measure(struct cli_cmd_measure_arg *arg);
