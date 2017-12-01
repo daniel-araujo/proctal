@@ -23,7 +23,7 @@ struct cli_val_implementation {
 	int (*print)(void *, FILE *);
 	int (*scan)(void *, FILE *);
 	int (*parse_text)(void *, const char *);
-	int (*parse_binary)(void *, const char *, size_t length);
+	int (*parse_binary)(void *, const void *, size_t);
 
 	void *(*create_clone)(void *);
 	void (*destroy)(void *);
@@ -363,13 +363,13 @@ int cli_val_parse_text(cli_val v, const char *s)
 	return v->implementation->parse_text(v->val, s);
 }
 
-int cli_val_parse_binary(cli_val v, const char *s, size_t length)
+int cli_val_parse_binary(cli_val v, const void *b, size_t length)
 {
 	if (v->implementation->parse_binary == NULL) {
 		return 0;
 	}
 
-	return v->implementation->parse_binary(v->val, s, length);
+	return v->implementation->parse_binary(v->val, b, length);
 }
 
 cli_val cli_val_nil(void)

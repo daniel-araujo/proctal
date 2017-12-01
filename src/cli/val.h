@@ -135,11 +135,12 @@ int cli_val_scan(cli_val v, FILE *f);
 int cli_val_parse_text(cli_val v, const char *s);
 
 /*
- * Attempts to interpret a value from a stream of bytes.
+ * Attempts to interpret a value in its representation in binary from a stream
+ * of bytes.
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-int cli_val_parse_binary(cli_val v, const char *s, size_t length);
+int cli_val_parse_binary(cli_val v, const void *b, size_t length);
 
 /*
  * Returns a value that represents no value. This will always return the same

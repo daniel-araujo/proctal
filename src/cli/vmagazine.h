@@ -158,7 +158,7 @@ exit0:
  *
  * The read parameter will only be written if the function succeeded.
  */
-inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, const unsigned char *binary, size_t size, size_t *read)
+inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, const void *binary, size_t size, size_t *read)
 {
 	enum vmagazine_result ret = VMAGAZINE_OK;
 
@@ -174,7 +174,7 @@ inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, cons
 
 		cli_val_address_set(value, this->template_address);
 
-		size_t progress = cli_val_parse_binary(value, &binary[index], size - index);
+		size_t progress = cli_val_parse_binary(value, (unsigned char *) binary + index, size - index);
 
 		if (progress == 0) {
 			cli_val_destroy(value);

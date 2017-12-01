@@ -76,7 +76,7 @@ inline void *cli_val_address_data(struct cli_val_address *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_address_parse_binary(struct cli_val_address *v, const char *s, size_t length)
+inline int cli_val_address_parse_binary(struct cli_val_address *v, const void *b, size_t length)
 {
 	size_t size = cli_val_address_sizeof();
 
@@ -84,7 +84,7 @@ inline int cli_val_address_parse_binary(struct cli_val_address *v, const char *s
 		return 0;
 	}
 
-	memcpy(cli_val_address_data(v), s, size);
+	memcpy(cli_val_address_data(v), b, size);
 
 	return size;
 }

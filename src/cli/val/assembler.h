@@ -106,7 +106,7 @@ int cli_val_assembler_print(struct cli_val_assembler *v, FILE *f);
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const char *s, size_t length);
+int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const void *b, size_t length);
 
 /*
  * Attempts to parse the instruction value as text from a C-style string.

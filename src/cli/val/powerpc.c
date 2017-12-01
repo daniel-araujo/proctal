@@ -24,6 +24,6 @@ extern inline struct cli_val_powerpc *cli_val_powerpc_create_clone(struct cli_va
 
 extern inline int cli_val_powerpc_print(struct cli_val_powerpc *v, FILE *f);
 
-extern inline int cli_val_powerpc_parse_binary(struct cli_val_powerpc *v, const char *s, size_t length);
+extern inline int cli_val_powerpc_parse_binary(struct cli_val_powerpc *v, const void *b, size_t length);
 
 extern inline int cli_val_powerpc_parse_text(struct cli_val_powerpc *v, const char *s);

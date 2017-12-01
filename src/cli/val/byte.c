@@ -8,7 +8,7 @@ extern inline void cli_val_byte_destroy(struct cli_val_byte *v);
 
 extern inline void *cli_val_byte_data(struct cli_val_byte *v);
 
-extern inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size_t length);
+extern inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const void *b, size_t length);
 
 extern inline int cli_val_byte_add(struct cli_val_byte *v, struct cli_val_byte *other_v);
 

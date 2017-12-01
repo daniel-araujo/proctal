@@ -5,7 +5,7 @@ int cli_val_text_ascii_cmp(struct cli_val_text *v, struct cli_val_text *other_v)
 int cli_val_text_ascii_print(struct cli_val_text *v, FILE *f);
 int cli_val_text_ascii_scan(struct cli_val_text *v, FILE *f);
 int cli_val_text_ascii_parse_text(struct cli_val_text *v, const char *s);
-int cli_val_text_ascii_parse_binary(struct cli_val_text *v, const char *s, size_t length);
+int cli_val_text_ascii_parse_binary(struct cli_val_text *v, const void *b, size_t length);
 
 struct cli_val_text_encoding_implementation {
 	int (*size)(struct cli_val_text *);
@@ -13,7 +13,7 @@ struct cli_val_text_encoding_implementation {
 	int (*print)(struct cli_val_text *, FILE *);
 	int (*scan)(struct cli_val_text *, FILE *);
 	int (*parse_text)(struct cli_val_text *, const char *);
-	int (*parse_binary)(struct cli_val_text *, const char *, size_t);
+	int (*parse_binary)(struct cli_val_text *, const void *, size_t);
 };
 
 static struct cli_val_text_encoding_implementation encoding_implementations[] = {
@@ -48,7 +48,7 @@ extern inline void *cli_val_text_data(struct cli_val_text *v);
 
 extern inline size_t cli_val_text_sizeof(struct cli_val_text *v);
 
-extern inline int cli_val_text_parse_binary(struct cli_val_text *v, const char *s, size_t length);
+extern inline int cli_val_text_parse_binary(struct cli_val_text *v, const void *b, size_t length);
 
 extern inline int cli_val_text_print(struct cli_val_text *v, FILE *f);
 
@@ -94,7 +94,7 @@ int cli_val_text_parse_text(struct cli_val_text *v, const char *s)
 	return get_encoding_implementation(v->attr.encoding)->parse_text(v, s);
 }
 
-int cli_val_text_parse_binary(struct cli_val_text *v, const char *s, size_t length)
+int cli_val_text_parse_binary(struct cli_val_text *v, const void *b, size_t length)
 {
-	return get_encoding_implementation(v->attr.encoding)->parse_binary(v, s, length);
+	return get_encoding_implementation(v->attr.encoding)->parse_binary(v, b, length);
 }

@@ -1,5 +1,6 @@
 #include <assert.h>
 
+#include "magic/magic.h"
 #include "cli/val/text.h"
 
 size_t cli_val_text_ascii_sizeof(struct cli_val_text *v)
@@ -39,18 +40,18 @@ int cli_val_text_ascii_parse_text(struct cli_val_text *v, const char *s)
 	return 1;
 }
 
-int cli_val_text_ascii_parse_binary(struct cli_val_text *v, const char *s, size_t length)
+int cli_val_text_ascii_parse_binary(struct cli_val_text *v, const void *b, size_t length)
 {
 	if (length == 0) {
 		return 0;
 	}
 
-	if ((unsigned char) *s > 127) {
+	if (DEREF(unsigned char, b) > 127) {
 		// Not a valid ASCII character.
 		return 0;
 	}
 
-	DEREF(char, v->data) = *s;
+	DEREF(char, v->data) = DEREF(char, b);
 
 	return 1;
 }

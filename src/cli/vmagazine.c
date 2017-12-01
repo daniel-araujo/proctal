@@ -14,4 +14,4 @@ extern inline cli_val *vmagazine_value(struct vmagazine *this, size_t index);
 
 extern inline enum vmagazine_result vmagazine_parse_text(struct vmagazine *this, const char *str, size_t length);
 
-extern inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, const unsigned char *binary, size_t size, size_t *read);
+extern inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, const void *binary, size_t size, size_t *read);

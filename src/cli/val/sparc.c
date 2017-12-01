@@ -24,6 +24,6 @@ extern inline struct cli_val_sparc *cli_val_sparc_create_clone(struct cli_val_sp
 
 extern inline int cli_val_sparc_print(struct cli_val_sparc *v, FILE *f);
 
-extern inline int cli_val_sparc_parse_binary(struct cli_val_sparc *v, const char *s, size_t length);
+extern inline int cli_val_sparc_parse_binary(struct cli_val_sparc *v, const void *b, size_t length);
 
 extern inline int cli_val_sparc_parse_text(struct cli_val_sparc *v, const char *s);

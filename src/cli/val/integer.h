@@ -221,7 +221,7 @@ inline size_t cli_val_integer_sizeof(struct cli_val_integer *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const char *s, size_t length)
+inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const void *b, size_t length)
 {
 	size_t size = cli_val_integer_sizeof(v);
 
@@ -229,7 +229,7 @@ inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const char *s
 		return 0;
 	}
 
-	memcpy(cli_val_integer_data(v), s, size);
+	memcpy(cli_val_integer_data(v), b, size);
 
 	return size;
 }

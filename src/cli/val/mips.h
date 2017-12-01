@@ -209,9 +209,9 @@ inline int cli_val_mips_print(struct cli_val_mips *v, FILE *f)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_mips_parse_binary(struct cli_val_mips *v, const char *s, size_t length)
+inline int cli_val_mips_parse_binary(struct cli_val_mips *v, const void *b, size_t length)
 {
-	return cli_val_assembler_parse_binary(&v->implementation, s, length);
+	return cli_val_assembler_parse_binary(&v->implementation, b, length);
 }
 
 /*

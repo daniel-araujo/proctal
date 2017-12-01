@@ -34,7 +34,7 @@ exit0:
 	return ret;
 }
 
-int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const char *s, size_t length)
+int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const void *b, size_t length)
 {
 	int ret = 0;
 
@@ -42,7 +42,7 @@ int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const char *s, s
 	// instruction and exactly how long it is.
 
 	struct cli_assembler_decompile_result result;
-	if (!cli_assembler_decompile(&v->assembler, s, length, &result)) {
+	if (!cli_assembler_decompile(&v->assembler, b, length, &result)) {
 		goto exit0;
 	}
 
@@ -55,7 +55,7 @@ int cli_val_assembler_parse_binary(struct cli_val_assembler *v, const char *s, s
 		goto exit1;
 	}
 
-	memcpy(bytecode, s, result.read);
+	memcpy(bytecode, b, result.read);
 
 	if (v->bytecode) {
 		// Discard the existing bytecode.

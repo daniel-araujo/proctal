@@ -110,7 +110,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 		}
 	}
 
-	char output[16];
+	unsigned char output[16];
 
 	char *address = (char *) arg->address;
 	for (size_t i = 0; i < arg->array; ++i) {

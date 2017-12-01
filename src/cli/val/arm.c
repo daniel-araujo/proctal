@@ -24,6 +24,6 @@ extern inline struct cli_val_arm *cli_val_arm_create_clone(struct cli_val_arm *o
 
 extern inline int cli_val_arm_print(struct cli_val_arm *v, FILE *f);
 
-extern inline int cli_val_arm_parse_binary(struct cli_val_arm *v, const char *s, size_t length);
+extern inline int cli_val_arm_parse_binary(struct cli_val_arm *v, const void *b, size_t length);
 
 extern inline int cli_val_arm_parse_text(struct cli_val_arm *v, const char *s);

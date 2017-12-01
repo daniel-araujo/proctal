@@ -62,7 +62,7 @@ inline void *cli_val_byte_data(struct cli_val_byte *v)
  *
  * Returns how many bytes were consumed on success, 0 on failure.
  */
-inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size_t length)
+inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const void *b, size_t length)
 {
 	size_t size = 1;
 
@@ -70,7 +70,7 @@ inline int cli_val_byte_parse_binary(struct cli_val_byte *v, const char *s, size
 		return 0;
 	}
 
-	memcpy(cli_val_byte_data(v), s, size);
+	memcpy(cli_val_byte_data(v), b, size);
 
 	return size;
 }

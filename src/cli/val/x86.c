@@ -24,6 +24,6 @@ extern inline struct cli_val_x86 *cli_val_x86_create_clone(struct cli_val_x86 *o
 
 extern inline int cli_val_x86_print(struct cli_val_x86 *v, FILE *f);
 
-extern inline int cli_val_x86_parse_binary(struct cli_val_x86 *v, const char *s, size_t length);
+extern inline int cli_val_x86_parse_binary(struct cli_val_x86 *v, const void *b, size_t length);
 
 extern inline int cli_val_x86_parse_text(struct cli_val_x86 *v, const char *s);

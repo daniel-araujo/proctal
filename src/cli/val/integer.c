@@ -79,7 +79,7 @@ extern inline size_t cli_val_integer_alignof(struct cli_val_integer *v);
 
 extern inline size_t cli_val_integer_sizeof(struct cli_val_integer *v);
 
-extern inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const char *s, size_t length);
+extern inline int cli_val_integer_parse_binary(struct cli_val_integer *v, const void *b, size_t length);
 
 extern inline struct cli_val_integer *cli_val_integer_create_clone( struct cli_val_integer *other_v);
 

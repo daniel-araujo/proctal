@@ -24,6 +24,6 @@ extern inline struct cli_val_mips *cli_val_mips_create_clone(struct cli_val_mips
 
 extern inline int cli_val_mips_print(struct cli_val_mips *v, FILE *f);
 
-extern inline int cli_val_mips_parse_binary(struct cli_val_mips *v, const char *s, size_t length);
+extern inline int cli_val_mips_parse_binary(struct cli_val_mips *v, const void *b, size_t length);
 
 extern inline int cli_val_mips_parse_text(struct cli_val_mips *v, const char *s);
