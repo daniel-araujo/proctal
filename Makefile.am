@@ -298,6 +298,14 @@ check_PROGRAMS += tests/cli/program/sleeper
 tests_cli_program_sleeper_SOURCES = src/cli/tests/program/sleeper.c
 tests_cli_program_sleeper_CFLAGS = $(PROCTAL_CFLAGS)
 
+EXTRA_DIST += \
+	src/cli/tests/util/algorithms.py \
+	src/cli/tests/util/proctal_cli.py \
+	src/cli/tests/util/read_mem.py \
+	src/cli/tests/util/read_mem_mt.py \
+	src/cli/tests/util/sleeper.py \
+	src/cli/tests/util/spit_back_mt.py
+
 # Always keep in mind that, according to sections 9.4.1 and 27.8 of the
 # documentation, automake does not support a convenient method for specifying
 # dependencies for automatically generated object files of *_SOURCES c files
@@ -508,6 +516,19 @@ tests_api_darr_realloc_libblocksize_a_SOURCES = \
 	src/api/darr/tests/realloc/util/block-size.h \
 	src/api/darr/tests/realloc/util/block-size.c
 tests_api_darr_realloc_libblocksize_a_CFLAGS = $(PROCTAL_CFLAGS)
+
+EXTRA_DIST += \
+	src/api/linux/tests/proc-maps/sample-region-heap \
+	src/api/linux/tests/proc-maps/sample-region-program-code \
+	src/api/linux/tests/proc-maps/sample-region-stack \
+	src/api/linux/tests/proc-maps/sample-region-with-execute \
+	src/api/linux/tests/proc-maps/sample-region-without-execute \
+	src/api/linux/tests/proc-maps/sample-with-execute \
+	src/api/linux/tests/proc-maps/sample-with-read \
+	src/api/linux/tests/proc-maps/sample-with-write \
+	src/api/linux/tests/proc-maps/sample-without-execute \
+	src/api/linux/tests/proc-maps/sample-without-read \
+	src/api/linux/tests/proc-maps/sample-without-write
 
 
 # Swbuf
