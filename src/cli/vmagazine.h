@@ -11,7 +11,7 @@
  * A structure that holds cli_vals.
  */
 struct vmagazine {
-	cli_val template_value;
+	cli_val_t template_value;
 
 	void *template_address;
 
@@ -36,7 +36,7 @@ inline enum vmagazine_result vmagazine_init(struct vmagazine *this)
 {
 	this->size = 0;
 	this->template_value = cli_val_nil();
-	darr_init(&this->values, sizeof(cli_val));
+	darr_init(&this->values, sizeof(cli_val_t));
 
 	if (!darr_resize(&this->values, 10)) {
 		darr_deinit(&this->values);
@@ -52,7 +52,7 @@ inline enum vmagazine_result vmagazine_init(struct vmagazine *this)
 inline void vmagazine_deinit(struct vmagazine *this)
 {
 	for (size_t i = 0; i < this->size; ++i) {
-		cli_val *e = darr_element(&this->values, i);
+		cli_val_t *e = darr_element(&this->values, i);
 		cli_val_destroy(*e);
 	}
 
@@ -74,7 +74,7 @@ inline void vmagazine_template_address_set(struct vmagazine *this, void *address
 /*
  * Sets the value that will be used to parse values.
  */
-inline void vmagazine_template_value_set(struct vmagazine *this, cli_val value)
+inline void vmagazine_template_value_set(struct vmagazine *this, cli_val_t value)
 {
 	this->template_value = cli_val_create_clone(value);
 }
@@ -92,7 +92,7 @@ inline size_t vmagazine_size(struct vmagazine *this)
  *
  * This pointer is invalidated when the number of values changes.
  */
-inline cli_val *vmagazine_value(struct vmagazine *this, size_t index)
+inline cli_val_t *vmagazine_value(struct vmagazine *this, size_t index)
 {
 	return darr_element(&this->values, index);
 }
@@ -107,7 +107,7 @@ inline enum vmagazine_result vmagazine_parse_text(struct vmagazine *this, const 
 	size_t index = 0;
 
 	while (index < length) {
-		cli_val value = cli_val_create_clone(this->template_value);
+		cli_val_t value = cli_val_create_clone(this->template_value);
 
 		if (value == cli_val_nil()) {
 			ret = VMAGAZINE_OUT_OF_MEMORY;
@@ -124,7 +124,7 @@ inline enum vmagazine_result vmagazine_parse_text(struct vmagazine *this, const 
 
 		this->template_address = (char *) this->template_address + cli_val_sizeof(value);
 
-		cli_val *element = darr_element(&this->values, this->size++);
+		cli_val_t *element = darr_element(&this->values, this->size++);
 		*element = value;
 
 		if (this->size >= darr_size(&this->values)) {
@@ -165,7 +165,7 @@ inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, cons
 	size_t index = 0;
 
 	while (index < size) {
-		cli_val value = cli_val_create_clone(this->template_value);
+		cli_val_t value = cli_val_create_clone(this->template_value);
 
 		if (value == cli_val_nil()) {
 			ret = VMAGAZINE_OUT_OF_MEMORY;
@@ -184,7 +184,7 @@ inline enum vmagazine_result vmagazine_parse_binary(struct vmagazine *this, cons
 
 		this->template_address = (char *) this->template_address + cli_val_sizeof(value);
 
-		cli_val *element = darr_element(&this->values, this->size++);
+		cli_val_t *element = darr_element(&this->values, this->size++);
 		*element = value;
 
 		if (this->size >= darr_size(&this->values)) {

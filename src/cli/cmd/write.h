@@ -14,7 +14,7 @@ struct cli_cmd_write_arg {
 	size_t array;
 
 	// For parsing values.
-	cli_val value;
+	cli_val_t value;
 
 	// Values to write.
 	const char **values;

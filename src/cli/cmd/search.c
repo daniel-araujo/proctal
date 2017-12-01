@@ -14,7 +14,7 @@ static inline struct cli_val_filter_compare_arg *create_filter_compare_arg(struc
 {
 	struct cli_val_filter_compare_arg *filter_arg = malloc(sizeof(*filter_arg));
 
-	cli_val nil = cli_val_nil();
+	cli_val_t nil = cli_val_nil();
 
 #define COPY(NAME) \
 	if (arg->NAME) { \
@@ -49,7 +49,7 @@ static inline struct cli_val_filter_compare_prev_arg *create_filter_compare_prev
 	filter_arg->increased = arg->increased;
 	filter_arg->decreased = arg->decreased;
 
-	cli_val nil = cli_val_nil();
+	cli_val_t nil = cli_val_nil();
 
 #define COPY(NAME) \
 	if (arg->NAME) { \
@@ -73,7 +73,7 @@ static inline void destroy_filter_compare_prev_arg(struct cli_val_filter_compare
 	free(filter_arg);
 }
 
-static inline void print_search_match(cli_val address, cli_val value)
+static inline void print_search_match(cli_val_t address, cli_val_t value)
 {
 	cli_val_print(address, stdout);
 	printf(" ");
@@ -103,8 +103,8 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
-	cli_val address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
-	cli_val value = arg->value;
+	cli_val_t address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val_t value = arg->value;
 
 	size_t size = cli_val_sizeof(value);
 	size_t align = cli_val_alignof(value);
@@ -237,7 +237,7 @@ exit0:
  * If the error code is PARSE_INPUT_ERROR_INVALID_VALUE, the address can be
  * assumed to have been parsed correctly.
  */
-static inline int parse_input(cli_val address, cli_val value)
+static inline int parse_input(cli_val_t address, cli_val_t value)
 {
 	if (!cli_val_scan(address, stdin)) {
 		cli_scan_skip_until_chars(stdin, "\n");
@@ -259,7 +259,7 @@ static inline int parse_input(cli_val address, cli_val value)
  *
  * Returns 1 if it handled, 0 if it did nothing.
  */
-static inline int handle_parse_input_error(int code, cli_val address)
+static inline int handle_parse_input_error(int code, cli_val_t address)
 {
 	switch (code) {
 	case 0:
@@ -287,7 +287,7 @@ static inline int handle_parse_input_error(int code, cli_val address)
  *
  * Returns 1 on success, 0 on failure.
  */
-static inline int handle_proctal_read_previous_error(proctal_t p, cli_val address)
+static inline int handle_proctal_read_previous_error(proctal_t p, cli_val_t address)
 {
 	switch (proctal_error(p)) {
 	case PROCTAL_ERROR_PERMISSION_DENIED:
@@ -320,9 +320,9 @@ static inline int search_input(struct cli_cmd_search_arg *arg, proctal_t p)
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 	struct cli_val_filter_compare_prev_arg *filter_compare_prev_arg = create_filter_compare_prev_arg(arg);
 
-	cli_val address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
-	cli_val value = arg->value;
-	cli_val previous_value = cli_val_create_clone(value);
+	cli_val_t address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val_t value = arg->value;
+	cli_val_t previous_value = cli_val_create_clone(value);
 
 	void *address_start = arg->address_start;
 	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;

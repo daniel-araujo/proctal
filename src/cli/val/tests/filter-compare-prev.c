@@ -20,11 +20,11 @@ struct test {
 	int result;
 };
 
-static struct cli_val_filter_compare_prev_arg *create_filter_arg(struct test *test, cli_val v)
+static struct cli_val_filter_compare_prev_arg *create_filter_arg(struct test *test, cli_val_t v)
 {
 	struct cli_val_filter_compare_prev_arg *arg = malloc(sizeof(*arg));
 
-	cli_val nil = cli_val_nil();
+	cli_val_t nil = cli_val_nil();
 
 #define CREATE(NAME) \
 	if (test->NAME != NULL) { \
@@ -210,9 +210,9 @@ int main(void)
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
-	cli_val vcurr = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t vcurr = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
-	cli_val vprev = cli_val_create_clone(vcurr);
+	cli_val_t vprev = cli_val_create_clone(vcurr);
 
 	for (size_t i = 0; i < ARRAY_SIZE(tests); ++i) {
 		struct test *test = &tests[i];

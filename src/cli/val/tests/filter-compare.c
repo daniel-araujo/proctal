@@ -17,11 +17,11 @@ struct test {
 	int result;
 };
 
-static struct cli_val_filter_compare_arg *create_filter_arg(struct test *test, cli_val v)
+static struct cli_val_filter_compare_arg *create_filter_arg(struct test *test, cli_val_t v)
 {
 	struct cli_val_filter_compare_arg *arg = malloc(sizeof(*arg));
 
-	cli_val nil = cli_val_nil();
+	cli_val_t nil = cli_val_nil();
 
 #define CREATE(NAME) \
 	if (test->NAME != NULL) { \
@@ -128,7 +128,7 @@ int main(void)
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	for (size_t i = 0; i < ARRAY_SIZE(tests); ++i) {

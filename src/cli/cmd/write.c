@@ -21,7 +21,7 @@ static inline int fire_magazine(struct cli_cmd_write_arg *arg, proctal_t p, stru
 			j = 0;
 		}
 
-		cli_val *v = vmagazine_value(vmagazine, j);
+		cli_val_t *v = vmagazine_value(vmagazine, j);
 
 		size_t size = cli_val_sizeof(*v);
 		void *input = cli_val_data(*v);

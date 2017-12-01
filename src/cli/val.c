@@ -213,7 +213,7 @@ static struct cli_val_implementation *get_implementation(enum cli_val_type type)
 	return &implementations[type];
 }
 
-cli_val cli_val_wrap(enum cli_val_type type, void *val)
+cli_val_t cli_val_wrap(enum cli_val_type type, void *val)
 {
 	struct cli_val_implementation *implementation = get_implementation(type);
 
@@ -233,7 +233,7 @@ cli_val cli_val_wrap(enum cli_val_type type, void *val)
 	return v;
 }
 
-void *cli_val_unwrap(cli_val v)
+void *cli_val_unwrap(cli_val_t v)
 {
 	void *val = v->val;
 
@@ -242,20 +242,20 @@ void *cli_val_unwrap(cli_val v)
 	return val;
 }
 
-cli_val cli_val_create_clone(cli_val other_v)
+cli_val_t cli_val_create_clone(cli_val_t other_v)
 {
 	void *val = other_v->implementation->create_clone(other_v->val);
 
 	return cli_val_wrap(other_v->implementation->type, val);
 }
 
-void cli_val_destroy(cli_val v)
+void cli_val_destroy(cli_val_t v)
 {
 	v->implementation->destroy(v->val);
 	free(v);
 }
 
-void cli_val_address_set(cli_val v, void *addr)
+void cli_val_address_set(cli_val_t v, void *addr)
 {
 	if (v->implementation->address_set == NULL) {
 		return;
@@ -264,7 +264,7 @@ void cli_val_address_set(cli_val v, void *addr)
 	return v->implementation->address_set(v->val, addr);
 }
 
-void *cli_val_address(cli_val v)
+void *cli_val_address(cli_val_t v)
 {
 	if (v->implementation->address == NULL) {
 		return NULL;
@@ -273,12 +273,12 @@ void *cli_val_address(cli_val v)
 	return v->implementation->address(v->val);
 }
 
-enum cli_val_type cli_val_type(cli_val v)
+enum cli_val_type cli_val_type(cli_val_t v)
 {
 	return v->implementation->type;
 }
 
-size_t cli_val_alignof(cli_val v)
+size_t cli_val_alignof(cli_val_t v)
 {
 	if (v->implementation->align == NULL) {
 		return 1;
@@ -287,17 +287,17 @@ size_t cli_val_alignof(cli_val v)
 	return v->implementation->align(v->val);
 }
 
-size_t cli_val_sizeof(cli_val v)
+size_t cli_val_sizeof(cli_val_t v)
 {
 	return v->implementation->size(v->val);
 }
 
-void *cli_val_data(cli_val v)
+void *cli_val_data(cli_val_t v)
 {
 	return v->implementation->data(v->val);
 }
 
-int cli_val_add(cli_val v, cli_val other_v)
+int cli_val_add(cli_val_t v, cli_val_t other_v)
 {
 	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
@@ -310,7 +310,7 @@ int cli_val_add(cli_val v, cli_val other_v)
 	return v->implementation->add(v->val, other_v->val);
 }
 
-int cli_val_sub(cli_val v, cli_val other_v)
+int cli_val_sub(cli_val_t v, cli_val_t other_v)
 {
 	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
@@ -323,7 +323,7 @@ int cli_val_sub(cli_val v, cli_val other_v)
 	return v->implementation->sub(v->val, other_v->val);
 }
 
-int cli_val_cmp(cli_val v, cli_val other_v)
+int cli_val_cmp(cli_val_t v, cli_val_t other_v)
 {
 	if (v->implementation->type != other_v->implementation->type) {
 		return 0;
@@ -336,7 +336,7 @@ int cli_val_cmp(cli_val v, cli_val other_v)
 	return v->implementation->cmp(v->val, other_v->val);
 }
 
-int cli_val_print(cli_val v, FILE *f)
+int cli_val_print(cli_val_t v, FILE *f)
 {
 	if (v->implementation->print == NULL) {
 		return 0;
@@ -345,7 +345,7 @@ int cli_val_print(cli_val v, FILE *f)
 	return v->implementation->print(v->val, f);
 }
 
-int cli_val_scan(cli_val v, FILE *f)
+int cli_val_scan(cli_val_t v, FILE *f)
 {
 	if (v->implementation->scan == NULL) {
 		return 0;
@@ -354,7 +354,7 @@ int cli_val_scan(cli_val v, FILE *f)
 	return v->implementation->scan(v->val, f);
 }
 
-int cli_val_parse_text(cli_val v, const char *s)
+int cli_val_parse_text(cli_val_t v, const char *s)
 {
 	if (v->implementation->parse_text == NULL) {
 		return 0;
@@ -363,7 +363,7 @@ int cli_val_parse_text(cli_val v, const char *s)
 	return v->implementation->parse_text(v->val, s);
 }
 
-int cli_val_parse_binary(cli_val v, const void *b, size_t length)
+int cli_val_parse_binary(cli_val_t v, const void *b, size_t length)
 {
 	if (v->implementation->parse_binary == NULL) {
 		return 0;
@@ -372,7 +372,7 @@ int cli_val_parse_binary(cli_val v, const void *b, size_t length)
 	return v->implementation->parse_binary(v->val, b, length);
 }
 
-cli_val cli_val_nil(void)
+cli_val_t cli_val_nil(void)
 {
 	return nil;
 }

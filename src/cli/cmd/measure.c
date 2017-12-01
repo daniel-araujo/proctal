@@ -48,7 +48,7 @@ int cli_cmd_measure(struct cli_cmd_measure_arg *arg)
 			j = 0;
 		}
 
-		cli_val *v = vmagazine_value(&vmagazine, j);
+		cli_val_t *v = vmagazine_value(&vmagazine, j);
 
 		total_size += cli_val_sizeof(*v);
 	}

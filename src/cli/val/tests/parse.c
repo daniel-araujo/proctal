@@ -72,7 +72,7 @@ struct test {
 		.result = "a", \
 	} \
 
-static int run_parse_text(const char *name, struct test *test, cli_val v)
+static int run_parse_text(const char *name, struct test *test, cli_val_t v)
 {
 	if (!cli_val_parse_text(v, test->value)) {
 		fprintf(stderr, "%s parse: Failed to parse '%s'\n", name, test->value);
@@ -105,9 +105,9 @@ static int run_parse_text(const char *name, struct test *test, cli_val v)
 	return 0;
 }
 
-static int run_parse_binary(const char *name, struct test *test, cli_val v)
+static int run_parse_binary(const char *name, struct test *test, cli_val_t v)
 {
-	cli_val sv = cli_val_create_clone(v);
+	cli_val_t sv = cli_val_create_clone(v);
 	cli_val_parse_text(sv, test->value);
 
 	if (!cli_val_parse_binary(v, cli_val_data(sv), cli_val_sizeof(sv))) {
@@ -141,7 +141,7 @@ static int run_parse_binary(const char *name, struct test *test, cli_val v)
 	return 0;
 }
 
-static int run_scan(const char *name, struct test *test, cli_val v)
+static int run_scan(const char *name, struct test *test, cli_val_t v)
 {
 	switch (cli_val_type(v)) {
 	case CLI_VAL_TYPE_X86:
@@ -191,7 +191,7 @@ static int run_scan(const char *name, struct test *test, cli_val v)
 	return 0;
 }
 
-static int run(const char *name, struct test *tests, size_t size, cli_val v)
+static int run(const char *name, struct test *tests, size_t size, cli_val_t v)
 {
 	for (size_t i = 0; i < size; ++i) {
 		struct test *test = &tests[i];
@@ -214,7 +214,7 @@ static int run(const char *name, struct test *tests, size_t size, cli_val v)
 
 static void test_byte()
 {
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_BYTE, cli_val_byte_create());
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_BYTE, cli_val_byte_create());
 
 	struct test tests[] = {
 		{
@@ -246,7 +246,7 @@ static void test_integer_8_twos_complement()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -269,7 +269,7 @@ static void test_integer_8_unsigned()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_8);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -291,7 +291,7 @@ static void test_integer_16_twos_complement()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_16);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -314,7 +314,7 @@ static void test_integer_16_unsigned()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_16);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -336,7 +336,7 @@ static void test_integer_32_twos_complement()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -359,7 +359,7 @@ static void test_integer_32_unsigned()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -381,7 +381,7 @@ static void test_integer_64_twos_complement()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -404,7 +404,7 @@ static void test_integer_64_unsigned()
 	cli_val_integer_attr_init(&a);
 	cli_val_integer_attr_sign_set(&a, CLI_VAL_INTEGER_SIGN_UNSIGNED);
 	cli_val_integer_attr_bits_set(&a, CLI_VAL_INTEGER_BITS_64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_INTEGER, cli_val_integer_create(&a));
 	cli_val_integer_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -425,7 +425,7 @@ static void test_ieee754_single()
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
 	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_SINGLE);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -448,7 +448,7 @@ static void test_ieee754_double()
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
 	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_DOUBLE);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -471,7 +471,7 @@ static void test_ieee754_extended()
 	struct cli_val_ieee754_attr a;
 	cli_val_ieee754_attr_init(&a);
 	cli_val_ieee754_attr_precision_set(&a, CLI_VAL_IEEE754_PRECISION_EXTENDED);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_IEEE754, cli_val_ieee754_create(&a));
 	cli_val_ieee754_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -494,7 +494,7 @@ static void test_text_ascii()
 	struct cli_val_text_attr a;
 	cli_val_text_attr_init(&a);
 	cli_val_text_attr_encoding_set(&a, CLI_VAL_TEXT_ENCODING_ASCII);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_TEXT, cli_val_text_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_TEXT, cli_val_text_create(&a));
 	cli_val_text_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -512,7 +512,7 @@ static void test_text_ascii()
 
 static void test_address()
 {
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 
 	struct test tests[] = {
 		{
@@ -543,7 +543,7 @@ static void test_x86_16()
 	struct cli_val_x86_attr a;
 	cli_val_x86_attr_init(&a);
 	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
 	cli_val_x86_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -583,7 +583,7 @@ static void test_x86_32()
 	struct cli_val_x86_attr a;
 	cli_val_x86_attr_init(&a);
 	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
 	cli_val_x86_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -623,7 +623,7 @@ static void test_x86_64()
 	struct cli_val_x86_attr a;
 	cli_val_x86_attr_init(&a);
 	cli_val_x86_attr_mode_set(&a, CLI_VAL_X86_MODE_64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_X86, cli_val_x86_create(&a));
 	cli_val_x86_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -663,7 +663,7 @@ static void test_arm_a32()
 	struct cli_val_arm_attr a;
 	cli_val_arm_attr_init(&a);
 	cli_val_arm_attr_mode_set(&a, CLI_VAL_ARM_MODE_A32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
 	cli_val_arm_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -687,7 +687,7 @@ static void test_arm_a64()
 	struct cli_val_arm_attr a;
 	cli_val_arm_attr_init(&a);
 	cli_val_arm_attr_mode_set(&a, CLI_VAL_ARM_MODE_A64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_ARM, cli_val_arm_create(&a));
 	cli_val_arm_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -716,7 +716,7 @@ static void test_sparc_32()
 	cli_val_sparc_attr_init(&a);
 	cli_val_sparc_attr_mode_set(&a, CLI_VAL_SPARC_MODE_32);
 	cli_val_sparc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
 	cli_val_sparc_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -745,7 +745,7 @@ static void test_sparc_64()
 	cli_val_sparc_attr_init(&a);
 	cli_val_sparc_attr_mode_set(&a, CLI_VAL_SPARC_MODE_64);
 	cli_val_sparc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_SPARC, cli_val_sparc_create(&a));
 	cli_val_sparc_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -774,7 +774,7 @@ static void test_powerpc_32()
 	cli_val_powerpc_attr_init(&a);
 	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_32);
 	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
 	cli_val_powerpc_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -803,7 +803,7 @@ static void test_powerpc_64()
 	cli_val_powerpc_attr_init(&a);
 	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_64);
 	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
 	cli_val_powerpc_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -831,7 +831,7 @@ static void test_mips_32()
 	struct cli_val_mips_attr a;
 	cli_val_mips_attr_init(&a);
 	cli_val_mips_attr_mode_set(&a, CLI_VAL_MIPS_MODE_32);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
 	cli_val_mips_attr_deinit(&a);
 
 	struct test tests[] = {
@@ -859,7 +859,7 @@ static void test_mips_64()
 	struct cli_val_mips_attr a;
 	cli_val_mips_attr_init(&a);
 	cli_val_mips_attr_mode_set(&a, CLI_VAL_MIPS_MODE_64);
-	cli_val v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
+	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_MIPS, cli_val_mips_create(&a));
 	cli_val_mips_attr_deinit(&a);
 
 	struct test tests[] = {

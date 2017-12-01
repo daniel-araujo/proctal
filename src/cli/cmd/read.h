@@ -12,7 +12,7 @@ struct cli_cmd_read_arg {
 	size_t array;
 
 	// How we're going to interpret values.
-	cli_val value;
+	cli_val_t value;
 
 	// Whether to additionally print the value's address. Useful when
 	// printing a lot of adjacent values of variable length.

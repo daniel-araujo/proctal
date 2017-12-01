@@ -55,14 +55,14 @@ struct type_options {
 };
 
 /*
- * Creates a cli_val from a struct type_options. You only have to have
+ * Creates a cli_val_t from a struct type_options. You only have to have
  * initialized the data members that are relevant to the type.
  *
  * You are expected to keep track of the life time of the returned cli_val.
  *
  * Returns a nil value on failure.
  */
-static cli_val create_cli_val_from_type_options(struct type_options *ta)
+static cli_val_t create_cli_val_from_type_options(struct type_options *ta)
 {
 	switch (ta->type) {
 	case CLI_VAL_TYPE_INTEGER: {
