@@ -25,8 +25,8 @@ struct cli_cmd_pattern_arg {
 	// Whether to search executable memory addresses.
 	int execute;
 
-	// Whether to keep the program frozen while searching.
-	int freeze;
+	// Whether to keep the program paused while searching.
+	int pause;
 };
 
 int cli_cmd_pattern(struct cli_cmd_pattern_arg *arg);

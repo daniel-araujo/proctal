@@ -257,8 +257,8 @@ class Process:
         """Returns True if the process has stopped, False otherwise."""
         return self.exit_code() != None
 
-class FreezeProcess(Process):
-    """Controls the freeze command."""
+class PauseProcess(Process):
+    """Controls the pause command."""
 
     def __init__(self, process):
         super().__init__(process)
@@ -444,19 +444,19 @@ class WriteBinaryProcess(Process):
 
         super().stop()
 
-def freeze(pid):
-    """Runs the freeze command and returns an object that can control it."""
-    cmd = [proctal_exe, "freeze", "--pid=" + str(pid)]
+def pause(pid):
+    """Runs the pause command and returns an object that can control it."""
+    cmd = [proctal_exe, "pause", "--pid=" + str(pid)]
 
     process = subprocess.Popen(cmd)
 
-    # Waiting for the freeze command to perform. We should probably figure out
-    # a reliable way for it to tell us in some way when it has frozen the
+    # Waiting for the pause command to perform. We should probably figure out
+    # a reliable way for it to tell us in some way when it has paused the
     # program instead of guessing when. This will be the culprit of
     # false-positives.
     time.sleep(0.033)
 
-    return FreezeProcess(process)
+    return PauseProcess(process)
 
 def watch(pid, address, watch=None, address_start=None, address_stop=None, unique=None):
     """Runs the watch command."""

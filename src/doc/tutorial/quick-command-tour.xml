@@ -190,11 +190,11 @@ $ proctal dump --pid=12345 --address-start=7F7BE75E0714 --address-stop=7F7BE75ED
 	<section>
 		<title>Pausing program execution</title>
 
-		Stop the command to unpause on your terminal by pressing
-		<quote>CTRL + C</quote>.
+		Pressing <quote>CTRL + C</quote> on your terminal stops the
+		command.
 
 		<code type="bash-prompt">
-$ proctal freeze --pid=12345
+$ proctal pause --pid=12345
 		</code>
 	</section>
 

@@ -25,8 +25,8 @@ struct cli_cmd_read_arg {
 	// Whether to print exactly what's in memory.
 	int binary;
 
-	// Whether to keep the program frozen while reading.
-	int freeze;
+	// Whether to keep the program paused while reading.
+	int pause;
 };
 
 int cli_cmd_read(struct cli_cmd_read_arg *arg);

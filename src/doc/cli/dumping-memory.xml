@@ -55,6 +55,6 @@ $ proctal dump --pid=12345 --execute &gt; dump2.bin
 $ proctal dump --pid=12345 --address-start=7F7BE75E0714 --address-stop=7F7BE75ED1A0 &gt; dump3.bin
 	</code>
 
-	The <quote>--freeze</quote> option prevents the program from executing
+	The <quote>--pause</quote> option prevents the program from executing
 	code while the command is running.
 </document>

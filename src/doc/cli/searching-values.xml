@@ -114,7 +114,7 @@ $ proctal search --pid=12345 --type=integer --integer-bits=32 --read --write --g
 $ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; results1
 		</code>
 
-		The <quote>--freeze</quote> option prevents the program from
+		The <quote>--pause</quote> option prevents the program from
 		executing code while the command is running.
 	</section>
 
@@ -158,7 +158,7 @@ $ proctal pattern --pid=12345 --region=program-code 'E8 ?? ?? ?? ??'
 		start searching for patterns in memory and the
 		<quote>--address-stop</quote> option specifies where to stop.
 
-		The <quote>--freeze</quote> option prevents the program from
+		The <quote>--pause</quote> option prevents the program from
 		executing code while the command is running.
 	</section>
 </document>

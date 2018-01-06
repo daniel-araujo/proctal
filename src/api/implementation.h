@@ -19,9 +19,9 @@ size_t proctal_implementation_read(struct proctal *p, void *address, void *out, 
 
 size_t proctal_implementation_write(struct proctal *p, void *address, const void *in, size_t size);
 
-void proctal_implementation_freeze(struct proctal *p);
+void proctal_implementation_pause(struct proctal *p);
 
-void proctal_implementation_unfreeze(struct proctal *p);
+void proctal_implementation_resume(struct proctal *p);
 
 void proctal_implementation_scan_address_start(struct proctal *p);
 

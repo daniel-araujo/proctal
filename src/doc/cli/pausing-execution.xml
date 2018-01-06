@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<title>Pausing execution</title>
+
+	You can use the <quote>pause</quote> command to pause program
+	execution.
+
+	Here's how you would pause a program whose PID is 12345:
+
+	<code type="bash-prompt">
+$ proctal pause --pid=12345
+	</code>
+
+	The program stays paused as long as the command is running. You can
+	stop the command by sending it the <quote>SIGINT</quote> signal
+	(<quote>^C</quote> on most terminals).
+</document>

@@ -19,8 +19,8 @@ int cli_cmd_dump(struct cli_cmd_dump_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	if (arg->freeze) {
-		proctal_freeze(p);
+	if (arg->pause) {
+		proctal_pause(p);
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
@@ -109,8 +109,8 @@ exit4:
 exit3:
 	proctal_scan_region_stop(p);
 exit2:
-	if (arg->freeze) {
-		proctal_unfreeze(p);
+	if (arg->pause) {
+		proctal_resume(p);
 	}
 exit1:
 	proctal_close(p);

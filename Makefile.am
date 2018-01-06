@@ -33,8 +33,8 @@ proctal_SOURCES = \
 	src/cli/cmd/execute.h \
 	src/cli/cmd/watch.c \
 	src/cli/cmd/watch.h \
-	src/cli/cmd/freeze.c \
-	src/cli/cmd/freeze.h \
+	src/cli/cmd/pause.c \
+	src/cli/cmd/pause.h \
 	src/cli/cmd/read.c \
 	src/cli/cmd/read.h \
 	src/cli/cmd/write.c \
@@ -226,8 +226,8 @@ tests_cli_val_integer_endianness_LDADD = libclival.a libcliassembler.a libclipar
 TESTS += src/cli/tests/invalid-type-arguments.py
 dist_check_SCRIPTS += src/cli/tests/invalid-type-arguments.py
 
-TESTS += src/cli/tests/freeze-multiple-threads.py
-dist_check_SCRIPTS += src/cli/tests/freeze-multiple-threads.py
+TESTS += src/cli/tests/pause-multiple-threads.py
+dist_check_SCRIPTS += src/cli/tests/pause-multiple-threads.py
 
 TESTS += src/cli/tests/watch-multiple-threads.py
 dist_check_SCRIPTS += src/cli/tests/watch-multiple-threads.py
@@ -351,7 +351,7 @@ libproctal_la_SOURCES = \
 	src/api/error.c \
 	src/api/error-message.c \
 	src/api/watch.c \
-	src/api/freeze.c \
+	src/api/pause.c \
 	src/api/write.c \
 	src/api/read.c \
 	src/api/address.c \

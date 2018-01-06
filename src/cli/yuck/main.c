@@ -7,7 +7,7 @@
 #include "cli/cmd/deallocate.h"
 #include "cli/cmd/dump.h"
 #include "cli/cmd/execute.h"
-#include "cli/cmd/freeze.h"
+#include "cli/cmd/pause.h"
 #include "cli/cmd/measure.h"
 #include "cli/cmd/pattern.h"
 #include "cli/cmd/read.h"
@@ -436,7 +436,7 @@ static struct cli_cmd_read_arg *create_cli_cmd_read_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_read_arg *arg = malloc(sizeof(*arg));
 	arg->binary = yuck_arg->read.binary_flag == 1;
-	arg->freeze = yuck_arg->read.freeze_flag == 1;
+	arg->pause = yuck_arg->read.pause_flag == 1;
 	arg->value = cli_val_nil();
 
 	if (yuck_arg->cmd != PROCTAL_CMD_READ) {
@@ -522,7 +522,7 @@ static struct cli_cmd_write_arg *create_cli_cmd_write_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_write_arg *arg = malloc(sizeof(*arg));
 	arg->binary = yuck_arg->write.binary_flag == 1;
-	arg->freeze = yuck_arg->write.freeze_flag == 1;
+	arg->pause = yuck_arg->write.pause_flag == 1;
 	arg->value = cli_val_nil();
 	arg->values = (const char **) yuck_arg->write.args;
 	arg->values_size = yuck_arg->write.nargs;
@@ -634,7 +634,7 @@ static void destroy_cli_cmd_search_arg(struct cli_cmd_search_arg *arg)
 static struct cli_cmd_search_arg *create_cli_cmd_search_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_search_arg *arg = malloc(sizeof(*arg));
-	arg->freeze = yuck_arg->search.freeze_flag == 1;
+	arg->pause = yuck_arg->search.pause_flag == 1;
 	arg->value = cli_val_nil();
 	arg->eq = 0;
 	arg->ne = 0;
@@ -789,7 +789,7 @@ static void destroy_cli_cmd_pattern_arg(struct cli_cmd_pattern_arg *arg)
 static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_pattern_arg *arg = malloc(sizeof(*arg));
-	arg->freeze = yuck_arg->pattern.freeze_flag == 1;
+	arg->pause = yuck_arg->pattern.pause_flag == 1;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_PATTERN) {
 		fputs("Wrong command.\n", stderr);
@@ -854,36 +854,36 @@ static struct cli_cmd_pattern_arg *create_cli_cmd_pattern_arg(yuck_t *yuck_arg)
 	return arg;
 }
 
-static void destroy_cli_cmd_freeze_arg(struct cli_cmd_freeze_arg *arg)
+static void destroy_cli_cmd_pause_arg(struct cli_cmd_pause_arg *arg)
 {
 	free(arg);
 }
 
-static struct cli_cmd_freeze_arg *create_cli_cmd_freeze_arg(yuck_t *yuck_arg)
+static struct cli_cmd_pause_arg *create_cli_cmd_pause_arg(yuck_t *yuck_arg)
 {
-	struct cli_cmd_freeze_arg *arg = malloc(sizeof(*arg));
+	struct cli_cmd_pause_arg *arg = malloc(sizeof(*arg));
 
-	if (yuck_arg->cmd != PROCTAL_CMD_FREEZE) {
+	if (yuck_arg->cmd != PROCTAL_CMD_PAUSE) {
 		fputs("Wrong command.\n", stderr);
-		destroy_cli_cmd_freeze_arg(arg);
+		destroy_cli_cmd_pause_arg(arg);
 		return NULL;
 	}
 
 	if (yuck_arg->nargs != 0) {
 		fputs("Too many arguments.\n", stderr);
-		destroy_cli_cmd_freeze_arg(arg);
+		destroy_cli_cmd_pause_arg(arg);
 		return NULL;
 	}
 
-	if (yuck_arg->freeze.pid_arg == NULL) {
+	if (yuck_arg->pause.pid_arg == NULL) {
 		fputs("OPTION --pid is required.\n", stderr);
-		destroy_cli_cmd_freeze_arg(arg);
+		destroy_cli_cmd_pause_arg(arg);
 		return NULL;
 	}
 
-	if (!cli_parse_int(yuck_arg->freeze.pid_arg, &arg->pid)) {
+	if (!cli_parse_int(yuck_arg->pause.pid_arg, &arg->pid)) {
 		fputs("Invalid pid.\n", stderr);
-		destroy_cli_cmd_freeze_arg(arg);
+		destroy_cli_cmd_pause_arg(arg);
 		return NULL;
 	}
 
@@ -1243,7 +1243,7 @@ static void destroy_cli_cmd_dump_arg(struct cli_cmd_dump_arg *arg)
 static struct cli_cmd_dump_arg *create_cli_cmd_dump_arg(yuck_t *yuck_arg)
 {
 	struct cli_cmd_dump_arg *arg = malloc(sizeof(*arg));
-	arg->freeze = yuck_arg->dump.freeze_flag == 1;
+	arg->pause = yuck_arg->dump.pause_flag == 1;
 
 	if (yuck_arg->cmd != PROCTAL_CMD_DUMP) {
 		fputs("Wrong command.\n", stderr);
@@ -1336,7 +1336,7 @@ CMD_HANDLER_COMMON(read)
 CMD_HANDLER_COMMON(write)
 CMD_HANDLER_COMMON(search)
 CMD_HANDLER_COMMON(pattern)
-CMD_HANDLER_COMMON(freeze)
+CMD_HANDLER_COMMON(pause)
 CMD_HANDLER_COMMON(watch)
 CMD_HANDLER_COMMON(execute)
 CMD_HANDLER_COMMON(allocate)
@@ -1352,7 +1352,7 @@ cmd_handler cmd_handlers[] = {
 	[PROCTAL_CMD_WRITE] = cmd_handler_write,
 	[PROCTAL_CMD_SEARCH] = cmd_handler_search,
 	[PROCTAL_CMD_PATTERN] = cmd_handler_pattern,
-	[PROCTAL_CMD_FREEZE] = cmd_handler_freeze,
+	[PROCTAL_CMD_PAUSE] = cmd_handler_pause,
 	[PROCTAL_CMD_WATCH] = cmd_handler_watch,
 	[PROCTAL_CMD_EXECUTE] = cmd_handler_execute,
 	[PROCTAL_CMD_ALLOCATE] = cmd_handler_allocate,

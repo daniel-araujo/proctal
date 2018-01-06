@@ -13,7 +13,7 @@ interface (CLI) and an abstract programming interface (API).
 
 - Searching for values and byte patterns
 
-- Freezing program execution
+- Pausing program execution
 
 - Watching for accesses to memory locations
 

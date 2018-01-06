@@ -146,7 +146,7 @@ Examples:
   PID_OPTION
   --address=ADDRESS     Address to read from.
   --binary              Whether to print in binary.
-  --freeze              Whether to keep the program frozen while reading.
+  --pause               Whether to keep the program paused while reading.
   --array=SIZE          Read SIZE values in consecutive addresses. By default
                         SIZE is 1.
   TYPE_OPTIONS
@@ -183,7 +183,7 @@ Examples:
   PID_OPTION
   --address=ADDRESS     Address to write to.
   --binary              Whether to parse values in binary.
-  --freeze              Whether to keep the program frozen while writing.
+  --pause               Whether to keep the program paused while writing.
   --array=SIZE          Write SIZE values in consecutive addresses. If less
                         than SIZE values are provided, then when in need of
                         more values the command will cycle through the provided
@@ -255,7 +255,7 @@ Examples:
   ADDRESS_RANGE_OPTIONS
   REGION_OPTION
   --review              Matches against the output of a previous run.
-  --freeze              Whether to keep the program frozen while searching.
+  --pause               Whether to keep the program paused while searching.
   TYPE_OPTIONS
   -r, --read            Readable memory.
   -w, --write           Writable memory.
@@ -310,21 +310,21 @@ Examples:
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
   REGION_OPTION
-  --freeze              Whether to keep the program frozen while searching.
+  --pause               Whether to keep the program paused while searching.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.
 
 
 
-Usage: proctal freeze
-Freezes program execution.
+Usage: proctal pause
+Pauses program execution.
 
-The program will be frozen for as long as the command is running.
+The program will be paused for as long as the command is running.
 
 Examples:
   Pause program execution
-        proctal freeze --pid=12345
+        proctal pause --pid=12345
 
 
   PID_OPTION
@@ -516,7 +516,7 @@ Examples:
   PID_OPTION
   ADDRESS_RANGE_OPTIONS
   REGION_OPTION
-  --freeze              Whether to keep the program frozen while dumping.
+  --pause               Whether to keep the program paused while dumping.
   -r, --read            Readable memory.
   -w, --write           Writable memory.
   -x, --execute         Executable memory.

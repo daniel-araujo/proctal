@@ -3,7 +3,7 @@
 	<title>Overview</title>
 
 	With text commands you can read, write and search for values, allocate
-	memory, execute code, freeze execution, dump memory and watch for
+	memory, execute code, pause execution, dump memory and watch for
 	memory accesses in programs that are running on your system.
 
 	<section>

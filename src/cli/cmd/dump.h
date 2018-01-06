@@ -23,8 +23,8 @@ struct cli_cmd_dump_arg {
 	// Whether to dump executable memory addresses.
 	int execute;
 
-	// Whether to keep the program frozen while dumping.
-	int freeze;
+	// Whether to keep the program paused while dumping.
+	int pause;
 };
 
 int cli_cmd_dump(struct cli_cmd_dump_arg *arg);

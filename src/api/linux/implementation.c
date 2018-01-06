@@ -66,14 +66,14 @@ size_t proctal_implementation_write(struct proctal *p, void *address, const void
 	return proctal_linux_mem_write(pl, address, in, size);
 }
 
-void proctal_implementation_freeze(struct proctal *p)
+void proctal_implementation_pause(struct proctal *p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 
 	proctal_linux_ptrace_attach(pl);
 }
 
-void proctal_implementation_unfreeze(struct proctal *p)
+void proctal_implementation_resume(struct proctal *p)
 {
 	struct proctal_linux *pl = (struct proctal_linux *) p;
 

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "cli/cmd/freeze.h"
+#include "cli/cmd/pause.h"
 #include "cli/printer.h"
 #include "api/include/proctal.h"
 #include "pq/pq.h"
 
-int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
+int cli_cmd_pause(struct cli_cmd_pause_arg *arg)
 {
 	int ret = 1;
 
@@ -24,7 +24,7 @@ int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	proctal_freeze(p);
+	proctal_pause(p);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
@@ -33,7 +33,7 @@ int cli_cmd_freeze(struct cli_cmd_freeze_arg *arg)
 
 	pq_wait();
 
-	proctal_unfreeze(p);
+	proctal_resume(p);
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);

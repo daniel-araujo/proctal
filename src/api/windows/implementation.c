@@ -58,14 +58,14 @@ size_t proctal_implementation_write(struct proctal *p, void *address, const void
 	return proctal_windows_memory_write(pw, address, in, size);
 }
 
-void proctal_implementation_freeze(struct proctal *p)
+void proctal_implementation_pause(struct proctal *p)
 {
 	struct proctal_windows *pw = (struct proctal_windows *) p;
 
 	DebugActiveProcess(pw->process_id);
 }
 
-void proctal_implementation_unfreeze(struct proctal *p)
+void proctal_implementation_resume(struct proctal *p)
 {
 	struct proctal_windows *pw = (struct proctal_windows *) p;
 

@@ -2,7 +2,7 @@
 <document>
 	<title>Overview</title>
 
-	With this API your program can access memory, execute code, freeze
+	With this API your program can access memory, execute code, pause
 	execution and watch for memory accesses in other programs.
 
 	<section>

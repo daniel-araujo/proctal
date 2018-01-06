@@ -139,8 +139,8 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 
 	proctal_pid_set(p, arg->pid);
 
-	if (arg->freeze) {
-		proctal_freeze(p);
+	if (arg->pause) {
+		proctal_pause(p);
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
@@ -169,8 +169,8 @@ int cli_cmd_write(struct cli_cmd_write_arg *arg)
 exit3:
 	vmagazine_deinit(&vmagazine);
 exit2:
-	if (arg->freeze) {
-		proctal_unfreeze(p);
+	if (arg->pause) {
+		proctal_resume(p);
 	}
 exit1:
 	proctal_close(p);

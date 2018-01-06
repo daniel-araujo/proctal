@@ -50,12 +50,12 @@ size_t proctal_implementation_write(struct proctal *p, void *address, const void
 	return 0;
 }
 
-void proctal_implementation_freeze(struct proctal *p)
+void proctal_implementation_pause(struct proctal *p)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }
 
-void proctal_implementation_unfreeze(struct proctal *p)
+void proctal_implementation_resume(struct proctal *p)
 {
 	proctal_error_set(p, PROCTAL_ERROR_UNSUPPORTED);
 }

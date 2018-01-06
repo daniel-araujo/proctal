@@ -523,29 +523,30 @@ int proctal_scan_region_execute(proctal_t p);
 void proctal_scan_region_execute_set(proctal_t p, int execute);
 
 /*
- * Freezes program execution.
+ * Pauses program execution.
  *
- * Freezing twice results in undefined behavior.
+ * You can resume by calling proctal_resume.
  *
- * You can unfreeze again by calling proctal_unfreeze.
+ * Pausing twice results in undefined behavior.
  *
- * Closing the handle without unfreezing first results in undefined behavior.
+ * Closing the handle while the program is paused results in undefined
+ * behavior.
  *
  * See the description for the proctal_error function on how to deal with
  * errors.
  */
-void proctal_freeze(proctal_t p);
+void proctal_pause(proctal_t p);
 
 /*
- * Unfreezes execution.
+ * Resumes program execution.
  *
- * You can only call this function if you had previously called proctal_freeze,
+ * You can only call this function if you had previously called proctal_pause,
  * otherwise behavior is undefined.
  *
  * See the description for the proctal_error function on how to deal with
  * errors.
  */
-void proctal_unfreeze(proctal_t p);
+void proctal_resume(proctal_t p);
 
 /*
  * Starts watching for memory accesses.

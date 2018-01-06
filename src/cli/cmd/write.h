@@ -32,8 +32,8 @@ struct cli_cmd_write_arg {
 	// Whether to parse values in binary.
 	int binary;
 
-	// Whether to keep the program frozen while writing.
-	int freeze;
+	// Whether to keep the program paused while writing.
+	int pause;
 };
 
 int cli_cmd_write(struct cli_cmd_write_arg *arg);

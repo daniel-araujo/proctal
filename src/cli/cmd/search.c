@@ -420,8 +420,8 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 	setup_proctal(arg, p);
 
-	if (arg->freeze) {
-		proctal_freeze(p);
+	if (arg->pause) {
+		proctal_pause(p);
 
 		if (proctal_error(p)) {
 			cli_print_proctal_error(p);
@@ -441,8 +441,8 @@ int cli_cmd_search(struct cli_cmd_search_arg *arg)
 
 	ret = 0;
 exit2:
-	if (arg->freeze) {
-		proctal_unfreeze(p);
+	if (arg->pause) {
+		proctal_resume(p);
 	}
 exit1:
 	proctal_close(p);
