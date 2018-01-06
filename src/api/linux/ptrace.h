@@ -32,6 +32,11 @@
 #define PROCTAL_LINUX_PTRACE_REGISTER_X86_64_DR7 0x8007
 
 /*
+ * Holds a task's CPU state.
+ */
+struct proctal_linux_ptrace_cpu_state;
+
+/*
  * Performs ptrace's attach function on all tasks of the program.
  *
  * You may attach to the same program multiple times.
@@ -144,5 +149,35 @@ int proctal_linux_ptrace_register(struct proctal_linux *pl, pid_t tid, int regid
  * untouched.
  */
 int proctal_linux_ptrace_register_set(struct proctal_linux *pl, pid_t tid, int regid, void *src);
+
+/*
+ * Creates a struct that can hold CPU state.
+ *
+ * Returns NULL on failure.
+ */
+struct proctal_linux_ptrace_cpu_state *proctal_linux_ptrace_cpu_state_create(struct proctal_linux *pl);
+
+/*
+ * Disposes the struct.
+ */
+void proctal_linux_ptrace_cpu_state_destroy(struct proctal_linux *pl, struct proctal_linux_ptrace_cpu_state *state);
+
+/*
+ * Saves the CPU state of the given task.
+ *
+ * This function only works if the task is stopped.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int proctal_linux_ptrace_cpu_state_save(struct proctal_linux *pl, pid_t tid, struct proctal_linux_ptrace_cpu_state *state);
+
+/*
+ * Copies src to a register.
+ *
+ * This function only works if the task is stopped.
+ *
+ * Returns 1 on success, 0 on failure.
+ */
+int proctal_linux_ptrace_cpu_state_load(struct proctal_linux *pl, pid_t tid, struct proctal_linux_ptrace_cpu_state *state);
 
 #endif /* API_LINUX_PTRACE_H */

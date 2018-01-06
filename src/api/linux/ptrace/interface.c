@@ -440,3 +440,23 @@ int proctal_linux_ptrace_register_set(struct proctal_linux *pl, pid_t tid, int r
 {
 	return proctal_linux_ptrace_implementation_register_set(pl, tid, regid, src);
 }
+
+struct proctal_linux_ptrace_cpu_state *proctal_linux_ptrace_cpu_state_create(struct proctal_linux *pl)
+{
+	return proctal_linux_ptrace_implementation_cpu_state_create(pl);
+}
+
+void proctal_linux_ptrace_cpu_state_destroy(struct proctal_linux *pl, struct proctal_linux_ptrace_cpu_state *state)
+{
+	proctal_linux_ptrace_implementation_cpu_state_destroy(pl, state);
+}
+
+int proctal_linux_ptrace_cpu_state_save(struct proctal_linux *pl, pid_t tid, struct proctal_linux_ptrace_cpu_state *state)
+{
+	return proctal_linux_ptrace_implementation_cpu_state_save(pl, tid, state);
+}
+
+int proctal_linux_ptrace_cpu_state_load(struct proctal_linux *pl, pid_t tid, struct proctal_linux_ptrace_cpu_state *state)
+{
+	return proctal_linux_ptrace_implementation_cpu_state_load(pl, tid, state);
+}
