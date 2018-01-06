@@ -1,5 +1,5 @@
 /*
- * An implementation that does nothing.
+ * Windows implementation.
  */
 
 #include "api/windows/proctal.h"
@@ -8,26 +8,28 @@
 
 struct proctal *proctal_implementation_open(void)
 {
-	struct proctal *p = proctal_global_malloc(sizeof(*p));
+	struct proctal_windows *pw = proctal_global_malloc(sizeof(*pw));
 
-	if (p == NULL) {
+	if (pw == NULL) {
 		return NULL;
 	}
 
-	proctal_init(p);
+	proctal_windows_init(pw);
 
-	return p;
+	return (struct proctal *) pw;
 }
 
 void proctal_implementation_close(struct proctal *p)
 {
-	if (p == NULL) {
+	struct proctal_windows *pw = (struct proctal_windows *) p;
+
+	if (pw == NULL) {
 		return;
 	}
 
-	proctal_deinit(p);
+	proctal_windows_deinit(pw);
 
-	proctal_global_free(p);
+	proctal_global_free(pw);
 }
 
 void proctal_implementation_pid_set(struct proctal *p, int pid)
