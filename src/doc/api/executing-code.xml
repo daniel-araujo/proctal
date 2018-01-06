@@ -19,6 +19,6 @@
 proctal_execute(proctal, "\x90\x90\x90", 3);
 	</code>
 
-	To check if something went wrong, call <quote>proctal_error</quote> to
-	get an error code.
+	Check the <quote>Error handling</quote> page to learn how to deal with
+	an error.
 </document>

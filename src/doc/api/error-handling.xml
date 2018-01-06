@@ -2,17 +2,20 @@
 <document>
 	<title>Error handling</title>
 
-	When a function fails, Proctal keeps track of a code that identifies
-	the cause of the failure. This code can be retrieved with a call to
-	<quote>proctal_error</quote>.
+	When an error occurs, the handle will keep track of a code that can
+	identify the cause. In this state the handle should not be used by any
+	other function that the ones described here.
+
+	The code can be retrieved by calling the <quote>proctal_error</quote>
+	function. It takes a handle as argument and returns a code.
 
 	<code type="c">
 int error_code = proctal_error(proctal);
 	</code>
 
-	If the code is <quote>0</quote> then it means that there was no failure.
+	When <quote>0</quote> is returned then it means that there is no error.
 
-	The following macros are defined to identify error codes:
+	Each error code has a corresponding macro definition:
 
 	<list>
 		<item>PROCTAL_ERROR_OUT_OF_MEMORY</item>
@@ -38,28 +41,28 @@ int error_code = proctal_error(proctal);
 		<item>PROCTAL_ERROR_PROGRAM_INTERRUPT</item>
 	</list>
 
-	To recover from an error you need to call
-	<quote>proctal_error_recover</quote>.
+	Call the <quote>proctal_error_recover</quote> function to recover from
+	an error. It takes a handle as argument and returns 1 on success and 0
+	on failure.
 
 	<code type="c">
 int result = proctal_error_recover(proctal);
 	</code>
 
-	It will return 1 on success and 0 on failure. On success,
-	<quote>proctal_error</quote> will begin returning 0 again. On failure,
-	the error must be so severe that it's best to destroy the handle.
+	On success, the error code is cleared for the given handle, making it
+	usable like normal again.
 
-	Using a handle without recovering from an error may result in
-	undefined behavior.
+	On failure, the handle is deemed unusable and must be destroyed.
 
-	You can also retrieve a description of the error in text by calling
-	<quote>proctal_error_message</quote>.
+	You can also retrieve a description of the error in text by calling the
+	<quote>proctal_error_message</quote> function. It takes a handle as
+	argument and returns a pointer to a read-only C-style string.
 
 	<code type="c">
 const char *error_message = proctal_error_message(proctal);
 	</code>
 
-	If there is no error, the returned value is <quote>NULL</quote>.
+	If there is no error it returns a NULL pointer.
 
 	<note>
 		The error message is only meant for diagnostic purposes, such

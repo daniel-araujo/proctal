@@ -2,9 +2,10 @@
 #define PROCTAL_H
 
 /*
- * These bring up type definitions used in the following function declarations.
- * They are included here for your convenience, allowing you to include this
- * header without having to worry about what you'd need to include beforehand.
+ * Include statements that contain type definitions used in the following
+ * function declarations. They are included here for your convenience to allow
+ * you to include this header file without having to worry about what you'd
+ * need to include beforehand.
  */
 #include <stddef.h>
 
@@ -42,45 +43,47 @@
 #define PROCTAL_REGION_PROGRAM_CODE 4
 
 /*
- * Provides a type name for a handle. The actual definition is an
- * implementation detail that you shouldn't worry about.
+ * Definition of a handle. This object is used to keep track of state. It's
+ * nothing more than an opaque pointer.
  */
 typedef struct proctal *proctal_t;
 
 /*
  * Creates a handle.
  *
- * This would be the first function you'd want to call. Most functions operate
- * on a handle.
+ * This would be the first function you'd want to call.
  *
- * There is always a tiny chance that this call may fail such as when the
- * system is running out of memory therefore you should call proctal_error
- * right after. And regardless of it succeeding or failing you still need to
- * call proctal_close.
+ * A new handle has its state set to default values.
  *
- * Using a handle that failed to be created correctly will result in undefined
- * behavior, likely leading to a crash.
+ * When you're done using the handle, you need to pass it to the proctal_close
+ * function to destroy it.
+ *
+ * This function may fail such as when the system is running out of memory. See
+ * the description for the proctal_error function on how to deal with errors.
+ *
+ * Using a handle that was not successfully created results in undefined
+ * behavior.
  */
 proctal_t proctal_open(void);
 
 /*
  * Destroys a handle.
  *
- * This is definitely the last function you'd call.
+ * This would be the last function you'd want to call.
  */
 void proctal_close(proctal_t p);
 
 /*
- * Allows you to check if an error happened with the given handle.
+ * Allows you to check if an error has happened with the given handle.
  *
- * Any non-zero value that is returned is an error code. Error codes are
- * defined as macros whose name start with PROCTAL_ERROR. A 0 return value
- * means there is no error.
+ * Any non-zero value that is returned is an error code. Error codes have a
+ * corresponding macro definition whose names start with PROCTAL_ERROR. A 0
+ * return value means there is no error
  *
  * You can call proctal_error_recover to try to recover from an error.
  *
- * Using a handle without recovering from an error may result in undefined
- * behavior.
+ * Keep in mind that using a handle without recovering from an error results in
+ * undefined behavior.
  */
 int proctal_error(proctal_t p);
 
@@ -89,9 +92,10 @@ int proctal_error(proctal_t p);
  *
  * Returns 1 on success and 0 on failure.
  *
- * On success, proctal_error will begin returning 0 again.
+ * On success, the error code is cleared for the given handle, making it usable
+ * like normal again.
  *
- * On failure, the handle is deemed unusable and should be destroyed.
+ * On failure, the handle is deemed unusable and must be destroyed.
  *
  * If the handle has no error, this function will do nothing and report that it
  * succeeded.
@@ -116,26 +120,26 @@ const char *proctal_error_message(proctal_t p);
 void proctal_pid_set(proctal_t p, int pid);
 
 /*
- * Returns the id of the program.
+ * Returns the id of the program that is being accessed.
  *
  * On Linux this would be a PID (Process ID).
  *
- * This will return 0 if you have never set the id.
+ * This will return 0 if you have never set an id.
  */
 int proctal_pid(proctal_t p);
 
 /*
- * Reads a specified length of characters starting from the given address. This
- * function assumes it can safely write the same length to the given buffer.
+ * Reads a given number of bytes (size) starting from the given address
+ * (address).
  *
- * Will return the number of characters it successfuly reads.
+ * This function assumes it can safely write the same number of bytes to the
+ * given buffer (out).
  *
- * Not returning the same length indicates an error. Call proctal_error to find
- * out what happened.
+ * Will return the number of bytes it successfully read.
  *
- * There are also convenience functions for reading native C types where length
- * corresponds to the type's size and the return value is the the number of
- * values read instead of the actual length.
+ * Not returning the same number of bytes that were given indicates an error.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 size_t proctal_read(proctal_t p, void *address, void *out, size_t size);
 
@@ -200,17 +204,16 @@ size_t proctal_read_address(proctal_t p, void *address, void **out);
 size_t proctal_read_address_array(proctal_t p, void *address, void **out, size_t size);
 
 /*
- * Writes a specified length of characters starting from an address. This
- * function assumes it can safely read the same length from the given buffer.
+ * Writes a given number of bytes (size) to the given address (address).
  *
- * Will return the number of characters it successfuly writes.
+ * This function assumes it can safely read the same number of bytes from the
+ * given buffer (in).
  *
- * Not returning the same length indicates an error. Call proctal_error to find
- * out what happened.
+ * Will return the number of bytes it successfully wrote.
  *
- * There are also convenience functions for writing native C types where length
- * corresponds to the type's size and the return value is the the number of
- * values written instead of the actual length.
+ * Not returning the same number of bytes that were given indicates an error.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 size_t proctal_write(proctal_t p, void *address, const void *in, size_t size);
 
@@ -279,7 +282,8 @@ size_t proctal_write_address_array(proctal_t p, void *address, const void **in, 
  *
  * When you're done scanning, you must call proctal_scan_address_stop.
  *
- * You should call proctal_error to verify if this function failed.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_scan_address_start(proctal_t p);
 
@@ -289,7 +293,8 @@ void proctal_scan_address_start(proctal_t p);
  * You must have previously called proctal_scan_address_start, otherwise
  * behavior is undefined.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_scan_address_stop(proctal_t p);
 
@@ -300,7 +305,8 @@ void proctal_scan_address_stop(proctal_t p);
  * It will return 1 on success, 0 on failure or when there are no more
  * addresses.
  *
- * You should call proctal_error to verify if 0 meant failure.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 int proctal_scan_address_next(proctal_t p, void **address);
 
@@ -412,7 +418,8 @@ void proctal_scan_address_execute_set(proctal_t p, int execute);
  *
  * When you're done scanning, you must call proctal_scan_region_stop.
  *
- * You should call proctal_error to verify if this function succeeded.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_scan_region_start(proctal_t p);
 
@@ -422,7 +429,8 @@ void proctal_scan_region_start(proctal_t p);
  * You must have previously called proctal_scan_region_start, otherwise
  * behavior is undefined.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_scan_region_stop(proctal_t p);
 
@@ -433,7 +441,8 @@ void proctal_scan_region_stop(proctal_t p);
  * It will return 1 on success, 0 on failure or when there are no more memory
  * regions.
  *
- * You should call proctal_error to verify if 0 meant failure.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 int proctal_scan_region_next(proctal_t p, void **start, void **end);
 
@@ -522,7 +531,8 @@ void proctal_scan_region_execute_set(proctal_t p, int execute);
  *
  * Closing the handle without unfreezing first results in undefined behavior.
  *
- * Call proctal_error to verify if this function failed.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_freeze(proctal_t p);
 
@@ -532,7 +542,8 @@ void proctal_freeze(proctal_t p);
  * You can only call this function if you had previously called proctal_freeze,
  * otherwise behavior is undefined.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_unfreeze(proctal_t p);
 
@@ -551,7 +562,8 @@ void proctal_unfreeze(proctal_t p);
  *
  * To stop watching, you must call proctal_watch_stop.
  *
- * You should call proctal_error to verify if this function succeeded.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_watch_start(proctal_t p);
 
@@ -561,7 +573,8 @@ void proctal_watch_start(proctal_t p);
  * You must have previously called proctal_watch_start successfully otherwise
  * behavior is left undefined.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_watch_stop(proctal_t p);
 
@@ -571,7 +584,8 @@ void proctal_watch_stop(proctal_t p);
  *
  * If a memory access was detected, it will return 1 and write out the address.
  * If no memory access was detected, it will return 0. On failure it will also
- * return 0 so you should call proctal_error to find out if 0 meant failure.
+ * return 0. See the description for the proctal_error function on how to deal
+ * with errors.
  *
  * You must have previously called proctal_watch_start successfully otherwise
  * behavior is left undefined.
@@ -658,7 +672,8 @@ void proctal_watch_execute_set(proctal_t p, int execute);
  *
  * The instructions cannot rely on where they will be placed in memory.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_execute(proctal_t p, const void *bytecode, size_t bytecode_length);
 
@@ -669,10 +684,10 @@ void proctal_execute(proctal_t p, const void *bytecode, size_t bytecode_length);
  * allocating. It may allocate more space but you should never rely on that.
  *
  * Access permissions can be set by calling proctal_allocate_read_set,
- * proctal_allocate_write_set and proctal_allocate_execute_set.
+ * proctal_allocate_write_set and proctal_allocate_execute_set beforehand.
  *
- * On success it returns the start address. On failure it will return NULL. You
- * can call proctal_error to find out what happened.
+ * On success it returns the start address. On failure it will return NULL. See
+ * the description for the proctal_error function on how to deal with errors.
  */
 void *proctal_allocate(proctal_t p, size_t size);
 
@@ -733,7 +748,8 @@ void proctal_allocate_execute_set(proctal_t p, int execute);
  * Behavior is left undefined if you deallocate memory that had already been
  * deallocated.
  *
- * On failure, proctal_error will return an error code.
+ * See the description for the proctal_error function on how to deal with
+ * errors.
  */
 void proctal_deallocate(proctal_t p, void *address);
 

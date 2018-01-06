@@ -2,25 +2,34 @@
 <document>
 	<title>Freezing execution</title>
 
-	You can freeze the execution of a program by calling
-	<quote>proctal_freeze</quote>.
+	You can freeze the execution of a program by calling the
+	<quote>proctal_freeze</quote> function. It takes a handle as argument.
 
 	<code type="c">
 proctal_freeze(proctal);
 	</code>
 
-	Call <quote>proctal_error</quote> to find out if the function failed.
-	Freezing twice results in undefined behavior.
+	Check the <quote>Error handling</quote> page to learn how to deal with
+	an error.
 
-	If freezing was successful, you can call
-	<quote>proctal_unfreeze</quote> to unfreeze the program. You should
-	only call this function if you had previously called
-	<quote>proctal_freeze</quote>, otherwise behavior is undefined.
+	To unfreeze the program you must call the
+	<quote>proctal_unfreeze</quote> function. It takes a handle as
+	argument.
 
 	<code type="c">
 proctal_unfreeze(proctal);
 	</code>
 
-	Closing the handle without unfreezing first results in undefined
+	You must only call <quote>proctal_unfreeze</quote> after having
+	successfully called <quote>proctal_freeze</quote> otherwise behavior is
+	undefined.
+
+	Closing a handle while the program is frozen results in undefined
+	behavior.
+
+	You may call other functions on the handle while the program is frozen.
+
+	Calling <quote>proctal_freeze</quote> again without calling
+	<quote>proctal_unfreeze</quote> beforehand results in undefined
 	behavior.
 </document>

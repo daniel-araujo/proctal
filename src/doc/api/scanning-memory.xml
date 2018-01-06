@@ -73,8 +73,8 @@ proctal_scan_address_read_set(proctal, 1);
 proctal_scan_address_start(proctal);
 		</code>
 
-		You should call proctal_error to verify if this function
-		succeeded.
+		Check the <quote>Error handling</quote> page to learn how to
+		deal with an error.
 
 		And now each call to <quote>proctal_scan_address_next</quote>
 		will return you the current address and move on to the next
@@ -94,10 +94,6 @@ while (proctal_scan_address_next(proctal, &amp;address)) {}
 		things. Either the function has iterated over all addresses or
 		it has hit an error.
 
-		To find out whether the return value 0 indicates an error, you
-		must call <quote>proctal_error</quote>. So this is going to be
-		a common idiom:
-
 		<code type="c">
 void *address;
 while (proctal_scan_address_next(proctal, &amp;address)) {
@@ -105,7 +101,7 @@ while (proctal_scan_address_next(proctal, &amp;address)) {
 }
 
 // Check if the loop finished because of an error.
-if (proctal_error(proctal) {
+if (proctal_error(proctal)) {
 	// Error handling.
 }
 		</code>
@@ -135,10 +131,10 @@ proctal_scan_address_stop(proctal);
 		are iterated over by calling
 		<quote>proctal_scan_region_mask_set</quote>.
 
-		Here's how you tell Proctal to iterate over heap memory regions:
+		Here's how you tell Proctal to iterate over stack memory regions:
 
 		<code type="c">
-proctal_scan_region_mask_set(proctal, PROCTAL_REGION_HEAP);
+proctal_scan_region_mask_set(proctal, PROCTAL_REGION_STACK);
 		</code>
 
 		You can also specify whether you want to iterate over readable,
@@ -162,8 +158,8 @@ proctal_scan_region_read_set(proctal, 1);
 proctal_scan_region_start(proctal);
 		</code>
 
-		You should call proctal_error to verify if this function
-		succeeded.
+		Check the <quote>Error handling</quote> page to learn how to
+		deal with an error.
 
 		And now each call to <quote>proctal_scan_region_next</quote>
 		will return you the starting and ending address of the current
@@ -185,10 +181,6 @@ while (proctal_scan_region_next(proctal, &amp;start, &amp;end)) {}
 		things. Either the function has iterated over all regions or it
 		has hit an error.
 
-		To find out whether the return value 0 indicates an error, you
-		must call <quote>proctal_error</quote>. So this is going to be
-		a common idiom:
-
 		<code type="c">
 void *start;
 void *end;
@@ -197,7 +189,7 @@ while (proctal_scan_region_next(proctal, &amp;start, &amp;end)) {
 }
 
 // Check if the loop finished because of an error.
-if (proctal_error(proctal) {
+if (proctal_error(proctal)) {
 	// Error handling.
 }
 		</code>

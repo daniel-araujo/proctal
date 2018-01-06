@@ -2,31 +2,38 @@
 <document>
 	<title>Allocating memory</title>
 
-	You can allocate and deallocate memory for a program by calling
-	<quote>proctal_allocate</quote> and <quote>proctal_deallocate</quote>,
-	respectively.
-
-	The function <quote>proctal_allocate</quote> takes the size of the
-	memory block. Here's how you would allocate 8 bytes in memory.
+	To allocate memory in another program you must call the
+	<quote>proctal_allocate</quote> function. It takes a handle and the
+	number of bytes as arguments and returns an address to the start of the
+	new memory location.
 
 	<code type="c">
 void *address = proctal_allocate(proctal, 8);
 	</code>
 
-	The function returns the address where the memory location starts. On
-	error the address will have the value <quote>NULL</quote> and you can
-	call <quote>proctal_error</quote> to find out what went wrong.
+	On failure the address will have the value <quote>NULL</quote>. Check
+	the <quote>Error handling</quote> page to learn how to deal with an
+	error.
 
-	Access permissions can be defined by calling
+	While the function may allocate more space than you had specified, you
+	must only consider the number of bytes you specified as usable.
+
+	Access permissions can be defined by calling the
 	<quote>proctal_allocate_read_set</quote>,
 	<quote>proctal_allocate_write_set</quote> and
-	<quote>proctal_allocate_execute_set</quote> before
+	<quote>proctal_allocate_execute_set</quote> functions before
 	<quote>proctal_allocate</quote>. By default all access permissions are
 	set.
 
-	Once you are done using the memory block, you need to deallocate with
-	<quote>proctal_deallocate</quote>. You just need to pass it the address
-	you got from <quote>proctal_allocate</quote>.
+	<code type="c">
+proctal_allocate_read_set(proctal, 1);
+proctal_allocate_write_set(proctal, 1);
+proctal_allocate_execute_set(proctal, 0);
+	</code>
+
+	To deallocate you must call the <quote>proctal_deallocate</quote>
+	function. It takes a handle and the address to the start of the memory
+	location as arguments.
 
 	<code type="c">
 proctal_deallocate(proctal, address);

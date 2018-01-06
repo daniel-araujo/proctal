@@ -34,7 +34,8 @@ proctal_watch_execute_set(proctal, 0);
 proctal_watch_start(proctal);
 	</code>
 
-	You should call proctal_error to verify if this function failed.
+	Check the <quote>Error handling</quote> page to learn how to deal with
+	an error.
 
 	To check if the memory address was accessed in the mean time, you need
 	to call <quote>proctal_watch_next</quote>.
@@ -59,8 +60,7 @@ for (;;) {
 	address.
 
 	If no memory access was detected, it will return 0. On failure it will
-	also return 0 so you should call <quote>proctal_error</quote> to find
-	out if the returned value 0 means failure.
+	also return 0.
 
 	<note>
 		The address of the instruction that is returned may
