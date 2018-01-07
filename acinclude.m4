@@ -448,7 +448,9 @@ AC_DEFUN([PROCTAL_COMPILATION_FLAGS], [
 	# Make the compiler less forgiving.
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wfatal-errors -Wall"])
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wextra -Wpointer-arith"])
-	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Werror=incompatible-pointer-types"])
+	if test "$PROCTAL_CC_GCC_FEATURE_INCOMPATIBLE_POINTER_TYPES" = "yes"; then
+		AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Werror=incompatible-pointer-types"])
+	fi
 
 	# Ignore less desirable warning messages.
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -Wno-unused-parameter -Wno-unused-function"])
@@ -471,4 +473,32 @@ AC_DEFUN([PROCTAL_META], [
 	AH_TEMPLATE([PROCTAL_META_DIR_SRC], [Define to source directory.])
 
 	AC_DEFINE_UNQUOTED([PROCTAL_META_DIR_SRC], ["$srcdir/src"])
+])
+
+dnl PROCTAL_FIND_CC
+dnl
+dnl Finds a suitable C compiler and defines variables that reveal which
+dnl features it supports.
+AC_DEFUN([PROCTAL_FIND_CC], [
+	dnl Let autoconf's AC_PROC_CC do most of the work for us.
+	AC_PROG_CC
+
+	AC_SUBST([PROCTAL_CC])
+
+	PROCTAL_CC="$CC"
+
+	dnl Checking what compiler we're dealing with.
+	if test "$GCC" = "yes"; then
+		PROCTAL_CC_GCC=yes
+	fi
+
+	dnl Anything to do with GCC should go inside this if statement.
+	if test "$PROCTAL_CC_GCC" = "yes"; then
+		PROCTAL_CC_GCC_VERSION=`$CC -dumpversion`
+		PROCTAL_CC_GCC_VERSION_MAJOR=`echo $PROCTAL_CC_GCC_VERSION | $SED -E 's/^([[0-9]]+).*/\1/'`
+
+		if test "$PROCTAL_CC_GCC_VERSION_MAJOR" -gt "4"; then
+			PROCTAL_CC_GCC_FEATURE_INCOMPATIBLE_POINTER_TYPES=yes
+		fi
+	fi
 ])
