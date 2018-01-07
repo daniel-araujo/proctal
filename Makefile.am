@@ -413,9 +413,9 @@ tests_api_linux_proc_maps_check_LDADD = libproctal.la
 if PROCTAL_CPU_ARCHITECTURE_X86_MODE_64
 
 libproctal_la_SOURCES += \
-	src/api/linux/ptrace/x86_64/cpu-state.c \
-	src/api/linux/ptrace/x86_64/instruction-pointer.c \
-	src/api/linux/ptrace/x86_64/register.c \
+	src/api/linux/ptrace/implementation/x86_64/cpu-state.c \
+	src/api/linux/ptrace/implementation/x86_64/instruction-pointer.c \
+	src/api/linux/ptrace/implementation/x86_64/register.c \
 	src/api/linux/ptrace/user-register.c
 
 libproctal_la_SOURCES += \
@@ -432,7 +432,9 @@ libproctal_la_SOURCES += \
 else
 
 libproctal_la_SOURCES += \
-	src/api/linux/ptrace/unimplemented.c
+	src/api/linux/ptrace/implementation/unsupported/cpu-state.c \
+	src/api/linux/ptrace/implementation/unsupported/instruction-pointer.c \
+	src/api/linux/ptrace/implementation/unsupported/register.c
 
 libproctal_la_SOURCES += \
 	src/api/linux/execute/unimplemented.c
