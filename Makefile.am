@@ -361,7 +361,7 @@ libproctal_la_SOURCES = \
 	src/api/malloc.c \
 	src/api/global.c \
 	src/api/proc.c \
-	src/api/init.c
+	src/api/handle.c
 
 if PROCTAL_PLATFORM_LINUX
 
