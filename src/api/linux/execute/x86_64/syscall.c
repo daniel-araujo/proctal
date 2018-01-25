@@ -57,7 +57,7 @@ static inline int load_state(struct proctal_linux *pl, pid_t tid, struct state *
 	return 1;
 }
 
-int setup(struct proctal_linux *pl, pid_t tid, unsigned long long sysnum, void *arg1, void *arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7)
+static int setup(struct proctal_linux *pl, pid_t tid, unsigned long long sysnum, void *arg1, void *arg2, void *arg3, void *arg4, void *arg5, void *arg6, void *arg7)
 {
 	if (!proctal_linux_ptrace_register_set(pl, tid, PROCTAL_LINUX_PTRACE_REGISTER_X86_64_RAX, &sysnum)) {
 		return 0;
