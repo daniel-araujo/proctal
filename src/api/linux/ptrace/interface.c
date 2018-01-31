@@ -124,22 +124,6 @@ static int wait_ptrace_stop(struct proctal_linux *pl, struct proctal_linux_ptrac
 	}
 }
 
-static int wait_ptrace_cont(struct proctal_linux *pl, struct proctal_linux_ptrace_task *task)
-{
-	int wstatus;
-
-	for (;;) {
-		waitpid(task->tid, &wstatus, WCONTINUED | WUNTRACED);
-
-		if (WIFCONTINUED(wstatus)) {
-			task->running = 1;
-			return 1;
-		} else if (!handle_signal_status(pl, task, wstatus)) {
-			return 0;
-		}
-	}
-}
-
 static int detach_threads(struct proctal_linux *pl)
 {
 	struct proctal_linux_ptrace_task *task;
