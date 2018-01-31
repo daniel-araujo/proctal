@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
+#include <sys/syscall.h>
 
 #include "api/darr/darr.h"
 #include "api/linux/proctal.h"
@@ -33,6 +34,11 @@ static struct proctal_acur *choose_tasks(struct proctal_linux *pl, pid_t tid)
 	}
 }
 
+static int tkill(int tid, int sig)
+{
+	return syscall(SYS_tkill, tid, sig);
+}
+
 static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_ptrace_task *task, int wstatus)
 {
 	if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
@@ -48,7 +54,7 @@ static int handle_signal_status(struct proctal_linux *pl, struct proctal_linux_p
 
 		int sig = WSTOPSIG(wstatus);
 
-		kill(task->tid, sig);
+		tkill(task->tid, sig);
 
 		switch (sig) {
 		case SIGSEGV:
@@ -274,7 +280,7 @@ int proctal_linux_ptrace_stop(struct proctal_linux *pl, pid_t tid)
 			continue;
 		}
 
-		kill(task->tid, SIGSTOP);
+		tkill(task->tid, SIGSTOP);
 
 		if (!wait_ptrace_stop(pl, task)) {
 			return 0;

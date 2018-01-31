@@ -441,6 +441,9 @@ AC_DEFUN([PROCTAL_COMPILATION_FLAGS], [
 	# Make usleep available.
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -D_POSIX_C_SOURCE=200112L"])
 
+	# Let glibc declare syscall.
+	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -D_DEFAULT_SOURCE"])
+
 	# The include directive with the quotes syntax will additionally be
 	# relative to the src directory.
 	AS_VAR_APPEND([PROCTAL_CFLAGS], [" -iquote${srcdir}/src -iquotesrc"])
