@@ -83,7 +83,16 @@ static int wait_ptrace_stop(struct proctal_linux *pl, struct proctal_linux_ptrac
 	int wstatus;
 
 	for (;;) {
-		waitpid(task->tid, &wstatus, WUNTRACED);
+		int wresult = waitpid(task->tid, &wstatus, WUNTRACED);
+
+		if (wresult == -1) {
+			if (proctal_linux_ptrace_check_waitpid_errno(pl)) {
+				return 0;
+			} else {
+				// Try again.
+				continue;
+			}
+		}
 
 		if (WIFSTOPPED(wstatus)) {
 			switch (WSTOPSIG(wstatus)) {
