@@ -88,7 +88,7 @@ static inline void print_binary(struct cli_cmd_read_arg *arg, void *address, siz
 
 int cli_cmd_read(struct cli_cmd_read_arg *arg)
 {
-	int ret = 0;
+	int ret = 1;
 
 	printer_t print = arg->binary ? print_binary : print_text;
 
@@ -140,7 +140,7 @@ int cli_cmd_read(struct cli_cmd_read_arg *arg)
 		address += size;
 	}
 
-	ret = 1;
+	ret = 0;
 exit2:
 	if (arg->pause) {
 		proctal_resume(p);
