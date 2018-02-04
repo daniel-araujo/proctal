@@ -136,6 +136,21 @@ Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review 
 [...]
 		</code>
 
+		If all the results don't fit on a single page, you can pipe the
+		output to the <quote>tail</quote> program which allows you to
+		specify an offset.
+
+		Here's how you would skip the first 150 lines:
+
+		<code type="bash-prompt">
+$ watch 'proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; results2 | tail -n +150 -'
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; results2 | tail -n +150 -
+7FCDB1D63AF4 53
+7FCDB1D65C34 53
+7FCDB1D78234 53
+7FCDB1D788B8 53
+		</code>
+
 		You can stop <quote>watch</quote> by sending it the
 		<quote>SIGINT</quote> signal.
 	</section>
