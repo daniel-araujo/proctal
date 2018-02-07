@@ -2,32 +2,38 @@
 <document>
 	<title>Modding games</title>
 
-	This document will list a couple of techniques that you can use with
-	Proctal to create mods for your favorite video games. The more you know
-	about computers the easier it will be to understand the concepts
-	involved here. This is best read from top to bottom.
+	You're going to learn a couple of techniques for creating mods with the
+	command line interface of Proctal. This is not meant to be an extensive
+	tutorial on modding but it covers enough concepts so that you get a
+	general idea of how this works.
 
-	<note>
-		The examples will use 12345 as the game's process id (PID).
-	</note>
+	Games are just programs that run on a computer, and all programs load
+	code and data into memory. With the ability to modify the contents in
+	memory, you're able to change the behavior of a game however you want.
+
+	The examples access a program whose Process ID (PID) is
+	<quote>12345</quote> on x86-64 Linux.
 
 	<section>
-		<title>Finding exact values</title>
+		<title>Finding known values</title>
 
-		With the <link ref="proctal:cli:search">search command</link>
-		you can search for values that represent game state such as
-		health points, money, score, time, velocity, inventories and so
-		on. The difficult part about finding these is guessing in what
-		form the programmers decided to store them in memory.
+		Suppose that the game shows you that you have 100 health
+		points. How would you go about searching for that value in
+		memory? First you must guess in what form that the programmers
+		decided to store it. It could be stored as an integer or
+		IEEE754 floating-point number. If the game does not use commas
+		to represent health points, it's most likely using an integer.
+		Now you must guess how many bits it's using to represent that
+		integer. The most common number of bits for integers is
+		<quote>32</quote>, so that's a first good guess.
 
-		If the game shows you the exact amount of health points, let's
-		say for example <quote>100%</quote>, then you could guess that
-		it's stored as an 8-bit integer and search for all 8-bit
-		integer values that equal to 100. The command would look like
-		this:
+		You can search for values in memory by using the <link
+		ref="proctal:cli:search">search command</link>. Here's how you
+		search for every 32-bit integer with the value
+		<quote>100</quote>:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --eq=100
 7FCDB1D56638 100
 7FCDB1D567A8 100
 7FCDB1D571B0 100
@@ -43,45 +49,44 @@ $ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100
 [...]
 		</code>
 
-		On each line you have an address and the value stored on it.
+		On each line you get an address and the current value on it.
 
-		Depending on the size of the game, you're very likely going to
-		get more than 1 match. Perhaps even hundreds. That's because
-		there can be many other things in memory with the same value.
-		When this happens you must find a way to filter out the noise
-		otherwise it will take a long time to analyze each match
-		individually. 
+		It's not uncommon to get thousands of lines because there can
+		be many other things with the same value in memory.
 
-		Start by saving the output to a file. The command that was
-		previously shown should look like this now:
+		There is a way to filter out the noise. Start by saving the
+		output to a file. Here's the same command from before but now
+		redirecting the output to a file called
+		<quote>results1</quote>.
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=100 &gt; results1
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --eq=100 &gt; results1
 		</code>
 
-		Using the <quote>wc</quote> program you can count exactly how
-		many matches you got.
+		Using the <quote>wc</quote> program you can count how many
+		matches you got.
 
 		<code type="bash-prompt">
 $ wc -l &lt; results1
 3463
 		</code>
 
-		In this example there were 3463. Your results will vary.
+		In this example there were 3463.
 
-		One method that you can use to figure out which of these
-		addresses stores the value you care about is by causing actions
-		in the game that change the value.
+		A common strategy for reducing the number of matches is to
+		cause actions in the game that can change the value. The search
+		command has the <quote>--review</quote> option that allows you
+		to match against the results from a previous search, so you're
+		able to filter out the addresses that do not contain the new
+		value.
 
-		The search command has the <quote>--review</quote> option that
-		allows you to match against the results from a previous search.
-
-		Assuming that your actions in game changed the value to 53,
-		here's how the command to compare against the previous search
-		results looks like:
+		Assuming that your actions in game changed the value to
+		<quote>58</quote>, here's how you would match against the
+		results stored in <quote>results1</quote> and store the new
+		results in <quote>results2</quote>:
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --eq=53 --review &lt; results1 &gt; results2
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --eq=58 --review &lt; results1 &gt; results2
 		</code>
 
 		And counting yields:
@@ -99,26 +104,23 @@ $ wc -l &lt; results2
 		the values change as you're playing the game:
 
 		<code type="bash-prompt">
-$ watch proctal search --pid=12345 --type=integer --integer-bits=8 --review '&lt;' results2
-Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review &lt; results2
-7FCDB1D577F8 53
-7FCDB1D57F38 53
-7FCDB1D58738 53
-7FCDB1D58BA8 53
+$ watch proctal search --pid=12345 --type=integer --integer-bits=32 --eq=58 --review '&lt;' results2
+Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=32 --eq=58 --review &lt; results2
+7FCDB1D577F8 58
+7FCDB1D57F38 58
+7FCDB1D58738 58
+7FCDB1D58BA8 58
 [...]
 		</code>
 
 		If your guesses were right you should be able to pick the right
-		address from the search results pretty easily now.
+		address from the search results. If you get no results then you
+		need to rethink about how the value might be stored in memory.
+		Thinking like a programmer will help you guessing better.
 
 		Sometimes programmers store copies of a value in different
 		places in memory. You need to pick the source of the copies.
 		It's usually the one that when modified updates the others.
-
-		If you got no results then you may need to rethink how the
-		value might be stored in memory. Choose the right filters so as
-		to not miss out on the right address. Thinking like a
-		programmer will help you guessing right.
 
 		Read more about searching values
 		<link ref="proctal:cli:search">here</link>.
@@ -127,50 +129,66 @@ Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=8 --review 
 	<section>
 		<title>Finding unknown values</title>
 
-		What if the game did not show you a value? Suppose that health
-		points are represented with a health meter, instead. How would
-		you know what's in memory?
+		Suppose that the game displays a health bar instead of health
+		points. How can you search for the address of a value that you
+		don't know?
 
-		Still assuming that it might be stored as an 8-bit integer, you
-		can search for all possible 8-bit integers:
+		You can look for all possible values of a given type and then
+		cause actions in the game that change the value. In this case
+		when you gain health points you can assume that the value
+		increases and when you lose health points the value decreases.
 
-		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 > results1
-		</code>
-
-		And then depending on whether you gain and or lose health, you
-		can search for values that have either increased or decreased.
-		Here's how you would search for increased values:
+		Using the <quote>--increased</quote> and
+		<quote>--decreased</quote> options, you can gradually reduce
+		the number of matches.
 
 		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --increased --review &lt; results1 &gt; results2
+$ proctal search --pid=12345 --type=integer --integer-bits=32 > results1
+$ wc -l &lt; results1
+172341
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --increased --review &lt; results1 &gt; results2
+$ wc -l &lt; results2
+41346
+$ proctal search --pid=12345 --type=integer --integer-bits=32 --decreased --review &lt; results2 &gt; results3
+$ wc -l &lt; results3
+6121
+[...]
 		</code>
 
-		And here's how you would then search for decreased values:
-
-		<code type="bash-prompt">
-$ proctal search --pid=12345 --type=integer --integer-bits=8 --decreased --review &lt; results2 &gt; results3
-		</code>
+		While you may not always be able to shrink the search results
+		to a single match, this greatly reduces the number of addresses
+		you would have to manually check.
 	</section>
 
 	<section>
-		<title>Modifying values</title>
+		<title>Reading and modifying values</title>
 
-		Suppose that the address where the game stores your health
-		points is 726BA1DA. Using the
-		<link ref="proctal:cli:write">write command</link> you can
-		replenish your health to 100% with a single command:
+		By knowing the address of a value in memory you are able to
+		read and write to it by using the <link
+		ref="proctal:cli:read">read</link> and <link
+		ref="proctal:cli:write">write</link> commands, respectively.
+
+		Assuming that <quote>55B4AA941048</quote> is the address where
+		the game stores your health, this is how you would check its
+		current value:
 
 		<code type="bash-prompt">
-$ proctal write --pid=12345 --type=integer --integer-bits=8 --address=726BA1DA 100
+$ proctal read --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941048
+58
 		</code>
 
-		The user interface of the game may not update immediately but
-		you can check the current value using the
-		<link ref="proctal:cli:read">read command</link>:
+		And this is how you would replenish your health back to
+		<quote>100</quote>:
 
 		<code type="bash-prompt">
-$ proctal read --pid=12345 --type=integer --integer-bits=8 --address=726BA1DA
+$ proctal write --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941048 100
+		</code>
+
+		Check its value again and you should see that it has changed to
+		<quote>100</quote>:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941048
 100
 		</code>
 	</section>
@@ -178,75 +196,234 @@ $ proctal read --pid=12345 --type=integer --integer-bits=8 --address=726BA1DA
 	<section>
 		<title>Freezing values</title>
 
-		What if instead of having to set your health back to 100%
-		manually you could just make the game unable to change it?
+		What if instead of having to manually set your health points
+		back to 100 you could just make the game unable to change it?
 
-		You can achieve this by passing the <quote>--repeat</quote>
-		option to the <link ref="proctal:cli:write">write command</link>.
-		Assuming that the address is 726BA1DA, here's how the command
-		would look like:
+		You can sort of achieve this by passing the
+		<quote>--repeat</quote> option to the <link
+		ref="proctal:cli:write">write command</link>. Assuming that the
+		address for your health points is <quote>55B4AA941048</quote>,
+		here's what the command would look like:
 
 		<code type="bash-prompt">
-$ proctal write --pid=12345 --type=integer --integer-bits=32 --address=726BA1DA --repeat 1000
+$ proctal write --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941048 --repeat 1000
 		</code>
 
 		What the command will actually do is repeatedly write the same
-		value over and over, making it seem like the value is never
-		changing when actually any changes that the game attempts to
-		make are just overwritten quickly. The command will keep
+		value over and over again, making it seem like the value is
+		never changing when actually any changes that the game attempts
+		to make are just overwritten quickly. The command will keep
 		executing indefinitely until you explicitly terminate it.
 
-		<note>
-			The game may modify and and then access the value
-			faster than the command can overwrite.
-		</note>
+		The game may sometimes modify and access the value faster than
+		the command can write to it again, though.
 	</section>
 
 	<section>
-		<title>Patching</title>
+		<title>Rewriting code</title>
 
-		<note>
-			You will need to know a bit of assembly to make use of
-			this method.
-		</note>
+		Programs can place code and data segments at random offsets.
+		This means that the addresses for the values you find using the
+		<link ref="proctal:cli:search">search command</link> become
+		useless after you close the program. You would have to search
+		for them again every time you start the program.
 
-		It may have happened to you that when you close the game and
-		start it again the addresses you had found in search results
-		are no longer valid or don't point to the values you were
-		expecting. This can happen if the program chooses to lay out
-		the contents in memory at random places on each run.
+		While data is very volatile in memory, code tends to be static
+		which makes it very easy to search for. If instead of needing
+		to modify values, you modify the instructions that access those
+		values then you only have to search for code.
 
-		Instead of guessing where the values are stored in memory you
-		could instead modify the instructions that access those values.
-		The advantage is that those instructions are always the same.
+		The <link ref="proctal:cli:watch">watch command</link> can
+		track reads and writes to a memory address. After it detects
+		that an instruction accessed the memory address, it prints out
+		the address of the instruction that would be executed next.
+		Even though it's not the actual instruction that accessed the
+		memory address, it's still useful information.
 
-		Use the <link ref="proctal:cli:watch">watch command</link> to
-		find out at which address sits the instruction that accesses
-		the health value when it drops.
+		Suppose that the address where the game stores your health
+		points is <quote>55B4AA941048</quote>. Here's how you track for
+		reads and writes on that address:
 
-		When you run the following command there's a good chance that a
-		couple of addresses will show up immediately. Those are most
-		likely just accesses for displaying the health in the user
-		interface. When you lose some health you should see a new
-		address pop up. That's most likely the one you care about.
-		Assuming that the address where the health is stored is
-		726BA1DA, here's how the command looks like:
+		<code type="bash-prompt">
+$ proctal watch --pid=12345 --read --write --unique 55B4AA941048
+55B4AA7406AB
+55B4AA7406B6
+		</code>
+
+		The <quote>--unique</quote> option is used so that the watch
+		command does not print the same address twice.
+
+		Now when you lose health in the game, more addresses should
+		show up:
 
 		<code type="bash-prompt">
 $ proctal watch --pid=12345 --read --write --unique 726BA1DA
 [...]
-418BAC
+55B4AA740676
+55B4AA740682
+55B4AA740688
 		</code>
 
-		So somewhere at address <quote>418BAC</quote> sits the
-		instruction that accessed the health meter as it's being
-		decreased.
+		The instruction that decreases the value must be located nearby
+		those addresses that showed up. You need to examine the code
+		around those areas. One way to do this is by using
+		<quote>gdb</quote> which supports breakpoints, disassembling
+		instructions and reading registers.
 
-		<note>
-			TODO: This part needs to be written.
-		</note>
+		Here's a <quote>gdb</quote> session where a breakpoint is set
+		at address <quote>55B4AA740676</quote>, then when the
+		breakpoint is hit the surrounding instructions are inspected
+		and the value of a register is printed:
 
-		With this technique you're able to patch the game and
-		potentially uncover hidden features and even fix bugs.
+		<code type="bash-prompt">
+$ gdb --pid=12345
+Attaching to process 12345
+(gdb) break *0x55B4AA740676
+(gdb) continue
+Continuing.
+
+Breakpoint 1, 0x55b4aa740676
+(gdb) layout asm
+
+    0x55b4aa740670         mov    eax,DWORD PTR [rip+0x2009d2]
+  &gt; 0x55b4aa740676         mov    rdi,rbx
+    0x55b4aa740679         sub    eax,0x1
+    0x55b4aa74067c         mov    DWORD PTR [rip+0x2009c6],eax
+    0x55b4aa740682         mov    esi,DWORD PTR [rip+0x2009c0]
+
+(gdb) print $eax
+58
+		</code>
+
+		There seems to be a <quote>mov</quote> instruction that loads a
+		value from memory to the register <quote>eax</quote>, then a
+		<quote>sub</quote> instruction substracts <quote>1</quote> from
+		that value and finally another <quote>mov</quote> instruction
+		stores the new value to that address. If the <quote>eax</quote>
+		register contains the current amount of health points then this
+		is the code that is decrementing the value. Everything else
+		seems irrelevant.
+
+		But before you make any changes to the code, store a copy of
+		the bytecode. You will need this later to find the code again.
+
+		The <quote>read</quote> command can also disassemble
+		instructions and supports the <quote>--show-bytes</quote>
+		option that makes it print the bytecode underneath each
+		instruction.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=x86 --address=55B4AA740676 --array=4 --show-address --show-bytes
+55B4AA740676	mov     rdi, rbx
+        48 89 DF
+55B4AA740679	sub     eax, 1
+        83 E8 01
+55B4AA74067C	mov     dword ptr [rip + 0x2009c6], eax
+        89 05 C6 09 20 00
+55B4AA740682	mov     esi, dword ptr [rip + 0x2009c0]
+        8B 35 C0 09 20 00
+		</code>
+
+		To prevent the game from decreasing health points you must
+		prevent that <quote>sub</quote> instruction from executing.
+
+		If you were to actually remove the instruction, you would have
+		to relocate every instruction coming after it and recalculate
+		the addresses that might be used by the instructions. This
+		would be a costly operation.
+
+		But you don't have to.
+
+		You can instead overwrite the <quote>sub</quote> instruction
+		with <quote>nop</quote> instructions. There is a variety of
+		<quote>nop</quote> instructions but the most commonly used one
+		takes 1 byte.
+
+		That particular <quote>sub</quote> instruction takes 3 bytes,
+		so you have to write 3 <quote>nop</quote> instructions over it.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=x86 --address=55b4aa740679 --array=3 'nop'
+		</code>
+
+		The game's code would look like this:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=x86 --address=55B4AA740676 --array=6 --show-address
+55B4AA740676	mov	rdi, rbx
+55b4aa740679	nop
+55b4aa74067A	nop
+55b4aa74067B	nop
+55b4aa74067c	mov	DWORD PTR [rip + 0x2009c6], eax
+55b4aa740682	mov	esi, dword ptr [rip + 0x2009c0]
+		</code>
+
+		Now the game will not decrease your health points anymore.
+
+		You also could have made the game increase your health points
+		by replacing the <quote>sub</quote> instruction with an
+		<quote>add</quote> instruction, which also takes the same
+		number of bytes.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=x86 --address=55b4aa740679 'add	eax, 1'
+		</code>
+
+		The game's code would look like this:
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=x86 --address=55B4AA740676 --array=4 --show-address
+55B4AA740676	mov	rdi, rbx
+55B4AA740679	add	eax, 1
+55B4AA74067C	mov	DWORD PTR [rip + 0x2009c6], eax
+55B4AA740682	mov	esi, dword ptr [rip + 0x2009c0]
+		</code>
+
+		Now close and start the game. You're going to use the
+		<quote>pattern</quote> command to find the new address of the
+		code. You must build a pattern out of the original bytecode.
+		You can just copy and paste, however, you can also use
+		<quote>??</quote> (question marks) to match any byte.  This
+		allows you to ignore volatile instruction operands, such as
+		addresses which increases the chance of the pattern working on
+		different versions of the game.
+
+		Here's an example that matches the code exactly as it is in
+		memory:
+
+		<code type="bash-prompt">
+$ proctal pattern --pid=12345 '
+        48 89 DF
+        83 E8 01
+        89 05 C6 09 20 00
+        8B 35 C0 09 20 00
+55B24157B676
+		</code>
+
+		And here's how you would be able to find the code again even if
+		the addresses of the last two instructions change in a new
+		version of the game:
+
+		<code type="bash-prompt">
+$ proctal pattern --pid=12345 '
+        48 89 DF
+        83 E8 01
+        89 05 ?? ?? ?? ??
+        8B 35 ?? ?? ?? ??'
+55B24157B676
+		</code>
+
+		There you have it, now the code is at address
+		<quote>55B24157B676</quote>.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=x86 --address=55B24157B676 --array=4 --show-address
+55B24157B676	mov     rdi, rbx
+55B24157B679	sub     eax, 1
+55B24157B67C	mov     dword ptr [rip + 0x2009c6], eax
+55B24157B682	mov     esi, dword ptr [rip + 0x2009c0]
+		</code>
+
+		You can apply your changes again using the new address.
 	</section>
 </document>
