@@ -32,9 +32,10 @@
 		When the kernel returns control back to the program, the
 		<quote>rax</quote> register contains the return value.
 
-		The registers used as arguments and <quote>rcx</quote> and
-		<quote>r11</quote> are not guaranteed to hold the same values
-		after the call.
+		The registers that are used as arguments, and the registers
+		<quote>rcx</quote> and <quote>r11</quote> are not guaranteed to
+		hold the same values after the system call returns control back
+		to the program.
 
 		You can find tables of system call numbers and their
 		corresponding number of arguments on the internet.
@@ -52,21 +53,28 @@
 			<item><quote>rdx</quote> size of buffer</item>
 		</list>
 
-		The system call number is 1. The file descriptor for standard
-		output is usually 1. All that is left is a buffer and its size.
+		The system call number is 1 and the file descriptor for
+		standard output is usually 1. All that is left is a buffer.
 
-		Using the <quote>allocate</quote> and <quote>write</quote>
-		commands, you can easily store things in memory.
+		The <quote>allocate</quote> command lets you allocate some
+		space in memory. You can use it to create a buffer.
 
 		<code type="bash-prompt">
 $ proctal allocate --pid=12345 -rw 14
 89AF8C08
+		</code>
+
+		The buffer starts at address <quote>89AF8C08</quote>. Using the
+		<quote>write</quote> command you can fill the buffer with data.
+
+		<code type="bash-prompt">
 $ proctal write --pid=12345 --address=89AF8C08 --type=text 'Hello, world!' $'\n'
 		</code>
 
-		With the <quote>execute</quote> command you can write some
-		assembly code that sets up the registers and executes the
-		<quote>syscall</quote> instruction.
+		Now you can make the call. Using the <quote>execute</quote>
+		command run the following assembly code. It sets up the
+		registers and then uses the <quote>syscall</quote> instruction
+		to make the call.
 
 		<code type="bash-prompt">
 proctal execute --pid=12345 &lt;&lt;EOD
@@ -78,11 +86,11 @@ proctal execute --pid=12345 &lt;&lt;EOD
 EOD
 		</code>
 
-		You should see the contents in the buffer in the output of the
-		program now.
+		You should now see the contents of the buffer in the output of
+		the program.
 
-		Now all that is left to do is to deallocate the memory block
-		that was used for the buffer.
+		All that is left to do is to deallocate the memory block that
+		was used as a buffer.
 
 		<code type="bash-prompt">
 $ proctal deallocate --pid=12345 89AF8C08
