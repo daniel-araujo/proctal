@@ -232,20 +232,20 @@ Options that compare against values from the previous run:
 
 Examples:
   Searching for all bytes that equal 12
-        proctal search --pid=12345 --eq 12
+        proctal search --pid=12345 --eq=12
 
   Searching for all bytes that are greater than 12 but less than or equal to 16
-        proctal search --pid=12345 --gt 12 --lte 16
+        proctal search --pid=12345 --gt=12 --lte=16
 
   Searching for all floating point values in memory
         proctal search --pid=12345 --type=ieee754
 
   Searching for values that changed from the results of a previous search
-        proctal search --pid=12345 --eq 12 --review > previous-search-results
+        proctal search --pid=12345 --eq=12 --review > previous-search-results
         proctal search --pid=12345 --changed --review < previous-search-results
 
   Searching in executable memory only
-        proctal search --pid=12345 -x --eq 12
+        proctal search --pid=12345 -x --eq=12
 
   Searching from address DCA0 to DCAF
 	proctal search --pid=12345 --address-start=DCA0 --address-stop=DCAF
