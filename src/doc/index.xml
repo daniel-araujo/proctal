@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index name="Documentation">
+	<document file="introduction.xml" />
+	<document file="installation.xml" />
+	<index name="Using the CLI">
+		<document file="cli/overview.xml" />
+		<document file="cli/searching-values.xml" />
+		<document file="cli/reading-values.xml" />
+		<document file="cli/writing-values.xml" />
+		<document file="cli/pausing-execution.xml" />
+		<document file="cli/executing-code.xml" />
+		<document file="cli/allocating-memory.xml" />
+		<document file="cli/measuring-values.xml" />
+		<document file="cli/watching-memory.xml" />
+		<document file="cli/dumping-memory.xml" />
+		<document file="cli/type-options.xml" />
+	</index>
+	<index name="Using the API">
+		<document file="api/overview.xml" />
+		<document file="api/initialization-deinitialization.xml" />
+		<document file="api/error-handling.xml" />
+		<document file="api/reading-memory.xml" />
+		<document file="api/writing-memory.xml" />
+		<document file="api/scanning-memory.xml" />
+		<document file="api/allocating-memory.xml" />
+		<document file="api/executing-code.xml" />
+		<document file="api/pausing-execution.xml" />
+		<document file="api/watching-memory.xml" />
+		<document file="api/api-memory-management.xml" />
+	</index>
+	<index name="Tutorial">
+		<document file="tutorial/quick-command-tour.xml" />
+		<document file="tutorial/search-techniques.xml" />
+		<document file="tutorial/linux-find-pid.xml" />
+		<document file="tutorial/linux-x86-64-system-call.xml" />
+		<document file="tutorial/modding-games.xml" />
+	</index>
+</index>
