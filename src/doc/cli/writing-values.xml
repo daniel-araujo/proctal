@@ -8,7 +8,7 @@
 	floating point numbers, CPU instructions and more.
 
 	The command accepts type options. You can find out all about them
-	<link ref="proctal:cli:type-options">here</link>.
+	<link doc="type-options.xml">here</link>.
 
 	Here's how you would write a 32-bit integer with the value 0 at the
 	memory address <quote>7FFE79DEA90C</quote> in a program whose PID is

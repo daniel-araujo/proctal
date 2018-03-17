@@ -17,6 +17,6 @@ size_t bytes_read = proctal_read(proctal, address, &amp;i, sizeof(i));
 	to the given number of bytes.
 
 	If the returned number is not equal to the given number, then an error
-	must have occurred. Check the <quote>Error handling</quote> page to
-	learn how to deal with an error.
+	must have occurred. Check the <link doc="error-handling.xml">Error
+	handling</link> page to learn how to deal with an error.
 </document>

@@ -9,9 +9,8 @@
 
 		The <quote>search</quote> command matches values in memory.
 
-		You can pass <link ref="proctal:cli:type-options">type
-		options</link> to specify what type of values you want to
-		search for.
+		You can pass <link doc="type-options.xml">type options</link>
+		to specify what type of values you want to search for.
 
 		These options let you specify filters that compare against the
 		value in memory.

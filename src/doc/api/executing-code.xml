@@ -19,6 +19,6 @@
 proctal_execute(proctal, "\x90\x90\x90", 3);
 	</code>
 
-	Check the <quote>Error handling</quote> page to learn how to deal with
-	an error.
+	Check the <link doc="error-handling.xml">Error handling</link> page to
+	learn how to deal with an error.
 </document>

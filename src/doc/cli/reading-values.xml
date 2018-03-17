@@ -7,7 +7,7 @@
 	integers, IEEE754 floating point numbers, CPU instructions and more.
 
 	The command accepts type options. You can find out all about them
-	<link ref="proctal:cli:type-options">here</link>.
+	<link doc="type-options.xml">here</link>.
 
 	Here's how you would read a 32-bit integer that is located at memory
 	address <quote>7FFE79DEA90C</quote> of a program whose PID is 12345.

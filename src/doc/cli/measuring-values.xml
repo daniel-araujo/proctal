@@ -14,7 +14,7 @@
 
 	Proctal provides the <quote>measure</quote> command that takes type
 	options and counts the values for you. You can read all about type
-	options <link ref="proctal:cli:type-options">here</link>.
+	options <link doc="type-options.xml">here</link>.
 
 	Here are some examples:
 

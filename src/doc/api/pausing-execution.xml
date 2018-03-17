@@ -9,8 +9,8 @@
 proctal_pause(proctal);
 	</code>
 
-	Check the <quote>Error handling</quote> page to learn how to deal with
-	an error.
+	Check the <link doc="error-handling.xml">Error handling</link> page to
+	learn how to deal with an error.
 
 	To resume execution you must call the <quote>proctal_resume</quote>
 	function. It takes a handle as argument.

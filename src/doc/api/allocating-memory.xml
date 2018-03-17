@@ -12,8 +12,8 @@ void *address = proctal_allocate(proctal, 8);
 	</code>
 
 	On failure the address will have the value <quote>NULL</quote>. Check
-	the <quote>Error handling</quote> page to learn how to deal with an
-	error.
+	the <link doc="error-handling.xml">Error handling</link> page to learn
+	how to deal with an error.
 
 	While the function may allocate more space than you had specified, you
 	must only consider the number of bytes you specified as usable.

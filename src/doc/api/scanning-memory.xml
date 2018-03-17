@@ -73,8 +73,8 @@ proctal_scan_address_read_set(proctal, 1);
 proctal_scan_address_start(proctal);
 		</code>
 
-		Check the <quote>Error handling</quote> page to learn how to
-		deal with an error.
+		Check the <link doc="error-handling.xml">Error handling</link>
+		page to learn how to deal with an error.
 
 		And now each call to <quote>proctal_scan_address_next</quote>
 		will return you the current address and move on to the next
@@ -158,8 +158,8 @@ proctal_scan_region_read_set(proctal, 1);
 proctal_scan_region_start(proctal);
 		</code>
 
-		Check the <quote>Error handling</quote> page to learn how to
-		deal with an error.
+		Check the <link doc="error-handling.xml">Error handling</link>
+		page to learn how to deal with an error.
 
 		And now each call to <quote>proctal_scan_region_next</quote>
 		will return you the starting and ending address of the current

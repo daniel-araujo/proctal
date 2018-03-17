@@ -2,8 +2,8 @@
 <document>
 	<title>Search techniques</title>
 
-	This is a compilation of techniques on how the <quote>search</quote>
-	command can be used.
+	This is a compilation of techniques on how the <link
+	doc="../cli/searching-values.xml">search command</quote> can be used.
 
 	<section>
 		<title>Only print addresses</title>

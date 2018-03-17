@@ -28,8 +28,8 @@
 		<quote>32</quote>, so that's a first good guess.
 
 		You can search for values in memory by using the <link
-		ref="proctal:cli:search">search command</link>. Here's how you
-		search for every 32-bit integer with the value
+		doc="../cli/searching-values.xml">search command</link>. Here's
+		how you search for every 32-bit integer with the value
 		<quote>100</quote>:
 
 		<code type="bash-prompt">
@@ -122,8 +122,8 @@ Every 2.0s: proctal search --pid=12345 --type=integer --integer-bits=32 --eq=58 
 		places in memory. You need to pick the source of the copies.
 		It's usually the one that when modified updates the others.
 
-		Read more about searching values
-		<link ref="proctal:cli:search">here</link>.
+		Read more about searching values <link
+		doc="../cli/searching-values.xml">here</link>.
 	</section>
 
 	<section>
@@ -165,8 +165,9 @@ $ wc -l &lt; results3
 
 		By knowing the address of a value in memory you are able to
 		read and write to it by using the <link
-		ref="proctal:cli:read">read</link> and <link
-		ref="proctal:cli:write">write</link> commands, respectively.
+		doc="../cli/reading-values.xml">read</link> and <link
+		doc="../cli/writing-values.xml">write</link> commands,
+		respectively.
 
 		Assuming that <quote>55B4AA941048</quote> is the address where
 		the game stores your health, this is how you would check its
@@ -201,9 +202,10 @@ $ proctal read --pid=12345 --type=integer --integer-bits=32 --address=55B4AA9410
 
 		You can sort of achieve this by passing the
 		<quote>--repeat</quote> option to the <link
-		ref="proctal:cli:write">write command</link>. Assuming that the
-		address for your health points is <quote>55B4AA941048</quote>,
-		here's what the command would look like:
+		doc="../cli/writing-values.xml">write command</link>. Assuming
+		that the address for your health points is
+		<quote>55B4AA941048</quote>, here's what the command would look
+		like:
 
 		<code type="bash-prompt">
 $ proctal write --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941048 --repeat 1000
@@ -224,16 +226,16 @@ $ proctal write --pid=12345 --type=integer --integer-bits=32 --address=55B4AA941
 
 		Programs can place code and data segments at random offsets.
 		This means that the addresses for the values you find using the
-		<link ref="proctal:cli:search">search command</link> become
-		useless after you close the program. You would have to search
-		for them again every time you start the program.
+		<link doc="../cli/searching-values.xml">search command</link>
+		become useless after you close the program. You would have to
+		search for them again every time you start the program.
 
 		While data is very volatile in memory, code tends to be static
 		which makes it very easy to search for. If instead of needing
 		to modify values, you modify the instructions that access those
 		values then you only have to search for code.
 
-		The <link ref="proctal:cli:watch">watch command</link> can
+		The <link doc="../cli/watching-memory.xml">watch command</link> can
 		track reads and writes to a memory address. After it detects
 		that an instruction accessed the memory address, it prints out
 		the address of the instruction that would be executed next.

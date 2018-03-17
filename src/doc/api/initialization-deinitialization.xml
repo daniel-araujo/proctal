@@ -16,10 +16,10 @@
 proctal_t proctal = proctal_open();
 	</code>
 
-	Check the <quote>Error handling</quote> page to learn how to deal with
-	an error. An error at this stage is not recoverable, so you have to
-	destroy the handle. How to destroy a handle will be explained in a few
-	sentences.
+	Check the <link doc="error-handling.xml">Error handling</link> page to
+	learn how to deal with an error. An error at this stage is not
+	recoverable, so you have to destroy the handle. How to destroy a handle
+	will be explained in a few sentences.
 
 	A new handle has all of its state set to default values. To set which
 	program you want to access you need to call
