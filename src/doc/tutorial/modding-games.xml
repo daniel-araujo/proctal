@@ -428,4 +428,201 @@ $ proctal read --pid=12345 --type=x86 --address=55B24157B676 --array=4 --show-ad
 
 		You can apply your changes again using the new address.
 	</section>
+
+	<section>
+		<title>Injecting code</title>
+
+		In the previous example it just so happened that the
+		modification could fit into the existing space but what if it
+		didn't? You can instead redirect code execution to a different
+		block of memory that you have more control of.
+
+		You can use the <quote>allocate</quote> command to allocate new
+		blocks of memory. This is how you allocate <quote>1000</quote>
+		bytes with read, write and execute permissions:
+
+		<code type="bash-prompt">
+$ proctal allocate --pid=12345 --read --write --execute 1000
+7F6E0F750008
+		</code>
+
+		Here <quote>7F6E0F750008</quote> is the address where the new
+		block starts.
+
+		Suppose that you want to count how many health points you would
+		have lost. You can store the counter as a 32-bit integer in
+		memory. You can use the first 4 bytes of the memory block for
+		that.
+
+		Here's the code from the previous example again.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=x86 --address=55B4AA740676 --array=4 --show-address
+55B4AA740676	mov	rdi, rbx
+55B4AA740679	sub	eax, 1
+55B4AA74067C	mov	DWORD PTR [rip + 0x2009c6], eax
+55B4AA740682	mov	esi, dword ptr [rip + 0x2009c0]
+		</code>
+
+		One way to redirect execution is to place a <quote>jmp</quote>
+		instruction. You have to place the address of the code you want
+		to execute in a register. You can use the <quote>rax</quote>
+		register seeing as its holding the number of healths points
+		that will be decremented by 1 which you no longer want to
+		happen. Here's how the code for the jump instruction looks
+		like:
+
+		<code type="asm">
+	mov	rax, 0x7F6E0F75000C
+	jmp	[rax]
+		</code>
+
+		You can use the <quote>measure</quote> command to figure out
+		how much space this takes up.
+
+		<code type="bash-prompt">
+$ proctal measure --type=x86 --address=55B4AA740676 "mov rax, 0x7F6E0F75000C" "jmp [rax]"
+12
+		</code>
+
+		12 bytes. That means that if you were to place this code at
+		<quote>55B4AA740676</quote>, you would overwrite all the
+		instructions up to <quote>55B4AA740682</quote>. While it does
+		overwrite some instructions that you don't want to execute, it
+		also overwrites one that is needed to keep the program running
+		correctly. When this happens you can move the instructions you
+		want to preserve into the memory block.
+
+		The code in the memory block will be made up of three sections.
+		The first section increments the health point counter. The
+		second section contains the instructions that were overwritten.
+		The third and last section returns control back to the program.
+
+		The code will have to be placed at <quote>7F6E0F75000C</quote>
+		because, remember, the counter is stored at
+		<quote>7F6E0F750008</quote>.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=integer --integer-bits=32 --address=7F6E0F750008 0
+$ proctal write --pid=12345 --type=x86 --address=7F6E0F75000C \
+	'mov	rax, 0x7F6E0F750008' \
+	'add	DWORD PTR [rax], 1' \
+\
+	'mov	rdi, rbx' \
+\
+	'mov	rax, 0x55B4AA941048' \
+	'jmp	rax'
+		</code>
+
+		With the code written to the memory block, you can now redirect
+		execution to it.
+
+		<code type="bash-prompt">
+$ proctal write --pid=12345 --type=x86 --address=55B4AA740676 \
+	'mov	rdi, 0x7F6E0F75000C' \
+	'jmp	rdi'
+		</code>
+
+		Now you can check how many health points you would have lost by
+		reading the 32-bit integer at address
+		<quote>7F6E0F750008</quote>.
+
+		<code type="bash-prompt">
+$ proctal read --pid=12345 --type=integer --integer-bits=32 --address=7F6E0F750008
+548
+		</code>
+
+		When overwriting code, you need to make sure that the code is
+		not being referenced by other instructions, such as jump
+		instructions, otherwise you risk having the program jump to the
+		middle of the bytecode of a single instruction which will
+		result in the CPU misinterpreting every instruction it then
+		come across.
+
+		You also need to be careful with what you leave in the
+		registers and in memory. If you were to increase the stack
+		space and then forget to decrease before returning control back
+		to the program, you risk having the program read the wrong
+		return address from memory that could make the program jump to
+		some random block that could potentially have instructions that
+		hopefully lead to a crash instead of corrupting data.
+	</section>
+
+	<section>
+		<title>Scripting</title>
+
+		Being able to create mods out of text command sounds very
+		exciting but it's be very time consuming to have to type all
+		those commands every time you want to activate a mod. And
+		unless you take notes you will eventually forget the thought
+		process that you went through when those commands commands were
+		written.
+
+		The command line interface of Proctal can be scripted very
+		easily. Here is a bash script that does everything that was
+		described in the previous section. When it finishes it prints
+		the address of the health point counter that you can then read
+		from.
+
+		<code type="bash">
+#!/bin/bash
+
+pid="12345"
+
+# Look for the address where we want to redirect program execution to our code.
+# We're only expecting a single address but in case more show up, use the
+# first one.
+inject_address="$(proctal pattern --pid="$pid" '
+        48 89 DF
+        83 E8 01
+        89 05 ?? ?? ?? ??
+        8B 35 ?? ?? ?? ??' | head -1)"
+
+# Allocate new block with enough space to store our code.
+new_block_address="$(proctal allocate --pid="$pid" --read --write --execute 1000)"
+
+# The return address. Calculated from the injection point.
+return_address="$(printf "%X" $(("0x$inject_address" + 12)))"
+
+# The address for the health point counter. It's located at the first address
+# of the new block.
+counter_address="$new_block_address"
+
+# The address where the code is located. It's located after the counter.
+code_address="$(printf "%X" $(("0x$counter_address" + 4)))"
+
+# Initialize the counter to 0.
+proctal write --pid="$pid" --type=integer --integer-bits=32 --address="$counter_address" 0
+
+# Write out the code. Notice that it's separated in 3 sections.
+# The first section increments the counter.
+# The second section contains the code that was overwritten.
+# The third section returns control back to the program.
+proctal write --pid="$pid" --type=x86 --address="$code_address" \
+	"mov	rax, 0x$counter_address" \
+	'add	DWORD PTR [rax], 1' \
+\
+	'mov	rdi, rbx' \
+\
+	"mov	rax, 0x$return_address" \
+	'jmp	rax'
+
+# Redirect execution to our code.
+proctal write --pid="$pid" --type=x86 --address="$inject_address" \
+	"mov	rax, 0x$code_address" \
+	'jmp	rax'
+
+echo "$counter_address"
+		</code>
+
+		Shell scripts come with a lot of advantages.
+
+		They do not require manual intervention. As you can see, it's
+		possible to store the address of the new block in a variable
+		and use it in the code. It even makes the code more readable.
+
+		Being able to write comments lets you document what the
+		commands are doing right on the spot. Good comments can help
+		you make changes quicker in the future.
+	</section>
 </document>
