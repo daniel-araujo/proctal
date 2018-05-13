@@ -32,7 +32,7 @@
 		<document file="tutorial/quick-command-tour.xml" />
 		<document file="tutorial/search-techniques.xml" />
 		<document file="tutorial/linux-find-pid.xml" />
-		<document file="tutorial/linux-x86-64-system-call.xml" />
+		<document file="tutorial/linux-x86-64-system-calls.xml" />
 		<document file="tutorial/modding-games.xml" />
 	</index>
 </index>
