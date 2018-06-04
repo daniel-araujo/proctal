@@ -280,7 +280,7 @@ Contributing
 ============
 
 Found a bug or want to contribute code? Feel free to create an issue or send a
-pull request on GitHub_.
+pull request on GitLab_.
 
 By submitting code as an individual you agree to the Individual Contributor
 License Agreement. By submitting code as an entity you agree to the Entity
@@ -311,7 +311,7 @@ COPYING. If not, see `GNU licenses`_.
 .. _Download: https://proctal.io/download
 .. _`GNU software`: https://www.gnu.org/software/
 .. _`GNU licenses`: http://www.gnu.org/licenses/
-.. _GitHub: https://github.com/daniel-araujo/proctal
+.. _GitLab: https://gitlab.com/daniel-araujo/proctal
 .. _Capstone: http://www.capstone-engine.org/
 .. _Keystone: http://www.keystone-engine.org/
 .. _Yuck: http://www.fresse.org/yuck/
