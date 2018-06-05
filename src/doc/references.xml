@@ -2,7 +2,7 @@
 <references>
 	<uri name="proctal" value="https://proctal.io/" />
 	<uri name="proctal:download" value="https://proctal.io/download" />
-	<uri name="proctal:gitlab" value="https://githlab.com/daniel-araujo/proctal" />
+	<uri name="proctal:gitlab" value="https://gitlab.com/daniel-araujo/proctal" />
 	<uri name="gnu" value="https://www.gnu.org/software/" />
 	<uri name="gpl" value="https://www.gnu.org/licenses/gpl.html" />
 	<uri name="capstone" value="http://www.capstone-engine.org/" />
