@@ -19,6 +19,9 @@ static inline void *align_address(void *address, size_t align)
 	return (void *) ((char *) address + offset);
 }
 
+/*
+ * The default reader. Just reads from main memory.
+ */
 static int reader_default(void *data, void *src, void *out, size_t size)
 {
 	return memcpy(out, src, size) != NULL;
@@ -48,7 +51,10 @@ static void first(struct riter *r)
 		chunk_size(&r->chunk));
 
 	if (!result) {
-		// TODO: Bail.
+		// Hard failure.
+		riter_deinit(r);
+		r->error = RITER_ERROR_READ_FAILURE;
+		return;
 	}
 
 	char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
@@ -160,7 +166,10 @@ int riter_next(struct riter *r)
 			chunk_size(&r->chunk));
 
 		if (!result) {
-			// TODO: Bail.
+			// Hard failure.
+			riter_deinit(r);
+			r->error = RITER_ERROR_READ_FAILURE;
+			return 0;
 		}
 	}
 

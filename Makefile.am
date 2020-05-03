@@ -731,6 +731,12 @@ tests_riter_init_defaults_SOURCES = src/riter/tests/init-defaults.c
 tests_riter_init_defaults_CFLAGS = $(PROCTAL_CFLAGS)
 tests_riter_init_defaults_LDADD = libriter.a libswbuf.a libchunk.a
 
+TESTS += tests/riter/read-failure
+check_PROGRAMS += tests/riter/read-failure
+tests_riter_read_failure_SOURCES = src/riter/tests/read-failure.c
+tests_riter_read_failure_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_read_failure_LDADD = libriter.a libswbuf.a libchunk.a
+
 
 # Darr
 ###############################################################################

@@ -8,6 +8,7 @@
 #define RITER_ERROR_SOURCE_SIZE_REQUIRED 2
 #define RITER_ERROR_BUFFER_SIZE_REQUIRED 3
 #define RITER_ERROR_DATA_SIZE_LARGER_THAN_BUFFER_SIZE 4
+#define RITER_ERROR_READ_FAILURE 5
 
 // Reader function signature.
 // data is user defined data that is passed to the callback.
