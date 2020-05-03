@@ -705,6 +705,21 @@ endif
 endif
 
 
+# Riter
+###############################################################################
+noinst_LIBRARIES += libriter.a
+libriter_a_SOURCES = \
+	src/riter/riter.h \
+	src/riter/riter.c
+libriter_a_CFLAGS = $(PROCTAL_CFLAGS)
+
+TESTS += tests/riter/basic
+check_PROGRAMS += tests/riter/basic
+tests_riter_basic_SOURCES = src/riter/tests/basic.c
+tests_riter_basic_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_basic_LDADD = libriter.a libswbuf.a libchunk.a
+
+
 # Darr
 ###############################################################################
 .PHONY: darr-dist-hook darr-clean darr/libdarr.a

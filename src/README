@@ -29,3 +29,7 @@ How the source code for Proctal is organized:
 - pq
 	Checks whether the program receives any kind of message or signal to
 	quit while also preventing it from exiting.
+
+- riter
+	Efficiently iterates over many addressable values in memory by reading large
+	chunks in advance.
