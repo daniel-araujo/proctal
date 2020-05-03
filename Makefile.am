@@ -713,11 +713,23 @@ libriter_a_SOURCES = \
 	src/riter/riter.c
 libriter_a_CFLAGS = $(PROCTAL_CFLAGS)
 
-TESTS += tests/riter/basic
-check_PROGRAMS += tests/riter/basic
-tests_riter_basic_SOURCES = src/riter/tests/basic.c
-tests_riter_basic_CFLAGS = $(PROCTAL_CFLAGS)
-tests_riter_basic_LDADD = libriter.a libswbuf.a libchunk.a
+TESTS += tests/riter/read
+check_PROGRAMS += tests/riter/read
+tests_riter_read_SOURCES = src/riter/tests/read.c
+tests_riter_read_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_read_LDADD = libriter.a libswbuf.a libchunk.a
+
+TESTS += tests/riter/init-errors
+check_PROGRAMS += tests/riter/init-errors
+tests_riter_init_errors_SOURCES = src/riter/tests/init-errors.c
+tests_riter_init_errors_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_init_errors_LDADD = libriter.a libswbuf.a libchunk.a
+
+TESTS += tests/riter/init-defaults
+check_PROGRAMS += tests/riter/init-defaults
+tests_riter_init_defaults_SOURCES = src/riter/tests/init-defaults.c
+tests_riter_init_defaults_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_init_defaults_LDADD = libriter.a libswbuf.a libchunk.a
 
 
 # Darr

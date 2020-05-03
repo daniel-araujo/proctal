@@ -14,94 +14,6 @@ char memory[] = {
 	5, 5, 5,
 };
 
-static void test_init_fails_source_required(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source_size = sizeof(memory),
-		.buffer_size = 4,
-	});
-
-	assert(riter_error(&riter) == RITER_ERROR_SOURCE_REQUIRED);
-
-	riter_deinit(&riter);
-}
-
-static void test_init_fails_source_size_required(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source = memory,
-		.buffer_size = 4,
-	});
-
-	assert(riter_error(&riter) == RITER_ERROR_SOURCE_SIZE_REQUIRED);
-
-	riter_deinit(&riter);
-}
-
-static void test_init_fails_buffer_size_required(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source = memory,
-		.source_size = sizeof(memory),
-	});
-
-	assert(riter_error(&riter) == RITER_ERROR_BUFFER_SIZE_REQUIRED);
-
-	riter_deinit(&riter);
-}
-
-static void test_init_fails_data_size_larger_than_buffer_size(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source = memory,
-		.source_size = sizeof(memory),
-		.buffer_size = 1,
-		.data_size = 2,
-	});
-
-	assert(riter_error(&riter) == RITER_ERROR_DATA_SIZE_LARGER_THAN_BUFFER_SIZE);
-
-	riter_deinit(&riter);
-}
-
-static void test_default_align_is_1(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source = memory,
-		.source_size = sizeof(memory),
-		.buffer_size = 4,
-	});
-
-	assert(riter_data_align(&riter) == 1);
-
-	riter_deinit(&riter);
-}
-
-static void test_default_size_is_1(void)
-{
-	struct riter riter;
-
-	riter_init(&riter, &(struct riter_config) {
-		.source = memory,
-		.source_size = sizeof(memory),
-		.buffer_size = 4,
-	});
-
-	assert(riter_data_size(&riter) == 1);
-
-	riter_deinit(&riter);
-}
-
 static void test_index_should_start_at_zero(void)
 {
 	struct riter riter;
@@ -115,7 +27,7 @@ static void test_index_should_start_at_zero(void)
 	size_t index = riter_index(&riter);
 
 	if (index != 0) {
-		printf("Index should start at 0, it is %zu instead\n", index);
+		fprintf(stderr, "Index should start at 0, it is %zu instead\n", index);
 		abort();
 	}
 
@@ -150,12 +62,12 @@ static void test_index_should_stop_at_last_index_that_can_hold_data_size(void)
 	}
 
 	if (index == INVALID_LAST_INDEX) {
-		printf("Reached index that cannot hold data size.\n");
+		fprintf(stderr, "Reached index that cannot hold data size.\n");
 		abort();
 	}
 
 	if (index != VALID_LAST_INDEX) {
-		printf("Did not end on the last valid index. Stopped at %zu.\n", index);
+		fprintf(stderr, "Did not end on the last valid index. Stopped at %zu.\n", index);
 		abort();
 	}
 
@@ -182,7 +94,7 @@ static void test_only_reads_aligned_data(void)
 	size_t index = riter_index(&riter);
 
 	if (index != 1) {
-		printf("Index should start at 1, it is %zu instead\n", index);
+		fprintf(stderr, "Index should start at 1, it is %zu instead\n", index);
 		abort();
 	}
 }
@@ -204,12 +116,12 @@ static void test_read_data(void)
 		char *data = riter_data(&riter);
 
 		if (data[0] != memory[index]) {
-			printf("Read index %zu incorrectly.\n", index);
+			fprintf(stderr, "Read index %zu incorrectly.\n", index);
 			abort();
 		}
 
 		if (data[1] != memory[index + 1]) {
-			printf("Read index %zu incorrectly.\n", index);
+			fprintf(stderr, "Read index %zu incorrectly.\n", index);
 			abort();
 		}
 
@@ -234,21 +146,21 @@ static void test_does_not_skip_data_between_chunks(void)
 	});
 
 	if (riter_index(&riter) != 0) {
-		printf("Expected index 0 but got %zu.\n", riter_index(&riter));
+		fprintf(stderr, "Expected index 0 but got %zu.\n", riter_index(&riter));
 		abort();
 	}
 
 	assert(riter_next(&riter));
 
 	if (riter_index(&riter) != 1) {
-		printf("Expected index 1 but got %zu.\n", riter_index(&riter));
+		fprintf(stderr, "Expected index 1 but got %zu.\n", riter_index(&riter));
 		abort();
 	}
 
 	assert(riter_next(&riter));
 
 	if (riter_index(&riter) != 2) {
-		printf("Expected index 2 but got %zu.\n", riter_index(&riter));
+		fprintf(stderr, "Expected index 2 but got %zu.\n", riter_index(&riter));
 		abort();
 	}
 
@@ -257,12 +169,6 @@ static void test_does_not_skip_data_between_chunks(void)
 
 int main(void)
 {
-	test_init_fails_source_required();
-	test_init_fails_source_size_required();
-	test_init_fails_buffer_size_required();
-	test_init_fails_data_size_larger_than_buffer_size();
-	test_default_align_is_1();
-	test_default_size_is_1();
 	test_index_should_start_at_zero();
 	test_index_should_stop_at_last_index_that_can_hold_data_size();
 	test_only_reads_aligned_data();
