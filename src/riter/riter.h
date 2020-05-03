@@ -97,7 +97,7 @@ int srch_next(struct srch *srch);
 /*
  * Index into source.
  */
-size_t srch_index(struct srch *srch);
+ptrdiff_t srch_index(struct srch *srch);
 
 /*
  * Offset into source.
@@ -106,6 +106,7 @@ void *srch_offset(struct srch *srch);
 
 /*
  * Returns address to current data.
+ * Note that this is not an address to the source. Call srch_offset, instead.
  */
 void *srch_data(struct srch *srch);
 

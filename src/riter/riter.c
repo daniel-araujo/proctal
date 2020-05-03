@@ -24,9 +24,14 @@ static int reader_default(void *data, void *src, void *out, size_t size)
 	return memcpy(out, src, size) != NULL;
 }
 
-static int has_anything(struct srch *srch)
+/*
+ * Returns how much data there is to read.
+ * Note that this also takes leftvers from previous chunk into account.
+ */
+static size_t to_be_read(struct srch *srch)
 {
-	return (srch->current + srch->data_size) <= chunk_size(&srch->chunk);
+	// Current can be negative if there were leftovers from the previous chunk.
+	return chunk_size(&srch->chunk) - srch->current;
 }
 
 /*
@@ -50,9 +55,9 @@ static void first(struct srch *srch)
 
 	srch->current = offset - (char *) chunk_offset(&srch->chunk);
 
-	if (!has_anything(srch)) {
-		// There seems to be nothing in the first chunk. This means there is
-		// nothing to iterate over. We will consider this finished.
+	if (to_be_read(srch) < srch->data_size) {
+		// This means there is nothing to iterate over. We will consider this
+		// finished.
 		chunk_next(&srch->chunk);
 	}
 }
@@ -123,15 +128,21 @@ int srch_next(struct srch *srch)
 {
 	srch->current += srch->data_align;
 
-	if (!has_anything(srch)) {
-		// There is nothing left in this chunk. Moving on to the next one.
+	// How much data would be read
+	size_t leftover = to_be_read(srch);
+
+	if (leftover < srch->data_size) {
+		// Can't read any further in this chunk. Will have to move on to the
+		// next chunk.
+
+		// Moving on to the next chunk.
 		chunk_next(&srch->chunk);
 
 		char *offset = align_address(chunk_offset(&srch->chunk), srch->data_align);
 
-		srch->current = offset - (char *) chunk_offset(&srch->chunk);
+		srch->current = offset - leftover - (char *) chunk_offset(&srch->chunk);
 
-		if (!has_anything(srch)) {
+		if (to_be_read(srch) < srch->data_size) {
 			// Looks like this chunk doesn't have enough data either. This is
 			// the end.
 			return 0;
@@ -156,7 +167,7 @@ int srch_next(struct srch *srch)
 	return 1;
 }
 
-size_t srch_index(struct srch *srch)
+ptrdiff_t srch_index(struct srch *srch)
 {
 	return (char *) srch_offset(srch) - (char *) srch->source;
 }
