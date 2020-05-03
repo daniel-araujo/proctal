@@ -28,121 +28,121 @@ static int reader_default(void *data, void *src, void *out, size_t size)
  * Returns how much data there is to read.
  * Note that this also takes leftvers from previous chunk into account.
  */
-static size_t to_be_read(struct srch *srch)
+static size_t to_be_read(struct riter *r)
 {
 	// Current can be negative if there were leftovers from the previous chunk.
-	return chunk_size(&srch->chunk) - srch->current;
+	return chunk_size(&r->chunk) - r->current;
 }
 
 /*
  * Performs the first search.
  */
-static void first(struct srch *srch)
+static void first(struct riter *r)
 {
-	srch->current = 0;
+	r->current = 0;
 
-	int result = srch->reader(
+	int result = r->reader(
 		NULL,
-		chunk_offset(&srch->chunk),
-		swbuf_offset(&srch->buf, 0),
-		chunk_size(&srch->chunk));
+		chunk_offset(&r->chunk),
+		swbuf_offset(&r->buf, 0),
+		chunk_size(&r->chunk));
 
 	if (!result) {
 		// TODO: Bail.
 	}
 
-	char *offset = align_address(chunk_offset(&srch->chunk), srch->data_align);
+	char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
 
-	srch->current = offset - (char *) chunk_offset(&srch->chunk);
+	r->current = offset - (char *) chunk_offset(&r->chunk);
 
-	if (to_be_read(srch) < srch->data_size) {
+	if (to_be_read(r) < r->data_size) {
 		// This means there is nothing to iterate over. We will consider this
 		// finished.
-		chunk_next(&srch->chunk);
+		chunk_next(&r->chunk);
 	}
 }
 
-void srch_init(struct srch *srch, struct srch_config *conf)
+void riter_init(struct riter *r, struct riter_config *conf)
 {
-	srch->error = 0;
-	srch->reader = conf->reader ? conf->reader : reader_default;
-	srch->source = conf->source;
-	srch->source_size = conf->source_size;
-	srch->data_align = conf->data_align ? conf->data_align : 1;
-	srch->data_size = conf->data_size ? conf->data_size : 1;
-	srch->current = 0;
+	r->error = 0;
+	r->reader = conf->reader ? conf->reader : reader_default;
+	r->source = conf->source;
+	r->source_size = conf->source_size;
+	r->data_align = conf->data_align ? conf->data_align : 1;
+	r->data_size = conf->data_size ? conf->data_size : 1;
+	r->current = 0;
 
-	if (!srch->source) {
-		srch->error = SRCH_ERROR_SOURCE_REQUIRED;
+	if (!r->source) {
+		r->error = RITER_ERROR_SOURCE_REQUIRED;
 		return;
 	}
 
-	if (!srch->source_size) {
-		srch->error = SRCH_ERROR_SOURCE_SIZE_REQUIRED;
+	if (!r->source_size) {
+		r->error = RITER_ERROR_SOURCE_SIZE_REQUIRED;
 		return;
 	}
 
 	if (!conf->buffer_size) {
-		srch->error = SRCH_ERROR_BUFFER_SIZE_REQUIRED;
+		r->error = RITER_ERROR_BUFFER_SIZE_REQUIRED;
 		return;
 	}
 
-	if (srch->data_size > conf->buffer_size) {
-		srch->error = SRCH_ERROR_DATA_SIZE_LARGER_THAN_BUFFER_SIZE;
+	if (r->data_size > conf->buffer_size) {
+		r->error = RITER_ERROR_DATA_SIZE_LARGER_THAN_BUFFER_SIZE;
 		return;
 	}
 
 	chunk_init(
-		&srch->chunk,
-		srch->source,
-		(char *) srch->source + srch->source_size,
+		&r->chunk,
+		r->source,
+		(char *) r->source + r->source_size,
 		conf->buffer_size);
 
-	swbuf_init(&srch->buf, conf->buffer_size);
+	swbuf_init(&r->buf, conf->buffer_size);
 
-	first(srch);
+	first(r);
 }
 
-void srch_deinit(struct srch *srch)
+void riter_deinit(struct riter *r)
 {
-	if (srch->error) {
+	if (r->error) {
 		// All structures should already be deallocated.
 		return;
 	}
 
-	chunk_deinit(&srch->chunk);
-	swbuf_deinit(&srch->buf);
+	chunk_deinit(&r->chunk);
+	swbuf_deinit(&r->buf);
 }
 
-int srch_error(struct srch *srch)
+int riter_error(struct riter *r)
 {
-	return srch->error;
+	return r->error;
 }
 
-int srch_end(struct srch *srch)
+int riter_end(struct riter *r)
 {
-	return chunk_finished(&srch->chunk);
+	return chunk_finished(&r->chunk);
 }
 
-int srch_next(struct srch *srch)
+int riter_next(struct riter *r)
 {
-	srch->current += srch->data_align;
+	r->current += r->data_align;
 
 	// How much data would be read
-	size_t leftover = to_be_read(srch);
+	size_t leftover = to_be_read(r);
 
-	if (leftover < srch->data_size) {
+	if (leftover < r->data_size) {
 		// Can't read any further in this chunk. Will have to move on to the
 		// next chunk.
 
 		// Moving on to the next chunk.
-		chunk_next(&srch->chunk);
+		chunk_next(&r->chunk);
 
-		char *offset = align_address(chunk_offset(&srch->chunk), srch->data_align);
+		char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
 
-		srch->current = offset - leftover - (char *) chunk_offset(&srch->chunk);
+		r->current = offset - leftover - (char *) chunk_offset(&r->chunk);
 
-		if (to_be_read(srch) < srch->data_size) {
+		if (to_be_read(r) < r->data_size) {
 			// Looks like this chunk doesn't have enough data either. This is
 			// the end.
 			return 0;
@@ -151,13 +151,13 @@ int srch_next(struct srch *srch)
 		// Gotta place the contents of the current chunk in a new buffer and
 		// turn that buffer active.
 
-		swbuf_swap(&srch->buf);
+		swbuf_swap(&r->buf);
 
-		int result = srch->reader(
+		int result = r->reader(
 			NULL,
-			chunk_offset(&srch->chunk),
-			swbuf_offset(&srch->buf, 0),
-			chunk_size(&srch->chunk));
+			chunk_offset(&r->chunk),
+			swbuf_offset(&r->buf, 0),
+			chunk_size(&r->chunk));
 
 		if (!result) {
 			// TODO: Bail.
@@ -167,27 +167,27 @@ int srch_next(struct srch *srch)
 	return 1;
 }
 
-ptrdiff_t srch_index(struct srch *srch)
+ptrdiff_t riter_index(struct riter *r)
 {
-	return (char *) srch_offset(srch) - (char *) srch->source;
+	return (char *) riter_offset(r) - (char *) r->source;
 }
 
-void *srch_offset(struct srch *srch)
+void *riter_offset(struct riter *r)
 {
-	return (char *) chunk_offset(&srch->chunk) + srch->current;
+	return (char *) chunk_offset(&r->chunk) + r->current;
 }
 
-void *srch_data(struct srch *srch)
+void *riter_data(struct riter *t)
 {
-	return swbuf_offset(&srch->buf, srch->current);
+	return swbuf_offset(&t->buf, t->current);
 }
 
-size_t srch_data_align(struct srch *srch)
+size_t riter_data_align(struct riter *t)
 {
-	return srch->data_align;
+	return t->data_align;
 }
 
-size_t srch_data_size(struct srch *srch)
+size_t riter_data_size(struct riter *r)
 {
-	return srch->data_size;
+	return r->data_size;
 }
