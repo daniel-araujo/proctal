@@ -5,8 +5,6 @@ static void (*dealloc)(void *) = free;
 
 extern inline void swbuf_init(struct swbuf *b, size_t size);
 
-extern inline void *swbuf_lead(struct swbuf *b);
-
 extern inline void swbuf_deinit(struct swbuf *b);
 
 extern inline int swbuf_error(struct swbuf *b);

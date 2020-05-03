@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "swbuf/swbuf.h"
 
@@ -28,12 +29,7 @@ int main(void)
 	struct swbuf buf;
 	swbuf_init(&buf, 200);
 
-	if (swbuf_error(&buf) != 0) {
-		fprintf(stderr, "swbuf_error reported an error.\n");
-		swbuf_deinit(&buf);
-		return 1;
-	}
+	assert(swbuf_error(&buf) == 0);
 
 	swbuf_deinit(&buf);
-	return 0;
 }

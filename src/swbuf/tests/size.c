@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "swbuf/swbuf.h"
 
@@ -7,20 +8,17 @@ int main(void)
 	struct swbuf buf;
 	swbuf_init(&buf, 20);
 
-	if (swbuf_size(&buf) != 20) {
-		fprintf(stderr, "swbuf_size did not report the same size given to swbuf_init.\n");
-		swbuf_deinit(&buf);
-		return 1;
-	}
+	assert(swbuf_size(&buf) == 20);
 
 	swbuf_swap(&buf);
 
-	if (swbuf_size(&buf) != 20) {
-		fprintf(stderr, "After a swap swbuf_size did not report the same size given to swbuf_init.\n");
-		swbuf_deinit(&buf);
-		return 1;
-	}
+	// Shouldn't change because of a swap.
+	assert(swbuf_size(&buf) == 20);
+
+	swbuf_swap(&buf);
+
+	// Back to the initial state.
+	assert(swbuf_size(&buf) == 20);
 
 	swbuf_deinit(&buf);
-	return 0;
 }

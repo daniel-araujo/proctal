@@ -1,35 +1,41 @@
 #include <stdio.h>
+#include <string.h>
+#include <assert.h>
 
 #include "swbuf/swbuf.h"
+
+#define BUF_SIZE 2
 
 int main(void)
 {
 	struct swbuf buf;
-	swbuf_init(&buf, 20);
+	swbuf_init(&buf, BUF_SIZE);
 
-	void *original_addr = swbuf_offset(&buf, 0);
+	// One side has 0s
+	memset(swbuf_offset(&buf, 0), 0x00, BUF_SIZE);
+
+	// The other has 1s
+	memset(swbuf_offset(&buf, -BUF_SIZE), 0xFF, BUF_SIZE);
 
 	swbuf_swap(&buf);
 
-	void *other_side_addr = swbuf_offset(&buf, 0);
+	for (int i = 0; i < BUF_SIZE; i++) {
+		unsigned char *ptr = swbuf_offset(&buf, i);
 
-	if (other_side_addr == original_addr) {
-		fprintf(stderr, "swbuf_offset returned the same address after a swap. This is not supposed to happen.\n");
-		swbuf_deinit(&buf);
-		return 1;
+		if (*ptr != 0xFF) {
+			fprintf(stderr, "Offset %i does not equal 0xFF.", i);
+			abort();
+		}
 	}
 
-	swbuf_swap(&buf);
+	for (int i = -BUF_SIZE; i < 0; i++) {
+		unsigned char *ptr = swbuf_offset(&buf, i);
 
-	void *should_be_original_addr = swbuf_offset(&buf, 0);
-
-	if (should_be_original_addr != original_addr) {
-		fprintf(stderr, "swbuf_offset did not return the same address on the second swap.\n");
-		fprintf(stderr, "Was expecting %p, got %p instead.\n", original_addr, should_be_original_addr);
-		swbuf_deinit(&buf);
-		return 1;
+		if (*ptr != 0x00) {
+			fprintf(stderr, "Offset %i does not equal 0x00.", i);
+			abort();
+		}
 	}
 
 	swbuf_deinit(&buf);
-	return 0;
 }

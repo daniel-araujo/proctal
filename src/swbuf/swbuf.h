@@ -3,14 +3,21 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
 
 /*
  * The swbuf structure. You will want to initialize it by passing a pointer to
  * swbuf_init.
  */
 struct swbuf {
-	void *curr;
-	void *prev;
+	// The two sides are allocated in the same block. The left side starts at
+	// this address, the right side starts at this address plus the size of the
+	// buffer.
+	void *buffer;
+
+	// Reserved for the swap operation. This side starts at the buffer address
+	// plus 2 times its size.
+	void *swap;
 };
 
 /*
@@ -48,18 +55,8 @@ void swbuf_free(void *b);
  */
 inline void swbuf_init(struct swbuf *b, size_t size)
 {
-	b->curr = swbuf_malloc(size * 2);
-	b->prev = (char *) b->curr + size;
-}
-
-/*
- * This is an implementation detail. Do not call this function.
- *
- * Returns the start address of the internal buffer.
- */
-inline void *swbuf_lead(struct swbuf *b)
-{
-	return b->curr > b->prev ? b->prev : b->curr;
+	b->buffer = swbuf_malloc(size * 3);
+	b->swap = (char *) b->buffer + size * 2;
 }
 
 /*
@@ -68,7 +65,9 @@ inline void *swbuf_lead(struct swbuf *b)
  */
 inline void swbuf_deinit(struct swbuf *b)
 {
-	swbuf_free(swbuf_lead(b));
+	if (b->buffer) {
+		swbuf_free(b->buffer);
+	}
 }
 
 /*
@@ -76,11 +75,7 @@ inline void swbuf_deinit(struct swbuf *b)
  */
 inline size_t swbuf_size(struct swbuf *b)
 {
-	if (b->curr > b->prev) {
-		return (char *) b->curr - (char *) b->prev;
-	} else {
-		return (char *) b->prev - (char *) b->curr;
-	}
+	return ((char *) b->swap - (char *) b->buffer) / 2;
 }
 
 /*
@@ -88,7 +83,7 @@ inline size_t swbuf_size(struct swbuf *b)
  */
 inline int swbuf_error(struct swbuf *b)
 {
-	return swbuf_lead(b) == NULL;
+	return b->buffer == NULL;
 }
 
 /*
@@ -102,11 +97,7 @@ inline int swbuf_error(struct swbuf *b)
  */
 inline void *swbuf_offset(struct swbuf *b, ptrdiff_t offset)
 {
-	if (offset >= 0) {
-		return (char *) b->curr + offset;
-	} else {
-		return (char *) b->prev + swbuf_size(b) + offset;
-	}
+	return (char *) b->buffer + swbuf_size(b) + offset;
 }
 
 /*
@@ -114,9 +105,14 @@ inline void *swbuf_offset(struct swbuf *b, ptrdiff_t offset)
  */
 inline void swbuf_swap(struct swbuf *b)
 {
-	void *tmp = b->curr;
-	b->curr = b->prev;
-	b->prev = tmp;
+	size_t size = swbuf_size(b);
+
+	void *sideA = b->buffer;
+	void *sideB = (char *) b->buffer + size;
+
+	memmove(b->swap, sideA, size);
+	memmove(sideA, sideB, size);
+	memmove(sideB, b->swap, size);
 }
 
 #endif /* SWBUF_SWBUF_H */

@@ -560,11 +560,11 @@ tests_swbuf_swap_SOURCES = src/swbuf/tests/swap.c
 tests_swbuf_swap_CFLAGS = $(PROCTAL_CFLAGS)
 tests_swbuf_swap_LDADD = libswbuf.a
 
-TESTS += tests/swbuf/address-offset
-check_PROGRAMS += tests/swbuf/address-offset
-tests_swbuf_address_offset_SOURCES = src/swbuf/tests/address-offset.c
-tests_swbuf_address_offset_CFLAGS = $(PROCTAL_CFLAGS)
-tests_swbuf_address_offset_LDADD = libswbuf.a
+TESTS += tests/swbuf/address-offset-arithmetic
+check_PROGRAMS += tests/swbuf/address-offset-arithmetic
+tests_swbuf_address_offset_arithmetic_SOURCES = src/swbuf/tests/address-offset-arithmetic.c
+tests_swbuf_address_offset_arithmetic_CFLAGS = $(PROCTAL_CFLAGS)
+tests_swbuf_address_offset_arithmetic_LDADD = libswbuf.a
 
 TESTS += tests/swbuf/size
 check_PROGRAMS += tests/swbuf/size

@@ -19,8 +19,10 @@ How the source code for Proctal is organized:
 	FILE handle.
 
 - swbuf
-	A buffer on the heap with two halves, where the index begins at the
-	middle of the two. You can use negative offsets.
+	A buffer made up of two sides. They are guaranteed to be adjacent in memory,
+	so you can dereference values that live on both sides. Indexes are relative
+	to the middle of the two. You can move the contents of one side to the
+	other.
 
 - chunk
 	A way to partition a large buffer into smaller chunks and iterating
