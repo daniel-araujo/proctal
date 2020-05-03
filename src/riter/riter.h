@@ -11,11 +11,11 @@
 #define RITER_ERROR_READ_FAILURE 5
 
 // Reader function signature.
-// data is user defined data that is passed to the callback.
+// user is user defined data that is passed to the callback.
 // src is the address to copy from
 // out is the address to copy to
 // size is the amount of bytes to copy
-typedef int (*riter_reader_fn)(void *data, void *src, void *out, size_t size);
+typedef int (*riter_reader_fn)(void *user, void *src, void *out, size_t size);
 
 // Must be treated as an opaque data structure. Never access its members.
 struct riter {
@@ -36,6 +36,9 @@ struct riter {
 
 	// Data size.
 	size_t data_size;
+
+	// User data that gets passed to callbacks.
+	void *user;
 
 	// A storage for data chunks. It keeps the previously read chunk in memory.
 	// Useful for backtracking.
@@ -66,6 +69,9 @@ struct riter_config {
 
 	// Read buffer size.
 	size_t buffer_size;
+
+	// User data that gets passed to callbacks.
+	void *user;
 };
 
 /*

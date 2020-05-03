@@ -14,12 +14,12 @@ char memory[] = {
 	5, 5, 5,
 };
 
-static int reader_always_fails(void *data, void *src, void *out, size_t size)
+static int reader_always_fails(void *user, void *src, void *out, size_t size)
 {
 	return 0;
 }
 
-static int reader_fails_second(void *data, void *src, void *out, size_t size)
+static int reader_fails_second(void *user, void *src, void *out, size_t size)
 {
 	static int called = 0;
 	memcpy(src, out, size);

@@ -22,7 +22,7 @@ static inline void *align_address(void *address, size_t align)
 /*
  * The default reader. Just reads from main memory.
  */
-static int reader_default(void *data, void *src, void *out, size_t size)
+static int reader_default(void *user, void *src, void *out, size_t size)
 {
 	return memcpy(out, src, size) != NULL;
 }
@@ -45,7 +45,7 @@ static void first(struct riter *r)
 	r->current = 0;
 
 	int result = r->reader(
-		NULL,
+		r->user,
 		chunk_offset(&r->chunk),
 		swbuf_offset(&r->buf, 0),
 		chunk_size(&r->chunk));
@@ -76,6 +76,7 @@ void riter_init(struct riter *r, struct riter_config *conf)
 	r->source_size = conf->source_size;
 	r->data_align = conf->data_align ? conf->data_align : 1;
 	r->data_size = conf->data_size ? conf->data_size : 1;
+	r->user = conf->user;
 	r->current = 0;
 
 	if (!r->source) {
@@ -160,7 +161,7 @@ int riter_next(struct riter *r)
 		swbuf_swap(&r->buf);
 
 		int result = r->reader(
-			NULL,
+			r->user,
 			chunk_offset(&r->chunk),
 			swbuf_offset(&r->buf, 0),
 			chunk_size(&r->chunk));
