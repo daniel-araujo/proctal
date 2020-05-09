@@ -737,6 +737,24 @@ tests_riter_read_failure_SOURCES = src/riter/tests/read-failure.c
 tests_riter_read_failure_CFLAGS = $(PROCTAL_CFLAGS)
 tests_riter_read_failure_LDADD = libriter.a libswbuf.a libchunk.a
 
+TESTS += tests/riter/read-align
+check_PROGRAMS += tests/riter/read-align
+tests_riter_read_align_SOURCES = src/riter/tests/read-align.c
+tests_riter_read_align_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_read_align_LDADD = libriter.a libswbuf.a libchunk.a
+
+TESTS += tests/riter/read-redundancy
+check_PROGRAMS += tests/riter/read-redundancy
+tests_riter_read_redundancy_SOURCES = src/riter/tests/read-redundancy.c
+tests_riter_read_redundancy_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_read_redundancy_LDADD = libriter.a libswbuf.a libchunk.a
+
+TESTS += tests/riter/read-end
+check_PROGRAMS += tests/riter/read-end
+tests_riter_read_end_SOURCES = src/riter/tests/read-end.c
+tests_riter_read_end_CFLAGS = $(PROCTAL_CFLAGS)
+tests_riter_read_end_LDADD = libriter.a libswbuf.a libchunk.a
+
 TESTS += tests/riter/reader-data
 check_PROGRAMS += tests/riter/reader-data
 tests_riter_reader_data_SOURCES = src/riter/tests/reader-data.c

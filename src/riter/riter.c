@@ -42,7 +42,16 @@ static size_t to_be_read(struct riter *r)
  */
 static void first(struct riter *r)
 {
-	r->current = 0;
+	char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
+
+	r->current = offset - (char *) chunk_offset(&r->chunk);
+
+	if (to_be_read(r) < r->data_size) {
+		// This means there is nothing to iterate over. We will consider this
+		// finished.
+		chunk_next(&r->chunk);
+		return;
+	}
 
 	int result = r->reader(
 		r->user,
@@ -55,16 +64,6 @@ static void first(struct riter *r)
 		riter_deinit(r);
 		r->error = RITER_ERROR_READ_FAILURE;
 		return;
-	}
-
-	char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
-
-	r->current = offset - (char *) chunk_offset(&r->chunk);
-
-	if (to_be_read(r) < r->data_size) {
-		// This means there is nothing to iterate over. We will consider this
-		// finished.
-		chunk_next(&r->chunk);
 	}
 }
 
@@ -143,7 +142,11 @@ int riter_next(struct riter *r)
 		// next chunk.
 
 		// Moving on to the next chunk.
-		chunk_next(&r->chunk);
+		if (!chunk_next(&r->chunk)) {
+			// Couldn't move to the next chunk. This means we don't
+			// have enough data to read the leftovers. This is the end.
+			return 0;
+		}
 
 		char *offset = align_address(chunk_offset(&r->chunk), r->data_align);
 
