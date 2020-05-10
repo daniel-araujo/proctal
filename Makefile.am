@@ -56,7 +56,7 @@ proctal_SOURCES = \
 	src/cli/yuck/main.h \
 	src/cli/yuck/main.c \
 	src/cli/main.c
-proctal_LDADD = libproctal.la libswbuf.a libchunk.a libpq.a libclival.a libcliparser.a libcliassembler.a $(PROCTAL_LDFLAGS)
+proctal_LDADD = libproctal.la libswbuf.a libchunk.a libriter.a libpq.a libclival.a libcliparser.a libcliassembler.a $(PROCTAL_LDFLAGS)
 proctal_CFLAGS = $(PROCTAL_CFLAGS)
 EXTRA_proctal_DEPENDENCIES = \
 	darr/libdarr.a \

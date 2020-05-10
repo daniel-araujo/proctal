@@ -38,6 +38,30 @@ static const char *cli_pattern_error_messages[] = {
 	[CLI_PATTERN_ERROR_COMPILE_PATTERN] = "You must compile a pattern beforehand.",
 };
 
+static const char *riter_error_messages[] = {
+	[0] = "Riter: unknown failure",
+	[RITER_ERROR_SOURCE_REQUIRED] = "Riter: source must be provided.",
+	[RITER_ERROR_SOURCE_SIZE_REQUIRED] = "Riter: source size must be provided.",
+	[RITER_ERROR_BUFFER_SIZE_REQUIRED] = "Riter: buffer size is required.",
+	[RITER_ERROR_DATA_SIZE_LARGER_THAN_BUFFER_SIZE] = "Riter: data size cannot be larger than buffer size.",
+	[RITER_ERROR_READ_FAILURE] = "Riter: failed to read from source.",
+};
+
+void cli_print_riter_error(struct riter *r)
+{
+	int error = riter_error(r);
+
+	if (error == 0) {
+		return;
+	}
+
+	if (!((unsigned) error < ARRAY_SIZE(riter_error_messages))) {
+		error = 0;
+	}
+
+	fprintf(stderr, "%s\n", riter_error_messages[error]);
+}
+
 void cli_print_proctal_error(proctal_t p)
 {
 	int error = proctal_error(p);

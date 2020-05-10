@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "cli/cmd/search.h"
 #include "cli/printer.h"
@@ -9,6 +10,7 @@
 #include "api/include/proctal.h"
 #include "swbuf/swbuf.h"
 #include "chunk/chunk.h"
+#include "riter/riter.h"
 
 static inline struct cli_val_filter_compare_arg *create_filter_compare_arg(struct cli_cmd_search_arg *arg)
 {
@@ -92,6 +94,17 @@ static inline void *align_address(void *address, size_t align)
 	return (void *) ((char *) address + offset);
 }
 
+struct search_user {
+	proctal_t p;
+};
+
+static int search_reader(void *user, void *src, void *out, size_t size)
+{
+	struct search_user *real_user = (struct search_user *) user;
+
+	return proctal_read(real_user->p, src, out, size) == size;
+}
+
 /*
  * Matches against the contents in memory.
  *
@@ -103,25 +116,28 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 
 	struct cli_val_filter_compare_arg *filter_compare_arg = create_filter_compare_arg(arg);
 
-	cli_val_t address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
+	// The value that is matched.
 	cli_val_t value = arg->value;
 
-	size_t size = cli_val_sizeof(value);
-	size_t align = cli_val_alignof(value);
+	// We use a cli_val_t to represent the address of the match.
+	cli_val_t address = cli_val_wrap(CLI_VAL_TYPE_ADDRESS, cli_val_address_create());
 
 	proctal_scan_region_start(p);
 
 	void *address_start = arg->address_start;
-	void *address_stop = arg->address_stop == NULL ? (char *) ~((uintptr_t) 0) : arg->address_stop;
+	void *address_stop = arg->address_stop;
 
-	const size_t buffer_size = 1024 * 1024;
-	struct swbuf buf;
-	swbuf_init(&buf, buffer_size);
+	if (address_start == NULL) {
+		// Assuming NULL is 0.
+	}
 
-	size_t prev_size, curr_size;
+	if (address_stop == NULL) {
+		// Search until the end.
+		address_stop = (char *) ~((uintptr_t) 0);
+	}
+
+	// Region start and end addresses.
 	void *start, *end;
-
-	struct chunk chunk;
 
 	while (proctal_scan_region_next(p, &start, &end)) {
 		if (start < address_start) {
@@ -137,89 +153,73 @@ static inline int search_program(struct cli_cmd_search_arg *arg, proctal_t p)
 			continue;
 		}
 
-		size_t leftover = 0;
+		struct riter riter;
 
-		chunk_init(&chunk, start, end, buffer_size);
+		riter_init(&riter, &(struct riter_config) {
+			.reader = search_reader,
+			.source = start,
+			.source_size = (char *) end - (char *) start,
+			.buffer_size = 1024 * 1024,
+			.data_size = cli_val_sizeof(value),
+			.data_align = cli_val_alignof(value),
+			.user = &(struct search_user) { p }
+		});
 
-		do {
-			char *offset = align_address(chunk_offset(&chunk), align);
-			curr_size = chunk_size(&chunk);
+		if (riter_error(&riter)) {
+			cli_print_riter_error(&riter);
+			continue;
+		}
 
-			proctal_read(p, offset, swbuf_offset(&buf, 0), curr_size);
+		while (!riter_end(&riter)) {
+			if (riter_error(&riter)) {
+				cli_print_riter_error(&riter);
 
-			if (proctal_error(p)) {
-				cli_print_proctal_error(p);
+				// Riter makes calls to proctal sometimes.
+				if (proctal_error(p)) {
+					cli_print_proctal_error(p);
 
-				if (!proctal_error_recover(p)) {
-					goto exit4;
+					if (!proctal_error_recover(p)) {
+						// Complete failure. Gotta leave.
+						riter_deinit(&riter);
+						goto exit_destroy_address;
+					}
 				}
 
+				// Give up on this region.
 				break;
 			}
 
-			if (leftover) {
-				// The word rightover isn't even an English
-				// word but serves as a very literal
-				// counterpart to the leftover variable.
-				size_t rightover = size - leftover;
+			cli_val_parse_binary(
+				value,
+				riter_data(&riter),
+				riter_data_size(&riter));
 
-				// Read what's left from the previous chunk.
-				memcpy(cli_val_data(value), swbuf_offset(&buf, prev_size - leftover - buffer_size), leftover);
-				memcpy((char *) cli_val_data(value) + leftover, swbuf_offset(&buf, rightover), rightover);
+			if (cli_val_filter_compare(filter_compare_arg, value)) {
+				// Need to store in a temporary variable so that
+				// we have an address. That's right, an address
+				// to an address.
+				void *a = riter_offset(&riter);
+				cli_val_parse_binary(address, &a, sizeof(a));
 
-				if (cli_val_filter_compare(filter_compare_arg, value)) {
-					void *a = offset - leftover;
-					cli_val_parse_binary(address, &a, sizeof(&a));
-
-					print_search_match(address, value);
-				}
-
-				leftover = 0;
+				print_search_match(address, value);
 			}
 
-			size_t i = 0;
+			riter_next(&riter);
+		}
 
-			while (i < curr_size) {
-				if ((i + size) > curr_size) {
-					leftover = curr_size - i;
-				}
-
-				memcpy(cli_val_data(value), swbuf_offset(&buf, i), size);
-
-				if (cli_val_filter_compare(filter_compare_arg, value)) {
-					void *a = offset + i;
-					cli_val_parse_binary(address, &a, sizeof(&a));
-
-					print_search_match(address, value);
-				}
-
-				i += align;
-			}
-
-			leftover = curr_size - i;
-
-			swbuf_swap(&buf);
-
-			// Remembering the size of the previous chunk.
-			prev_size = curr_size;
-		} while (chunk_next(&chunk));
+		riter_deinit(&riter);
 	}
 
 	if (proctal_error(p)) {
 		cli_print_proctal_error(p);
-		goto exit4;
+		goto exit_destroy_address;
 	}
 
 	ret = 1;
-exit4:
-	swbuf_deinit(&buf);
-exit3:
+exit_destroy_address:
 	cli_val_destroy(address);
-exit2:
 	destroy_filter_compare_arg(filter_compare_arg);
-exit1:
 	proctal_scan_region_stop(p);
-exit0:
 	return ret;
 }
 

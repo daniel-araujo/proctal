@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include "api/include/proctal.h"
 #include "cli/pattern.h"
+#include "riter/riter.h"
+
+/*
+ * Prints a generic error message about riter's failure. These will only be
+ * useful to programmers.
+ */
+void cli_print_riter_error(struct riter *r);
 
 /*
  * Prints an error message 
