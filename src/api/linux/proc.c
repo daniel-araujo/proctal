@@ -7,10 +7,33 @@
 #include "api/linux/proctal.h"
 #include "api/linux/proc.h"
 
+static inline int int_dec_length(unsigned i)
+{
+	if (i >= 1000000000) {
+		return 10;
+	} else if (i >= 100000000) {
+		return 9;
+	} else if (i >= 10000000) {
+		return 8;
+	} else if (i >= 1000000) {
+		return 7;
+	} else if (i >= 100000) {
+		return 6;
+	} else if (i >= 10000) {
+		return 5;
+	} else if (i >= 1000) {
+		return 4;
+	} else if (i >= 100) {
+		return 3;
+	} else if (i >= 10) {
+		return 2;
+	} else {
+		return 1;
+	}
+}
+
 const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file)
 {
-#define PID_MAX_DIGITS 5
-
 	static char proc_dir[] = "/proc";
 
 	struct proctal_darr *path = proctal_global_malloc(sizeof(struct proctal_darr));
@@ -22,7 +45,7 @@ const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file)
 	size_t file_size = strlen(file);
 
 	proctal_darr_init(path, sizeof(char));
-	proctal_darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + PID_MAX_DIGITS + 1 + file_size + 1);
+	proctal_darr_resize(path, ARRAY_SIZE(proc_dir) + 1 + int_dec_length(pid) + 1 + file_size + 1);
 
 	int n = snprintf(
 		proctal_darr_data(path),
@@ -44,8 +67,6 @@ const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file)
 	}
 
 	return path;
-
-#undef PID_MAX_DIGITS
 }
 
 void proctal_linux_proc_path_dispose(const struct proctal_darr *path)
