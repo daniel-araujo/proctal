@@ -4,8 +4,8 @@
 
 #include "cli/cmd/execute.h"
 #include "cli/printer.h"
-#include "cli/parser.h"
-#include "cli/assembler.h"
+#include "cli/parser/parser.h"
+#include "cli/assembler/assembler.h"
 #include "api/include/proctal.h"
 
 static int read(struct darr *buffer)

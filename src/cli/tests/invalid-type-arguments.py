@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-
 import subprocess
 import sys
 
-proctal = "./proctal"
+proctal = "../proctal"
 
 common_base_commands = [
     [proctal, "read", "--pid=1", "--address=1"],

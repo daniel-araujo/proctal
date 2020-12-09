@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "cli/val.h"
+#include "cli/val/val.h"
 #include "cli/val/filter.h"
 
 struct test {

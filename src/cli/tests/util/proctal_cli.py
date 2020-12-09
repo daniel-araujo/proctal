@@ -9,7 +9,7 @@ communicate with them.
 Error messages are piped to stderr.
 """
 
-proctal_exe = "./proctal"
+proctal_exe = "../proctal"
 
 class Error(Exception):
     pass

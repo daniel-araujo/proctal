@@ -116,7 +116,9 @@ define(`TYPE_OPTIONS', `
                         big
 ')dnl
 Usage: proctal
-Modding programs.
+
+A tool for modding programs at runtime. Visit https://proctal.io for extensive
+documentation.
 
 
   -h, --help            Display help information and exit. If a command is

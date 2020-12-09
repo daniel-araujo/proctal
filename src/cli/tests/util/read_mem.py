@@ -1,7 +1,7 @@
 import subprocess
 import select
 
-exe = "./tests/cli/program/read-mem"
+exe = "./util/read-mem"
 
 class Proc:
     """Controls the program."""
@@ -34,6 +34,12 @@ class Proc:
     def pid(self):
         """Returns the process id (PID) of the program."""
         return self.process.pid
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
 
 def run():
     """Runs the program and returns an object that can communicate with it."""

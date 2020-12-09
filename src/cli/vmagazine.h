@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <darr.h>
 
-#include "src/magic/magic.h"
-#include "src/cli/val.h"
+#include "magic/magic.h"
+#include "cli/val/val.h"
 
 /*
  * A structure that holds cli_vals.

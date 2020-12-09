@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, read_mem
 
 class Error(Exception):
@@ -14,17 +11,14 @@ class UnepectedMatch(Error):
     def __init__(self):
         super().__init__("Did not expect a match.")
 
-guinea = read_mem.run()
-
-try:
+with read_mem.run() as guinea:
     watch_address = guinea.address()
 
     try:
         watcher = proctal_cli.watch(guinea.pid(), watch_address, watch="rw")
 
         if not watcher.wait_match(100):
-            sys.stderr.write("Was unable to watch for reads.\n")
-            exit(1)
+            exit("Was unable to watch for reads.")
 
         instruction_address = watcher.next_match().address;
     finally:
@@ -62,5 +56,3 @@ try:
 
     for test in tests:
             run(test[0], test[1], test[2])
-finally:
-    guinea.stop()

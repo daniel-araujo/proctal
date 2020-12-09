@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "api/include/proctal.h"
-#include "cli/pattern.h"
+#include "cli/pattern/pattern.h"
 #include "riter/riter.h"
 
 /*

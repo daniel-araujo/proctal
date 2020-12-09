@@ -5,7 +5,7 @@
 #include "cli/cmd/search.h"
 #include "cli/printer.h"
 #include "cli/scanner.h"
-#include "cli/val.h"
+#include "cli/val/val.h"
 #include "cli/val/filter.h"
 #include "api/include/proctal.h"
 #include "swbuf/swbuf.h"

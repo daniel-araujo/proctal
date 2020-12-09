@@ -1,19 +1,13 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, read_mem
 
-try:
-    guinea = read_mem.run()
-
+with read_mem.run() as guinea:
     watch_address = guinea.address()
 
     watcher = proctal_cli.watch(guinea.pid(), watch_address, watch="rw", unique=True)
 
     try:
         if not watcher.wait_match(100):
-            sys.stderr.write("Was supposed to have at least 1 match.\n")
-            exit(1)
+            exit("Was supposed to have at least 1 match.")
     finally:
         watcher.stop()
 
@@ -21,7 +15,4 @@ try:
     guinea.wait_stop(200)
 
     if guinea.stopped():
-        sys.stderr.write("Program died.\n")
-        exit(1)
-finally:
-    guinea.stop()
+        exit("Program died.")

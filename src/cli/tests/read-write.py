@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, sleeper
 
 class Error(Exception):
@@ -29,8 +26,6 @@ class TestSingleValue:
         finally:
             proctal_cli.deallocate(guinea.pid(), address)
 
-guinea = sleeper.run()
-
 int32 = proctal_cli.TypeInteger(32);
 int32_test_val = proctal_cli.ValueInteger(int32)
 int32_test_val.parse(0x0ACC23AA)
@@ -39,8 +34,6 @@ tests = [
     TestSingleValue(int32, int32_test_val)
 ]
 
-try:
+with sleeper.run() as guinea:
     for test in tests:
         test.run(guinea)
-finally:
-    guinea.stop()

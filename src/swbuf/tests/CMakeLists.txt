@@ -1,0 +1,11 @@
+function(test_single_c_file file)
+    add_executable(swbuf_${file} ${file}.c)
+    target_link_libraries(swbuf_${file} PRIVATE swbuf)
+    add_test(NAME swbuf_${file} COMMAND swbuf_${file})
+endfunction()
+
+test_single_c_file(address-offset-arithmetic)
+test_single_c_file(init-fail-alloc)
+test_single_c_file(init-succeed-alloc)
+test_single_c_file(size)
+test_single_c_file(swap)

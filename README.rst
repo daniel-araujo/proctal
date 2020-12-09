@@ -147,36 +147,30 @@ Hello, world!
 Installation
 ============
 
-	**Note**
-
-	If you have a clean state of the source repository you will need to
-	follow some instructions given in the Development_ section.
-
-You can find the latest version at `proctal.io <Download_>`_. 
-
-You will need the following programs installed on your system:
+You need to have the following programs installed on your system:
 
 - GCC_
-- Libtool_
+- CMake_
 - sed_
+- m4_
+- php_
 
-Optional:
+Optionally:
 
-- Capstone_ - Disassembling instructions.
-- Keystone_ - Assembling instructions.
+- Capstone_ - For disassembling instructions.
+- Keystone_ - For assembling instructions.
 
-Proctal provides the familiar configure, compile and install process:
+Then run:
 
 .. code :: sh
 
-	$ ./configure
+	$ mkdir build
+
+	# cmake -DCMAKE_BUILD_TYPE=Release ..
 
 	$ make
 
 	$ make install
-
-Run ``./configure -h`` to read about the options you have available that can
-change how Proctal will be compiled and installed.
 
 
 Usage
@@ -207,11 +201,11 @@ the man page by running the following command:
 
 **API**
 
-The C library can be used by linking to ``libproctal.so`` and including
-``proctal.h``.
+The C library can be used by linking to ``libproctal.so`` or ``libproctal.a``
+and including ``proctal.h``.
 
-The header file contains comments that provide a complete reference guide for
-all the exposed symbols.
+The header file contains comments that explain how functions and macros are
+meant to be used.
 
 
 Documentation
@@ -224,55 +218,49 @@ You will find a complete guide with examples and tutorials at `proctal.io
 Development
 ===========
 
-In addition to the dependencies listed in the Installation_ section, you will
-also need:
+Proctal uses CMake_ to generate a suitable build system for your operating
+system. This section will not go into too much detail about that but will show
+you what you need to get started.
+
+You must have the following programs installed on your system:
 
 - Git_
-- Yuck_
-- PHP_
+- GCC_
+- CMake_
+- sed_
+- m4_
+- php_
 - Python_
-- Autoconf_
-- Automake_
 
-Proctal uses the autotools to generate build systems for UNIX like operating
-systems. This section will not go into too much detail about them but will show
-you how you can create a development build to tinker with the source code.
-
-First you need to run the ``bootstrap`` script. This will fetch some additional
-libraries for you and also set up the autotools.
+Here's how you create a debug build of the latest version:
 
 .. code :: sh
 
-	$ ./bootstrap
+	$ git clone https://github.com/daniel-araujo/proctal
 
-At this point you can follow the instructions given in the Installation_
-section but you will most likely want to work strictly inside the project
-directory. Here's how you would create and compile a build that suppresses
-optimizations and inserts debugging symbols.
-
-.. code :: sh
+	$ cd proctal
 
 	$ mkdir -p build
 
 	$ cd build
 
-	$ ../configure 'CFLAGS=-g -O0'
+	$ cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 	$ make
 
-If you modify a source file and run ``make`` again it should detect the change
-and compile again.
+If you modify a source file and run ``make`` again it will detect the change and
+compile again.
 
-You can also run the test suite. Beware that some test cases require higher
-privileges, which means that you will most likely have to run the following
-command as root in order for them to pass.
+Libraries are automatically downloaded and installed locally in the project.
+
+You can also run the test suite with ``ctest``.
 
 .. code :: sh
 
-	$ make check
+	$ ctest
 
-For more details on what else you can do with the autotools go read the manuals
-over at `GNU software`_.
+Beware that some test cases require higher privileges, which means that you will
+most likely have to run that command as root in order for all tests to pass.
 
 
 Contributing
@@ -313,12 +301,10 @@ COPYING. If not, see `GNU licenses`_.
 .. _GitHub: https://github.com/daniel-araujo/proctal
 .. _Capstone: http://www.capstone-engine.org/
 .. _Keystone: http://www.keystone-engine.org/
-.. _Yuck: http://www.fresse.org/yuck/
 .. _PHP: http://php.net/
-.. _Autoconf: https://www.gnu.org/software/autoconf/autoconf.html
-.. _Automake: https://www.gnu.org/software/automake/
+.. _CMake: https://cmake.org/cmake/help/v3.14/
 .. _GCC: https://gcc.gnu.org/
-.. _Libtool: https://www.gnu.org/software/libtool/libtool.html
 .. _sed: https://www.gnu.org/software/sed/
+.. _m4: https://www.gnu.org/software/m4/
 .. _Python: https://www.python.org/
 .. _Git: https://git-scm.com/

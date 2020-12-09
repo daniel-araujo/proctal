@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "src/riter/riter.h"
+#include "riter/riter.h"
 
 /*
  * For aligning. Returns the address in the correct offset. If the address is

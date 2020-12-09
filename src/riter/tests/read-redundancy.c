@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "src/riter/riter.h"
+#include "riter/riter.h"
 
 /*
  * Region of memory that is going to be iterated over.

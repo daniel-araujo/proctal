@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <darr.h>
 
+#include "config.h"
 #include "cli/yuck/main.h"
 #include "cli/cmd/allocate.h"
 #include "cli/cmd/deallocate.h"
@@ -14,8 +15,8 @@
 #include "cli/cmd/search.h"
 #include "cli/cmd/watch.h"
 #include "cli/cmd/write.h"
-#include "cli/parser.h"
-#include "cli/assembler.h"
+#include "cli/parser/parser.h"
+#include "cli/assembler/assembler.h"
 #include "cli/yuck/args.yucc"
 #include "magic/magic.h"
 
@@ -1361,6 +1362,11 @@ cmd_handler cmd_handlers[] = {
 	[PROCTAL_CMD_DUMP] = cmd_handler_dump,
 };
 
+static inline void version(yuck_t *argp)
+{
+	printf("Proctal %d\n", PROCTAL_VERSION);
+}
+
 int cli_yuck_main(int argc, char **argv)
 {
 	yuck_t argp;
@@ -1376,7 +1382,7 @@ int cli_yuck_main(int argc, char **argv)
 	if (argp.help_flag) {
 		yuck_auto_help(&argp);
 	} else if (argp.version_flag) {
-		yuck_auto_version(&argp);
+		version(&argp);
 	} else if (argp.cmd < ARRAY_SIZE(cmd_handlers)) {
 		exit_code = cmd_handlers[argp.cmd](&argp);
 	} else {

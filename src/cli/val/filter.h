@@ -1,7 +1,7 @@
 #ifndef CLI_VAL_FILTER_H
 #define CLI_VAL_FILTER_H
 
-#include "cli/val.h"
+#include "cli/val/val.h"
 
 struct cli_val_filter_compare_arg {
 	cli_val_t eq;

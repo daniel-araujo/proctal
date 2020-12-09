@@ -1,7 +1,7 @@
 #ifndef CLI_CMD_SEARCH_H
 #define CLI_CMD_SEARCH_H
 
-#include "cli/val.h"
+#include "cli/val/val.h"
 
 struct cli_cmd_search_arg {
 	int pid;

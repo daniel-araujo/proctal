@@ -8,6 +8,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "config.h"
+
 /*
  * Supported number of bits.
  */
@@ -38,12 +40,18 @@ enum cli_val_integer_endianness {
 
 #define CLI_VAL_INTEGER_SIGN_DEFAULT CLI_VAL_INTEGER_SIGN_TWOS_COMPLEMENT
 
-#if PROCTAL_INTEGER_ENDIANNESS_LITTLE
+#ifdef PROCTAL_INTEGER_ENDIANNESS_LITTLE
+
 	#define CLI_VAL_INTEGER_ENDIANNESS_DEFAULT CLI_VAL_INTEGER_ENDIANNESS_LITTLE
-#elif PROCTAL_INTEGER_ENDIANNESS_BIG
+
+#elif defined PROCTAL_INTEGER_ENDIANNESS_BIG
+
 	#define CLI_VAL_INTEGER_ENDIANNESS_DEFAULT CLI_VAL_INTEGER_ENDIANNESS_BIG
+
 #else
+
 	#error "Unknown integer endianness."
+
 #endif
 
 /*

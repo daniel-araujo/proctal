@@ -1,5 +1,6 @@
 #include <assert.h>
 
+#include "config.h"
 #include "cli/val/integer.h"
 
 static void reverse_bytes(void *p, size_t n)
@@ -19,11 +20,11 @@ static void reverse_bytes(void *p, size_t n)
 
 void cli_val_integer_endianness_convert(struct cli_val_integer *v)
 {
-#if PROCTAL_INTEGER_ENDIANNESS_LITTLE
+#ifdef PROCTAL_INTEGER_ENDIANNESS_LITTLE
 	if (v->attr.endianness == CLI_VAL_INTEGER_ENDIANNESS_BIG) {
 		reverse_bytes(v->data, cli_val_integer_sizeof(v));
 	}
-#elif PROCTAL_INTEGER_ENDIANNESS_BIG
+#elif defined PROCTAL_INTEGER_ENDIANNESS_BIG
 	if (v->attr.endianness == CLI_VAL_INTEGER_ENDIANNESS_LITTLE) {
 		reverse_bytes(v->data, cli_val_integer_sizeof(v));
 	}

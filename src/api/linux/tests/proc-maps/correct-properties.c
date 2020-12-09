@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "config.h"
 #include "magic/magic.h"
 #include "api/linux/proc.h"
 

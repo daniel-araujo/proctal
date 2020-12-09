@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, sleeper
 
 class TestCase:
@@ -49,39 +46,35 @@ class UnexpectedTotalMatches(Error):
         super().__init__(message)
 
 def start(test):
-    guinea = sleeper.run()
+    with sleeper.run() as guinea:
+        total_size = int(test.value.size() * test.length)
 
-    total_size = int(test.value.size() * test.length)
+        address = proctal_cli.allocate(guinea.pid(), str(total_size))
 
-    address = proctal_cli.allocate(guinea.pid(), str(total_size))
+        proctal_cli.write(guinea.pid(), address, test.type, test.value, array=test.length)
 
-    proctal_cli.write(guinea.pid(), address, test.type, test.value, array=test.length)
+        searcher = proctal_cli.search(guinea.pid(), test.type, eq=test.value)
 
-    searcher = proctal_cli.search(guinea.pid(), test.type, eq=test.value)
+        start_address = address
+        end_address = start_address.clone()
+        end_address.add_address_offset(total_size)
+        found = 0
 
-    start_address = address
-    end_address = start_address.clone()
-    end_address.add_address_offset(total_size)
-    found = 0
+        for match in searcher.match_iterator():
+            if test.value.cmp(match.value) != 0:
+                searcher.stop()
+                raise UnexpectedMatchValue(test.value, match.value)
 
-    for match in searcher.match_iterator():
-        if test.value.cmp(match.value) != 0:
-            guinea.stop()
-            searcher.stop()
-            raise UnexpectedMatchValue(test.value, match.value)
+            if not (start_address.cmp(match.address) <= 0 and end_address.cmp(match.address) > 0):
+                searcher.stop()
+                raise UnexpectedMatchAddress(start_address, end_address, match.address)
 
-        if not (start_address.cmp(match.address) <= 0 and end_address.cmp(match.address) > 0):
-            guinea.stop()
-            searcher.stop()
-            raise UnexpectedMatchAddress(start_address, end_address, match.address)
+            found += 1
 
-        found += 1
+        searcher.stop()
 
-    searcher.stop()
-    guinea.stop()
-
-    if test.length != found:
-        raise UnexpectedTotalMatches(test.length, found)
+        if test.length != found:
+            raise UnexpectedTotalMatches(test.length, found)
 
 int32 = proctal_cli.TypeInteger(32);
 int32_test_val = proctal_cli.ValueInteger(int32)

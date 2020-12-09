@@ -1,7 +1,7 @@
 #ifndef CLI_CMD_READ_H
 #define CLI_CMD_READ_H
 
-#include "cli/val.h"
+#include "cli/val/val.h"
 
 struct cli_cmd_read_arg {
 	int pid;

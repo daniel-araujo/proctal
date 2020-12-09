@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, sleeper
 
 class Error(Exception):
@@ -39,42 +36,37 @@ class LengthTest:
         value = proctal_cli.ValueByte(byte_type)
         value.parse_binary(b'\x42')
 
-        guinea = sleeper.run()
+        with sleeper.run() as guinea:
+            address = proctal_cli.allocate(guinea.pid(), self.offset + self.length)
+            address.add_address_offset(self.offset)
 
-        address = proctal_cli.allocate(guinea.pid(), self.offset + self.length)
-        address.add_address_offset(self.offset)
+            proctal_cli.write(guinea.pid(), address, byte_type, value, array=self.length)
 
-        proctal_cli.write(guinea.pid(), address, byte_type, value, array=self.length)
+            start_address = address
+            stop_address = start_address.clone()
+            stop_address.add_address_offset(self.length)
 
-        start_address = address
-        stop_address = start_address.clone()
-        stop_address.add_address_offset(self.length)
+            dumper = proctal_cli.dump(
+                guinea.pid(),
+                address_start=start_address,
+                address_stop=stop_address)
 
-        dumper = proctal_cli.dump(
-            guinea.pid(),
-            address_start=start_address,
-            address_stop=stop_address)
+            found = 0
 
-        found = 0
+            for match in dumper.byte_iterator():
+                byte = proctal_cli.ValueByte(byte_type)
+                byte.parse_binary(match)
 
-        for match in dumper.byte_iterator():
-            byte = proctal_cli.ValueByte(byte_type)
-            byte.parse_binary(match)
+                if value.cmp(byte) != 0:
+                    dumper.stop()
+                    raise UnexpectedMatchValue(value, byte)
 
-            if value.cmp(byte) != 0:
-                guinea.stop()
-                dumper.stop()
-                raise UnexpectedMatchValue(value, byte)
+                found += 1
 
-            found += 1
+            dumper.stop()
 
-        dumper.stop()
-
-        if self.length != found:
-            guinea.stop()
-            raise UnexpectedTotalMatches(self.length, found)
-
-        guinea.stop()
+            if self.length != found:
+                raise UnexpectedTotalMatches(self.length, found)
 
 tests = [
     LengthTest(1),

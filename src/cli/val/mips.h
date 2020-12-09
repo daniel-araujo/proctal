@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "config.h"
 #include "cli/val/assembler.h"
 
 /*
@@ -40,13 +41,17 @@ struct cli_val_mips_attr {
  */
 #define CLI_VAL_MIPS_MODE_DEFAULT CLI_VAL_MIPS_MODE_64
 
-#if PROCTAL_INTEGER_ENDIANNESS_LITTLE
+#ifdef PROCTAL_INTEGER_ENDIANNESS_LITTLE
 
 	#define CLI_VAL_MIPS_ENDIANNESS_DEFAULT CLI_VAL_MIPS_ENDIANNESS_LITTLE
 
-#elif PROCTAL_INTEGER_ENDIANNESS_BIG
+#elif defined PROCTAL_INTEGER_ENDIANNESS_BIG
 
 	#define CLI_VAL_MIPS_ENDIANNESS_DEFAULT CLI_VAL_MIPS_ENDIANNESS_BIG
+
+#else
+
+	#error "Unknown integer endianness."
 
 #endif
 

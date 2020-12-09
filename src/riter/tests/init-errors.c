@@ -1,6 +1,6 @@
 #include <assert.h>
 
-#include "src/riter/riter.h"
+#include "riter/riter.h"
 
 char memory[] = {
 	0, 0, 0, 0,

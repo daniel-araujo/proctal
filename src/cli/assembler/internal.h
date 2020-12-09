@@ -1,7 +1,7 @@
 #ifndef CLI_ASSEMBLER_INTERNAL_H
 #define CLI_ASSEMBLER_INTERNAL_H
 
-#include "cli/assembler.h"
+#include "cli/assembler/assembler.h"
 
 void cli_assembler_error_message_set(struct cli_assembler *assembler, const char *message);
 

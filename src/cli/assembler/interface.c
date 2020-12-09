@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "cli/assembler.h"
+#include "cli/assembler/assembler.h"
 #include "cli/assembler/implementation.h"
 
 extern inline void cli_assembler_init(struct cli_assembler *assembler);

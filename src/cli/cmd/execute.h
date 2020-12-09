@@ -1,7 +1,7 @@
 #ifndef CLI_CMD_EXECUTE_H
 #define CLI_CMD_EXECUTE_H
 
-#include "cli/assembler.h"
+#include "cli/assembler/assembler.h"
 
 enum cli_cmd_execute_format {
 	CLI_CMD_EXECUTE_FORMAT_ASSEMBLY,

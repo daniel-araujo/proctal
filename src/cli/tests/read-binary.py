@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import sys
 from util import proctal_cli, sleeper
 
 class Error(Exception):
@@ -37,10 +34,6 @@ tests = [
     TestSingleValue(int32, int32_test_val)
 ]
 
-guinea = sleeper.run()
-
-try:
+with sleeper.run() as guinea:
     for test in tests:
         test.run(guinea)
-finally:
-    guinea.stop()

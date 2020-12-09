@@ -3,7 +3,7 @@
 
 #include <darr.h>
 
-#include "cli/val.h"
+#include "cli/val/val.h"
 
 struct cli_cmd_write_arg {
 	int pid;

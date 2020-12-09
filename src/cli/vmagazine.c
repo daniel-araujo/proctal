@@ -1,4 +1,4 @@
-#include "src/cli/vmagazine.h"
+#include "cli/vmagazine.h"
 
 extern inline enum vmagazine_result vmagazine_init(struct vmagazine *this);
 

@@ -1,7 +1,7 @@
 import subprocess
 import select
 
-exe = "./tests/cli/program/sleeper"
+exe = "./util/sleeper"
 
 class Proc:
     """Controls the program."""
@@ -21,6 +21,12 @@ class Proc:
     def read_line(self):
         """Reads the next available line."""
         return self.process.stdout.readline().decode("utf-8")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
 
 def run():
     """Runs the program and returns an object that can communicate with it."""

@@ -8,28 +8,29 @@
 	To compile you need the following programs installed on your system:
 
 	<list>
+		<item><link ref="cmake">CMake</link></item>
 		<item><link ref="gcc">GCC</link></item>
-		<item><link ref="libtool">libtool</link></item>
+		<item><link ref="sed">sed</link></item>
+		<item><link ref="m4">m4</link></item>
+		<item><link ref="php">php</link></item>
 	</list>
 
-	Proctal can optionally compile with the following libraries listed with
-	the features they enable:
+	Proctal can optionally compile with the following libraries:
 
 	<list>
-		<item><link ref="capstone">capstone</link> - Disassembling instructions.</item>
-		<item><link ref="keystone">keystone</link> - Assembling instructions.</item>
+		<item><link ref="capstone">capstone</link> - For disassembling instructions.</item>
+		<item><link ref="keystone">keystone</link> - For assembling instructions.</item>
 	</list>
 
-	Proctal provides the familiar configure, compile and install process:
+	Then run:
 
 	<code type="bash-prompt">
-$ ./configure
+$ mkdir build
+
+# cmake -DCMAKE_BUILD_TYPE=Release ..
 
 $ make
 
 $ make install
 	</code>
-
-	Run <quote>./configure -h</quote> to read about the options you have
-	available that can change how Proctal will be compiled and installed.
 </document>

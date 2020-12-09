@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "cli/assembler.h"
+#include "cli/assembler/assembler.h"
 
 /*
  * How our instruction values are represented in memory.

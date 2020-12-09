@@ -1,7 +1,7 @@
 #ifndef CLI_ASSEMBLER_IMPLEMENTATION_H
 #define CLI_ASSEMBLER_IMPLEMENTATION_H
 
-#include "cli/assembler.h"
+#include "cli/assembler/assembler.h"
 
 int cli_assembler_implementation_decompile(struct cli_assembler *assembler, const char *bytecode, size_t bytecode_size, struct cli_assembler_decompile_result *result);
 

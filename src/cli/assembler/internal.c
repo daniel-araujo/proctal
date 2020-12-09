@@ -1,5 +1,5 @@
 #include "cli/assembler/internal.h"
-#include "cli/parser.h"
+#include "cli/parser/parser.h"
 
 void cli_assembler_error_message_set(struct cli_assembler *assembler, const char *message)
 {
