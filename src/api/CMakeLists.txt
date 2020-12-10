@@ -30,6 +30,7 @@ add_library(
 )
 
 set_target_properties(api-static PROPERTIES OUTPUT_NAME "proctal")
+set_target_properties(api-static PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/proctal.h")
 
 if(PROCTAL_SHARED)
     # Code needs to be compiled with position independent instructions.
@@ -58,5 +59,6 @@ if(PROCTAL_SHARED)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/cmake-no-source-workaround.c "")
     add_library(api-shared SHARED ${CMAKE_CURRENT_BINARY_DIR}/cmake-no-source-workaround.c)
     set_target_properties(api-shared PROPERTIES OUTPUT_NAME "proctal")
+    set_target_properties(api-shared PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/proctal.h")
     target_link_libraries(api-shared api-static)
 endif()
