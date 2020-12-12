@@ -332,7 +332,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->arm_mode = CLI_VAL_X86_MODE_DEFAULT; \
+			type->arm_mode = CLI_VAL_ARM_MODE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->arm_endianness_arg) { \
@@ -341,7 +341,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->arm_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+			type->arm_endianness = CLI_VAL_ARM_ENDIANNESS_DEFAULT; \
 		} \
 		break; \
 \
@@ -352,7 +352,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->sparc_mode = CLI_VAL_X86_MODE_DEFAULT; \
+			type->sparc_mode = CLI_VAL_SPARC_MODE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->sparc_endianness_arg) { \
@@ -361,7 +361,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->sparc_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+			type->sparc_endianness = CLI_VAL_SPARC_ENDIANNESS_DEFAULT; \
 		} \
 		break; \
 \
@@ -372,7 +372,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->powerpc_mode = CLI_VAL_X86_MODE_DEFAULT; \
+			type->powerpc_mode = CLI_VAL_POWERPC_MODE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->powerpc_endianness_arg) { \
@@ -381,7 +381,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->powerpc_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+			type->powerpc_endianness = CLI_VAL_POWERPC_ENDIANNESS_DEFAULT; \
 		} \
 		break; \
 \
@@ -392,7 +392,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->mips_mode = CLI_VAL_X86_MODE_DEFAULT; \
+			type->mips_mode = CLI_VAL_MIPS_MODE_DEFAULT; \
 		} \
 \
 		if (yuck_arg->mips_endianness_arg) { \
@@ -401,7 +401,7 @@ static inline int cli_type_options_##NAME(struct type_options *type, YUCK_TYPE *
 				return 0; \
 			} \
 		} else { \
-			type->mips_endianness = CLI_VAL_X86_SYNTAX_DEFAULT; \
+			type->mips_endianness = CLI_VAL_MIPS_ENDIANNESS_DEFAULT; \
 		} \
 		break; \
 \

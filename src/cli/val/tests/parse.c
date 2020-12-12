@@ -773,7 +773,7 @@ static void test_powerpc_32()
 	struct cli_val_powerpc_attr a;
 	cli_val_powerpc_attr_init(&a);
 	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_32);
-	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_POWERPC_ENDIANNESS_BIG);
 	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
 	cli_val_powerpc_attr_deinit(&a);
 
@@ -802,7 +802,7 @@ static void test_powerpc_64()
 	struct cli_val_powerpc_attr a;
 	cli_val_powerpc_attr_init(&a);
 	cli_val_powerpc_attr_mode_set(&a, CLI_VAL_POWERPC_MODE_64);
-	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_SPARC_ENDIANNESS_BIG);
+	cli_val_powerpc_attr_endianness_set(&a, CLI_VAL_POWERPC_ENDIANNESS_BIG);
 	cli_val_t v = cli_val_wrap(CLI_VAL_TYPE_POWERPC, cli_val_powerpc_create(&a));
 	cli_val_powerpc_attr_deinit(&a);
 
