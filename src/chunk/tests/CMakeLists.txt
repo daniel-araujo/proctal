@@ -1,7 +1,7 @@
 function(test_single_c_file file)
-    add_executable(chunk_${file} ${file}.c)
-    target_link_libraries(chunk_${file} PRIVATE chunk)
-    add_test(NAME chunk_${file} COMMAND chunk_${file})
+    add_executable(proctal_chunk_${file} ${file}.c)
+    target_link_libraries(proctal_chunk_${file} PRIVATE proctal_chunk)
+    add_test(NAME proctal_chunk_${file} COMMAND proctal_chunk_${file})
 endfunction()
 
 test_single_c_file(leftover)

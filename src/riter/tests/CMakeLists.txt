@@ -1,7 +1,7 @@
 function(test_single_c_file file)
-    add_executable(riter_${file} ${file}.c)
-    target_link_libraries(riter_${file} PRIVATE riter)
-    add_test(NAME riter_${file} COMMAND riter_${file})
+    add_executable(proctal_riter_${file} ${file}.c)
+    target_link_libraries(proctal_riter_${file} PRIVATE proctal_riter)
+    add_test(NAME proctal_riter_${file} COMMAND proctal_riter_${file})
 endfunction()
 
 test_single_c_file(init-defaults)

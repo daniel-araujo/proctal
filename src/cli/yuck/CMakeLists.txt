@@ -2,10 +2,10 @@ m4_preprocess(args.yuck.m4)
 yuck_compile(args.yuck)
 yuck_manpage(proctal.1 args.yuck)
 
-add_custom_target(compile_yuck ALL DEPENDS args.yucc proctal.1)
+add_custom_target(proctal_compile_yuck ALL DEPENDS args.yucc proctal.1)
 
 add_library(
-    cli_yuck
+    proctal_cli_yuck
 
     OBJECT
 
@@ -13,6 +13,6 @@ add_library(
     main.c
 )
 
-add_dependencies(cli_yuck compile_yuck)
+add_dependencies(proctal_cli_yuck proctal_compile_yuck)
 
-target_link_libraries(cli_yuck darr)
+target_link_libraries(proctal_cli_yuck darr)

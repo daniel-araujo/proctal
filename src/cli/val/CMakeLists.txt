@@ -1,7 +1,7 @@
 add_subdirectory(tests)
 
 add_library(
-    cli_val
+    proctal_cli_val
 
     OBJECT
 

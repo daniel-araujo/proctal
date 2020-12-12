@@ -6,7 +6,7 @@ add_subdirectory(pattern)
 add_subdirectory(tests)
 
 add_executable(
-    cli
+    proctal_cli
 
     cmd/allocate.c
     cmd/allocate.h
@@ -39,15 +39,16 @@ add_executable(
     main.c
 )
 
-set_target_properties(cli PROPERTIES OUTPUT_NAME "proctal")
+set_target_properties(proctal_cli PROPERTIES OUTPUT_NAME "proctal")
 
-target_link_libraries(cli api-static)
-target_link_libraries(cli pq)
-target_link_libraries(cli chunk)
-target_link_libraries(cli swbuf)
-target_link_libraries(cli riter)
-target_link_libraries(cli cli_val)
-target_link_libraries(cli cli_assembler)
-target_link_libraries(cli cli_yuck)
-target_link_libraries(cli cli_parser)
-target_link_libraries(cli cli_pattern)
+target_link_libraries(proctal_cli proctal_api-static)
+target_link_libraries(proctal_cli proctal_pq)
+target_link_libraries(proctal_cli proctal_chunk)
+target_link_libraries(proctal_cli proctal_swbuf)
+target_link_libraries(proctal_cli proctal_riter)
+target_link_libraries(proctal_cli proctal_cli_val)
+target_link_libraries(proctal_cli proctal_cli_assembler)
+target_link_libraries(proctal_cli proctal_cli_yuck)
+target_link_libraries(proctal_cli proctal_cli_parser)
+target_link_libraries(proctal_cli proctal_cli_pattern)
+target_link_libraries(proctal_cli darr)

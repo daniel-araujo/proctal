@@ -1,7 +1,7 @@
 function(test_single_c_file file)
-    add_executable(swbuf_${file} ${file}.c)
-    target_link_libraries(swbuf_${file} PRIVATE swbuf)
-    add_test(NAME swbuf_${file} COMMAND swbuf_${file})
+    add_executable(proctal_swbuf_${file} ${file}.c)
+    target_link_libraries(proctal_swbuf_${file} PRIVATE proctal_swbuf)
+    add_test(NAME proctal_swbuf_${file} COMMAND proctal_swbuf_${file})
 endfunction()
 
 test_single_c_file(address-offset-arithmetic)

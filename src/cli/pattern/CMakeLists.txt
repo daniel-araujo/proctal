@@ -1,7 +1,7 @@
 add_subdirectory(tests)
 
 add_library(
-    cli_pattern
+    proctal_cli_pattern
 
     OBJECT
 

@@ -1,5 +1,5 @@
 add_library(
-    pq
+    proctal_pq
 
     STATIC
 

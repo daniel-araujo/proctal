@@ -1,7 +1,7 @@
 make_php_c(names.c.php)
 
 add_library(
-    cli_parser
+    proctal_cli_parser
 
     OBJECT
 

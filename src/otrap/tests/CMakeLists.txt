@@ -1,7 +1,7 @@
 function(test_single_c_file file)
-    add_executable(otrap_${file} ${file}.c)
-    target_link_libraries(otrap_${file} PRIVATE otrap)
-    add_test(NAME otrap_${file} COMMAND otrap_${file})
+    add_executable(proctal_otrap_${file} ${file}.c)
+    target_link_libraries(proctal_otrap_${file} PRIVATE proctal_otrap)
+    add_test(NAME proctal_otrap_${file} COMMAND proctal_otrap_${file})
 endfunction()
 
 test_single_c_file(read-nothing)

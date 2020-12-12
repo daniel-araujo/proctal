@@ -115,16 +115,16 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
 else()
     message(STATUS "Fetching keystone")
     FetchContent_Declare(
-        keystone_project
+        proctal_keystone_project
 
         GIT_REPOSITORY
             ${KEYSTONE_GIT}
         GIT_TAG
             0.9.2
     )
-    FetchContent_Populate(keystone_project)
-    add_subdirectory(${keystone_project_SOURCE_DIR} ${keystone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
-    include_directories(${keystone_project_SOURCE_DIR}/include)
+    FetchContent_Populate(proctal_keystone_project)
+    add_subdirectory(${proctal_keystone_project_SOURCE_DIR} ${proctal_keystone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
+    include_directories(${proctal_keystone_project_SOURCE_DIR}/include)
 
     set(PROCTAL_KEYSTONE ON)
 endif()
@@ -143,16 +143,16 @@ else()
     message(STATUS "Capstone repository set. Will compile from source")
 
     FetchContent_Declare(
-        capstone_project
+        proctal_capstone_project
 
         GIT_REPOSITORY
             ${CAPSTONE_GIT}
         GIT_TAG
             4.0.2
     )
-    FetchContent_Populate(capstone_project)
-    add_subdirectory(${capstone_project_SOURCE_DIR} ${capstone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
-    include_directories(${capstone_project_SOURCE_DIR}/include)
+    FetchContent_Populate(proctal_capstone_project)
+    add_subdirectory(${proctal_capstone_project_SOURCE_DIR} ${proctal_capstone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
+    include_directories(${proctal_capstone_project_SOURCE_DIR}/include)
 
     set(PROCTAL_CAPSTONE ON)
 endif()
@@ -160,35 +160,35 @@ endif()
 # Acur
 message(STATUS "Fetching acur")
 FetchContent_Declare(
-    acur_project
+    proctal_acur_project
 
     GIT_REPOSITORY
         ${ACUR_GIT}
     GIT_TAG
         v1.1.3
 )
-FetchContent_Populate(acur_project)
-add_subdirectory(${acur_project_SOURCE_DIR} ${acur_project_BINARY_DIR} EXCLUDE_FROM_ALL)
+FetchContent_Populate(proctal_acur_project)
+add_subdirectory(${proctal_acur_project_SOURCE_DIR} ${proctal_acur_project_BINARY_DIR} EXCLUDE_FROM_ALL)
 
 # Darr
 message(STATUS "Fetching darr")
 FetchContent_Declare(
-    darr_project
+    proctal_darr_project
 
     GIT_REPOSITORY
         ${DARR_GIT}
     GIT_TAG
         351c3a07eb30706448307079b39aafd540cda8de
 )
-FetchContent_Populate(darr_project)
-add_subdirectory(${darr_project_SOURCE_DIR} ${darr_project_BINARY_DIR} EXCLUDE_FROM_ALL)
+FetchContent_Populate(proctal_darr_project)
+add_subdirectory(${proctal_darr_project_SOURCE_DIR} ${proctal_darr_project_BINARY_DIR} EXCLUDE_FROM_ALL)
 
 # Yuck
 if(NOT DEFINED YUCK)
     message(STATUS "Fetching yuck")
 
     FetchContent_Declare(
-        yuck_project
+        proctal_yuck_project
     
         GIT_REPOSITORY
             ${YUCK_GIT}
@@ -197,13 +197,13 @@ if(NOT DEFINED YUCK)
         PATCH_COMMAND
             autoreconf -i
     )
-    FetchContent_Populate(yuck_project)
+    FetchContent_Populate(proctal_yuck_project)
 
     execute_process(
         COMMAND
-            ${yuck_project_SOURCE_DIR}/configure --prefix=${yuck_project_INSTALL_DIR}
+            ${proctal_yuck_project_SOURCE_DIR}/configure --prefix=${proctal_yuck_project_INSTALL_DIR}
         WORKING_DIRECTORY
-            ${yuck_project_BINARY_DIR}
+            ${proctal_yuck_project_BINARY_DIR}
         RESULT_VARIABLE
             ret
     )
@@ -216,7 +216,7 @@ if(NOT DEFINED YUCK)
         COMMAND
             make
         WORKING_DIRECTORY
-            ${yuck_project_BINARY_DIR}
+            ${proctal_yuck_project_BINARY_DIR}
         RESULT_VARIABLE
             ret
     )
@@ -225,7 +225,7 @@ if(NOT DEFINED YUCK)
         message(FATAL_ERROR "Failed to build yuck")
     endif()
 
-    set(YUCK ${yuck_project_BINARY_DIR}/src/yuck)
+    set(YUCK ${proctal_yuck_project_BINARY_DIR}/src/yuck)
 endif()
 
 
@@ -358,14 +358,14 @@ endfunction()
 
 add_subdirectory(src)
 
-install(TARGETS cli)
+install(TARGETS proctal_cli)
 
 if(PROCTAL_SHARED)
-    install(TARGETS api-shared)
+    install(TARGETS proctal_api-shared)
 endif()
 
 if(PROCTAL_STATIC)
-    install(TARGETS api-static)
+    install(TARGETS proctal_api-static)
 endif()
 
 install(

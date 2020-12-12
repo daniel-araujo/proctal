@@ -1,10 +1,10 @@
 add_subdirectory(tests)
 
-naive_prefix_funcs(darr.h ${darr_project_SOURCE_DIR}/src/darr.h darr)
-naive_prefix_funcs(darr.c ${darr_project_SOURCE_DIR}/src/darr.c darr)
+naive_prefix_funcs(darr.h ${proctal_darr_project_SOURCE_DIR}/src/darr.h darr)
+naive_prefix_funcs(darr.c ${proctal_darr_project_SOURCE_DIR}/src/darr.c darr)
 
 add_library(
-    api_darr
+    proctal_api_darr
 
     OBJECT
 
@@ -16,5 +16,5 @@ add_library(
 
 if(PROCTAL_SHARED)
     # Code needs to be compiled with position independent instructions.
-    set_property(TARGET api_darr PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET proctal_api_darr PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()

@@ -1,7 +1,7 @@
 add_subdirectory(util)
 
 function(test_python_script file)
-    set(target_name cli_${file})
+    set(target_name proctal_cli_${file})
 
     relative_build_or_source(file ${file}.py)
 

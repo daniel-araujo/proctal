@@ -1,5 +1,5 @@
 add_library(
-    cli_assembler
+    proctal_cli_assembler
 
     OBJECT
 
@@ -13,13 +13,13 @@ add_library(
 
 if(PROCTAL_CAPSTONE)
     if(CAPSTONE_LIBRARY)
-        target_link_libraries(cli_assembler capstone)
+        target_link_libraries(proctal_cli_assembler capstone)
     else()
         # Has different name.
-        target_link_libraries(cli_assembler capstone-static)
+        target_link_libraries(proctal_cli_assembler capstone-static)
     endif()
 endif()
 
 if(PROCTAL_KEYSTONE)
-    target_link_libraries(cli_assembler keystone)
+    target_link_libraries(proctal_cli_assembler keystone)
 endif()

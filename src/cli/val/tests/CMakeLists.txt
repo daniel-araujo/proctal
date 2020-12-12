@@ -1,7 +1,7 @@
 function(test_single_c_file file)
-    add_executable(cli_val_${file} ${file}.c)
-    target_link_libraries(cli_val_${file} PRIVATE cli_val cli_assembler cli_parser otrap)
-    add_test(NAME cli_val_${file} COMMAND cli_val_${file})
+    add_executable(proctal_cli_val_${file} ${file}.c)
+    target_link_libraries(proctal_cli_val_${file} PRIVATE proctal_cli_val proctal_cli_assembler proctal_cli_parser proctal_otrap)
+    add_test(NAME proctal_cli_val_${file} COMMAND proctal_cli_val_${file})
 endfunction()
 
 test_single_c_file(add)

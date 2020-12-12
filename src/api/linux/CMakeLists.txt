@@ -1,7 +1,7 @@
 add_subdirectory(tests)
 
 add_library(
-    api_linux
+    proctal_api_linux
 
     OBJECT
 
@@ -34,15 +34,15 @@ add_library(
 
 if(PROCTAL_SHARED)
     # Code needs to be compiled with position independent instructions.
-    set_property(TARGET api_linux PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET proctal_api_linux PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_link_libraries(api_linux api_darr)
-target_link_libraries(api_linux api_acur)
+target_link_libraries(proctal_api_linux proctal_api_darr)
+target_link_libraries(proctal_api_linux proctal_api_acur)
 
 if(PROCTAL_CPU_ARCHITECTURE_X86 AND PROCTAL_CPU_ARCHITECTURE_X86_MODE_64)
     target_SOURCES(
-        api_linux
+        proctal_api_linux
 
         PRIVATE
 
@@ -62,7 +62,7 @@ if(PROCTAL_CPU_ARCHITECTURE_X86 AND PROCTAL_CPU_ARCHITECTURE_X86_MODE_64)
     )
 else()
     target_SOURCES(
-        api_linux
+        proctal_api_linux
 
         PRIVATE
 
