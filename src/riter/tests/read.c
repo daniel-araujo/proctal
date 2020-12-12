@@ -54,7 +54,7 @@ static void test_index_should_stop_at_last_index_that_can_hold_data_size(void)
 #define VALID_LAST_INDEX 8
 
 	// After the while loop, this variable will hold the last index.
-	size_t index;
+	size_t index = 0;
 
 	while (!riter_end(&riter)) {
 		index = riter_index(&riter);
