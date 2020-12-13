@@ -99,6 +99,14 @@ message(STATUS "PYTHON = ${PYTHON}")
 # Dependencies
 ###############################################################################
 
+# Don't want to register tests of included dependencies. The EXCLUDE_FROM_ALL
+# option does not seem to ignore tests.
+function(add_test)
+    message("IGNORING add_test(${ARGV})")
+endfunction()
+function(_add_test)
+endfunction(_add_test)
+
 include(ExternalProject)
 include(FetchContent)
 
@@ -227,6 +235,11 @@ if(NOT DEFINED YUCK)
 
     set(YUCK ${proctal_yuck_project_BINARY_DIR}/src/yuck)
 endif()
+
+# Restore add_test
+function(add_test)
+    __add_test(${ARGV})
+endfunction()
 
 
 
