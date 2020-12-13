@@ -103,16 +103,7 @@ include(ExternalProject)
 include(FetchContent)
 
 # Keystone
-if(CMAKE_BUILD_TYPE STREQUAL Release)
-    find_library(KEYSTONE_LIBRARY keystone)
-
-    if(KEYSTONE_LIBRARY)
-        message(STATUS "Found keystone library. Will link to it.")
-        set(PROCTAL_KEYSTONE ON)
-    else()
-        message(STATUS "Keystone library not found. Some features will be missing.")
-    endif()
-else()
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message(STATUS "Fetching keystone")
     FetchContent_Declare(
         proctal_keystone_project
@@ -126,20 +117,20 @@ else()
     add_subdirectory(${proctal_keystone_project_SOURCE_DIR} ${proctal_keystone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
     include_directories(${proctal_keystone_project_SOURCE_DIR}/include)
 
-    set(PROCTAL_KEYSTONE ON)
+    set(PROCTAL_HAS_KEYSTONE ON)
+else()
+    find_library(KEYSTONE_LIBRARY keystone)
+
+    if(KEYSTONE_LIBRARY)
+        message(STATUS "Found keystone library. Will link to it.")
+        set(PROCTAL_HAS_KEYSTONE ON)
+    else()
+        message(STATUS "Keystone library not found and no git repository is set")
+    endif()
 endif()
 
 # Capstone
-if(CMAKE_BUILD_TYPE STREQUAL Release)
-    find_library(CAPSTONE_LIBRARY capstone)
-
-    if(CAPSTONE_LIBRARY)
-        message(STATUS "Found capstone library. Will link to it.")
-        set(PROCTAL_CAPSTONE ON)
-    else()
-        message(STATUS "Capstone library not found. Some features will be missing.")
-    endif()
-else()
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message(STATUS "Capstone repository set. Will compile from source")
 
     FetchContent_Declare(
@@ -154,7 +145,16 @@ else()
     add_subdirectory(${proctal_capstone_project_SOURCE_DIR} ${proctal_capstone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
     include_directories(${proctal_capstone_project_SOURCE_DIR}/include)
 
-    set(PROCTAL_CAPSTONE ON)
+    set(PROCTAL_HAS_CAPSTONE ON)
+else()
+    find_library(CAPSTONE_LIBRARY capstone)
+
+    if(CAPSTONE_LIBRARY)
+        message(STATUS "Found capstone library. Will link to it.")
+        set(PROCTAL_HAS_CAPSTONE ON)
+    else()
+        message(STATUS "Capstone library not found. Some features will be missing.")
+    endif()
 endif()
 
 # Acur

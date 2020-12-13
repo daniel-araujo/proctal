@@ -11,7 +11,7 @@ add_library(
     implementation.c
 )
 
-if(PROCTAL_CAPSTONE)
+if(PROCTAL_HAS_CAPSTONE)
     if(CAPSTONE_LIBRARY)
         target_link_libraries(proctal_cli_assembler capstone)
     else()
@@ -20,6 +20,6 @@ if(PROCTAL_CAPSTONE)
     endif()
 endif()
 
-if(PROCTAL_KEYSTONE)
+if(PROCTAL_HAS_KEYSTONE)
     target_link_libraries(proctal_cli_assembler keystone)
 endif()
