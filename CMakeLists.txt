@@ -6,8 +6,6 @@ cmake_minimum_required(VERSION 3.14)
 
 project(Proctal VERSION 0)
 
-enable_testing()
-
 # Platform check.
 if(UNIX AND NOT APPLE)
     set(PROCTAL_PLATFORM_LINUX ON)
@@ -368,6 +366,11 @@ endfunction()
 ###############################################################################
 # Build & Install
 ###############################################################################
+
+if(NOT (CMAKE_BUILD_TYPE STREQUAL Release OR CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo OR CMAKE_BUILD_TYPE STREQUAL MinSizeRel))
+    # Testing is only enabled in build types that don't disable asserts.
+    enable_testing()
+endif()
 
 add_subdirectory(src)
 
