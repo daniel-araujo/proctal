@@ -72,7 +72,7 @@ static int next(struct proctal_linux *pl)
 		}
 	}
 
-	return pl->address.current_address == NULL;
+	return pl->address.current_address != NULL;
 }
 
 void proctal_linux_scan_address_start(struct proctal_linux *pl)
