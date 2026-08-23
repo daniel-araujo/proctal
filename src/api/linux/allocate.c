@@ -35,9 +35,9 @@ static inline int make_prot(struct proctal_linux *pl)
 
 static inline void *read_header(struct proctal_linux *pl, struct mem_header *header, void *address)
 {
-	void *memory_location = (char *) address - sizeof(header);
+	void *memory_location = (char *) address - sizeof(*header);
 
-	if (!proctal_linux_mem_read(pl, memory_location, (char *) header, sizeof(header))) {
+	if (!proctal_linux_mem_read(pl, memory_location, (char *) header, sizeof(*header))) {
 		return NULL;
 	}
 
@@ -46,11 +46,11 @@ static inline void *read_header(struct proctal_linux *pl, struct mem_header *hea
 
 static inline void *write_header(struct proctal_linux *pl, struct mem_header *header, void *memory_location)
 {
-	if (!proctal_linux_mem_write(pl, memory_location, (char *) header, sizeof(header))) {
+	if (!proctal_linux_mem_write(pl, memory_location, (char *) header, sizeof(*header))) {
 		return NULL;
 	}
 
-	return (char *) memory_location + sizeof(header);
+	return (char *) memory_location + sizeof(*header);
 }
 
 void *proctal_linux_allocate(struct proctal_linux *pl, size_t size)
@@ -81,6 +81,10 @@ void proctal_linux_deallocate(struct proctal_linux *pl, void *address)
 	struct mem_header header;
 
 	void *memory_location = read_header(pl, &header, address);
+
+	if (memory_location == NULL) {
+		return;
+	}
 
 	int ret = proctal_linux_execute_syscall_munmap(pl, memory_location, header.size);
 

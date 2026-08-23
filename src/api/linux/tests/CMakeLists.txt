@@ -8,5 +8,6 @@ test_single_c_file(proc-path-size)
 test_single_c_file(proc-program-path)
 test_single_c_file(mem)
 test_single_c_file(scan-address)
+test_single_c_file(allocate-invalid-deallocate)
 
 add_subdirectory(proc-maps)
