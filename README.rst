@@ -259,8 +259,26 @@ You can also run the test suite with ``ctest``.
 
 	$ ctest
 
-Beware that some test cases require higher privileges, which means that you will
-most likely have to run that command as root in order for all tests to pass.
+Beware that some test cases require higher privileges. They spawn a separate
+guinea pig process and then use ``ptrace`` on it from the ``proctal`` binary
+under test. Most Linux systems restrict ``ptrace`` to a process's own direct
+children by default (the Yama ``ptrace_scope`` security policy), and since
+the guinea pig is a sibling process rather than a child of ``proctal``, this
+fails with a permission error. Running the command as root sidesteps the
+restriction entirely, so you will most likely have to do that in order for
+all tests to pass.
+
+If you'd rather not run the whole suite as root, you can instead grant just
+the ``proctal`` binary the ``CAP_SYS_PTRACE`` capability:
+
+.. code :: sh
+
+	$ sudo setcap cap_sys_ptrace+ep build/debug/src/cli/proctal
+
+	$ ctest
+
+Note that rebuilding the binary replaces the file and drops the capability,
+so you will need to run ``setcap`` again after every ``make``.
 
 
 Contributing
