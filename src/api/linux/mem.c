@@ -32,7 +32,10 @@ size_t proctal_linux_mem_read(struct proctal_linux *pl, void *address, void *out
 		return 0;
 	}
 
-	fseek(f, (long) address, SEEK_SET);
+	if (fseek(f, (long) address, SEEK_SET) != 0) {
+		proctal_error_set(&pl->p, PROCTAL_ERROR_READ_FAILURE);
+		return 0;
+	}
 
 	long i = fread(out, size, 1, f);
 
@@ -56,7 +59,10 @@ size_t proctal_linux_mem_write(struct proctal_linux *pl, void *address, const vo
 		return 0;
 	}
 
-	fseek(f, (long) address, SEEK_SET);
+	if (fseek(f, (long) address, SEEK_SET) != 0) {
+		proctal_error_set(&pl->p, PROCTAL_ERROR_WRITE_FAILURE);
+		return 0;
+	}
 
 	long i = fwrite(in, size, 1, f);
 
