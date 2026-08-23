@@ -97,12 +97,15 @@ static inline void read_until_nl(FILE *maps, struct proctal_darr *buffer)
 			break;
 		}
 
-		bufferbuf[i++] = ch;
+		if (i >= proctal_darr_size(buffer)) {
+			if (!proctal_darr_grow(buffer, proctal_darr_size(buffer))) {
+				break;
+			}
 
-		if (i > proctal_darr_size(buffer)) {
-			proctal_darr_grow(buffer, proctal_darr_size(buffer));
 			bufferbuf = proctal_darr_data(buffer);
 		}
+
+		bufferbuf[i++] = ch;
 	}
 
 	proctal_darr_resize(buffer, i + 1);
