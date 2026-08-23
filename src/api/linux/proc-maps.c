@@ -147,8 +147,14 @@ int proctal_linux_proc_maps_region_check(struct proctal_linux_proc_maps_region *
 
 		if (check->mask & PROCTAL_REGION_PROGRAM_CODE) {
 			const struct proctal_darr *program_path = proctal_linux_program_path(check->pid);
-			int same_path = strcmp(proctal_darr_data(&region->name), proctal_darr_data_const(program_path)) == 0;
-			proctal_linux_program_path_dispose(program_path);
+
+			int same_path = program_path != NULL
+				&& proctal_darr_size(&region->name) != 0
+				&& strcmp(proctal_darr_data(&region->name), proctal_darr_data_const(program_path)) == 0;
+
+			if (program_path != NULL) {
+				proctal_linux_program_path_dispose(program_path);
+			}
 
 			if (same_path && region->execute) {
 				return 1;

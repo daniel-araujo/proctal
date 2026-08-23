@@ -6,3 +6,4 @@ endfunction()
 
 test_single_c_file(check)
 test_single_c_file(correct-properties)
+test_single_c_file(program-code)
