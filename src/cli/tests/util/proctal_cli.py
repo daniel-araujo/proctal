@@ -584,6 +584,26 @@ def allocate(pid, size, permission=None):
 
     return v
 
+def measure(type, values, address=0, array=None):
+    """Runs the measure command and returns the total size in bytes."""
+
+    cmd = [
+        proctal_exe,
+        "measure",
+        "--address=" + str(address),
+    ]
+    cmd = cmd + type.type_options()
+
+    if array != None:
+        cmd.append("--array=" + str(array))
+
+    cmd = cmd + list(map(lambda v: str(v), values))
+
+    output = subprocess.check_output(cmd)
+    output = output.strip().decode("utf-8")
+
+    return int(output)
+
 def deallocate(pid, address):
     """Runs the deallocate command."""
 
