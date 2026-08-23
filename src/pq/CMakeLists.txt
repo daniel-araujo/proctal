@@ -10,3 +10,5 @@ add_library(
     quit-state.c
     quit-state.h
 )
+
+add_subdirectory(tests)

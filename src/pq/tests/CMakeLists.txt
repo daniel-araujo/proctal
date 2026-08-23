@@ -1,0 +1,10 @@
+function(test_single_c_file file)
+    add_executable(proctal_pq_${file} ${file}.c)
+    target_link_libraries(proctal_pq_${file} PRIVATE proctal_pq)
+    add_test(NAME proctal_pq_${file} COMMAND proctal_pq_${file})
+endfunction()
+
+test_single_c_file(initial-check)
+test_single_c_file(sigint-sets-check)
+test_single_c_file(sigterm-sets-check)
+test_single_c_file(wait-returns-if-already-quit)
