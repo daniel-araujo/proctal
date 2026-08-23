@@ -5,6 +5,7 @@ function(test_single_c_file file)
 endfunction()
 
 test_single_c_file(proc-path-size)
+test_single_c_file(proc-program-path)
 test_single_c_file(mem)
 
 add_subdirectory(proc-maps)

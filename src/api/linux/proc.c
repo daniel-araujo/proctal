@@ -88,8 +88,21 @@ const struct proctal_darr *proctal_linux_program_path(pid_t pid)
 	char *path_data = proctal_darr_data(path);
 
 	const struct proctal_darr *link = proctal_linux_proc_path(pid, "exe");
-	size_t e = readlink(proctal_darr_data_const(link), path_data, proctal_darr_size(path) - 1);
+
+	if (link == NULL) {
+		proctal_darr_deinit(path);
+		proctal_global_free(path);
+		return NULL;
+	}
+
+	ssize_t e = readlink(proctal_darr_data_const(link), path_data, proctal_darr_size(path) - 1);
 	proctal_linux_proc_path_dispose(link);
+
+	if (e < 0) {
+		proctal_darr_deinit(path);
+		proctal_global_free(path);
+		return NULL;
+	}
 
 	path_data[e] = '\0';
 
