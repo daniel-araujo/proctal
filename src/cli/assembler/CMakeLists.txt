@@ -16,7 +16,7 @@ if(PROCTAL_HAS_CAPSTONE)
         target_link_libraries(proctal_cli_assembler capstone)
     else()
         # Has different name.
-        target_link_libraries(proctal_cli_assembler capstone-static)
+        target_link_libraries(proctal_cli_assembler capstone_static)
     endif()
 endif()
 

@@ -69,7 +69,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 # Dependency options.
-set(CAPSTONE_GIT "https://github.com/aquynh/capstone.git" CACHE STRING "capstone git repository")
+set(CAPSTONE_GIT "https://github.com/capstone-engine/capstone.git" CACHE STRING "capstone git repository")
 set(KEYSTONE_GIT "https://github.com/keystone-engine/keystone.git" CACHE STRING "keystone git repository")
 set(DARR_GIT "https://github.com/daniel-araujo/darr.git" CACHE STRING "darr git repository")
 set(ACUR_GIT "https://github.com/daniel-araujo/acur.git" CACHE STRING "acur git repository")
@@ -111,13 +111,18 @@ include(FetchContent)
 # Keystone
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message(STATUS "Fetching keystone")
+    # Keystone's last tagged release (0.9.2) requires CMake < 3.5 and fails
+    # to configure with CMake 4. There's been no new release since 2020, but
+    # master has since fixed this (commit 0d9567f, "Fix build compatibility
+    # with CMake 4, GCC 15, and MSVC"), so we pin to that commit instead of a
+    # tag.
     FetchContent_Declare(
         proctal_keystone_project
 
         GIT_REPOSITORY
             ${KEYSTONE_GIT}
         GIT_TAG
-            0.9.2
+            0d9567f08c0c23e8f604b2cad3d49450c93cfb40
     )
     FetchContent_Populate(proctal_keystone_project)
     add_subdirectory(${proctal_keystone_project_SOURCE_DIR} ${proctal_keystone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
@@ -145,7 +150,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
         GIT_REPOSITORY
             ${CAPSTONE_GIT}
         GIT_TAG
-            4.0.2
+            5.0.9
     )
     FetchContent_Populate(proctal_capstone_project)
     add_subdirectory(${proctal_capstone_project_SOURCE_DIR} ${proctal_capstone_project_BINARY_DIR} EXCLUDE_FROM_ALL)
