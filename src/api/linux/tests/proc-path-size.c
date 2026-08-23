@@ -32,13 +32,14 @@ int main(void)
 
 		size_t expected_size = strlen(test->expected_path);
 
-		if (proctal_darr_size(path) != expected_size) {
+		// The size includes room for the NUL terminator.
+		if (proctal_darr_size(path) != expected_size + 1) {
 			fprintf(stderr, "Unexpected size in test #%d.\n", (int) i);
 			proctal_linux_proc_path_dispose(path);
 			return 1;
 		}
 
-		if (strncmp(test->expected_path, proctal_darr_data_const(path), expected_size) != 0) {
+		if (strncmp(test->expected_path, proctal_darr_data_const(path), expected_size + 1) != 0) {
 			fprintf(stderr, "Unexpected path in test #%d.\n", (int) i);
 			proctal_linux_proc_path_dispose(path);
 			return 1;

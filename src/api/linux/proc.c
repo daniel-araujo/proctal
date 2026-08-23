@@ -61,9 +61,9 @@ const struct proctal_darr *proctal_linux_proc_path(pid_t pid, const char *file)
 		return NULL;
 	}
 
-	if (n < (int) proctal_darr_size(path)) {
-		// Discards extra space.
-		proctal_darr_resize(path, n);
+	if (n + 1 < (int) proctal_darr_size(path)) {
+		// Discards extra space, but keeps room for the NUL terminator.
+		proctal_darr_resize(path, n + 1);
 	}
 
 	return path;
