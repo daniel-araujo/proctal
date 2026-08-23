@@ -257,6 +257,12 @@ class Process:
         """Returns True if the process has stopped, False otherwise."""
         return self.exit_code() != None
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
+
 class PauseProcess(Process):
     """Controls the pause command."""
 
@@ -571,7 +577,7 @@ def allocate(pid, size, permission=None):
     address = address.strip().decode("utf-8")
 
     if not address:
-        return None
+        raise Error("Allocate command produced no address for pid {pid}.".format(pid=pid))
 
     v = ValueAddress(TypeAddress())
     v.parse(address)
@@ -614,7 +620,7 @@ def write(pid, address, type, value=None, array=None, binary=False):
         process.poll()
 
         if process.returncode != None:
-            return False
+            raise Error("Write command failed to start for pid {pid}.".format(pid=pid))
 
         return WriteBinaryProcess(process)
     else:
@@ -628,10 +634,10 @@ def write(pid, address, type, value=None, array=None, binary=False):
 
         code = subprocess.call(cmd)
 
-        if code == 0:
-            return True
-        else:
-            return False
+        if code != 0:
+            raise Error("Write command failed with exit code {code} for pid {pid}.".format(code=code, pid=pid))
+
+        return True
 
 def execute(pid, code):
     """Runs the execute command."""

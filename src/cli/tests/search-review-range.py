@@ -55,14 +55,14 @@ with sleeper.run() as guinea:
     stop_address = start_address.clone()
     stop_address.add_address_offset(byte_length)
 
-    searcher = proctal_cli.search(
+    with proctal_cli.search(
         guinea.pid(),
         test_type,
         address_start=start_address,
         address_stop=stop_address,
-        eq=test_value)
+        eq=test_value) as searcher:
 
-    matches = list(searcher.match_iterator())
+        matches = list(searcher.match_iterator())
 
     def make_test_same_range():
         """Same range of addresses as the previous search."""
@@ -122,33 +122,26 @@ with sleeper.run() as guinea:
     ]
 
     def run(start_address, stop_address, length):
-        searcher = proctal_cli.search(
+        with proctal_cli.search(
             guinea.pid(),
             test_type,
             address_start=start_address,
             address_stop=stop_address,
-            review=matches)
+            review=matches) as searcher:
 
-        found = 0
+            found = 0
 
-        for match in searcher.match_iterator():
-            if test_value.cmp(match.value) != 0:
-                searcher.stop()
-                raise UnexpectedMatchValue(match.value, test_value)
+            for match in searcher.match_iterator():
+                if test_value.cmp(match.value) != 0:
+                    raise UnexpectedMatchValue(match.value, test_value)
 
-            if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
-                searcher.stop()
-                raise UnexpectedMatchAddress(start_address, stop_address, match.address)
+                if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
+                    raise UnexpectedMatchAddress(start_address, stop_address, match.address)
 
-            found += 1
-
-        searcher.stop()
+                found += 1
 
         if length != found:
             raise UnexpectedTotalMatches(length, found)
 
-    try:
-        for test in tests:
-                run(test[0], test[1], test[2])
-    finally:
-        searcher.stop()
+    for test in tests:
+        run(test[0], test[1], test[2])

@@ -53,25 +53,20 @@ def start(test):
 
         proctal_cli.write(guinea.pid(), address, test.type, test.value, array=test.length)
 
-        searcher = proctal_cli.search(guinea.pid(), test.type, eq=test.value)
-
         start_address = address
         end_address = start_address.clone()
         end_address.add_address_offset(total_size)
         found = 0
 
-        for match in searcher.match_iterator():
-            if test.value.cmp(match.value) != 0:
-                searcher.stop()
-                raise UnexpectedMatchValue(test.value, match.value)
+        with proctal_cli.search(guinea.pid(), test.type, eq=test.value) as searcher:
+            for match in searcher.match_iterator():
+                if test.value.cmp(match.value) != 0:
+                    raise UnexpectedMatchValue(test.value, match.value)
 
-            if not (start_address.cmp(match.address) <= 0 and end_address.cmp(match.address) > 0):
-                searcher.stop()
-                raise UnexpectedMatchAddress(start_address, end_address, match.address)
+                if not (start_address.cmp(match.address) <= 0 and end_address.cmp(match.address) > 0):
+                    raise UnexpectedMatchAddress(start_address, end_address, match.address)
 
-            found += 1
-
-        searcher.stop()
+                found += 1
 
         if test.length != found:
             raise UnexpectedTotalMatches(test.length, found)

@@ -9,14 +9,10 @@ with sleeper.run() as guinea:
 
     proctal_cli.write(guinea.pid(), address, int32, test_value)
 
-    proctal_cli.deallocate(guinea.pid(), address)
+    if not proctal_cli.deallocate(guinea.pid(), address):
+        exit("Deallocate command failed.")
 
-    searcher = proctal_cli.search(guinea.pid(), int32, eq=test_value)
-
-    for match in searcher.match_iterator():
-        if match.address.cmp(address) == 0:
-            searcher.stop()
-            exit("Memory block still seems accessible.")
-            break
-
-    searcher.stop()
+    with proctal_cli.search(guinea.pid(), int32, eq=test_value) as searcher:
+        for match in searcher.match_iterator():
+            if match.address.cmp(address) == 0:
+                exit("Memory block still seems accessible.")

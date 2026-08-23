@@ -13,16 +13,14 @@ with sleeper.run() as guinea:
 
         proctal_cli.write(guinea.pid(), address, int32, test_value)
 
-        searcher = proctal_cli.search(guinea.pid(), int32, eq=test_value)
+        with proctal_cli.search(guinea.pid(), int32, eq=test_value) as searcher:
+            found = False
 
-        found = False
-
-        for match in searcher.match_iterator():
-            if match.address.cmp(address) == 0:
-                found = True
+            for match in searcher.match_iterator():
+                if match.address.cmp(address) == 0:
+                    found = True
 
         if not found:
-            searcher.stop()
             exit("Default search permissions is missing the {flag} flag.\n".format(flag=flag))
 
     for flag in inactive_flags:
@@ -30,11 +28,7 @@ with sleeper.run() as guinea:
 
         proctal_cli.write(guinea.pid(), address, int32, test_value)
 
-        searcher = proctal_cli.search(guinea.pid(), int32, eq=test_value)
-
-        for match in searcher.match_iterator():
-            if match.address.cmp(address) == 0:
-                searcher.stop()
-                exit("Default search permissions should not have the {flag} flag.\n".format(flag=flag))
-
-    searcher.stop()
+        with proctal_cli.search(guinea.pid(), int32, eq=test_value) as searcher:
+            for match in searcher.match_iterator():
+                if match.address.cmp(address) == 0:
+                    exit("Default search permissions should not have the {flag} flag.\n".format(flag=flag))

@@ -102,22 +102,19 @@ with sleeper.run() as guinea:
     ]
 
     def run(start_address, stop_address, length):
-        searcher = proctal_cli.pattern(
+        with proctal_cli.pattern(
             guinea.pid(),
             test_pattern,
             address_start=start_address,
-            address_stop=stop_address)
+            address_stop=stop_address) as searcher:
 
-        found = 0
+            found = 0
 
-        for match in searcher.match_iterator():
-            if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
-                searcher.stop()
-                raise UnexpectedMatchAddress(start_address, stop_address, match.address)
+            for match in searcher.match_iterator():
+                if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
+                    raise UnexpectedMatchAddress(start_address, stop_address, match.address)
 
-            found += 1
-
-        searcher.stop()
+                found += 1
 
         if length != found:
             raise UnexpectedTotalMatches(length, found)

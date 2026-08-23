@@ -46,24 +46,21 @@ class LengthTest:
             stop_address = start_address.clone()
             stop_address.add_address_offset(self.length)
 
-            dumper = proctal_cli.dump(
+            with proctal_cli.dump(
                 guinea.pid(),
                 address_start=start_address,
-                address_stop=stop_address)
+                address_stop=stop_address) as dumper:
 
-            found = 0
+                found = 0
 
-            for match in dumper.byte_iterator():
-                byte = proctal_cli.ValueByte(byte_type)
-                byte.parse_binary(match)
+                for match in dumper.byte_iterator():
+                    byte = proctal_cli.ValueByte(byte_type)
+                    byte.parse_binary(match)
 
-                if value.cmp(byte) != 0:
-                    dumper.stop()
-                    raise UnexpectedMatchValue(value, byte)
+                    if value.cmp(byte) != 0:
+                        raise UnexpectedMatchValue(value, byte)
 
-                found += 1
-
-            dumper.stop()
+                    found += 1
 
             if self.length != found:
                 raise UnexpectedTotalMatches(self.length, found)

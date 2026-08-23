@@ -60,27 +60,23 @@ class LengthTest:
             stop_address = start_address.clone()
             stop_address.add_address_offset(total_length)
 
-            searcher = proctal_cli.search(
+            found = 0
+
+            with proctal_cli.search(
                 guinea.pid(),
                 self.type,
                 address_start=start_address,
                 address_stop=stop_address,
-                eq=test.value)
+                eq=test.value) as searcher:
 
-            found = 0
+                for match in searcher.match_iterator():
+                    if self.value.cmp(match.value) != 0:
+                        raise UnexpectedMatchValue(match.value, self.value)
 
-            for match in searcher.match_iterator():
-                if self.value.cmp(match.value) != 0:
-                    searcher.stop()
-                    raise UnexpectedMatchValue(match.value, self.value)
+                    if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
+                        raise UnexpectedMatchAddress(start_address, stop_address, match.address)
 
-                if not (start_address.cmp(match.address) <= 0 and stop_address.cmp(match.address) > 0):
-                    searcher.stop()
-                    raise UnexpectedMatchAddress(start_address, stop_address, match.address)
-
-                found += 1
-
-            searcher.stop()
+                    found += 1
 
             if self.length != found:
                 raise UnexpectedTotalMatches(self.length, found)

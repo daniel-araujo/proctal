@@ -16,16 +16,13 @@ with sleeper.run() as guinea:
 
         proctal_cli.write(guinea.pid(), address, int32, test_value)
 
-        searcher = proctal_cli.search(guinea.pid(), int32, eq=test_value, permission=flags)
+        with proctal_cli.search(guinea.pid(), int32, eq=test_value, permission=flags) as searcher:
+            found = False
 
-        found = False
-
-        for match in searcher.match_iterator():
-            if match.address.cmp(address) == 0:
-                found = True
-                break
-
-        searcher.stop()
+            for match in searcher.match_iterator():
+                if match.address.cmp(address) == 0:
+                    found = True
+                    break
 
         if not found:
             exit("Could not allocate memory with the following permission flags: {flags}.".format(flags=flags))

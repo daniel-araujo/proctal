@@ -16,11 +16,11 @@ with sleeper.run() as guinea:
 
     proctal_cli.write(guinea.pid(), address, type, value)
 
-    proctal_cli.execute(guinea.pid(), codes["x86-64"].format(address=str(address), value=1))
+    if not proctal_cli.execute(guinea.pid(), codes["x86-64"].format(address=str(address), value=1)):
+        exit("Execute command failed.")
 
-    reader = proctal_cli.read(guinea.pid(), address, type)
-    read = reader.next_value()
-    reader.stop()
+    with proctal_cli.read(guinea.pid(), address, type) as reader:
+        read = reader.next_value()
 
     if read.cmp(value) == 0:
         exit("Value was not overwritten.")
